@@ -88,10 +88,6 @@ Slash/Arrow/Jab
 Digging
 - Double damage for digging wood or stone (3 hits for wood block, 4 for stone block)
 
-Bushes/Grass
-- Every second, grass spawns on an open dirt or a bush spawns on a grass block (can't have more than one bush in the same spot though)
-- Won't respawn on backwall or underwater
-
 # TODO/Ideas for the future
 
 Trampoline
