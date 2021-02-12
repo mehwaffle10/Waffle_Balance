@@ -153,4 +153,5 @@ Siege Blocks
 - Fix sound sync
 - Depth texture renders behind player
 - Inventory icon for other blocks
+- Figure out how to make blocks drop the original amount of mats without giving extra when breaking something with 1 hit left
 */
