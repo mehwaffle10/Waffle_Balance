@@ -32,6 +32,9 @@ Arrows
 - Collide with enemy arrows
 - Have 5x the amount of health (will last 5x longer when climbed on)
 
+Fire Arrows
+- Always flare even if not on flammable surface
+
 Mines
 - Deploy after timer like they used to 
 - Can still be picked up

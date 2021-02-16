@@ -6,7 +6,7 @@
 #include "BombCommon.as";
 #include "SplashWater.as";
 #include "TeamStructureNear.as";
-#include "Knocked.as"
+#include "KnockedCommon.as"
 
 const s32 bomb_fuse = 120;
 const f32 arrowMediumSpeed = 8.0f;
@@ -143,9 +143,14 @@ void onTick(CBlob@ this)
 		if (shape.vellen > 0.0001f)
 		{
 			if (shape.vellen > 13.5f)
+			{
 				shape.SetGravityScale(0.1f);
+			}
 			else
+			{
 				shape.SetGravityScale(Maths::Min(1.0f, 1.0f / (shape.vellen * 0.1f)));
+			}
+
 
 			processSticking = false;
 		}
@@ -242,7 +247,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		}
 
 		f32 dmg = 0.0f;
-		if (blob.getTeamNum() != this.getTeamNum())
+		if (blob.getTeamNum() != this.getTeamNum() || blob.getName() == "bridge")
 		{
 			dmg = getArrowDamage(this, vellen);
 		}
@@ -331,7 +336,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	}
 
 	//definitely collide with non-team blobs
-	bool check = this.getTeamNum() != blob.getTeamNum();
+	bool check = this.getTeamNum() != blob.getTeamNum() || blob.getName() == "bridge";
 	//maybe collide with team structures
 	if (!check)
 	{
@@ -609,7 +614,7 @@ void FireUp(CBlob@ this)
 	{
 		MakeFireCross(this, burnpos);
 	}
-	else if (isFlammableAt(pos))
+	else
 	{
 		MakeFireCross(this, pos);
 	}
@@ -803,7 +808,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 				speed > ArcherParams::shoot_max_vel * 0.845f &&
 				hitBlob.hasTag("player")
 			) {
-				SetKnocked(hitBlob, 20);
+				setKnocked(hitBlob, 20, true);
 				Sound::Play("/Stun", hitBlob.getPosition(), 1.0f, this.getSexNum() == 0 ? 1.0f : 1.5f);
 			}
 		}
