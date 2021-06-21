@@ -66,6 +66,10 @@ Boulders
 Fall Damage
 - TDM fall damage (takes 1.3x longer falls)
 
+Map Ceiling
+- Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
+- Lightened the sky above the top of the map a bit to improve visibility
+
 Crates
 - Won't break when exiting
 
