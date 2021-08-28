@@ -18,7 +18,7 @@ Food
 - Picking up a food will still change it to that player's team (can catch enemy food but leads to more medic plays)
 
 Hearts
-- (Not enabled by default, need to toggle "hearts ignore team" bool in CRules) Not team based (ignores change above)
+- (Not enabled by default, need to toggle "hearts do not collide" bool in CRules) Not team based (ignores change above)
 - Dont despawn
 - Not account age based
 
@@ -60,8 +60,15 @@ Mounted Bow
 
 Boulders
 - Team based collisions like TDM (allows friendly archers to shoot through them but not enemy)
-- 30 stone instead of 35
+- Cost 30 stone instead of 35 so you can use spawn mats to buy them
 - Can still convert to your team by picking them up
+
+Crates
+- Won't break when exiting
+- Cost 100 wood instead of 150 so you can use spawn mats to buy them
+
+Sponges
+- Cost 10 instead of 15 coins to punish players less financially (a lost inventory slot is already a lot)
 
 Fall Damage
 - TDM fall damage (takes 1.3x longer falls)
@@ -69,9 +76,6 @@ Fall Damage
 Map Ceiling
 - Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
 - Lightened the sky above the top of the map a bit to improve visibility
-
-Crates
-- Won't break when exiting
 
 Coins
 - 2 coins for platforms and wood doors instead of 1
