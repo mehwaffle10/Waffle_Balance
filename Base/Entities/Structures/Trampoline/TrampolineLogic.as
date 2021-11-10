@@ -26,8 +26,8 @@ void onInit(CBlob@ this)
 	// Because BlobPlacement.as is *AMAZING*
 	this.Tag("place norotate");
 
-	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-	point.SetKeysToTake(key_action1 | key_action2);
+	// AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+	// point.SetKeysToTake(key_action1 | key_action2);  Waffle: Make it so you can do all actions while holding a trampoline
 
 	this.getCurrentScript().runFlags |= Script::tick_attached;
 }
