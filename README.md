@@ -74,11 +74,6 @@ Map Ceiling
 - Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
 - Lightened the sky above the top of the map a bit to improve visibility
 
-Coins
-- 2 coins for platforms and wood doors instead of 1
-- 5 whenever hitting a vehicle instead of 5 * damage done
-- 50 coins for breaking a vehicle instead of 20
-
 Bombs
 - Do full damage to stone structures instead of half (3 shot stone doors and tunnels, 2 shot storage)
 - Do 2x damage to wood structures instead of 1.4x (1 shot wood doors, already 1 shot wood buildings)
