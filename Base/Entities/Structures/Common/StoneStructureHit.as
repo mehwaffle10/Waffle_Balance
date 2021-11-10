@@ -20,7 +20,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 
 		case Hitters::bomb:
-			dmg *= 1.0f;
+			dmg *= 1.0f;  // Waffle: Up damage to 3 shot stone doors
 			break;
 
 		case Hitters::keg:

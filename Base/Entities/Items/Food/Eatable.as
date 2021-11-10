@@ -8,6 +8,8 @@ void onInit(CBlob@ this)
 	}
 
 	this.addCommandID(heal_id);
+
+	this.Tag("pushedByDoor");
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
@@ -51,7 +53,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 						bool sameTeam = healer.getTeamNum() == player.getTeamNum();
 						if (!healerHealed && sameTeam)
 						{
-							int coins = this.getName() == "heart" ? 5 : 10;
+							int coins = 10;
 							healer.server_setCoins(healer.getCoins() + coins);
 						}
 					}
@@ -72,7 +74,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		return;
 	}
 
-	if (getNet().isServer() && !blob.hasTag("dead") && (this.getTeamNum() == blob.getTeamNum() || this.getName() == "flowers" || (getRules().get_bool("hearts collide") && this.getName() == "heart")))
+	// Waffle: Make it so hearts only collide with teammates
+	if (getNet().isServer() && !blob.hasTag("dead") && (this.getTeamNum() == blob.getTeamNum() || this.getName() == "flowers" || (!getRules().get_bool("hearts do not collide") && this.getName() == "heart")))
 	{
 		Heal(blob, this);
 	}
@@ -83,6 +86,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	if (this is null || attached is null) {return;}
 
+	// Waffle: Convert to your team on pickup
 	this.server_setTeamNum(attached.getTeamNum());
 
 	if (isServer())

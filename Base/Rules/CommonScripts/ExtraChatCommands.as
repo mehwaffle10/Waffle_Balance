@@ -23,23 +23,23 @@ bool onServerProcessChat(CRules@ this, const string& in text_in, string& out tex
 
 	if (sv_test)
 	{
-		if (text_in == "!siegeframe") // pine tree (seed)
+		if (text_in == "!siegeframe")
 		{
 			CBlob@ siegeblock = server_CreateBlob("siegeblock", team, pos);
 		}
-		else if (text_in == "!siegearmor") // bushy tree (seed)
+		else if (text_in == "!siegearmor")
 		{
 			CBlob@ siegeblock = server_CreateBlob("siegeblock", team, pos);
 			siegeblock.set_bool("armored", true);
 			siegeblock.Sync("armored", true);
 		}
-		else if (text_in == "!siegewheel") // 30 normal arrows, 2 water arrows, 2 fire arrows, 1 bomb arrow (full inventory for archer)
+		else if (text_in == "!siegewheel")
 		{
 			CBlob@ siegeblock = server_CreateBlob("siegeblock", team, pos);
 			siegeblock.set_bool("wheel", true);
 			siegeblock.Sync("wheel", true);
 		}
-		else if (text_in == "!siegeseat") // 3 mats of 30 arrows (90 arrows)
+		else if (text_in == "!siegeseat")
 		{
 			CBlob@ siegeblock = server_CreateBlob("siegeblock", team, pos);
 			siegeblock.set_bool("seat", true);

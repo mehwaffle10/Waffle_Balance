@@ -4,7 +4,7 @@ namespace Trampoline
 {
 	const string TIMER = "trampoline_timer";
 	const u16 COOLDOWN = 7;
-	const u8 SCALAR = 12;
+	const u8 SCALAR = 12;  // Waffle: Increase bounce strength
 	const bool SAFETY = true;
 	const int COOLDOWN_LIMIT = 8;
 }
@@ -22,7 +22,7 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().collideWhenAttached = true;
 
 	this.Tag("no falldamage");
-	// this.Tag("medium weight");
+	// this.Tag("medium weight");  // Waffle: Make the trampoline lighter
 	// Because BlobPlacement.as is *AMAZING*
 	this.Tag("place norotate");
 
@@ -56,6 +56,9 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 	CBlob@ holder = point.getOccupied();
 
+	//choose whether to jump on team trampolines
+	if (blob.hasTag("player") && blob.isKeyPressed(key_down) && this.getTeamNum() == blob.getTeamNum()) return;
+
 	//cant bounce holder
 	if (holder is blob) return;
 
@@ -63,7 +66,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	if (holder !is null && holder.isAttached()) return;
 
 	//prevent knights from flying using trampolines
-	/*
+	/*  // Waffle : Bounce from any angle
 	//get angle difference between entry angle and the facing angle
 	Vec2f pos_delta = (blob.getPosition() - this.getPosition()).RotateBy(90);
 	float delta_angle = Maths::Abs(-pos_delta.Angle() - this.getAngleDegrees());
@@ -110,7 +113,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 		float velocity_angle = direction.AngleWith(velocity_old);
 
-		//if (Maths::Abs(velocity_angle) > 90)
+		//if (Maths::Abs(velocity_angle) > 90)  // Waffle: Make always bounce
 		//{
 		TrampolineCooldown cooldown(netid, getGameTime() + Trampoline::COOLDOWN);
 		cooldowns.push_back(cooldown);

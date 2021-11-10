@@ -4,7 +4,7 @@
 #include "AnimalConsts.as";
 
 const u8 DEFAULT_PERSONALITY = SCARED_BIT;
-const int MAX_EGGS = 4; //maximum symultaneous eggs
+const int MAX_EGGS = 4; //maximum symultaneous eggs  // Waffle: Increase chicken spawning
 const int MAX_CHICKENS = 10;
 const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
 
@@ -31,6 +31,7 @@ void onTick(CSprite@ this)
 			AttachmentPoint@ ap = blob.getAttachmentPoint(0);
 			if (ap !is null && ap.getOccupied() !is null)
 			{
+				// Waffle: Make chicken fly in the air if held
 				if (!blob.isOnGround()) //Maths::Abs(ap.getOccupied().getVelocity().y) > 0.2f)
 				{
 					this.SetAnimation("fly");
@@ -165,6 +166,7 @@ void onTick(CBlob@ this)
 				Vec2f vel = b.getVelocity();
 				if (vel.y > 0.5f)
 				{
+					// Waffle: Increase chicken hover strength
 					b.AddForce(Vec2f(0, -35));
 				}
 			}

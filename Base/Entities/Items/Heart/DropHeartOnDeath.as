@@ -16,6 +16,12 @@ void dropHeart(CBlob@ this)
 
 		if (killer is null || myplayer is null || killer.getUsername() == myplayer.getUsername()) { return; }
 
+		// Waffle: Remove new players not dropping hearts
+		// newb handicap - dont drop hearts from newbs
+		// bool newVictim = Time_DaysSince(myplayer.getRegistrationTime()) <= NEW_AGE;
+		// bool newKiller = Time_DaysSince(killer.getRegistrationTime()) <= NEW_AGE;
+		// if (newVictim && !newKiller) { return; }
+
 		this.Tag("dropped heart");
 
 		if ((XORRandom(1024) / 1024.0f) < probability)
@@ -26,6 +32,7 @@ void dropHeart(CBlob@ this)
 			{
 				Vec2f vel(XORRandom(2) == 0 ? -2.0 : 2.0f, -5.0f);
 				heart.setVelocity(vel);
+				heart.set_u16("healer", killer.getNetworkID());
 			}
 		}
 	}

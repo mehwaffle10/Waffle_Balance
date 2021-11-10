@@ -1,7 +1,7 @@
 
-const int grow_time = 20 * getTicksASecond();
+const int grow_time = 20 * getTicksASecond(); // Waffle: Decrease time to hatch
 
-const int MAX_CHICKENS_TO_HATCH = 10;
+const int MAX_CHICKENS_TO_HATCH = 10; // Waffle: Increase number of chickens we can hatch nearby
 const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
 
 void onInit(CBlob@ this)
