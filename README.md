@@ -40,6 +40,10 @@ Trampoline
 - Increase bounce velocity from 10 to 12
 - Bounce from all angles
 - No longer "medium" weight (no slow down while carrying)
+- Can use M1 and M2 while holding a trampoline
+	- Archers: Shoot arrows and grapple. Arrows always collide with trampoline
+	- Knights: Slash, jab, and shield as normal
+	- Builders: Can only dig, since selecting a block makes you drop what you are holding
 
 Warboats
 - Can't be captured
@@ -73,11 +77,6 @@ Fall Damage
 Map Ceiling
 - Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
 - Lightened the sky above the top of the map a bit to improve visibility
-
-Coins
-- 2 coins for platforms and wood doors instead of 1
-- 5 whenever hitting a vehicle instead of 5 * damage done
-- 50 coins for breaking a vehicle instead of 20
 
 Bombs
 - Do full damage to stone structures instead of half (3 shot stone doors and tunnels, 2 shot storage)
