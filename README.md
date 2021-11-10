@@ -22,9 +22,6 @@ Hearts
 - Dont despawn
 - Not account age based
 
-Boat Shop
-- Doesn't cost gold, doesn't drop gold
-
 Quarries
 - Removed
 
