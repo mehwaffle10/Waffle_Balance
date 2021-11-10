@@ -80,7 +80,6 @@ Coins
 - 50 coins for breaking a vehicle instead of 20
 
 Bombs
-- (Not enabled by default, post thought it seems too strong with the door buffs) Do the same damage to tiles as bomb arrows
 - Do full damage to stone structures instead of half (3 shot stone doors and tunnels, 2 shot storage)
 - Do 2x damage to wood structures instead of 1.4x (1 shot wood doors, already 1 shot wood buildings)
 
