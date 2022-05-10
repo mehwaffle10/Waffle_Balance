@@ -31,6 +31,8 @@ Arrows
 
 Fire Arrows
 - Always flare even if not on flammable surface
+- Ignite instantly on contact
+- Added animation and sound for instant feedback
 
 Mines
 - Deploy after timer like they used to 
