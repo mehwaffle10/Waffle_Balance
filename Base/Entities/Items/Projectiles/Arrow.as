@@ -538,8 +538,9 @@ f32 ArrowHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlo
 			}
 			else
 			{
-				this.server_SetTimeToDie(0.5f);
+				// Waffle: Make fire arrows ignite instantly
 				this.set_Vec2f("override fire pos", hitBlob.getPosition());
+				this.server_Die();
 			}
 		}
 		else
@@ -640,6 +641,15 @@ void FireUp(CBlob@ this)
 	CMap@ map = getMap();
 	if (map is null) return;
 
+	// Waffle: Center the cross on the air not in the block it hits (doesn't use burnpos anymore)
+	Vec2f pos = this.exists("override fire pos") ? this.get_Vec2f("override fire pos") : this.getPosition();
+
+	// Waffle: Make fire arrows always ignite
+	// Waffle: Play burn sound on hit
+	Sound::Play("FireFwoosh.ogg", pos);
+	MakeFireCross(this, pos);
+
+	/*
 	Vec2f pos = this.getPosition();
 	Vec2f head = Vec2f(map.tilesize * 0.8f, 0.0f);
 	f32 angle = this.getAngleDegrees();
@@ -654,10 +664,11 @@ void FireUp(CBlob@ this)
 	{
 		MakeFireCross(this, burnpos);
 	}
-	else  // Waffle: Make fire arrows always ignite
+	else if (isFlammableAt(pos))
 	{
 		MakeFireCross(this, pos);
 	}
+	*/
 }
 
 void MakeFireCross(CBlob@ this, Vec2f burnpos)
@@ -695,17 +706,22 @@ void MakeFireCross(CBlob@ this, Vec2f burnpos)
 		//set map on fire
 		map.server_setFireWorldspace(pos, true);
 
+		// Waffle: Draw fire for client
+		ParticleAnimated(XORRandom(2) == 0 ? "SmallFire1.png" : "SmallFire2.png", pos, Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, true);
+
 		//set blob on fire
 		CBlob@ b = map.getBlobAtPosition(pos);
 		//skip self or nothing there
 		if (b is null || b is this) continue;
 
 		//only hit static blobs
-		CShape@ s = b.getShape();
-		if (s !is null && s.isStatic())
-		{
-			this.server_Hit(b, this.getPosition(), this.getVelocity(), 0.5f, Hitters::fire);
-		}
+		// Waffle: Fire ignites everything and has no knockback
+		// CShape@ s = b.getShape();
+		// if (s !is null && s.isStatic())
+		// {
+		// 	this.server_Hit(b, this.getPosition(), this.getVelocity(), 0.5f, Hitters::fire);
+		// }
+		this.server_Hit(b, this.getPosition(), Vec2f(0, 0), 0.0f, Hitters::fire);
 	}
 }
 
@@ -749,7 +765,7 @@ void onDie(CBlob@ this)
 
 	const u8 arrowType = this.get_u8("arrow type");
 
-	if (arrowType == ArrowType::fire && isServer() && !this.hasTag("no_fire"))
+	if (arrowType == ArrowType::fire && !this.hasTag("no_fire"))
 	{
 		FireUp(this);
 	}
