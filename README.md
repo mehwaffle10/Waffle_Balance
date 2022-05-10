@@ -33,6 +33,8 @@ Fire Arrows
 - Always flare even if not on flammable surface
 - Ignite instantly on contact
 - Added animation and sound for instant feedback
+- Fire arrow flares don't do an extra half heart to things they ignite
+	- Direct arrow hits still do full damge plus burn damage
 
 Mines
 - Deploy after timer like they used to 
