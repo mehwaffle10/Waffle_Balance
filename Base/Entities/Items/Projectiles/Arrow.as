@@ -16,7 +16,8 @@ const f32 arrowFastSpeed = 13.0f;
 const f32 ARROW_PUSH_FORCE = 6.0f;
 const f32 SPECIAL_HIT_SCALE = 1.0f; //special hit on food items to shoot to team-mates
 
-const s32 FIRE_IGNITE_TIME = 5;
+// Waffle: Make fire arrows ignite instantly
+// const s32 FIRE_IGNITE_TIME = 5;
 
 const u32 STUCK_ARROW_DECAY_SECS = 30;
 
@@ -613,7 +614,9 @@ void ArrowHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 c
 	}
 	else if (arrowType == ArrowType::fire)
 	{
-		this.server_SetTimeToDie(FIRE_IGNITE_TIME);
+		// Waffle: Make fire arrows ignite instantly
+		this.server_Die();
+		// this.server_SetTimeToDie(FIRE_IGNITE_TIME);
 	}
 
 	//kill any grain plants we shot the base of
