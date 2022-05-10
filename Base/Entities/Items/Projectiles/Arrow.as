@@ -707,7 +707,7 @@ void MakeFireCross(CBlob@ this, Vec2f burnpos)
 		map.server_setFireWorldspace(pos, true);
 
 		// Waffle: Draw fire for client
-		ParticleAnimated(XORRandom(2) == 0 ? "SmallFire1.png" : "SmallFire2.png", pos, Vec2f(0, 0), 0.0f, 1.0f, 3, 0.0f, true);
+		ParticleAnimated(XORRandom(2) == 0 ? "SmallFire1.png" : "SmallFire2.png", pos, Vec2f(0, 0), 0.0f, 1.0f, 5, 0.0f, true);
 
 		//set blob on fire
 		CBlob@ b = map.getBlobAtPosition(pos);
