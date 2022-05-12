@@ -40,6 +40,12 @@ Water Arrows
 - Only stack to one
 - Cost 20 for one in the shop
 
+Buckets
+- Can only splash once before needing a refill
+
+Sponges
+- Cost 10 instead of 15 coins to punish players less financially (a lost inventory slot is already a lot)
+
 Mines
 - Deploy after timer like they used to 
 - Can still be picked up
@@ -75,9 +81,6 @@ Boulders
 Crates
 - Won't break when exiting
 - Cost 100 wood instead of 150 so you can use spawn mats to buy them
-
-Sponges
-- Cost 10 instead of 15 coins to punish players less financially (a lost inventory slot is already a lot)
 
 Fall Damage
 - TDM fall damage (takes 1.3x longer falls)
