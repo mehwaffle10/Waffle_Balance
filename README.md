@@ -73,10 +73,17 @@ Mounted Bow
 - Health increased from 2 to 20
 - Can fire every 15 ticks instead of every 25 ticks (every .75 seconds instead of 1.25 seconds)
 
+Catapults
+- Rocks ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
+
+Ballista
+- Bolts ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
+
 Boulders
 - Team based collisions like TDM (allows friendly archers to shoot through them but not enemy)
 - Cost 30 stone instead of 35 so you can use spawn mats to buy them
 - Can still convert to your team by picking them up
+- Ignore no build zones when in rock and roll mode, allowing them to destroy backwall in the flag room and behind shops
 
 Crates
 - Won't break when exiting
