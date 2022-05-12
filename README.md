@@ -36,6 +36,10 @@ Fire Arrows
 - Fire arrow flares don't do an extra half heart to things they ignite
 	- Direct arrow hits still do full damge plus burn damage
 
+Water Arrows
+- Only stack to one
+- Cost 20 for one in the shop
+
 Mines
 - Deploy after timer like they used to 
 - Can still be picked up
