@@ -80,6 +80,7 @@ Boulders
 
 Crates
 - Won't break when exiting
+- Heavily reduced air friction
 - Cost 100 wood instead of 150 so you can use spawn mats to buy them
 
 Fall Damage
