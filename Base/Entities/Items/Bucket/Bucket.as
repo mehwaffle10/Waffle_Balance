@@ -6,7 +6,7 @@
 
 const int splash_width = 9;
 const int splash_height = 7;
-const int splashes = 1;
+const int splashes = 1;  // Waffle: Buckets can only splash once
 
 //logic
 void onInit(CBlob@ this)
