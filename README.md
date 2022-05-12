@@ -34,7 +34,7 @@ Fire Arrows
 - Ignite instantly on contact
 - Added animation and sound for instant feedback
 - Fire arrow flares don't do an extra half heart to things they ignite
-	- Direct arrow hits still do full damge plus burn damage
+	- Direct arrow hits still do full damage plus burn damage
 
 Water Arrows
 - Only stack to one
