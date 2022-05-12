@@ -90,6 +90,9 @@ Map Ceiling
 - Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
 - Lightened the sky above the top of the map a bit to improve visibility
 
+Explosives
+- Ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
+
 Bombs
 - Do full damage to stone structures instead of half (3 shot stone doors and tunnels, 2 shot storage)
 - Do 2x damage to wood structures instead of 1.4x (1 shot wood doors, already 1 shot wood buildings)
