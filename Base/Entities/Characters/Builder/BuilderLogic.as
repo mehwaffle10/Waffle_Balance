@@ -238,7 +238,8 @@ void Pickaxe(CBlob@ this)
 {
 	HitData@ hitdata;
 	CSprite @sprite = this.getSprite();
-	bool strikeAnim = sprite.isAnimation("strike") || sprite.isAnimation("chop");
+	// Waffle: Add support for alternate strike animations
+	bool strikeAnim = sprite.isAnimation("slow_strike") || sprite.isAnimation("strike") || sprite.isAnimation("fast_strike") || sprite.isAnimation("chop") || sprite.isAnimation("fast_chop");
 
 	if (!strikeAnim)
 	{
