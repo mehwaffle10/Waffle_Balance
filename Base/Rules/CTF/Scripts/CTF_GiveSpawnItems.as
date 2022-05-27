@@ -30,7 +30,8 @@ bool SetMaterials(CBlob@ blob,  const string &in name, const int quantity)
 
 		mat.server_SetQuantity(quantity);
 
-		if (not blob.server_PutInInventory(mat))
+		// Waffle: Make it so nonbuilder classes drop mats at their feet
+		if (blob.getName() != "builder" || not blob.server_PutInInventory(mat))
 		{
 			mat.setPosition(blob.getPosition());
 		}
@@ -39,11 +40,12 @@ bool SetMaterials(CBlob@ blob,  const string &in name, const int quantity)
 	return true;
 }
 
-bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInfo@ info)
+bool GiveSpawnResources(CRules@ this, CPlayer@ player, CBlob@ blob, string name, CTFPlayerInfo@ info)
 {
 	bool ret = false;
 
-	if (blob.getName() == "builder")
+	// Waffle: Refactor to spawn based on class name not player class
+	if (name == "builder")
 	{
 		if (this.isWarmup())
 		{
@@ -62,7 +64,7 @@ bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInf
 			info.items_collected |= ItemFlag::Builder;
 		}
 	}
-	else if (blob.getName() == "archer")
+	else if (name == "archer")
 	{
 		ret = SetMaterials(blob, "mat_arrows", 30) || ret;
 
@@ -71,7 +73,7 @@ bool GiveSpawnResources(CRules@ this, CBlob@ blob, CPlayer@ player, CTFPlayerInf
 			info.items_collected |= ItemFlag::Archer;
 		}
 	}
-	else if (blob.getName() == "knight")
+	else if (name == "knight")
 	{
 		if (ret)
 		{
@@ -118,59 +120,56 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	}
 }
 
-bool canGetSpawnmats(CRules@ this, CPlayer@ p, RulesCore@ core)
+bool canGetSpawnmats(CRules@ this, CPlayer@ p, string name, RulesCore@ core)
 {
-	s32 next_items = getCTFTimer(this, p);
+	s32 next_items = getCTFTimer(this, p, name);
 	s32 gametime = getGameTime();
 
 	CTFPlayerInfo@ info = cast < CTFPlayerInfo@ > (core.getInfoFromPlayer(p));
 
 	if (gametime > next_items)		// timer expired
 	{
-		info.items_collected = 0; //reset available class items
-		return true;
-	}
-	else //trying to get new class items, give a guy a break
-	{
-		u32 items = info.items_collected;
 		u32 flag = 0;
 
-		CBlob@ b = p.getBlob();
-		string name = b.getName();
 		if (name == "builder")
-			flag = ItemFlag::Builder;
-		else if (name == "knight")
-			flag = ItemFlag::Knight;
-		else if (name == "archer")
-			flag = ItemFlag::Archer;
-
-		if (info.items_collected & flag == 0)
 		{
-			return true;
+			flag = ItemFlag::Builder;
 		}
+		else if (name == "knight")
+		{
+			flag = ItemFlag::Knight;
+		}
+		else if (name == "archer")
+		{
+			flag = ItemFlag::Archer;
+		}
+		info.items_collected &= ~flag; // reset available class item
+		return true;
 	}
 
 	return false;
-
 }
 
-string getCTFTimerPropertyName(CPlayer@ p)
+string getCTFTimerPropertyName(CPlayer@ p, string name)
 {
-	return SPAWN_ITEMS_TIMER + p.getUsername();
+	// Waffle: Make spawn timers class specific
+	return SPAWN_ITEMS_TIMER + p.getUsername() + name;
 }
 
-s32 getCTFTimer(CRules@ this, CPlayer@ p)
+s32 getCTFTimer(CRules@ this, CPlayer@ p, string name)
 {
-	string property = getCTFTimerPropertyName(p);
+	// Waffle: Make spawn timers class specific
+	string property = getCTFTimerPropertyName(p, name);
 	if (this.exists(property))
 		return this.get_s32(property);
 	else
 		return 0;
 }
 
-void SetCTFTimer(CRules@ this, CPlayer@ p, s32 time)
+void SetCTFTimer(CRules@ this, CPlayer@ p, string name, s32 time)
 {
-	string property = getCTFTimerPropertyName(p);
+	// Waffle: Make spawn timers class specific
+	string property = getCTFTimerPropertyName(p, name);
 	this.set_s32(property, time);
 	this.SyncToPlayer(property, p);
 }
@@ -179,16 +178,27 @@ void SetCTFTimer(CRules@ this, CPlayer@ p, s32 time)
 //prevents dying over and over, and allows getting more mats throughout the game
 void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b, RulesCore@ core)
 {
-	if (canGetSpawnmats(this, p, core))
+	// Waffle: Make spawn timers class specific
+	string[] names = {"builder", "knight", "archer"};
+
+	for (u8 i = 0; i < names.length(); i++)
 	{
-		s32 gametime = getGameTime();
+		string name = names[i];
 
-		CTFPlayerInfo@ info = cast < CTFPlayerInfo@ > (core.getInfoFromPlayer(p));
-
-		bool gotmats = GiveSpawnResources(this, b, p, info);
-		if (gotmats)
+		if (canGetSpawnmats(this, p, name, core))
 		{
-			SetCTFTimer(this, p, gametime + (this.isWarmup() ? materials_wait_warmup : materials_wait)*getTicksASecond());
+			if (name == b.getName() || this.isWarmup() && name == "builder")
+			{
+				s32 gametime = getGameTime();
+
+				CTFPlayerInfo@ info = cast < CTFPlayerInfo@ > (core.getInfoFromPlayer(p));
+
+				bool gotmats = GiveSpawnResources(this, p, b, name, info);
+				if (gotmats)
+				{
+					SetCTFTimer(this, p, name, gametime + (this.isWarmup() ? materials_wait_warmup : materials_wait)*getTicksASecond());
+				}
+			}
 		}
 	}
 }
@@ -197,9 +207,17 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b, RulesCore@ core)
 
 void Reset(CRules@ this)
 {
+	// Waffle: Make spawn timers class specific
+	string[] names = {"builder", "knight", "archer"};
+
 	//restart everyone's timers
 	for (uint i = 0; i < getPlayersCount(); ++i)
-		SetCTFTimer(this, getPlayer(i), 0);
+	{
+		for (u8 j = 0; j < names.length(); j++)
+		{
+			SetCTFTimer(this, getPlayer(i), names[j], 0);
+		}
+	}
 }
 
 void onRestart(CRules@ this)
@@ -228,7 +246,7 @@ void onTick(CRules@ this)
 	if (core !is null)
 	{
 		// Waffle: Always give spawn mats during warmup
-		if (this.getCurrentState() == WARMUP)
+		if (this.isWarmup())
 		{
 			for (u8 i = 0; i < getPlayerCount(); i++)
 			{
@@ -289,28 +307,32 @@ void onRender(CRules@ this)
 	CPlayer@ p = getLocalPlayer();
 	if (p is null || !p.isMyPlayer()) { return; }
 
-	string propname = getCTFTimerPropertyName(p);
 	CBlob@ b = p.getBlob();
-	if (b !is null && this.exists(propname))
+	if (b !is null)
 	{
-		s32 next_items = this.get_s32(propname);
-		if (next_items > getGameTime())
+		// Waffle: Make spawn timers class specific
+		string propname = getCTFTimerPropertyName(p, b.getName());
+		if (this.exists(propname))
 		{
-			string action = (b.getName() == "builder" ? "Go Build" : "Go Fight");
-			if (this.isWarmup())
+			s32 next_items = this.get_s32(propname);
+			if (next_items > getGameTime())
 			{
-				action = "Prepare for Battle";
-			}
+				string action = (b.getName() == "builder" ? "Go Build" : "Go Fight");
+				if (this.isWarmup())
+				{
+					action = "Prepare for Battle";
+				}
 
-			u32 secs = ((next_items - 1 - getGameTime()) / getTicksASecond()) + 1;
-			string units = ((secs != 1) ? " seconds" : " second");
-			GUI::SetFont("menu");
-			GUI::DrawTextCentered(getTranslatedString("Next resupply in {SEC}{TIMESUFFIX}, {ACTION}!")
-							.replace("{SEC}", "" + secs)
-							.replace("{TIMESUFFIX}", getTranslatedString(units))
-							.replace("{ACTION}", getTranslatedString(action)),
-			              Vec2f(getScreenWidth() / 2, getScreenHeight() / 3 - 70.0f + Maths::Sin(getGameTime() / 3.0f) * 5.0f),
-			              SColor(255, 255, 55, 55));
+				u32 secs = ((next_items - 1 - getGameTime()) / getTicksASecond()) + 1;
+				string units = ((secs != 1) ? " seconds" : " second");
+				GUI::SetFont("menu");
+				GUI::DrawTextCentered(getTranslatedString("Next resupply in {SEC}{TIMESUFFIX}, {ACTION}!")
+								.replace("{SEC}", "" + secs)
+								.replace("{TIMESUFFIX}", getTranslatedString(units))
+								.replace("{ACTION}", getTranslatedString(action)),
+							Vec2f(getScreenWidth() / 2, getScreenHeight() / 3 - 70.0f + Maths::Sin(getGameTime() / 3.0f) * 5.0f),
+							SColor(255, 255, 55, 55));
+			}
 		}
 	}
 }
