@@ -90,13 +90,6 @@ Crates
 - Heavily reduced air friction
 - Cost 100 wood instead of 150 so you can use spawn mats to buy them
 
-Fall Damage
-- TDM fall damage (takes 1.3x longer falls)
-
-Map Ceiling
-- Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
-- Lightened the sky above the top of the map a bit to improve visibility
-
 Explosives
 - Ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 
@@ -113,5 +106,21 @@ Slash/Arrow/Jab
 	- wood doors have 7 health
 	- platforms have 5 health
 
-Digging
+Builder
+- Increased swing speed on man-made structures
+- Decreased swing speed on dirt
+
+Knight and Builder
 - Double damage for digging wood or stone (3 hits for wood block, 4 for stone block)
+
+Fall Damage
+- TDM fall damage (takes 1.3x longer falls)
+
+Resupply
+- Always gives resupplies during build phase
+- Nonbuilders drop builder resupplies during build phase
+- Class specific rather than global (swapping to archer after resupplying as a builder won't reset your builder resupply timer)
+
+Map Ceiling
+- Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
+- Lightened the sky above the top of the map a bit to improve visibility
