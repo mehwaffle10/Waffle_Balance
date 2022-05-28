@@ -283,7 +283,7 @@ void SetBuildDelay(CBlob@ this)
 
 void SetBuildDelay(CBlob@ this, uint time)
 {
-	
+	// Waffle: Players build 3x as faster during build phase
 	this.set_u32("build time", getGameTime() + (getRules().isWarmup() ? time / 3 : time));
 }
 

@@ -190,7 +190,6 @@ void onTick(CSprite@ this)
 						}
 
 						// Waffle: Add support for digging man made blocks faster
-						print(attacked_name);
 						if (attacked.hasTag("door")		||  // Wood and Stone Doors
 							attacked.isPlatform()		||  // Platforms and Trap Bridges
 							attacked_name == "ladder" 	||
