@@ -109,6 +109,7 @@ Slash/Arrow/Jab
 Builder
 - Increased swing speed on man-made structures
 - Decreased swing speed on dirt
+- Greatly increased build speed during build phase
 
 Knight and Builder
 - Double damage for digging wood or stone (3 hits for wood block, 4 for stone block)
