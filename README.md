@@ -121,6 +121,9 @@ Resupply
 - Nonbuilders drop builder resupplies during build phase
 - Class specific rather than global (swapping to archer after resupplying as a builder won't reset your builder resupply timer)
 
+Flag Room
+- Increased size from 3x5 to 5x6
+
 Map Ceiling
 - Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
 - Lightened the sky above the top of the map a bit to improve visibility
