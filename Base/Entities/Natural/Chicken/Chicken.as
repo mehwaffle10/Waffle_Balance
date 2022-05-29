@@ -124,6 +124,12 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	return !blob.hasTag("flesh");
 }
 
+// Waffle: Prevent friendly players from killing your chicken
+void onAttach( CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint )
+{
+	this.server_setTeamNum(attached.getTeamNum());
+}
+
 void onTick(CBlob@ this)
 {
 	f32 x = this.getVelocity().x;
