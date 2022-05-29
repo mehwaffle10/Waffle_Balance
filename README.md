@@ -11,7 +11,7 @@ Eggs
 Chickens
 - Hover no longer decays
 - Dies if player holding it takes damage from an enemy
-- Max horizontal speed decreased with strong decay of speeds above threshold
+- Max horizontal speed decreased with strong decay of speeds above threshold while in the air
 - Can now be burned
 - Can have up to 4 simultaneous eggs instead of 2
 - Can have up to 10 chickens in close proximity instead of 6
