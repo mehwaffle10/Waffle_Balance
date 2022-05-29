@@ -284,7 +284,6 @@ void SetBuildDelay(CBlob@ this)
 void SetBuildDelay(CBlob@ this, uint time)
 {
 	// Waffle: Players build 3x as faster during build phase
-	print("" + getRules().get_u8("Synced State"));
 	this.set_u32("build time", getGameTime() + (getRules().get_u8("Synced State") == WARMUP ? time / 3 : time));
 }
 
