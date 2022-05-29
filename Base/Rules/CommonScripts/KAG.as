@@ -87,7 +87,7 @@ void onBlobCreated(CRules@ this, CBlob@ blob)
 {
 	if (blob !is null && this !is null && !this.get_bool("collide with ceiling"))
 	{
-		blob.SetMapEdgeFlags(CBlob::map_collide_sides);
+		blob.SetMapEdgeFlags(blob.getMapEdgeFlags() & ~CBlob::map_collide_up);
 	}
 }
 
