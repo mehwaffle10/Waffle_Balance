@@ -128,6 +128,18 @@ void onAttach( CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint )
 {
 	// Waffle: Prevent friendly players from killing your chicken
 	this.server_setTeamNum(attached.getTeamNum());
+
+	// Waffle: Damage taken also hits chickens
+	attached.AddScript("HitHeld.as");
+}
+
+void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
+{
+	// Waffle: Only hit held chickens
+	if (detached.hasScript("HitHeld.as"))
+	{
+		detached.RemoveScript("HitHeld.as");
+	}
 }
 
 void onTick(CBlob@ this)
