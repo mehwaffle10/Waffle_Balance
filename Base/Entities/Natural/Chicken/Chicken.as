@@ -189,7 +189,7 @@ void onTick(CBlob@ this)
 				}
 
 				// Waffle: Strong horizontal movement decay
-				if (Maths::Abs(vel.x) > 1.5f)
+				if (!b.isOnGround() && Maths::Abs(vel.x) > 1.5f)
 				{
 					b.AddForce(Vec2f(35 * (vel.x > 0 ? -1 : 1), 0));
 				}
