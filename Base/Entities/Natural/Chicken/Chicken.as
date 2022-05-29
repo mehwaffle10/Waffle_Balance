@@ -124,9 +124,9 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	return !blob.hasTag("flesh");
 }
 
-// Waffle: Prevent friendly players from killing your chicken
 void onAttach( CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint )
 {
+	// Waffle: Prevent friendly players from killing your chicken
 	this.server_setTeamNum(attached.getTeamNum());
 }
 
@@ -174,6 +174,12 @@ void onTick(CBlob@ this)
 				{
 					// Waffle: Increase chicken hover strength
 					b.AddForce(Vec2f(0, -35));
+				}
+
+				// Waffle: Strong horizontal movement decay
+				if (Maths::Abs(vel.x) > 1.5f)
+				{
+					b.AddForce(Vec2f(35 * (vel.x > 0 ? -1 : 1), 0));
 				}
 			}
 		}
