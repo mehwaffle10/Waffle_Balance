@@ -61,6 +61,7 @@ Trampoline
 	- Archers: Shoot arrows and grapple. Arrows always collide with trampoline
 	- Knights: Slash, jab, and shield as normal
 	- Builders: Can only dig, since selecting a block makes you drop what you are holding
+- Can bounce boulders into rock and roll mode
 
 Warboats
 - Can't be captured
@@ -82,11 +83,14 @@ Catapults
 Ballista
 - Bolts ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 
-Boulders
+Boulders (Rock and roll mode is the block destroying mode like when launched from a catapult)
 - Team based collisions like TDM (allows friendly archers to shoot through them but not enemy)
 - Cost 30 stone instead of 35 so you can use spawn mats to buy them
 - Can still convert to your team by picking them up
 - Ignore no build zones when in rock and roll mode, allowing them to destroy backwall in the flag room and behind shops
+- Can be bounced off a trampoline to activate rock and roll mode
+- Tick faster in rock and roll mode (damage happens faster so it will blow holes in walls rather than phase through and break blocks intermittently)
+- Can break static blobs (doors, platforms, etc) in rock and roll mode
 
 Crates
 - Won't break when exiting
