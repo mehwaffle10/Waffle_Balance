@@ -42,8 +42,17 @@ void onTick(CBlob@ this)
 	Vec2f ray = holder.getAimPos() - this.getPosition();
 	ray.Normalize();
 
+	// Waffle: Make it rotate vertical as well
 	f32 angle = ray.Angle();
-	angle = angle > 135 || angle < 45? (holder.isFacingLeft()? 135 : 45) : 90;
+	if (angle > 180)
+	{
+		angle = holder.isFacingLeft() ? 180 : 0;
+	}
+	else
+	{
+		angle = angle > 135 || angle < 45 ? (holder.isFacingLeft() ? 135 : 45) : 90;
+	}
+	
 	angle -= 90;
 
 	this.setAngleDegrees(-angle);
@@ -122,6 +131,13 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		velocity.RotateBy(angle);
 
 		blob.setVelocity(velocity);
+
+		// Waffle: Boulders enter rock and roll mode when bouncing
+		if (blob.getName() == "boulder")
+		{
+			blob.getShape().getConsts().mapCollisions = false;
+			blob.getShape().getConsts().collidable = false;
+		}
 
 		CSprite@ sprite = this.getSprite();
 		if (sprite !is null)

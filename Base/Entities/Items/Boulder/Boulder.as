@@ -1,7 +1,8 @@
 #include "/Entities/Common/Attacks/Hitters.as";
 #include "/Entities/Common/Attacks/LimitedAttacks.as";
 
-const int pierce_amount = 8;
+// Waffle: Increase limit to include backwall
+const int pierce_amount = 9;
 
 const f32 hit_amount_ground = 0.5f;
 const f32 hit_amount_air = 1.0f;
@@ -22,7 +23,7 @@ void onInit(CBlob @ this)
 
 	// damage
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	this.getCurrentScript().tickFrequency = 3;
+	this.getCurrentScript().tickFrequency = 1;
 }
 
 void onTick(CBlob@ this)
@@ -94,16 +95,32 @@ void Slam(CBlob @this, f32 angle, Vec2f vel, f32 vellen)
 
 	// chew through backwalls
 
-	Tile tile = map.getTile(pos);
-	if (map.isTileBackgroundNonEmpty(tile))
+	// Waffle: Fix bug where it could break dirt and bedrock when trying to hit backwall bouncing off a trampoline
+	u16 type = map.getTile(pos).type;
+	if (type == CMap::tile_wood_back 	 	||  // Wood Backwall
+		type == 207 					 	||  // Damaged Wood Backwall
+		type == CMap::tile_castle_back 	||  // Stone Backwall
+		type >= 76 && type <= 79	 	||  // Damaged Stone Backwall
+		type == CMap::tile_castle_back_moss)  // Mossy Stone Backwall
 	{
 		// Waffle: Ignore no build zones
 		// if (map.getSectorAtPosition(pos, "no build") !is null)
 		// {
 		// 	return;
 		// }
-		map.server_DestroyTile(pos + Vec2f(7.0f, 7.0f), 10.0f, this);
-		map.server_DestroyTile(pos - Vec2f(7.0f, 7.0f), 10.0f, this);
+
+		// Waffle: Backwall counts towards total too
+		u8 blocks_pierced = this.get_u8("blocks_pierced");
+		if (blocks_pierced < pierce_amount)
+		{
+			map.server_DestroyTile(pos + Vec2f(7.0f, 7.0f), 10.0f, this);
+			map.server_DestroyTile(pos - Vec2f(7.0f, 7.0f), 10.0f, this);
+			this.set_u8("blocks_pierced", blocks_pierced + 1);
+		}
+		else
+		{
+			this.server_Hit(this, this.getPosition(), vel, 10, Hitters::crush, true);
+		}
 	}
 }
 
@@ -167,6 +184,21 @@ bool BoulderHitMap(CBlob@ this, Vec2f worldPoint, int tileOffset, Vec2f velocity
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1)
 {
+	// Waffle: Hit static blobs in rock and roll mode
+	if (!this.getShape().getConsts().collidable && blob !is null && blob.getShape() !is null && blob.getShape().isStatic())
+	{
+		u8 blocks_pierced = this.get_u8("blocks_pierced");
+		if (blocks_pierced < pierce_amount)
+		{
+			this.server_Hit(blob, point1, this.getOldVelocity(), 10, Hitters::boulder, true);
+			this.set_u8("blocks_pierced", blocks_pierced + 1);
+		}
+		else
+		{
+			this.server_Hit(this, point1, this.getOldVelocity(), 10, Hitters::crush, true);
+		}
+	}
+
 	if (solid && blob !is null)
 	{
 		Vec2f hitvel = this.getOldVelocity();
