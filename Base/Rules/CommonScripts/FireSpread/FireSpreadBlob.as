@@ -20,7 +20,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
             offset -= Vec2f(0, getMap().tilesize);
         }
 
-        print("worldPoint: " + worldPoint + " Position: " + this.getPosition() + " Angle: " + this.getAngleDegrees() + " Width: " + this.getWidth() + " Height: " + this.getHeight() + " offset: " + offset);
         CShape@ shape = this.getShape();
         FireSpread(worldPoint - offset, shape is null || shape.isStatic());
     }
