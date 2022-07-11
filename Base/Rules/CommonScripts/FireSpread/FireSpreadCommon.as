@@ -1,5 +1,5 @@
 
-void FireSpread(Vec2f world_pos)
+void FireSpread(Vec2f world_pos, bool static)
 {
     if (!isServer())
     {
@@ -11,9 +11,18 @@ void FireSpread(Vec2f world_pos)
     world_pos += Vec2f(1.0f, 1.0f) * map.tilesize / 2;
     
     // Ignite target locations
-    for (u8 i = 0; i < 2; i++)
+    if (static)
     {
-        Vec2f target = map.getAlignedWorldPos(world_pos) + Vec2f(1 - XORRandom(3), 1 - XORRandom(3)) * map.tilesize + Vec2f(map.tilesize, map.tilesize) / 2;
+        for (u8 i = 0; i < 2; i++)
+        {
+            Vec2f target = map.getAlignedWorldPos(world_pos) + Vec2f(1 - XORRandom(3), 1 - XORRandom(3)) * map.tilesize + Vec2f(map.tilesize, map.tilesize) / 2;
+            map.server_setFireWorldspace(target, true);
+            params.write_Vec2f(target);
+        }
+    }
+    else
+    {
+        Vec2f target = map.getAlignedWorldPos(world_pos) + Vec2f(map.tilesize, map.tilesize) / 2;
         map.server_setFireWorldspace(target, true);
         params.write_Vec2f(target);
     }

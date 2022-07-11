@@ -17,7 +17,8 @@ void addFireScript()
 
 void onBlobCreated(CRules@ this, CBlob@ blob)
 {
-    if (!blob.hasTag("player"))
+    CShape@ shape = blob.getShape();
+    if (!blob.hasTag("player") && shape !is null && shape.getConsts() !is null && shape.getConsts().isFlammable)
     {
         blob.AddScript("FireSpreadBlob.as");
     }
