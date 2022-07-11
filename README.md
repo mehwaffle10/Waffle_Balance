@@ -28,6 +28,12 @@ Hearts
 Quarries
 - Removed
 
+Drills
+- Dig pure dirt 3x slower and properly detected
+- Water slowdown is now double instead of a fixed rate
+	- Digging dirt in water is excruciatingly slow
+	- Digging resources is slightly faster (16 tick delay instead of 20)
+
 Arrows
 - Collide with enemy arrows
 - Have 5x the amount of health (will last 5x longer when climbed on)
