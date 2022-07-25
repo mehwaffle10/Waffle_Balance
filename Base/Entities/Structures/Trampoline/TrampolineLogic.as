@@ -133,8 +133,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 		blob.setVelocity(velocity);
 
-		// Waffle: Boulders enter rock and roll mode when bouncing
-		if (blob.getName() == "boulder")
+		// Waffle: Boulders enter rock and roll mode when bouncing off a trampoline held by a player
+		if (holder !is null && holder.hasTag("player") && blob.getName() == "boulder")
 		{
 			blob.getShape().getConsts().mapCollisions = false;
 			blob.getShape().getConsts().collidable = false;
