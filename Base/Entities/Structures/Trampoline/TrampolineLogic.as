@@ -66,7 +66,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	CBlob@ holder = point.getOccupied();
 
 	//choose whether to jump on team trampolines
-	if (blob.hasTag("player") && blob.isKeyPressed(key_down) && this.getTeamNum() == blob.getTeamNum()) return;
+	// Waffle: Swap it to holding up to bounce rather than holding down to not bounce
+	if (blob.hasTag("player") && !blob.isKeyPressed(key_up) && this.getTeamNum() == blob.getTeamNum()) return;
 
 	//cant bounce holder
 	if (holder is blob) return;
