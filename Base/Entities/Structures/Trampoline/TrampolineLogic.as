@@ -4,7 +4,7 @@ namespace Trampoline
 {
 	const string TIMER = "trampoline_timer";
 	const u16 COOLDOWN = 7;
-	const u8 SCALAR = 12;  // Waffle: Increase bounce strength
+	const u8 SCALAR = 11;  // Waffle: Increase bounce strength
 	const bool SAFETY = true;
 	const int COOLDOWN_LIMIT = 8;
 }
