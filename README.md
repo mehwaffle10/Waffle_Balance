@@ -30,6 +30,8 @@ Quarries
 
 Drills
 - Dig pure dirt 3x slower and properly detected (30 ticks instead of 10)
+- Digging pure dirt overheats the drill incredibly fast
+	- Will even overheat in water
 - Water slowdown is now double instead of a fixed rate
 	- Digging pure dirt in water is excruciatingly slow (60 ticks)
 	- Digging resources is slightly faster (16 tick delay instead of 20)
@@ -60,14 +62,15 @@ Mines
 - Can still be picked up
 
 Trampoline
-- Increase bounce velocity from 10 to 12
+- Increase bounce velocity from 10 to 11
 - Bounce from all angles
 - No longer "medium" weight (no slow down while carrying)
 - Can use M1 and M2 while holding a trampoline
 	- Archers: Shoot arrows and grapple. Arrows always collide with trampoline
 	- Knights: Slash, jab, and shield as normal
 	- Builders: Can only dig, since selecting a block makes you drop what you are holding
-- Can bounce boulders into rock and roll mode
+- Can bounce boulders into rock and roll mode if a player is holding the trampoline
+- Now cost 100 wood and 80 coins so they can be bought with spawn mats but are less spammable
 
 Warboats
 - Can't be captured
