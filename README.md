@@ -31,7 +31,7 @@ Quarries
 Drills
 - Dig pure dirt 3x slower and properly detected (30 ticks instead of 10)
 - Digging pure dirt overheats the drill incredibly fast
-	- Will even overheat in water
+	- Will overheat even in water
 - Water slowdown is now double instead of a fixed rate
 	- Digging pure dirt in water is excruciatingly slow (60 ticks)
 	- Digging resources is slightly faster (16 tick delay instead of 20)
