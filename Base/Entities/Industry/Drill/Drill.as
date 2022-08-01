@@ -253,8 +253,7 @@ void onTick(CBlob@ this)
 			else
 			{
 				this.set_u32(last_drill_prop, gametime); // update last drill time
-				// Waffle: Default to only hitting dirt
-				this.set_bool("just hit dirt", true);	
+				this.set_bool("just hit dirt", false);
 				this.Sync("just hit dirt", true);
 			}
 
@@ -279,6 +278,7 @@ void onTick(CBlob@ this)
 					if (map.getHitInfosFromArc((this.getPosition() - attackVel), -attackVel.Angle(), 30, distance, this, true, @hitInfos))
 					{
 						bool hit_ground = false;
+						bool hit_nondirt = false;
 						for (uint i = 0; i < hitInfos.length; i++)
 						{
 							f32 attack_dam = 1.0f;
@@ -329,6 +329,7 @@ void onTick(CBlob@ this)
 
 								hitsomething = true;
 								hitblob = true;
+								hit_nondirt = true;
 							}
 							else // map
 							{
@@ -358,11 +359,10 @@ void onTick(CBlob@ this)
 										
 										// Waffle: Only slowdown when hitting pure dirt
 										// if (map.isTileGround(tile)) || map.isTileStone(tile) || map.isTileThickStone(tile)) 
-										if (!(tile == CMap::tile_ground || // Dirt Blocks
-											  tile >= 29 && tile <= 31))   // Damaged Dirt Blocks
+										if (tile == CMap::tile_ground || // Dirt Blocks
+											tile >= 29 && tile <= 31)   // Damaged Dirt Blocks
 										{
-											this.set_bool("just hit dirt", false);
-											this.Sync("just hit dirt", true);
+											hit_nondirt = true;
 										}
 
 									}
@@ -413,6 +413,11 @@ void onTick(CBlob@ this)
 								hitsomething = false;
 								hitblob = false;
 							}
+						}
+						if (hit_nondirt)
+						{
+							this.set_bool("just hit dirt", false);
+							this.Sync("just hit dirt", true);
 						}
 					}
 				}
