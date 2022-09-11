@@ -59,16 +59,36 @@ void onTick(CBlob@ this)
 				{
 					for (int y = -40; y < 8; y += 8)
 					{
-						map.server_SetTile(pos + Vec2f(x, y), CMap::tile_empty);
+						Vec2f target = pos + Vec2f(x, y);
+						Tile t = map.getTile(target);
+						if (t.type == CMap::tile_ground)
+						{
+							map.server_SetTile(target, CMap::tile_ground_back);
+						}
+						else if (map.isTileWood(t.type))
+						{
+							map.server_SetTile(target, CMap::tile_wood_back);
+						}
+						else if (t.type == CMap::tile_castle_moss)
+						{
+							map.server_SetTile(target, CMap::tile_castle_back_moss);
+						}
+						else if (map.isTileCastle(t.type))
+						{
+							map.server_SetTile(target, CMap::tile_castle_back);
+						}
 					}
 				}
 
 				// Waffle: Flag base is now five wide
-				map.server_SetTile(pos + Vec2f(-16, 12), CMap::tile_bedrock);
-				map.server_SetTile(pos + Vec2f(-8, 12), CMap::tile_bedrock);
-				map.server_SetTile(pos + Vec2f(0, 12), CMap::tile_bedrock);
-				map.server_SetTile(pos + Vec2f(8, 12), CMap::tile_bedrock);
-				map.server_SetTile(pos + Vec2f(16, 12), CMap::tile_bedrock);
+				for (int x = -16; x <= 16; x += 8)
+				{
+					Vec2f target = pos + Vec2f(x, 12);
+					if (!map.isTileBedrock(map.getTile(target).type))
+					{
+						map.server_SetTile(target, CMap::tile_bedrock);
+					}
+				}
 
 				this.set_Vec2f("stick position", this.getPosition());
 			}
