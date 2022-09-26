@@ -81,6 +81,7 @@ Warboats
 Longboats
 - Doesn't break on land or if flipped (or if left alone???)
 - Doesn't sink on low health
+- Captured much quicker
 
 Mounted Bow
 - Health increased from 2 to 20
@@ -88,9 +89,12 @@ Mounted Bow
 
 Catapults
 - Rocks ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
+- Captured much quicker
 
 Ballista
 - Bolts ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
+- Captured much quicker
+- No longer function as spawn points
 
 Boulders (Rock and roll mode is the block destroying mode like when launched from a catapult)
 - Team based collisions like TDM (allows friendly archers to shoot through them but not enemy)
