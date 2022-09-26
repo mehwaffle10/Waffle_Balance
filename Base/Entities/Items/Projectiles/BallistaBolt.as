@@ -152,8 +152,9 @@ void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
 
 			if (blob !is null)
 			{
-				if (blob.getShape().getConsts().platform && !CollidesWithPlatform(this, blob, velocity))
-					continue;
+				// Waffle: Catapults can't shoot through platforms
+				// if (blob.getShape().getConsts().platform && !CollidesWithPlatform(this, blob, velocity))
+				// 	continue;
 
 				if (!doesCollideWithBlob(this, blob) || LimitedAttack_has_hit_actor(this, blob))
 					continue;

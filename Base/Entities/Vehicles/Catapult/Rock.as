@@ -188,8 +188,9 @@ void Pierce(CBlob @this)
 
 			if (hi.blob !is null) // blob
 			{
-				if (hi.blob.getShape().getConsts().platform && !CollidesWithPlatform(this, hi.blob, this.getVelocity()))
-				return;
+				// Waffle: Catapults can't shoot through platforms
+				// if (hi.blob.getShape().getConsts().platform && !CollidesWithPlatform(this, hi.blob, this.getVelocity()))
+				// return;
 
 				if (canHitBlob(this, hi.blob))
 				{
