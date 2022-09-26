@@ -90,10 +90,12 @@ Mounted Bow
 Catapults
 - Rocks ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - Captured much quicker
+- Can no longer shoot through platforms
 
 Ballista
 - Bolts ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - Captured much quicker
+- Can no longer shoot through platforms
 - No longer function as spawn points
 
 Boulders (Rock and roll mode is the block destroying mode like when launched from a catapult)
