@@ -30,8 +30,10 @@ namespace CTFCosts
 	//BoatShop.as
 	s32 dinghy, dinghy_wood, longboat, longboat_wood, warboat, warboat_gold;
 
+	// Waffle: Remove outposts
 	//VehicleShop.as
-	s32 catapult, ballista, ballista_gold, ballista_ammo, ballista_bomb_ammo;
+	s32 catapult, ballista, ballista_gold, ballista_ammo, ballista_bomb_ammo;  // outpost_coins, outpost_gold;
+
 
 	//Quarters.as
 	s32 beer, meal, egg, burger;
@@ -103,7 +105,7 @@ void InitCosts()
 
 	//ArcherShop.as
 	CTFCosts::arrows =                      ReadCost(cfg, "cost_arrows"             , 15);
-	CTFCosts::waterarrows =                 ReadCost(cfg, "cost_waterarrows"        , 20);
+	CTFCosts::waterarrows =                 ReadCost(cfg, "cost_waterarrows"        , 15);
 	CTFCosts::firearrows =                  ReadCost(cfg, "cost_firearrows"         , 30);
 	CTFCosts::bombarrows =                  ReadCost(cfg, "cost_bombarrows"         , 50);
 
@@ -118,9 +120,9 @@ void InitCosts()
 	CTFCosts::bucket_wood =                 ReadCost(cfg, "cost_bucket_wood"        , 10);
 	CTFCosts::filled_bucket =               ReadCost(cfg, "cost_filled_bucket"      , 10);
 	CTFCosts::sponge =                      ReadCost(cfg, "cost_sponge"             , 15);
-	CTFCosts::boulder_stone =               ReadCost(cfg, "cost_boulder_stone"      , 35);
-	CTFCosts::trampoline =             		ReadCost(cfg, "cost_trampoline"    		, 80);
-	CTFCosts::trampoline_wood =             ReadCost(cfg, "cost_trampoline_wood"    , 100);
+	CTFCosts::boulder_stone =               ReadCost(cfg, "cost_boulder_stone"      , 30);   // Waffle: Boulders only cost stone from a single resupply
+	CTFCosts::trampoline =             		ReadCost(cfg, "cost_trampoline"    		, 80);   // Waffle: Trampolines cost coins alongside the wood
+	CTFCosts::trampoline_wood =             ReadCost(cfg, "cost_trampoline_wood"    , 100);  // Waffle: Trampolines only cost wood from a single resupply
 	CTFCosts::saw_wood =                    ReadCost(cfg, "cost_saw_wood"           , 150);
 	CTFCosts::saw_stone =                   ReadCost(cfg, "cost_saw_stone"          , 100);
 	CTFCosts::drill_stone =                 ReadCost(cfg, "cost_drill_stone"        , 100);
@@ -142,6 +144,8 @@ void InitCosts()
 	CTFCosts::ballista_gold =               ReadCost(cfg, "cost_ballista_gold"              , 50);
 	CTFCosts::ballista_ammo =               ReadCost(cfg, "cost_ballista_ammo"              , 80);
 	CTFCosts::ballista_bomb_ammo =          ReadCost(cfg, "cost_ballista_bomb_ammo"         , 100);
+	// CTFCosts::outpost_coins =				ReadCost(cfg, "cost_outpost_coins"				, 150);  // Waffle: Remove outposts
+	// CTFCosts::outpost_gold =				ReadCost(cfg, "cost_outpost_gold"				, 50);
 
 	//Quarters.as
 	CTFCosts::beer =                        ReadCost(cfg, "cost_beer"               , 5);
