@@ -112,6 +112,7 @@ Crates
 
 Explosives
 - Ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
+- Changed the threshold for a strong launch from 30% to 50% of the blast radius to make bomb jumps easier especially on laggy servers, damage remains the same
 
 Bombs
 - Do full damage to stone structures instead of half (3 shot stone doors and tunnels, 2 shot storage)
