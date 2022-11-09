@@ -41,6 +41,7 @@ Fire Arrows
 - Always flare even if not on flammable surface
 - Ignite instantly on contact
 - Added animation and sound for instant feedback
+- Collide with enemy trampolines
 - Fire arrow flares don't do an extra half heart to things they ignite
 	- Direct arrow hits still do full damage plus burn damage
 
@@ -69,6 +70,8 @@ Trampoline
 - Can bounce boulders into rock and roll mode if a player is holding the trampoline
 - Now cost 100 wood and 80 coins so they can be bought with spawn mats but are less spammable
 - Snap to angles
+- Are now flammable
+- No longer bounce enemy fire arrows
 
 Warboats
 - Can't be captured
