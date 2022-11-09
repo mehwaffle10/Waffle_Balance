@@ -145,3 +145,6 @@ Map Ceiling
 - Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
 - Lightened the sky above the top of the map a bit to improve visibility
 - Maps tend to have significantly shorter sky boxes
+
+Build Phase
+- Can build extremely fast during build phase
