@@ -1,5 +1,7 @@
 // TrampolineLogic.as
 
+#include "ArcherCommon.as";
+
 namespace Trampoline
 {
 	const string TIMER = "trampoline_timer";
@@ -73,6 +75,14 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 	//cant bounce while held by something attached to something else
 	if (holder !is null && holder.isAttached()) return;
+
+	// Waffle: Make fire arrows hit enemy trampolines
+	if (this.getTeamNum() != blob.getTeamNum() && blob.getName() == "arrow" && blob.get_u8("arrow type") == ArrowType::fire)
+	{
+		blob.setPosition(this.getPosition());
+		blob.server_Die();
+		return;
+	}
 
 	//prevent knights from flying using trampolines
 	/*  // Waffle : Bounce from any angle
