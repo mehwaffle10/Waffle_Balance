@@ -2,6 +2,7 @@
 //script for a chicken
 
 #include "AnimalConsts.as";
+#include "KnockedCommon.as";  // Waffle: Fix issue with HitHeld + shieldbashing
 
 const u8 DEFAULT_PERSONALITY = SCARED_BIT;
 const int MAX_EGGS = 4; //maximum symultaneous eggs  // Waffle: Increase chicken spawning
@@ -74,6 +75,7 @@ void onTick(CSprite@ this)
 
 void onInit(CBlob@ this)
 {
+	InitKnockable(this);  // Waffle: Fix issue with HitHeld + shieldbashing
 	this.set_f32("bite damage", 0.25f);
 
 	//brain
