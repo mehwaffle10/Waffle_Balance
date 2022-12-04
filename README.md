@@ -118,6 +118,7 @@ Explosives
 Bombs
 - Do full damage to stone structures instead of half (3 shot stone doors and tunnels, 2 shot storage)
 - Do 2x damage to wood structures instead of 1.4x (1 shot wood doors, already 1 shot wood buildings)
+- Have a larger radius in which they launch full force (center 50% of the explosion instead of 30%)
 
 Wood Structure Damage
 - Arrows do full damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
