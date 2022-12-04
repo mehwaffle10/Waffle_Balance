@@ -69,6 +69,7 @@ void onTick(CBlob@ this)
 {
 	if (getNet().isServer())
 	{
+		// Waffle: Allow mines to start arming as soon as they are thrown
 		//tick down
 		//if (this.getVelocity().LengthSquared() < 1.0f && !this.isAttached())
 		//{

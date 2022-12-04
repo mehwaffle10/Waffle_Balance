@@ -132,7 +132,10 @@ void onAttach( CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint )
 	this.server_setTeamNum(attached.getTeamNum());
 
 	// Waffle: Damage taken also hits chickens
-	attached.AddScript("HitHeld.as");
+	if (!attached.hasScript("HitHeld.as"))
+	{
+		attached.AddScript("HitHeld.as");
+	}
 }
 
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)

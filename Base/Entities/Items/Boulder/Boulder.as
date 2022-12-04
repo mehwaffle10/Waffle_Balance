@@ -23,7 +23,7 @@ void onInit(CBlob @ this)
 
 	// damage
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	this.getCurrentScript().tickFrequency = 1;
+	this.getCurrentScript().tickFrequency = 1;  // Waffle: Make tick every tick to do more damage up front rather than periodically while clipping through stuff
 }
 
 void onTick(CBlob@ this)

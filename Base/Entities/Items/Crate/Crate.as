@@ -25,17 +25,23 @@ void onInit(CBlob@ this)
 	this.addCommandID("stop unpack");
 	this.addCommandID("boobytrap");
 
+	string packed = this.get_string("packed");
+
 	this.set_u32("boobytrap_cooldown_time", 0);
-	this.set_s32("gold building amount", 0);
+	int goldAmount = 0;
+	if (packed == "warboat")
+	{
+		goldAmount = 50;
+	}
+	this.set_s32("gold building amount", goldAmount);
 
 	u8 frame = 0;
 	if (this.exists("frame"))
 	{
 		frame = this.get_u8("frame");
-		string packed = this.get_string("packed");
 
 		// GIANT HACK!!!
-		if (packed == "catapult" || packed == "bomber" || packed == "ballista" || packed == "mounted_bow" || packed == "longboat" || packed == "warboat")	 // HACK:
+		if (packed == "catapult" || packed == "bomber" || packed == "ballista" || packed == "outpost" || packed == "mounted_bow" || packed == "longboat" || packed == "warboat")
 		{
 			CSpriteLayer@ icon = this.getSprite().addSpriteLayer("icon", "/MiniIcons.png" , 16, 16, this.getTeamNum(), -1);
 			if (icon !is null)
@@ -185,7 +191,7 @@ void Land(CBlob@ this)
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
 	return (this.getName() == blob.getName())
-	    || ((blob.getShape().isStatic() || blob.hasTag("player") || blob.hasTag("projectile")) && !blob.hasTag("parachute"));
+		|| ((blob.getShape().isStatic() || blob.hasTag("player") || blob.hasTag("projectile")) && !blob.hasTag("parachute"));
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -352,7 +358,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			CInventory@ inv = this.getInventory();
 			u8 itemcount = inv.getItemsCount();
-
 			// Boobytrap if crate has enemy mine
 			CBlob@ mine = null;
 			for (int i = 0; i < inv.getItemsCount(); i++)
@@ -367,8 +372,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 					return;
 				}
 			}
-
-			// We might have to make room
 			while (!inv.canPutItem(caller) && itemcount > 0)
 			{
 				// pop out last items until we can put in player or there's nothing left
@@ -442,7 +445,14 @@ void Unpack(CBlob@ this)
 
 	if (blob !is null && blob.getShape() !is null)
 	{
-		blob.setPosition(this.getPosition() + Vec2f(0, (this.getHeight() - blob.getHeight()) / 2));
+		CMap@ map = getMap();
+
+		Vec2f space = this.get_Vec2f(required_space);
+		Vec2f offsetPos = crate_getOffsetPos(this, map);
+		Vec2f center = offsetPos + (Vec2f(space.x * map.tilesize / 2, space.y * map.tilesize / 2));
+
+		blob.setPosition(center);
+
 		//	if (!getMap().isInWater(this.getPosition() + Vec2f(0.0f, this.getRadius())))
 		//	blob.getShape().PutOnGround();
 		//	else
@@ -468,7 +478,7 @@ void Unpack(CBlob@ this)
 		blob.SetFacingLeft(this.isFacingLeft());
 	}
 
-	this.set_s32("gold building amount", 0); // prevents ballista crates from dropping gold if they were unpacked
+	this.set_s32("gold building amount", 0); // for crates with vehicles that cost gold
 	this.server_SetHealth(-1.0f); // TODO: wont gib on client
 	this.server_Die();
 }
@@ -689,6 +699,14 @@ bool canUnpackHere(CBlob@ this)
 		{
 			Vec2f temp = (Vec2f(step_x + 0.5, step_y + 0.5) * map.tilesize);
 			Vec2f v = offsetPos + temp;
+
+			if (this.hasTag("unpack_check_nobuild"))
+			{
+				if (map.getSectorAtPosition(v, "no build") !is null || hasNoBuildBlobs(v))
+				{
+					return false;
+				}
+			}
 			if (v.y < map.tilesize || map.isTileSolid(v))
 			{
 				return false;
@@ -726,6 +744,8 @@ Vec2f crate_getOffsetPos(CBlob@ blob, CMap@ map)
 
 	Vec2f alignedWorldPos = map.getAlignedWorldPos(blob.getPosition() + Vec2f(0, -2)) + (Vec2f(0.5f, 0.0f) * map.tilesize);
 	Vec2f offsetPos = alignedWorldPos - Vec2f(halfSize.x , halfSize.y) * map.tilesize;
+	offsetPos += blob.get_Vec2f("space_offset") * map.tilesize;
+	offsetPos = map.getAlignedWorldPos(offsetPos);
 	return offsetPos;
 }
 
@@ -836,7 +856,8 @@ void onRender(CSprite@ this)
 			const f32 scalex = getDriver().getResolutionScaleFactor();
 			const f32 zoom = getCamera().targetDistance * scalex;
 			Vec2f aligned = getDriver().getScreenPosFromWorldPos(offsetPos);
-			GUI::DrawIcon("CrateSlots.png", 0, Vec2f(40, 32), aligned, zoom);
+			//GUI::DrawIcon("CrateSlots.png", 0, Vec2f(40, 32), aligned, zoom);
+			DrawSlots(space, aligned, zoom); //if (getGameTime() % 30 == 0)
 
 			for (f32 step_x = 0.0f; step_x < space.x ; ++step_x)
 			{
@@ -844,7 +865,8 @@ void onRender(CSprite@ this)
 				{
 					Vec2f temp = (Vec2f(step_x + 0.5, step_y + 0.5) * map.tilesize);
 					Vec2f v = offsetPos + temp;
-					if (map.isTileSolid(v))
+				
+					if (map.isTileSolid(v) || (blob.hasTag("unpack_check_nobuild") && (map.getSectorAtPosition(v, "no build") !is null || hasNoBuildBlobs(v))))
 					{
 						GUI::DrawIcon("CrateSlots.png", 5, Vec2f(8, 8), aligned + (temp - Vec2f(0.5f, 0.5f)* map.tilesize) * 2 * zoom, zoom);
 					}
@@ -853,4 +875,39 @@ void onRender(CSprite@ this)
 		}
 	}
 
+}
+
+void DrawSlots(Vec2f size, Vec2f pos, f32 zoom)
+{
+	int x = Maths::Floor(size.x);
+	int y = Maths::Floor(size.y);
+	CMap@ map = getMap();
+
+	GUI::DrawRectangle(pos, pos + Vec2f(x, y) * map.tilesize * zoom * 2, SColor(125, 255, 255, 255));
+	GUI::DrawLine2D(pos + Vec2f(0, 0) * map.tilesize * zoom * 2, pos + Vec2f(x, 0) * map.tilesize * zoom * 2, SColor(255, 255, 255, 255));
+	GUI::DrawLine2D(pos + Vec2f(x, 0) * map.tilesize * zoom * 2, pos + Vec2f(x, y) * map.tilesize * zoom * 2, SColor(255, 255, 255, 255));
+	GUI::DrawLine2D(pos + Vec2f(x, y) * map.tilesize * zoom * 2, pos + Vec2f(0, y) * map.tilesize * zoom * 2, SColor(255, 255, 255, 255));
+	GUI::DrawLine2D(pos + Vec2f(0, y) * map.tilesize * zoom * 2, pos + Vec2f(0, 0) * map.tilesize * zoom * 2, SColor(255, 255, 255, 255));
+}
+
+const string[] noBuildBlobs = {"wooden_door", "stone_door", "wooden_platform", "bridge"};
+
+bool hasNoBuildBlobs(Vec2f pos)
+{
+	CBlob@[] blobs;
+	if (getMap().getBlobsAtPosition(pos + Vec2f(1, 1), blobs))
+	{
+		for (int i = 0; i < blobs.size(); i++)
+		{
+			CBlob@ blob = blobs[i];
+			if (blob is null) continue;
+
+			if (noBuildBlobs.find(blob.getName()) != -1)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
