@@ -149,4 +149,7 @@ Map Ceiling
 - Maps tend to have significantly shorter sky boxes
 
 Build Phase
+- 90 seconds
 - Can build extremely fast during build phase
+- Resupply buffed back to 300 wood and 100 stone
+- Resupply timer set to 31 seconds (only two resupplies, but maximum time with materials during build phase)
