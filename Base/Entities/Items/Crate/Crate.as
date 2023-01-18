@@ -103,7 +103,8 @@ void onInit(CBlob@ this)
 	this.Tag("activated");
 
 
-	const uint unpackSecs = 3;
+	// Waffle: Crates unpack instantly
+	const uint unpackSecs = 0;
 	this.set_u32("unpack secs", unpackSecs);
 	this.set_u32("unpack time", 0);
 
