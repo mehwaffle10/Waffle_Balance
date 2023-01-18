@@ -36,7 +36,7 @@ namespace CTFCosts
 
 
 	//Quarters.as
-	s32 beer, meal, egg, burger;
+	s32 beer, meal, chicken, burger;  // egg
 
 	//CommonBuilderBlocks.as
 	s32 workshop_wood;
@@ -150,7 +150,7 @@ void InitCosts()
 	//Quarters.as
 	CTFCosts::beer =                        ReadCost(cfg, "cost_beer"               , 5);
 	CTFCosts::meal =                        ReadCost(cfg, "cost_meal"               , 10);
-	CTFCosts::egg =                         ReadCost(cfg, "cost_egg"                , 30);
+	CTFCosts::chicken =                     ReadCost(cfg, "cost_chicken"            , 60);  // Waffle: Chickens are bought directly instead of eggs
 	CTFCosts::burger =                      ReadCost(cfg, "cost_burger"             , 20);
 
 	//CommonBuilderBlocks.as
