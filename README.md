@@ -73,29 +73,27 @@ Trampoline
 - Are now flammable
 - No longer bounce enemy fire arrows
 
-Warboats
+Vehicles:
+- Take full damage from swords and arrows
+- Deploy instantly
 - Can't be captured
-- Doesn't break on land or if flipped
+- Don't break while flipped
+- Riders are now tagged with invulnerable
+	- Can't be hit by sword or arrows
+	- Can still be hit by explosives
+
+Boats
+- Don't break on land (or if left alone???)
 - Doesn't sink on low health
 
-Longboats
-- Doesn't break on land or if flipped (or if left alone???)
-- Doesn't sink on low health
-- Captured much quicker
+Siege Weapons
+- Don't break in water
+- Can no longer shoot through platforms
+- Projectiles ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 
 Mounted Bow
 - Health increased from 2 to 20
 - Can fire every 15 ticks instead of every 25 ticks (every .75 seconds instead of 1.25 seconds)
-
-Catapults
-- Rocks ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
-- Captured much quicker
-- Can no longer shoot through platforms
-
-Ballista
-- Bolts ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
-- Captured much quicker
-- Can no longer shoot through platforms
 
 Boulders (Rock and roll mode is the block destroying mode like when launched from a catapult)
 - Team based collisions like TDM (allows friendly archers to shoot through them but not enemy)
