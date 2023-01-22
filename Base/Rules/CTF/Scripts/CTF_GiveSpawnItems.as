@@ -23,7 +23,7 @@ const int crate_warmup_wood_amount = 1500;
 const int crate_warmup_stone_amount = 750;
 
 // Waffle: Builders no longer can resupply. Crates drop for each team with team materials
-const u32 crate_wait = 40 * getTicksASecond();
+const u32 crate_wait = 60 * getTicksASecond();
 const int crate_wood_amount = 500;
 const int crate_stone_amount = 150;
 
@@ -152,7 +152,7 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
 			}
 			else if (SetMaterials(b, "mat_arrows", 30)) 
 			{
-				SetCTFTimer(this, p, gametime + (this.isWarmup() ? materials_wait_warmup : materials_wait)*getTicksASecond(), "archer");
+				SetCTFTimer(this, p, gametime + (isBuildPhase(this) ? materials_wait_warmup : materials_wait)*getTicksASecond(), "archer");
 			}
 		}
 	}
@@ -179,7 +179,7 @@ void displayResupply(CRules@ this, string player_class, string resupply_class, V
 	}
 	else // Waffle: Display crate resupply information instead
 	{
-		if (this.isWarmup())
+		if (isBuildPhase(this))
 		{
 			resupply_available = getTranslatedString("Starting airdrop of {WOOD} wood and {STONE} stone supplied. More materials will be airdropped after build time.")
 				.replace("{WOOD}", "" + crate_warmup_wood_amount)
@@ -224,8 +224,7 @@ void displayResupply(CRules@ this, string player_class, string resupply_class, V
 void Reset(CRules@ this)
 {
 	// Waffle: Do build phase resupply
-	SpawnResupplies(this);
-	this.set_s32(RESUPPLY_TIME_STRING, 0);
+	this.set_s32(RESUPPLY_TIME_STRING, 1);
 	
 	//restart everyone's timers
 	for (uint i = 0; i < getPlayersCount(); ++i) {
@@ -251,12 +250,20 @@ void onTick(CRules@ this)
 	if ((gametime % 15) != 5)
 		return;
 	
-	if (this.isWarmup()) 
+	// Waffle: Drop periodic crates of materials
+	if (gametime > this.get_s32(RESUPPLY_TIME_STRING))
 	{
-		if(!isServer())
-		{
-			return;
-		}
+		SpawnResupplies(this);
+		this.set_s32(RESUPPLY_TIME_STRING, isBuildPhase(this) ? 9999999999 : gametime + crate_wait);
+	}
+
+	if(!isServer())
+	{
+		return;
+	}
+
+	if (isBuildPhase(this)) 
+	{
 		// during building time, give everyone resupplies no matter where they are
 		for (int i = 0; i < getPlayerCount(); i++) 
 		{
@@ -270,17 +277,6 @@ void onTick(CRules@ this)
 	}
 	else 
 	{
-		// Waffle: Drop periodic crates of materials
-		if (gametime > this.get_s32(RESUPPLY_TIME_STRING))
-		{
-			SpawnResupplies(this);
-			this.set_s32(RESUPPLY_TIME_STRING, gametime + crate_wait);
-		}
-
-		if (!isServer())
-		{
-			return;
-		}
 		CBlob@[] spots;
 		getBlobsByName(base_name(),   @spots);
 		getBlobsByName("outpost",	@spots);
@@ -357,7 +353,7 @@ void onRender(CRules@ this)
 // Reset timer in case player who joins has an outdated timer
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 {
-	s32 next_add_time = getGameTime() + (this.isWarmup() ? materials_wait_warmup : materials_wait) * getTicksASecond();
+	s32 next_add_time = getGameTime() + (isBuildPhase(this) ? materials_wait_warmup : materials_wait) * getTicksASecond();
 
 	if (next_add_time < getCTFTimer(this, player, "archer"))  // next_add_time < getCTFTimer(this, player, "builder") ||  // Waffle: No need to track this
 	{
@@ -376,7 +372,7 @@ void SpawnResupplies(CRules@ this)
         return;
     }
 
-    bool parachute = !this.get_bool("collide with ceiling");  // From KAG.as
+    bool parachute = !this.get_bool("collide with ceiling") && !isBuildPhase(this);  // From KAG.as
     f32 auto_distance_from_edge_tents = Maths::Min(map.tilemapwidth * 0.15f * 8.0f, 100.0f) * map.tilesize;
     Vec2f blue_resupply_location, red_resupply_location;
     if (!map.getMarker("blue main spawn", blue_resupply_location))
@@ -390,26 +386,29 @@ void SpawnResupplies(CRules@ this)
 
     if (parachute)
     {
-        blue_resupply_location.y = -30;
+        blue_resupply_location.y = -10 * map.tilesize;
         red_resupply_location.y = blue_resupply_location.y;
     }
-    SpawnResupply(this, blue_resupply_location, 0);
-    SpawnResupply(this, red_resupply_location,  1);
+    SpawnResupply(this, blue_resupply_location, 0, parachute);
+    SpawnResupply(this, red_resupply_location,  1, parachute);
 			
 }
 
 // Waffle: Spawn crate at location with team materials
-void SpawnResupply(CRules@ this, Vec2f pos, u8 team)
+void SpawnResupply(CRules@ this, Vec2f pos, u8 team, bool parachute)
 {
     if (isServer())
     {
         CBlob@ crate = server_CreateBlob("crate", team, pos);
         if (crate !is null)
         {
-            crate.Tag("parachute");
+			if (parachute)
+			{
+				crate.Tag("parachute");
+			}
             crate.SetFacingLeft(team == 1);
-            SetMaterials(crate, "mat_wood",  this.isWarmup() ? crate_warmup_wood_amount  : crate_wood_amount);
-            SetMaterials(crate, "mat_stone", this.isWarmup() ? crate_warmup_stone_amount : crate_stone_amount);
+            SetMaterials(crate, "mat_wood",  isBuildPhase(this) ? crate_warmup_wood_amount  : crate_wood_amount);
+            SetMaterials(crate, "mat_stone", isBuildPhase(this) ? crate_warmup_stone_amount : crate_stone_amount);
         }
     }
     else
@@ -421,8 +420,13 @@ void SpawnResupply(CRules@ this, Vec2f pos, u8 team)
 // Waffle: Set timer on state change
 void onStateChange(CRules@ this, const u8 oldState)
 {
-    if (!this.isWarmup())
+    if (!isBuildPhase(this))
     {
 		this.set_s32(RESUPPLY_TIME_STRING, getGameTime() + crate_wait);
     }
+}
+
+bool isBuildPhase(CRules@ this)
+{
+	return this.isWarmup() || this.isIntermission();
 }
