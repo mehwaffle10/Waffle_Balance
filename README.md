@@ -79,6 +79,8 @@ Siege Weapons
 Mounted Bow
 - Health increased from 2 to 20
 - Can fire every 15 ticks instead of every 25 ticks (every .75 seconds instead of 1.25 seconds)
+- Arrows no longer decay
+- Arrows no longer have random inaccuracy
 
 --- BUILDER SHOP ---
 
