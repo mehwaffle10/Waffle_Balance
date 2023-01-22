@@ -21,10 +21,10 @@ namespace CTFCosts
 	//KnightShop.as
 	s32 bomb, waterbomb, mine, keg;
 
-	// Waffle: Trampolines cost coins alongside the wood
+	// Waffle: Trampolines and boulders only cost coins
 	//BuilderShop.as
-	s32 lantern_wood, bucket_wood, filled_bucket, sponge, boulder_stone,
-		trampoline, trampoline_wood, saw_wood, saw_stone, drill_stone, drill,
+	s32 lantern_wood, bucket_wood, filled_bucket, sponge, boulder,  // boulder_stone, trampoline_wood
+		trampoline, saw_wood, saw_stone, drill_stone, drill,
 		crate_wood, crate;
 
 	//BoatShop.as
@@ -120,9 +120,10 @@ void InitCosts()
 	CTFCosts::bucket_wood =                 ReadCost(cfg, "cost_bucket_wood"        , 10);
 	CTFCosts::filled_bucket =               ReadCost(cfg, "cost_filled_bucket"      , 10);
 	CTFCosts::sponge =                      ReadCost(cfg, "cost_sponge"             , 15);
-	CTFCosts::boulder_stone =               ReadCost(cfg, "cost_boulder_stone"      , 30);   // Waffle: Boulders only cost stone from a single resupply
-	CTFCosts::trampoline =             		ReadCost(cfg, "cost_trampoline"    		, 80);   // Waffle: Trampolines cost coins alongside the wood
-	CTFCosts::trampoline_wood =             ReadCost(cfg, "cost_trampoline_wood"    , 100);  // Waffle: Trampolines only cost wood from a single resupply
+	CTFCosts::boulder =                     ReadCost(cfg, "cost_boulder"    		, 40);   // Waffle: Boulders only cost coins
+	// CTFCosts::boulder_stone =               ReadCost(cfg, "cost_boulder_stone"      , 30);   // Waffle: Boulders no longer cost materials
+	CTFCosts::trampoline =             		ReadCost(cfg, "cost_trampoline"    		, 100);  // Waffle: Trampolines only cost coins
+	// CTFCosts::trampoline_wood =             ReadCost(cfg, "cost_trampoline_wood"    , 100);  // Waffle: Trampolines no longer cost materials
 	CTFCosts::saw_wood =                    ReadCost(cfg, "cost_saw_wood"           , 150);
 	CTFCosts::saw_stone =                   ReadCost(cfg, "cost_saw_stone"          , 100);
 	CTFCosts::drill_stone =                 ReadCost(cfg, "cost_drill_stone"        , 100);
@@ -150,7 +151,7 @@ void InitCosts()
 	//Quarters.as
 	CTFCosts::beer =                        ReadCost(cfg, "cost_beer"               , 5);
 	CTFCosts::meal =                        ReadCost(cfg, "cost_meal"               , 10);
-	CTFCosts::chicken =                     ReadCost(cfg, "cost_chicken"            , 60);  // Waffle: Chickens are bought directly instead of eggs
+	CTFCosts::chicken =                     ReadCost(cfg, "cost_chicken"            , 80);  // Waffle: Chickens are bought directly instead of eggs
 	CTFCosts::burger =                      ReadCost(cfg, "cost_burger"             , 20);
 
 	//CommonBuilderBlocks.as

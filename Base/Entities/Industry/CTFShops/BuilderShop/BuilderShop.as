@@ -51,7 +51,8 @@ void onInit(CBlob@ this)
 		s.customButton = true;
 		s.buttonwidth = 2;
 		s.buttonheight = 1;
-		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", CTFCosts::boulder_stone);
+		// AddRequirement(s.requirements, "blob", "mat_stone", "Stone", CTFCosts::boulder_stone);
+		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::boulder);  // Waffle: Boulders only cost coins
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Lantern", "$lantern$", "lantern", Descriptions::lantern, false);
@@ -63,8 +64,8 @@ void onInit(CBlob@ this)
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Trampoline", getTeamIcon("trampoline", "Trampoline.png", team_num, Vec2f(32, 16), 3), "trampoline", Descriptions::trampoline, false);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::trampoline_wood);
-		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::trampoline);  // Waffle: Trampolines cost coins alongside the wood
+		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::trampoline_wood);
+		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::trampoline);  // Waffle: Trampolines only cost coins
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Saw", getTeamIcon("saw", "VehicleIcons.png", team_num, Vec2f(32, 32), 3), "saw", Descriptions::saw, false);
