@@ -23,7 +23,7 @@ const int crate_warmup_wood_amount = 1500;
 const int crate_warmup_stone_amount = 750;
 
 // Waffle: Builders no longer can resupply. Crates drop for each team with team materials
-const u32 crate_wait = 30 * getTicksASecond();
+const u32 crate_wait = 40 * getTicksASecond();
 const int crate_wood_amount = 500;
 const int crate_stone_amount = 150;
 
@@ -421,7 +421,7 @@ void SpawnResupply(CRules@ this, Vec2f pos, u8 team)
 // Waffle: Set timer on state change
 void onStateChange(CRules@ this, const u8 oldState)
 {
-    if (this.isMatchRunning())
+    if (!this.isWarmup())
     {
 		this.set_s32(RESUPPLY_TIME_STRING, getGameTime() + crate_wait);
     }
