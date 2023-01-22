@@ -74,8 +74,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 		return;
 	}
 
-	// Waffle: Make it so hearts only collide with teammates
-	if (getNet().isServer() && !blob.hasTag("dead") && (this.getTeamNum() == blob.getTeamNum() || this.getName() == "flowers" || (!getRules().get_bool("hearts do not collide") && this.getName() == "heart")))
+	// Waffle: Make it so food only collide with teammates
+	if (getNet().isServer() && !blob.hasTag("dead") && (this.getTeamNum() < 0 || this.getTeamNum() >= 255 || this.getTeamNum() == blob.getTeamNum() || this.getName() == "flowers" || (!getRules().get_bool("hearts do not collide") && this.getName() == "heart")))
 	{
 		Heal(blob, this);
 	}
