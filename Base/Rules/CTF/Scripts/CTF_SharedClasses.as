@@ -1,4 +1,7 @@
 
+#include "CTF_Structs.as";
+#include "RulesCore.as";
+#include "RespawnSystem.as";
 //CTF spawn system
 
 const s32 spawnspam_limit_time = 10;
