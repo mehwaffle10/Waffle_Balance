@@ -5,7 +5,7 @@ void onInit(CBlob@ this)
 {
 	// this.Tag("bomberman_style");
 	// this.set_f32("map_bomberman_width", 24.0f);
-	this.set_f32("explosive_radius", 64.0f);
+	this.set_f32("explosive_radius", 48.0f);
 	this.set_f32("explosive_damage", 10.0f);
 	this.set_u8("custom_hitter", Hitters::keg);
 	this.set_string("custom_explosion_sound", "Entities/Items/Explosives/KegExplosion.ogg");

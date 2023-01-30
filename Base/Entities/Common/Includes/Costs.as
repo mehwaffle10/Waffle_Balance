@@ -116,7 +116,7 @@ void InitCosts()
 	CTFCosts::bomb =                        ReadCost(cfg, "cost_bomb"               , 25);
 	CTFCosts::waterbomb =                   ReadCost(cfg, "cost_waterbomb"          , 30);
 	CTFCosts::mine =                        ReadCost(cfg, "cost_mine"               , 60);
-	CTFCosts::keg =                         ReadCost(cfg, "cost_keg"                , 120);
+	CTFCosts::keg =                         ReadCost(cfg, "cost_keg"                , 200);  // Waffle: Offset strength of circular kegs
 
 	//BuilderShop.as
 	CTFCosts::lantern_wood =                ReadCost(cfg, "cost_lantern_wood"       , 10);
