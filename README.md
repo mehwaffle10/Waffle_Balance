@@ -11,6 +11,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Removed for builders
 - Crates with 500 wood and 150 stone air drop every minute above team tents
 
+### Materials
+- No longer decay
+
 ### Build Phase
 - 120 seconds
 - Can build extremely fast during build phase
@@ -54,7 +57,26 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can spread diagonally
 - Can spread from non-player blobs
 
+### Gold
+- Gives 8 coins per hit instead of gold
+- Gold cost replaced with coin cost on items that required gold
+
 # ITEMS
+
+## BUILDINGS
+
+### Siege Shop
+- Costs 400 wood total and 50 coins
+
+### Tunnel
+- Costs 500 wood total, 250 stone, and 200 coins
+
+### Storage
+- Removed (Makes room for quarry and redundant with crates)
+
+### Quarry
+- Costs 300 wood total, 100 stone, and 80 coins
+- Produces 50 stone for 150 wood every 45 seconds
 
 ## VEHICLES
 
@@ -148,7 +170,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ## KNIGHT SHOP
 
 ### Keg
-- Explode in a circular 8 block radius instead of doing bomberman plus shape
+- Explode in a circular 6 block radius instead of doing bomberman plus shape
+- Cost 200 coins
 
 ### Mines
 - Deploy after timer like they used to 
