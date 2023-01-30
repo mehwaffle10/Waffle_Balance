@@ -95,7 +95,7 @@ void InitCosts()
 	CTFCosts::archershop_wood =             ReadCost(cfg, "cost_archershop_wood"    , 50);
 	CTFCosts::boatshop_wood =               ReadCost(cfg, "cost_boatshop_wood"      , 100);
 	CTFCosts::vehicleshop_wood =            ReadCost(cfg, "cost_vehicleshop_wood"   , 250);  // Waffle: Vehicle shop costs 400 wood
-	CTFCosts::vehicleshop_gold =            ReadCost(cfg, "cost_vehicleshop_gold"   , 50);   // Waffle: Vehicle shop costs 400 coins
+	CTFCosts::vehicleshop_gold =            ReadCost(cfg, "cost_vehicleshop_gold"   , 50);   // Waffle: Vehicle shop costs 50 coins
 	CTFCosts::storage_stone =               ReadCost(cfg, "cost_storage_stone"      , 50);
 	CTFCosts::storage_wood =                ReadCost(cfg, "cost_storage_wood"       , 50);
 	CTFCosts::tunnel_stone =                ReadCost(cfg, "cost_tunnel_stone"       , 250);  // Waffle: Tunnel costs 250 stone
