@@ -19,11 +19,11 @@ const string SPAWN_ITEMS_TIMER_ARCHER  = "CTF SpawnItems Archer:";
 const string RESUPPLY_TIME_STRING = "team resupply timer";
 
 // Waffle: Materials for the entire team. Drop once at the start of the game
-const int crate_warmup_wood_amount = 1500;  
-const int crate_warmup_stone_amount = 750;
+const int crate_warmup_wood_amount = 2000;  
+const int crate_warmup_stone_amount = 1000;
 
 // Waffle: Builders no longer can resupply. Crates drop for each team with team materials
-const u32 crate_wait = 60 * getTicksASecond();
+const u32 crate_wait = 2 * 60 * getTicksASecond();
 const int crate_wood_amount = 500;
 const int crate_stone_amount = 150;
 
@@ -422,7 +422,7 @@ void onStateChange(CRules@ this, const u8 oldState)
 {
     if (!isBuildPhase(this))
     {
-		this.set_s32(RESUPPLY_TIME_STRING, getGameTime() + crate_wait);
+		this.set_s32(RESUPPLY_TIME_STRING, getGameTime());
     }
 }
 
