@@ -9,7 +9,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Resupplies
 - Removed for builders
-- Crates with 500 wood and 150 stone air drop every minute above team tents
+- Crates with 500 wood and 150 stone air drop every 2 minutes above team tents
 
 ### Materials
 - No longer decay
@@ -17,7 +17,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Build Phase
 - 120 seconds
 - Can build extremely fast during build phase
-- Single crate at the start of build phase per team with 1500 wood and 750 stone
+- Single crate at the start of build phase per team with 2000 wood and 1000 stone
 
 ### Fall Damage
 - TDM fall damage (takes 1.3x longer falls)
