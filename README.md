@@ -9,7 +9,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Resupplies
 - Removed for builders
-- Crates with 500 wood and 150 stone air drop every 2 minutes above team tents
+- Crates with 500 wood and 150 stone air drop every 3 minutes above team tents
 
 ### Materials
 - No longer decay
@@ -59,23 +59,23 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Gold
 - Gives 8 coins per hit instead of gold
-- Gold cost replaced with coin cost on items that required gold
+- Gold is only present in middle of map
 
 # ITEMS
 
 ## BUILDINGS
 
 ### Siege Shop
-- Costs 400 wood total and 50 coins
+- Costs 400 wood total
 
 ### Tunnel
-- Costs 500 wood total, 250 stone, and 200 coins
+- Costs 500 wood total and 250 stone
 
 ### Storage
 - Removed (Makes room for quarry and redundant with crates)
 
 ### Quarry
-- Costs 300 wood total, 100 stone, and 80 coins
+- Costs 300 wood total and 100 stone
 - Produces 50 stone for 150 wood every 45 seconds
 
 ## VEHICLES
@@ -159,13 +159,20 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Collide with enemy arrows
 - Have 5x the amount of health (will last 5x longer when climbed on)
 
+### Water Arrows
+- Cost 20 coins for 1 instead of 15
+
 ### Fire Arrows
+- Cost 50 coins for 2 instead of 30
 - Always flare even if not on flammable surface
 - Ignite instantly on contact
 - Added animation and sound for instant feedback
 - Collide with enemy trampolines
 - Fire arrow flares don't do an extra half heart to things they ignite
 	- Direct arrow hits still do full damage plus burn damage
+
+### Bomb Arrows
+- Cost 100 coins for 1 instead of 50
 
 ## KNIGHT SHOP
 

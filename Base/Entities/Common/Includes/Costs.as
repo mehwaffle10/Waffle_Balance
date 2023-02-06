@@ -11,10 +11,10 @@ namespace CTFCosts
 {
 	// Waffle: Add quarry wood cost
 	//Building.as
-	s32 buildershop_wood, quarters_wood, knightshop_wood, archershop_wood,
+	s32 buildershop_wood, quarters_wood, knightshop_wood, archershop_wood,  // tunnel_gold, quarry_gold
 		boatshop_wood, vehicleshop_wood, vehicleshop_gold,
-		storage_stone, storage_wood, tunnel_stone, tunnel_wood, tunnel_gold,
-		quarry_wood, quarry_stone, quarry_gold, quarry_count;
+		storage_stone, storage_wood, tunnel_stone, tunnel_wood,
+		quarry_wood, quarry_stone, quarry_count;
 
 	//ArcherShop.as
 	s32 arrows, waterarrows, firearrows, bombarrows;
@@ -95,16 +95,16 @@ void InitCosts()
 	CTFCosts::archershop_wood =             ReadCost(cfg, "cost_archershop_wood"    , 50);
 	CTFCosts::boatshop_wood =               ReadCost(cfg, "cost_boatshop_wood"      , 100);
 	CTFCosts::vehicleshop_wood =            ReadCost(cfg, "cost_vehicleshop_wood"   , 250);  // Waffle: Vehicle shop costs 400 wood
-	CTFCosts::vehicleshop_gold =            ReadCost(cfg, "cost_vehicleshop_gold"   , 50);   // Waffle: Vehicle shop costs 50 coins
+	// CTFCosts::vehicleshop_gold =            ReadCost(cfg, "cost_vehicleshop_gold"   , 50);   // Waffle: Vehicle shops no longer cost gold
 	CTFCosts::storage_stone =               ReadCost(cfg, "cost_storage_stone"      , 50);
 	CTFCosts::storage_wood =                ReadCost(cfg, "cost_storage_wood"       , 50);
 	CTFCosts::tunnel_stone =                ReadCost(cfg, "cost_tunnel_stone"       , 250);  // Waffle: Tunnel costs 250 stone
 	CTFCosts::tunnel_wood =                 ReadCost(cfg, "cost_tunnel_wood"        , 350);  // Waffle: Tunnel costs 500 wood
-	CTFCosts::tunnel_gold =                 ReadCost(cfg, "cost_tunnel_gold"        , 200);  // Waffle: Tunnel costs 100 coins
+	// CTFCosts::tunnel_gold =                 ReadCost(cfg, "cost_tunnel_gold"        , 200);  // Waffle: Tunnels no longer cost gold
 	CTFCosts::quarry_wood =                 ReadCost(cfg, "cost_quarry_wood"        , 150);  // Waffle: Quarries cost 300 wood
 	CTFCosts::quarry_stone =				ReadCost(cfg, "cost_quarry_stone"       , 100);  // Waffle: Quarries cost 100 stone
-	CTFCosts::quarry_gold =					ReadCost(cfg, "cost_quarry_gold"        , 80);   // Waffle: Quarries cost 80 coins
-	// CTFCosts::quarry_count =				ReadCost(cfg, "cost_quarry_count"       , 1);
+	// CTFCosts::quarry_gold =					ReadCost(cfg, "cost_quarry_gold"        , 80);  // Waffle: Quarries no longer cost gold
+	// CTFCosts::quarry_count =				ReadCost(cfg, "cost_quarry_count"       , 1);    // Waffle: No quarry limit
 
 	//ArcherShop.as
 	CTFCosts::arrows =                      ReadCost(cfg, "cost_arrows"             , 15);

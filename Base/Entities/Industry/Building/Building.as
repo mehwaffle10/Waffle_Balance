@@ -56,14 +56,14 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Vehicle Shop", getTeamIcon("vehicleshop", "VehicleShop.png", team_num, Vec2f(40, 24)), "vehicleshop", Descriptions::vehicleshop);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::vehicleshop_wood);
-		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::vehicleshop_gold);  // Waffle: Coin costs replace gold costs
+		// AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::vehicleshop_gold);  // Waffle: Vehicle shops no longer cost gold
 	}
 	// Waffle: Replace storage with quarries
 	{
 		ShopItem@ s = addShopItem(this, "Stone Quarry", "$stonequarry$", "quarry", Descriptions::quarry);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::quarry_wood);
 		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", CTFCosts::quarry_stone);
-		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::quarry_gold);  // Waffle: Coin costs replace gold costs
+		// AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::quarry_gold);  // Waffle: Quarries no longer cost gold
 		// AddRequirement(s.requirements, "no more", "quarry", "Stone Quarry", CTFCosts::quarry_count);  // Waffle: Remove quarry limit
 	}
 	// {
@@ -75,7 +75,7 @@ void onInit(CBlob@ this)
 		ShopItem@ s = addShopItem(this, "Transport Tunnel", getTeamIcon("tunnel", "Tunnel.png", team_num, Vec2f(40, 24)), "tunnel", Descriptions::tunnel);
 		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", CTFCosts::tunnel_stone);
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::tunnel_wood);
-		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::tunnel_gold);  // Waffle: Coin costs replace gold costs
+		// AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::tunnel_gold);  // Waffle: Tunnels no longer cost gold
 	}
 }
 

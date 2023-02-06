@@ -43,7 +43,7 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Filled Bucket", "$_buildershop_filled_bucket$", "filled_bucket", Descriptions::filled_bucket, false);
 		s.spawnNothing = true;
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::bucket_wood);
+		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::bucket_wood);  // Waffle: Removed wood cost for filled buckets
 		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::filled_bucket);
 	}
 	{
