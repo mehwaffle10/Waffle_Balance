@@ -89,6 +89,7 @@ namespace Descriptions
 	// egg                        = getTranslatedString("A suspiciously undercooked egg, maybe it will hatch."),
 	chicken                    = getTranslatedString("A chicken to that can lay eggs and let you glide."),  // Waffle: Chickens are bought directly instead of eggs
 	burger                     = getTranslatedString("A burger to go."),
+	seed                       = getTranslatedString("A seed that will grow into a pine tree."),  // Waffle: Seeds can be bought from quarters
 
 	//Magic Scrolls
 	scroll_carnage             = getTranslatedString("This magic scroll when cast will turn all nearby enemies into a pile of bloody gibs."),

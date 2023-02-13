@@ -7,6 +7,7 @@
 #include "CheckSpam.as"
 #include "StandardControlsCommon.as"
 #include "GenericButtonCommon.as"
+#include "MakeSeed.as"
 
 const f32 beer_amount = 1.0f;
 const f32 heal_amount = 0.25f;
@@ -81,11 +82,12 @@ void onInit(CBlob@ this)
 	AddIconToken("$quarters_meal$",    "Quarters.png",         Vec2f(48, 24), 2);
 	AddIconToken("$quarters_chicken$", "Chicken.png",          Vec2f(16, 16), 0);   // Waffle: Chickens are bought directly instead of eggs
 	AddIconToken("$quarters_burger$",  "Quarters.png",         Vec2f(24, 24), 9);
+	AddIconToken("$quarters_seed$",    "Trees.png",            Vec2f(16, 16), 20);  // Waffle: Seeds can be bought from quarters
 	AddIconToken("$rest$",             "InteractionIcons.png", Vec2f(32, 32), 29);
 
 	// SHOP
 	this.set_Vec2f("shop offset", Vec2f_zero);
-	this.set_Vec2f("shop menu size", Vec2f(5, 1));
+	this.set_Vec2f("shop menu size", Vec2f(3, 2));
 	this.set_string("shop description", "Buy");
 	this.set_u8("shop icon", 25);
 
@@ -111,6 +113,11 @@ void onInit(CBlob@ this)
 	{
 		ShopItem@ s = addShopItem(this, "Burger - Full Health", "$quarters_burger$", "food", Descriptions::burger, true);
 		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::burger);
+	}
+	{
+		ShopItem@ s = addShopItem(this, "Pine Seed", "$quarters_seed$", "tree_seed", Descriptions::seed, true);  // Waffle: Seeds can be bought from quarters
+		s.spawnNothing = true;
+		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::seed);
 	}
 }
 
@@ -216,6 +223,17 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				if (isServer)
 				{
 					callerBlob.server_SetHealth(callerBlob.getInitialHealth());
+				}
+			}
+			else if (name == "tree_seed")
+			{
+				if (isServer)
+				{
+					CBlob@ seed = server_MakeSeed(callerBlob.getPosition(), "tree_pine");
+					if (seed !is null)
+					{
+						callerBlob.server_PutInInventory(seed);
+					}
 				}
 			}
 		}
