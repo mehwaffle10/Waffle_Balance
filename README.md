@@ -9,7 +9,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Resupplies
 - Removed for builders
-- Crates with 500 wood and 150 stone air drop every 3 minutes above team tents
+- Crates with 500 wood and 150 stone air drop every 5 minutes above team tents
 
 ### Materials
 - No longer decay
@@ -17,7 +17,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Build Phase
 - 120 seconds
 - Can build extremely fast during build phase
-- Single crate at the start of build phase per team with 2000 wood and 1000 stone
+- Single crate at the start of build phase per team with 3000 wood and 1500 stone
 
 ### Fall Damage
 - TDM fall damage (takes 1.3x longer falls)
@@ -60,6 +60,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Gold
 - Gives 8 coins per hit instead of gold
 - Gold is only present in middle of map
+
+### Trees
+- Can only grow if there is no more than 1 other tree within 16 blocks
+- Purchaseable at the quarters for 100 coins
 
 # ITEMS
 
@@ -209,3 +213,6 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can have up to 4 simultaneous eggs instead of 2
 - Can have up to 10 chickens in close proximity instead of 6
 - Only have 0.1 health
+
+### Saplings
+- Can now be bought for 100 coins
