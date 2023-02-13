@@ -4,10 +4,10 @@
 #include "CTF_Structs.as";
 
 const u32 materials_wait = 20; //seconds between free mats
-const u32 materials_wait_warmup = 31; //seconds between free mats  // Waffle: Maximize time with mats for 90 sec build phase
+const u32 materials_wait_warmup = materials_wait; //seconds between free mats  // Waffle: Set to same cooldown since it's only for archers
 
-const int warmup_wood_amount = 300;  // Waffle: Increase mats since build phase is so short
-const int warmup_stone_amount = 100;  // Waffle: Increase mats since build phase is so short
+const int warmup_wood_amount = 250;
+const int warmup_stone_amount = 80;
 
 const int matchtime_wood_amount = 100;
 const int matchtime_stone_amount = 30;
@@ -15,6 +15,17 @@ const int matchtime_stone_amount = 30;
 //property
 const string SPAWN_ITEMS_TIMER_BUILDER = "CTF SpawnItems Builder:";
 const string SPAWN_ITEMS_TIMER_ARCHER  = "CTF SpawnItems Archer:";
+
+const string RESUPPLY_TIME_STRING = "team resupply timer";
+
+// Waffle: Materials for the entire team. Drop once at the start of the game
+const int crate_warmup_wood_amount = 2000;  
+const int crate_warmup_stone_amount = 1000;
+
+// Waffle: Builders no longer can resupply. Crates drop for each team with team materials
+const u32 crate_wait = 3 * 60 * getTicksASecond();
+const int crate_wood_amount = 500;
+const int crate_stone_amount = 150;
 
 string base_name() { return "tent"; }
 
@@ -102,6 +113,8 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
 	s32 gametime = getGameTime();
 	string name = b.getName();
 	
+	// Waffle: Remove builder resupplies
+	/*
 	if (name == "builder" || this.isWarmup()) 
 	{
 		if (gametime > getCTFTimer(this, p, "builder")) 
@@ -125,7 +138,8 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
 				SetCTFTimer(this, p, gametime + (this.isWarmup() ? materials_wait_warmup : materials_wait)*getTicksASecond(), "builder");
 			}
 		}
-	} 
+	}
+	*/
 
 	if (name == "archer") 
 	{
@@ -138,7 +152,7 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
 			}
 			else if (SetMaterials(b, "mat_arrows", 30)) 
 			{
-				SetCTFTimer(this, p, gametime + (this.isWarmup() ? materials_wait_warmup : materials_wait)*getTicksASecond(), "archer");
+				SetCTFTimer(this, p, gametime + (isBuildPhase(this) ? materials_wait_warmup : materials_wait)*getTicksASecond(), "archer");
 			}
 		}
 	}
@@ -163,32 +177,25 @@ void displayResupply(CRules@ this, string player_class, string resupply_class, V
 			.replace("{SEC}", "" + secs)
 			.replace("{TIMESUFFIX}", getTranslatedString(units));
 	}
-	else // default: builder
+	else // Waffle: Display crate resupply information instead
 	{
-		int wood_amount = matchtime_wood_amount;
-		int stone_amount = matchtime_stone_amount;
-		if (this.isWarmup())
+		if (isBuildPhase(this))
 		{
-			wood_amount = warmup_wood_amount;
-			stone_amount = warmup_stone_amount;
+			resupply_available = getTranslatedString("Starting airdrop of {WOOD} wood and {STONE} stone supplied. More materials will be airdropped after build time.")
+				.replace("{WOOD}", "" + crate_warmup_wood_amount)
+				.replace("{STONE}", "" + crate_warmup_stone_amount);
 		}
-
-		string need_to_switch_string = "";
-		if (player_class != "builder") need_to_switch_string = getTranslatedString("and switch to builder ");
-
-		resupply_available = getTranslatedString("Go to a builder shop or a respawn point {SWITCH}to get a resupply of {WOOD} wood and {STONE} stone.")
-			.replace("{SWITCH}", need_to_switch_string)
-			.replace("{WOOD}", "" + wood_amount)
-			.replace("{STONE}", "" + stone_amount);
-
-		resupply_unavailable = getTranslatedString("Next resupply of {WOOD} wood and {STONE} stone in {SEC}{TIMESUFFIX}.")
-			.replace("{SEC}", "" + secs)
-			.replace("{TIMESUFFIX}", getTranslatedString(units))
-			.replace("{WOOD}", "" + wood_amount)
-			.replace("{STONE}", "" + stone_amount);
+		else
+		{
+			resupply_available = getTranslatedString("Next airdrop of {WOOD} wood and {STONE} stone in {SEC}{TIMESUFFIX}.")
+				.replace("{SEC}", "" + secs)
+				.replace("{TIMESUFFIX}", getTranslatedString(units))
+				.replace("{WOOD}", "" + crate_wood_amount)
+				.replace("{STONE}", "" + crate_stone_amount);
+		}
 	}
 		
-	if (next_items > getGameTime()) // Unavailable resupply - shown on upper center of screen
+	if (next_items > getGameTime() && resupply_class == "archer") // Unavailable resupply - shown on upper center of screen
 	{
 		SColor color = SColor(255, 255, 55, 55);
 			
@@ -199,7 +206,7 @@ void displayResupply(CRules@ this, string player_class, string resupply_class, V
 
 		GUI::DrawTextCentered(text, Vec2f(x, y), color);
 	}
-	else if (this.getCurrentState() == GAME) // Available resupply & not warmup - shown above inventory GUI
+	else  // Waffle: Always display if available  // if (this.getCurrentState() == GAME) // Available resupply & not warmup - shown above inventory GUI
 	{
 		SColor color = SColor(200, 135, 185, 45);
 
@@ -216,9 +223,12 @@ void displayResupply(CRules@ this, string player_class, string resupply_class, V
 
 void Reset(CRules@ this)
 {
+	// Waffle: Do build phase resupply
+	this.set_s32(RESUPPLY_TIME_STRING, 1);
+	
 	//restart everyone's timers
 	for (uint i = 0; i < getPlayersCount(); ++i) {
-		SetCTFTimer(this, getPlayer(i), 0, "builder");
+		// SetCTFTimer(this, getPlayer(i), 0, "builder");  // Waffle: No need to track this
 		SetCTFTimer(this, getPlayer(i), 0, "archer");
 	}
 }
@@ -235,15 +245,24 @@ void onInit(CRules@ this)
 
 void onTick(CRules@ this)
 {
-	if (!isServer())
-		return;
-	
 	s32 gametime = getGameTime();
 	
 	if ((gametime % 15) != 5)
 		return;
 	
-	if (this.isWarmup()) 
+	// Waffle: Drop periodic crates of materials
+	if (gametime > this.get_s32(RESUPPLY_TIME_STRING))
+	{
+		SpawnResupplies(this);
+		this.set_s32(RESUPPLY_TIME_STRING, isBuildPhase(this) ? 9999999999 : gametime + crate_wait);
+	}
+
+	if(!isServer())
+	{
+		return;
+	}
+
+	if (isBuildPhase(this)) 
 	{
 		// during building time, give everyone resupplies no matter where they are
 		for (int i = 0; i < getPlayerCount(); i++) 
@@ -262,7 +281,7 @@ void onTick(CRules@ this)
 		getBlobsByName(base_name(),   @spots);
 		getBlobsByName("outpost",	@spots);
 		getBlobsByName("warboat",	 @spots);
-		getBlobsByName("buildershop", @spots);
+		// getBlobsByName("buildershop", @spots);  // Waffle: No builer resupplies
 		getBlobsByName("archershop",  @spots);
 		// getBlobsByName("knightshop",  @spots);
 		for (uint step = 0; step < spots.length; ++step) 
@@ -311,18 +330,17 @@ void onRender(CRules@ this)
 
 	GUI::SetFont("menu");
 
-	// Display builder resupply text for everyone
-	string propname = getCTFTimerPropertyName(p, "builder");
-	if (this.exists(propname)) 
+	// Waffle: No builder tooltip, display resupply crate text instead
+	if (this.exists(RESUPPLY_TIME_STRING))
 	{
 		Vec2f offset = Vec2f(20, 64);
 		Vec2f offset_second = Vec2f(0, 70);
 		string resupply_class = "builder";
-		displayResupply(this, name, resupply_class, offset, offset_second, propname);
+		displayResupply(this, name, resupply_class, offset, offset_second, RESUPPLY_TIME_STRING);
 	}
 	
 	// Display archer resupply text for archers
-	propname = getCTFTimerPropertyName(p, "archer");
+	string propname = getCTFTimerPropertyName(p, "archer");
 	if (name == "archer" && this.exists(propname))
 	{
 		Vec2f offset = Vec2f(20, 96);
@@ -335,11 +353,80 @@ void onRender(CRules@ this)
 // Reset timer in case player who joins has an outdated timer
 void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 {
-	s32 next_add_time = getGameTime() + (this.isWarmup() ? materials_wait_warmup : materials_wait) * getTicksASecond();
+	s32 next_add_time = getGameTime() + (isBuildPhase(this) ? materials_wait_warmup : materials_wait) * getTicksASecond();
 
-	if (next_add_time < getCTFTimer(this, player, "builder") || next_add_time < getCTFTimer(this, player, "archer"))
+	if (next_add_time < getCTFTimer(this, player, "archer"))  // next_add_time < getCTFTimer(this, player, "builder") ||  // Waffle: No need to track this
 	{
-		SetCTFTimer(this, player, getGameTime(), "builder");
+		// SetCTFTimer(this, player, getGameTime(), "builder");  // Waffle: No need to track this
 		SetCTFTimer(this, player, getGameTime(), "archer");
 	}
+}
+
+// Waffle: Spawn crates at each tent with team materials
+void SpawnResupplies(CRules@ this)
+{
+    CMap@ map = getMap();
+    if (map is null)
+    {
+        print("Failed to spawn resupplies, map was null");
+        return;
+    }
+
+    bool parachute = !this.get_bool("collide with ceiling") && !isBuildPhase(this);  // From KAG.as
+    f32 auto_distance_from_edge_tents = Maths::Min(map.tilemapwidth * 0.15f * 8.0f, 100.0f) * map.tilesize;
+    Vec2f blue_resupply_location, red_resupply_location;
+    if (!map.getMarker("blue main spawn", blue_resupply_location))
+    {
+        blue_resupply_location.x = auto_distance_from_edge_tents;
+    }
+    if (!map.getMarker("red main spawn", red_resupply_location))
+    {
+        red_resupply_location.x = map.tilemapwidth * map.tilesize - auto_distance_from_edge_tents;
+    }
+
+    if (parachute)
+    {
+        blue_resupply_location.y = -10 * map.tilesize;
+        red_resupply_location.y = blue_resupply_location.y;
+    }
+    SpawnResupply(this, blue_resupply_location, 0, parachute);
+    SpawnResupply(this, red_resupply_location,  1, parachute);
+			
+}
+
+// Waffle: Spawn crate at location with team materials
+void SpawnResupply(CRules@ this, Vec2f pos, u8 team, bool parachute)
+{
+    if (isServer())
+    {
+        CBlob@ crate = server_CreateBlob("crate", team, pos);
+        if (crate !is null)
+        {
+			if (parachute)
+			{
+				crate.Tag("parachute");
+			}
+            crate.SetFacingLeft(team == 1);
+            SetMaterials(crate, "mat_wood",  isBuildPhase(this) ? crate_warmup_wood_amount  : crate_wood_amount);
+            SetMaterials(crate, "mat_stone", isBuildPhase(this) ? crate_warmup_stone_amount : crate_stone_amount);
+        }
+    }
+    else
+    {
+        Sound::Play("spawn.ogg");
+    }
+}
+
+// Waffle: Set timer on state change
+void onStateChange(CRules@ this, const u8 oldState)
+{
+    if (!isBuildPhase(this))
+    {
+		this.set_s32(RESUPPLY_TIME_STRING, getGameTime());
+    }
+}
+
+bool isBuildPhase(CRules@ this)
+{
+	return this.isWarmup() || this.isIntermission();
 }

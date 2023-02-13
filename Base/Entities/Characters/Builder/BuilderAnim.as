@@ -189,12 +189,11 @@ void onTick(CSprite@ this)
 							hitting_stone = true;
 						}
 
-						// Waffle: Add support for digging man made blocks faster
-						if (attacked.hasTag("door")		||  // Wood and Stone Doors
-							attacked.isPlatform()		||  // Platforms and Trap Bridges
-							attacked_name == "ladder" 	||
-							attacked.hasTag("building")	||  // Shops
-							attacked_name == "spikes"
+						// Waffle: Add support for digging man made blocks and trees faster
+						if (attacked.hasTag("wooden")   ||
+							attacked.hasTag("building")	||
+							attacked_name == "spikes"   ||
+							attacked.hasTag("tree")
 							)
 						{
 							hitting_built = true;

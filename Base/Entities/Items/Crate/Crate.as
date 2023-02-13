@@ -134,7 +134,8 @@ void onTick(CBlob@ this)
 		}
 
 		// para force + swing in wind
-		this.AddForce(Vec2f(Maths::Sin(getGameTime() * 0.03f) * 1.0f, -30.0f * this.getVelocity().y));
+		// Waffle: Remove swinging in the wind for balance and desync
+		this.AddForce(Vec2f(Maths::Sin(getGameTime() * 0.03f) * 0.0f, -30.0f * this.getVelocity().y));
 
 		if (this.isOnGround() || this.isInWater() || this.isAttached())
 		{

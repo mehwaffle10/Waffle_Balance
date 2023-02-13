@@ -190,7 +190,7 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		u16 charge = v.charge;
 		f32 angle = Vehicle_getWeaponAngle(this, v);
 		angle = angle * (this.isFacingLeft() ? -1 : 1);
-		angle += ((XORRandom(512) - 256) / 64.0f);
+		// angle += ((XORRandom(512) - 256) / 64.0f);  // Waffle: Remove random inaccuracy
 
 		Vec2f vel = Vec2f(charge / 16.0f * (this.isFacingLeft() ? -1 : 1), 0.0f).RotateBy(angle);
 		bullet.setVelocity(vel);
@@ -207,8 +207,9 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		// set much higher drag than archer arrow
 		bullet.getShape().setDrag(bullet.getShape().getDrag() * 2.0f);
 
-		bullet.server_SetTimeToDie(-1);   // override lock
-		bullet.server_SetTimeToDie(0.69f);
+		// Waffle: Remove arrow decay 
+		// bullet.server_SetTimeToDie(-1);   // override lock
+		// bullet.server_SetTimeToDie(0.69f);
 		bullet.Tag("bow arrow");
 	}
 }

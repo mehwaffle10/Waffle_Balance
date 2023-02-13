@@ -1,4 +1,6 @@
 
+#include "canGrow.as"  // Waffle: Use the proper function instead of copy pasting it
+
 const f32 MAX_BUILD_LENGTH = 4.0f;
 
 shared class BlockCursor
@@ -217,7 +219,8 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		if (isSeed)
 		{
 			// from canGrow.as
-			return (map.isTileGround(map.getTile(p + Vec2f(0, 8)).type));
+			return canGrowAt(this, p);  // Waffle: Use the proper function instead of copy pasting it
+			// return (map.isTileGround(map.getTile(p + Vec2f(0, 8)).type));
 
 		}
 	}

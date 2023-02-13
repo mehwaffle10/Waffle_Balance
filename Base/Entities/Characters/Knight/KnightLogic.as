@@ -8,6 +8,7 @@
 #include "KnockedCommon.as"
 #include "Help.as";
 #include "Requirements.as"
+#include "GoldCoins.as"  // Waffle: Gold mines for coins instead of gold material
 
 
 //attacks limited to the one time per-actor before reset.
@@ -1383,14 +1384,20 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 									// Note: 0.1f damage doesn't harvest anything I guess
 									// This puts it in inventory - include MaterialCommon
 									//Material::fromTile(this, hi.tile, 1.f);
-									CBlob@ ore = server_CreateBlobNoInit("mat_gold");
-									if (ore !is null)
+									// Waffle: Gold mines for coins instead of gold material
+									CPlayer@ player = this.getPlayer();
+									if (player !is null)
 									{
-										ore.Tag('custom quantity');
-										ore.Init();
-										ore.setPosition(hi.hitpos);
-										ore.server_SetQuantity(4);
+										player.server_setCoins(player.getCoins() + gold_coins);
 									}
+									// CBlob@ ore = server_CreateBlobNoInit("mat_gold");
+									// if (ore !is null)
+									// {
+									// 	ore.Tag('custom quantity');
+									// 	ore.Init();
+									// 	ore.setPosition(hi.hitpos);
+									// 	ore.server_SetQuantity(4);
+									// }
 								}
 								else if (dirt_stone)
 								{
