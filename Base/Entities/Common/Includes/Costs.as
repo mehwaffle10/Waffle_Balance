@@ -156,7 +156,7 @@ void InitCosts()
 	CTFCosts::meal =                        ReadCost(cfg, "cost_meal"               , 10);
 	CTFCosts::chicken =                     ReadCost(cfg, "cost_chicken"            , 80);  // Waffle: Chickens are bought directly instead of eggs
 	CTFCosts::burger =                      ReadCost(cfg, "cost_burger"             , 20);
-	CTFCosts::seed =                        ReadCost(cfg, "cost_seed"               , 50);  // Waffle: Seeds can be bought from quarters
+	CTFCosts::seed =                        ReadCost(cfg, "cost_seed"               , 100);  // Waffle: Seeds can be bought from quarters
 
 	//CommonBuilderBlocks.as
 	CTFCosts::workshop_wood =               ReadCost(cfg, "cost_workshop_wood"      , 150);
