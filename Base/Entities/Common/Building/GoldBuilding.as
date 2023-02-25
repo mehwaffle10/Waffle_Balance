@@ -1,11 +1,10 @@
 
 // Waffle: Remove gold material in favor of coins
 // #define SERVER_ONLY
-
 // const string custom_amount_prop = "gold building amount";
 
-// void onDie(CBlob@ this)
-// {
+void onDie(CBlob@ this)
+{
 // 	int drop_amount = this.exists(custom_amount_prop) ?
 // 			this.get_s32(custom_amount_prop) :
 // 			50;
@@ -23,4 +22,4 @@
 // 		blob.server_SetQuantity(drop_amount);
 // 		blob.setPosition(this.getPosition());
 // 	}
-// }
+}

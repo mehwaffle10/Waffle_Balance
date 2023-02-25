@@ -9,14 +9,14 @@
 // const uint16 QUICK_FREQUENCY = 30;
 // const uint16 QUARTER = FREQUENCY / 4;
 
-// void onInit(CBlob@ this)
-// {
+void onInit(CBlob@ this)
+{
 // 	ScriptData@ script = this.getCurrentScript();
 // 	script.runFlags |= Script::tick_not_attached;
 // 	script.runFlags |= Script::tick_not_ininventory;
 
 // 	this.getCurrentScript().tickFrequency = (getRules().hasTag("quick decay") ? QUICK_FREQUENCY : FREQUENCY);
-// }
+}
 
 // void onTick(CBlob@ this)
 // {
