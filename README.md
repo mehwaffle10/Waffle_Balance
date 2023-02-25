@@ -142,6 +142,11 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Won't break when exiting
 - Heavily reduced air friction
 - Cost 100 wood instead of 150
+- Take 50% more damage from builders (takes 6 hits to break instead of 8)
+- No longer decay in water
+- No longer decay if spammed
+- Can automatically pick up materials again
+	- No longer automatically picks up normal arrows or logs
 
 ### Drills
 - Dig pure dirt 3x slower and properly detected (30 ticks instead of 10)

@@ -25,20 +25,20 @@ void onInit(CBlob@ this)
 	this.addCommandID("stop unpack");
 	this.addCommandID("boobytrap");
 
-	string packed = this.get_string("packed");
-
 	this.set_u32("boobytrap_cooldown_time", 0);
-	int goldAmount = 0;
-	if (packed == "warboat")
-	{
-		goldAmount = 50;
-	}
-	this.set_s32("gold building amount", goldAmount);
+	// Waffle: No more gold
+	// int goldAmount = 0;
+	// if (packed == "warboat")
+	// {
+	// 	goldAmount = 50;
+	// }
+	this.set_s32("gold building amount", 0);
 
 	u8 frame = 0;
 	if (this.exists("frame"))
 	{
 		frame = this.get_u8("frame");
+		string packed = this.get_string("packed");  // Waffle: Fix auto-pickup
 
 		// GIANT HACK!!!
 		if (packed == "catapult" || packed == "bomber" || packed == "ballista" || packed == "outpost" || packed == "mounted_bow" || packed == "longboat" || packed == "warboat")
@@ -629,7 +629,7 @@ f32 onHit( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hit
 
 	if (customData == Hitters::builder)
 	{
-		dmg *= 4;
+		dmg *= 6;  // Waffle: Builders break crates 50% faster
 	}
 	if (customData == Hitters::saw)
 	{
