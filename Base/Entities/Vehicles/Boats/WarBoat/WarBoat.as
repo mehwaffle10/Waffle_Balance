@@ -45,7 +45,8 @@ void onInit(CBlob@ this)
 		}
 	}
 
-	this.Tag("respawn");
+	// Waffle: Can't spawn at warboats
+	// this.Tag("respawn");  
 
 	InitRespawnCommand(this);
 	InitClasses(this);

@@ -89,6 +89,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Deploy instantly
 - Can't be captured
 - Don't break while flipped
+- No spawn points
 - Riders are now tagged with invulnerable
 	- Can't be hit by sword or arrows
 	- Can still be hit by explosives
