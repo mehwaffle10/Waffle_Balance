@@ -137,6 +137,12 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can be bounced off a trampoline to activate rock and roll mode
 - Tick faster in rock and roll mode (damage happens faster so it will blow holes in walls rather than phase through and break blocks intermittently)
 - Can break static blobs (doors, platforms, etc) in rock and roll mode
+- Breaks up to 16 blocks in rock and roll mode
+- No longer slowed down when breaking blocks in rock and roll mode
+- Improved rock and roll tile damage code
+	- Fixed radius and full 360 degree arc for block and blob detection
+	- Breaks backwall underneath in a plus constantly
+	- Leads to much more consistency and wider holes
 
 ### Crates
 - Won't break when exiting

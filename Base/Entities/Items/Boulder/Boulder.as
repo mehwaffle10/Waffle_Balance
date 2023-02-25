@@ -2,7 +2,7 @@
 #include "/Entities/Common/Attacks/LimitedAttacks.as";
 
 // Waffle: Increase limit to include backwall
-const int pierce_amount = 9;
+const int pierce_amount = 15;
 
 const f32 hit_amount_ground = 0.5f;
 const f32 hit_amount_air = 1.0f;
@@ -67,7 +67,7 @@ void Slam(CBlob @this, f32 angle, Vec2f vel, f32 vellen)
 	HitInfo@[] hitInfos;
 	u8 team = this.get_u8("launch team");
 
-	if (map.getHitInfosFromArc(pos, -angle, 30, vellen, this, true, @hitInfos))
+	if (map.getHitInfosFromArc(pos, -angle, 360, 8.0f, this, true, @hitInfos))  // Waffle: Rock and roll hits a full circle and a fixed distance
 	{
 		for (uint i = 0; i < hitInfos.length; i++)
 		{
@@ -96,30 +96,39 @@ void Slam(CBlob @this, f32 angle, Vec2f vel, f32 vellen)
 	// chew through backwalls
 
 	// Waffle: Fix bug where it could break dirt and bedrock when trying to hit backwall bouncing off a trampoline
-	u16 type = map.getTile(pos).type;
-	if (type == CMap::tile_wood_back 	 	||  // Wood Backwall
-		type == 207 					 	||  // Damaged Wood Backwall
-		type == CMap::tile_castle_back 	||  // Stone Backwall
-		type >= 76 && type <= 79	 	||  // Damaged Stone Backwall
-		type == CMap::tile_castle_back_moss)  // Mossy Stone Backwall
+	Vec2f center_tile = map.getTileSpacePosition(pos) * map.tilesize;
+	s8 size = 1;
+	for (s8 x = -size; x <= size; x++)
 	{
-		// Waffle: Ignore no build zones
-		// if (map.getSectorAtPosition(pos, "no build") !is null)
-		// {
-		// 	return;
-		// }
+		s8 bound = size - Maths::Abs(x);
+		for (s8 y = -bound; y <= bound; y++)
+		{
+			Vec2f tile_pos = center_tile + Vec2f(x, y) * map.tilesize;
+			u16 type = map.getTile(tile_pos).type;
+			if (type == CMap::tile_wood_back   ||  	  // Wood Backwall
+				type == 207 				   ||  	  // Damaged Wood Backwall
+				type == CMap::tile_castle_back ||  	  // Stone Backwall
+				type >= 76 && type <= 79       ||  	  // Damaged Stone Backwall
+				type == CMap::tile_castle_back_moss)  // Mossy Stone Backwall
+			{
+				// Waffle: Ignore no build zones
+				// if (map.getSectorAtPosition(pos, "no build") !is null)
+				// {
+				// 	return;
+				// }
 
-		// Waffle: Backwall counts towards total too
-		u8 blocks_pierced = this.get_u8("blocks_pierced");
-		if (blocks_pierced < pierce_amount)
-		{
-			map.server_DestroyTile(pos + Vec2f(7.0f, 7.0f), 10.0f, this);
-			map.server_DestroyTile(pos - Vec2f(7.0f, 7.0f), 10.0f, this);
-			this.set_u8("blocks_pierced", blocks_pierced + 1);
-		}
-		else
-		{
-			this.server_Hit(this, this.getPosition(), vel, 10, Hitters::crush, true);
+				// Waffle: Backwall counts towards total too
+				u8 blocks_pierced = this.get_u8("blocks_pierced");
+				if (blocks_pierced < pierce_amount)
+				{
+					map.server_DestroyTile(tile_pos, 10.0f, this);
+					this.set_u8("blocks_pierced", blocks_pierced + 1);
+				}
+				else
+				{
+					this.server_Hit(this, this.getPosition(), vel, 10, Hitters::crush, true);
+				}
+			}
 		}
 	}
 }
@@ -152,7 +161,7 @@ bool BoulderHitMap(CBlob@ this, Vec2f worldPoint, int tileOffset, Vec2f velocity
 
 		map.server_DestroyTile(tpos, 100.0f, this);
 		Vec2f vel = this.getVelocity();
-		this.setVelocity(vel * 0.8f); //damp
+		// this.setVelocity(vel * 0.8f); //damp  // Waffle: No longer slows down when hitting blocks
 		this.push("tileOffsets", tileOffset);
 
 		if (blocks_pierced < pierce_amount)
