@@ -46,7 +46,11 @@ void onInit(CBlob@ this)
 	}
 
 	// Waffle: Can't spawn at warboats
-	// this.Tag("respawn");  
+	// this.Tag("respawn");
+
+	// Waffle: Fix issue with missing command
+	this.addCommandID("detach vehicle");
+    this.addCommandID("attach vehicle");
 
 	InitRespawnCommand(this);
 	InitClasses(this);
@@ -215,7 +219,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 	if (caller.getTeamNum() == this.getTeamNum())
 	{
-		caller.CreateGenericButton("$change_class$", Vec2f(13, 4), this, buildSpawnMenu, getTranslatedString("Change class"));
+		caller.CreateGenericButton("$change_class$", Vec2f(0, 0), this, buildSpawnMenu, getTranslatedString("Change class"));  // Waffle: Center class swap button
 	}
 }
 
