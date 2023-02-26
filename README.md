@@ -97,6 +97,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Boats
 - Don't break on land (or if left alone???)
 - Doesn't sink on low health
+- No longer have an inventory
 
 ### Siege Weapons
 - Don't break in water
