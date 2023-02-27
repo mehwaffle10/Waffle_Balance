@@ -6,7 +6,7 @@
 // defines amount of damage as well as maximum separate hits
 // - in terms of this's health. see config
 const f32 ROCK_MAX_DAMAGE = 10.0f; // just deal all the damage of the rock to blobs
-const f32 ROCK_DAMAGE_MULT = 0.6f; // but make the rock kinda weak against blobs
+const f32 ROCK_DAMAGE_MULT = 1.0f; // but make the rock kinda weak against blobs  // Waffle: Less damage to blobs
 
 u32 g_lastplayedsound = 0;
 
@@ -60,9 +60,14 @@ void onTick(CBlob@ this)
 	}
 
 	CMap@ map = this.getMap();
-	Tile tile = map.getTile(pos);
+	TileType type = map.getTile(pos).type;
 
-	if (map.isTileBackgroundNonEmpty(tile) && this.getTickSinceCreated() > 9.0f - vellen*0.42f) // prevent hitting backtiles if just created.
+	if ((type == CMap::tile_wood_back  ||  	  // Wood Backwall
+		type == 207 				   ||  	  // Damaged Wood Backwall
+		type == CMap::tile_castle_back ||  	  // Stone Backwall
+		type >= 76 && type <= 79       ||  	  // Damaged Stone Backwall
+		type == CMap::tile_castle_back_moss)  // Mossy Stone Backwall
+		&& this.getTickSinceCreated() > 9.0f - vellen*0.42f) // prevent hitting backtiles if just created.
 	{
 		if (isServer)
 		{
@@ -71,10 +76,13 @@ void onTick(CBlob@ this)
 			// {
 			// 	return;
 			// }
-			map.server_DestroyTile(pos, 2.0f, this);
+			map.server_DestroyTile(pos, 1.0f, this);  // Waffle: Do more damage to backwall
+			map.server_DestroyTile(pos, 1.0f, this);
+			map.server_DestroyTile(pos, 1.0f, this);
 
 			// slightly damage the rock too
-			this.server_Hit(this, this.getPosition(), this.getVelocity(), 0.05f, Hitters::cata_stones, true);
+			this.server_Die();
+			// this.server_Hit(this, this.getPosition(), this.getVelocity(), 0.5f, Hitters::cata_stones, true);  // Waffle: Break less backwall
 		}
 	}
 
@@ -175,6 +183,7 @@ float HitMap(CBlob@ this, CMap@ map, Vec2f tilepos, bool ricochet)
 		// a rock can do ~4 hits to wood, ~3 hits to stone
 		const float dmg = map.isTileCastle(t) ? 1.3f : 0.8f;
 		map.server_DestroyTile(tilepos, 1.0f, this);
+		map.server_DestroyTile(tilepos, 1.0f, this);
 		return dmg;
 		// }
 	}
@@ -207,12 +216,12 @@ void onDie(CBlob@ this)
 			"rocks.png", // not CataRocks.png
 			this.getPosition(),
 			getRandomVelocity(-this.getOldVelocity().getAngle(), XORRandom(4.0f) + 2.0f, 10.0f),
-			1,
+			0,
 			XORRandom(4), // any of the smaller frames
 			Vec2f(8, 8),
 			7.0f,
 			0,
-			"",
+			"rock_hit",
 			0
 		);
 
@@ -220,7 +229,7 @@ void onDie(CBlob@ this)
 		if (gametime > g_lastplayedsound + 2)
 		{
 			g_lastplayedsound = gametime;
-			Sound::Play("/rock_hit", this.getPosition(), Maths::Min(Maths::Max(0.5f, this.getOldVelocity().Length()), 1.5f));
+			Sound::Play("rock_hit", this.getPosition(), Maths::Min(Maths::Max(0.5f, this.getOldVelocity().Length()), 1.5f));
 		}
 	}
 }
@@ -267,7 +276,10 @@ void Pierce(CBlob @this)
 
 				if (isServer() && canHitBlob(this, hi.blob))
 				{
-					const float appliedDamage = Maths::Min(ROCK_MAX_DAMAGE, damageBudget) * ROCK_DAMAGE_MULT;
+					// Waffle: Fix damage ratios
+					const float appliedDamage = hi.blob.hasTag("player") ? 0.25f : 2.0f;
+					// const float appliedDamage = Maths::Min(ROCK_MAX_DAMAGE, damageBudget) * ROCK_DAMAGE_MULT;
+
 
 					const float oldTargetHealth = hi.blob.getHealth();
 					this.server_Hit(hi.blob, hi.hitpos, initVelocity, appliedDamage, Hitters::cata_stones, true);
@@ -298,12 +310,13 @@ void Pierce(CBlob @this)
 
 				// though if we're the client... we honestly don't really have a way to tell.
 				// so if we're the client, assume it's a ricochet and let the resync occur if we were wrong
-				ricochet = map.getTile(tilepos).type != 0 || !isServer();
+				// ricochet = map.getTile(tilepos).type != 0 || !isServer();
 
-				if (ricochet)
-				{
-					this.setPosition(hi.hitpos - velDir * 0.4f);
-				}
+				// Waffle: Remove ricochets
+				// if (ricochet)
+				// {
+				// 	this.setPosition(hi.hitpos - velDir * 0.4f);
+				// }
 			}
 
 			if (isServer() && damageDealt > 0.0f)
@@ -317,14 +330,17 @@ void Pierce(CBlob @this)
 	{
 		Random r(this.getNetworkID());
 
+		// Waffle: Make rocks weaker per but increase volume
 		if (isServer())
 		{
-			this.server_Hit(this, pos, initVelocity, damageDealt, Hitters::cata_stones, true);
+			this.server_Die();
+			// this.server_Hit(this, pos, initVelocity, damageDealt, Hitters::cata_stones, true);
 		}
 
-		if (ricochet)
-		{
-			this.setVelocity(Vec2f(r.NextFloat() - 0.5f, r.NextFloat() - 0.5f) * vellen * 1.5f + initVelocity * 0.25f);
-		}
+		// Waffle: Remove ricochets
+		// if (ricochet)
+		// {
+		// 	this.setVelocity(Vec2f(r.NextFloat() - 0.5f, r.NextFloat() - 0.5f) * vellen * 1.5f + initVelocity * 0.25f);
+		// }
 	}
 }

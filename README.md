@@ -104,6 +104,21 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can no longer shoot through platforms
 - Projectiles ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 
+### Catapults
+- Rocks reworked
+	- Deal half a heart of damage to players
+	- Deal 2 hearts to all other blocks
+	- Hit backwall 3 times
+	- Hit blocks 2 times
+	- Break instantly when hitting something
+		- No piercing
+		- No ricochets
+		- Makes for more consistency in gameplay and visuals
+- Now shoots 25 rocks instead of 7
+- Each rock costs 1 stone
+- Doubled the amount of vertical spread on catapult shots
+- Can hold 100 stone in reserve
+
 ### Mounted Bow
 - Health increased from 2 to 20
 - Can fire every 15 ticks instead of every 25 ticks (every .75 seconds instead of 1.25 seconds)
