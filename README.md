@@ -129,6 +129,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Cost 180 coins
 
 ### Ballistas
+- Start with 6 bomb bolts
+- Can aim up to 60° lower
 - Cost 250 coins
 
 ### Mounted Bow
