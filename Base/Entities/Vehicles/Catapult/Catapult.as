@@ -22,8 +22,8 @@ const f32 other_launch_modifier = 1.1f;
 void onInit(CBlob@ this)
 {
 	Vehicle_Setup(this,
-	              30.0f, // move speed
-	              0.31f,  // turn speed
+	              45.0f, // move speed  // Waffle: Move 50% faster
+	              0.10f,  // turn speed  // Waffle: Turn around faster
 	              Vec2f(0.0f, 0.0f), // jump out velocity
 	              false  // inventory access
 	             );
@@ -36,7 +36,7 @@ void onInit(CBlob@ this)
 	Vehicle_AddAmmo(this, v,
 	                    cooldown_time, // fire delay (ticks)
 	                    25, // fire bullets amount                    // Waffle: Higher impact per shot
-	                    1, // fire cost								  // Waffle: Less cost per rock
+	                    2, // fire cost								  // Waffle: Less cost per rock
 	                    "mat_stone", // bullet ammo config name
 	                    "Catapult Rocks", // name for ammo selection
 	                    "cata_rock", // bullet config name
