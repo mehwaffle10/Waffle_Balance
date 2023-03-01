@@ -103,6 +103,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Don't break in water
 - Can no longer shoot through platforms
 - Projectiles ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
+- 50% Faster and can turn around easier
 
 ### Catapults
 - Rocks reworked
@@ -115,7 +116,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 		- No ricochets
 		- Makes for more consistency in gameplay and visuals
 - Now shoots 25 rocks instead of 7
-- Each rock costs 1 stone
+- Each rock costs 2 stone instead of 3
 - Doubled the amount of vertical spread on catapult shots
 - Can hold 100 stone in reserve
 
