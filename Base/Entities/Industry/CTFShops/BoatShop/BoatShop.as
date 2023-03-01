@@ -29,20 +29,21 @@ void onInit(CBlob@ this)
 	{
 		string dinghy_icon = getTeamIcon("dinghy", "VehicleIcons.png", team_num, Vec2f(32, 32), 5);
 		ShopItem@ s = addShopItem(this, "Dinghy", dinghy_icon, "dinghy", dinghy_icon + "\n\n\n" + Descriptions::dinghy);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::dinghy_wood);
+		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::dinghy);
+		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::dinghy_wood);  // Waffle: Remove wood cost from dinghies
 	}
 	{
 		string longboat_icon = getTeamIcon("longboat", "VehicleIcons.png", team_num, Vec2f(32, 32), 4);
 		ShopItem@ s = addShopItem(this, "Longboat", longboat_icon, "longboat", longboat_icon + "\n\n\n" + Descriptions::longboat, false, true);
 		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::longboat);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::longboat_wood);
+		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::longboat_wood);  // Waffle: Remove wood cost from longboats
 		s.crate_icon = 1;
 	}
 	{
 		string warboat_icon = getTeamIcon("warboat", "VehicleIcons.png", team_num, Vec2f(32, 32), 2);
 		ShopItem@ s = addShopItem(this, "War Boat", warboat_icon, "warboat", warboat_icon + "\n\n\n" + Descriptions::warboat, false, true);
 		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::warboat);
-		// AddRequirement(s.requirements, "blob", "mat_gold", "Gold", CTFCosts::warboat_gold);  // Waffle: Remove gold cost
+		// AddRequirement(s.requirements, "blob", "mat_gold", "Gold", CTFCosts::warboat_gold);  // Waffle: Remove gold cost from warboats
 		s.crate_icon = 2;
 	}
 }

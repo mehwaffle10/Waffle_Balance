@@ -94,7 +94,17 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Boats
 - Don't break on land (or if left alone???)
 - Doesn't sink on low health
+- No longer have wood cost
 - No longer have an inventory
+
+### Dinghies
+- Cost 40 coins
+
+### Longboats
+- Cost 100 coins
+
+### Warboats
+- Cost 200 coins
 
 ### Siege Weapons
 - Don't break in water
@@ -116,6 +126,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Each rock costs 2 stone instead of 3
 - Doubled the amount of vertical spread on catapult shots
 - Can hold 100 stone in reserve
+- Cost 180 coins
+
+### Ballistas
+- Cost 250 coins
 
 ### Mounted Bow
 - Health increased from 2 to 20
@@ -208,7 +222,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Keg
 - Explode in a circular 6 block radius instead of doing bomberman plus shape
-- Cost 200 coins
+- Cost 160 coins
 
 ### Mines
 - Deploy after timer like they used to 

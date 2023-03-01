@@ -30,7 +30,7 @@ namespace CTFCosts
 
 	// Waffle: Remove warboat gold cost
 	//BoatShop.as
-	s32 dinghy, dinghy_wood, longboat, longboat_wood, warboat;  // warboat_gold;
+	s32 dinghy, longboat, warboat;  // dinghy_wood, longboat_wood, warboat_gold;
 
 	// Waffle: Remove outposts and ballista gold cost
 	//VehicleShop.as
@@ -135,11 +135,11 @@ void InitCosts()
 	CTFCosts::crate =                       ReadCost(cfg, "cost_crate"              , 20);
 
 	//BoatShop.as
-	CTFCosts::dinghy =                      ReadCost(cfg, "cost_dinghy"             , 25);
-	CTFCosts::dinghy_wood =                 ReadCost(cfg, "cost_dinghy_wood"        , 100);
-	CTFCosts::longboat =                    ReadCost(cfg, "cost_longboat"           , 50);
-	CTFCosts::longboat_wood =               ReadCost(cfg, "cost_longboat_wood"      , 200);
-	CTFCosts::warboat =                     ReadCost(cfg, "cost_warboat"            , 250);
+	CTFCosts::dinghy =                      ReadCost(cfg, "cost_dinghy"             , 40);
+	// CTFCosts::dinghy_wood =                 ReadCost(cfg, "cost_dinghy_wood"        , 100);  # Waffle: Remove wood cost on dinghies
+	CTFCosts::longboat =                    ReadCost(cfg, "cost_longboat"           , 100);
+	// CTFCosts::longboat_wood =               ReadCost(cfg, "cost_longboat_wood"      , 200);  # Waffle: Remove wood cost on longboats
+	CTFCosts::warboat =                     ReadCost(cfg, "cost_warboat"            , 200);
 	// CTFCosts::warboat_gold =                ReadCost(cfg, "cost_warboat_gold"       , 50);
 
 	//VehicleShop.as
