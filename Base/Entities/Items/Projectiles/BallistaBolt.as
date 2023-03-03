@@ -152,7 +152,7 @@ void Pierce(CBlob@ this, Vec2f velocity, const f32 angle)
 
 			if (blob !is null)
 			{
-				// Waffle: Catapults can't shoot through platforms
+				// Waffle: Ballistas can't shoot through platforms
 				// if (blob.getShape().getConsts().platform && !CollidesWithPlatform(this, blob, velocity))
 				// 	continue;
 
@@ -178,7 +178,7 @@ bool DoExplosion(CBlob@ this, Vec2f velocity)
 			return true;
 
 		Explode(this, 16.0f, 2.0f);
-		LinearExplosion(this, velocity, 64.0f, 8.0f, 2, 4.0f, Hitters::bomb);
+		LinearExplosion(this, velocity, 32.0f, 16.0f, 4, 4.0f, Hitters::bomb);  // Waffle: Make bomb bolts more damaging
 
 		this.Tag("dead");
 		this.server_Die();

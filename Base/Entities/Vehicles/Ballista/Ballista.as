@@ -72,7 +72,7 @@ void onInit(CBlob@ this)
 
 	this.getShape().SetOffset(Vec2f(0, 8));
 
-	Vehicle_SetWeaponAngle(this, low_angle, v);
+	Vehicle_SetWeaponAngle(this, (low_angle - high_angle) / 2, v);  // Waffle: Make starting aim position a little less weird
 
 	string[] autograb_blobs = {"mat_bolts", "mat_bomb_bolts"};
 	this.set("autograb blobs", autograb_blobs);

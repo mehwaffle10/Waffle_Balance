@@ -96,6 +96,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Doesn't sink on low health
 - No longer have wood cost
 - No longer have an inventory
+- No longer can detach attached siege weapons
 
 ### Dinghies
 - Cost 40 coins
@@ -111,6 +112,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can no longer shoot through platforms
 - Projectiles ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - 50% Faster and can turn around easier
+- Can readd wheels after immobilizing
 
 ### Catapults
 - Rocks reworked
@@ -131,6 +133,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Ballistas
 - Start with 6 bomb bolts
 - Can aim up to 60° lower
+- Bomb bolt linear explosion damaged increase
+	- width from 1 to 2 blocks
+	- max depth from 2 to 4 blocks
+	- explosion damage (vs blobs) limited from 8 to 4 blocks
 - Cost 250 coins
 
 ### Mounted Bow
