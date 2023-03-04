@@ -2,6 +2,12 @@
 
 #include "ArcherCommon.as";
 
+// Waffle: Add angle lock toggle
+const string ANGLE_IS_LOCKED = "angle is locked";
+const string LOCKED_ANGLE = "locked angle";
+const string LOCK_COOLDOWN = "locked angle cooldown";
+
+
 namespace Trampoline
 {
 	const string TIMER = "trampoline_timer";
@@ -28,8 +34,9 @@ void onInit(CBlob@ this)
 	// Because BlobPlacement.as is *AMAZING*
 	this.Tag("place norotate");
 
-	// AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-	// point.SetKeysToTake(key_action1 | key_action2);  Waffle: Make it so you can do all actions while holding a trampoline
+	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+	// point.SetKeysToTake(key_action1 | key_action2);  // Waffle: Make it so you can do all actions while holding a trampoline
+	point.SetKeysToTake(key_action3);  // Waffle: Add angle lock toggle
 
 	this.getCurrentScript().runFlags |= Script::tick_attached;
 }
@@ -44,18 +51,31 @@ void onTick(CBlob@ this)
 	Vec2f ray = holder.getAimPos() - this.getPosition();
 	ray.Normalize();
 
+	// Waffle: Add angle lock toggle
+	u32 gametime = getGameTime();
+	if (point.isKeyPressed(key_action3) && gametime > this.get_u32(LOCK_COOLDOWN))
+	{
+		this.set_bool(ANGLE_IS_LOCKED, !this.get_bool(ANGLE_IS_LOCKED));
+		this.set_u32(LOCK_COOLDOWN, gametime + getTicksASecond() / 2);
+		this.set_f32(LOCKED_ANGLE, -this.getAngleDegrees());
+	}
+
 	// Waffle: Make it rotate vertical as well
 	f32 angle = ray.Angle();
-	if (angle > 180)
+	if (this.get_bool(ANGLE_IS_LOCKED))
+	{
+		angle = this.get_f32(LOCKED_ANGLE);
+	}
+	else if (angle > 180)
 	{
 		angle = holder.isFacingLeft() ? 180 : 0;
+		angle -= 90;
 	}
 	else
 	{
 		angle = angle > 135 || angle < 45 ? (holder.isFacingLeft() ? 135 : 45) : 90;
+		angle -= 90;
 	}
-	
-	angle -= 90;
 
 	this.setAngleDegrees(-angle);
 }
@@ -168,4 +188,10 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 {
 	return !this.hasTag("no pickup");
+}
+
+void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
+{
+	this.set_bool(ANGLE_IS_LOCKED, false);
+	this.set_u32(LOCK_COOLDOWN, 0);
 }

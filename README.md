@@ -165,6 +165,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Snap to angles
 - Are now flammable
 - No longer bounce enemy fire arrows
+- Can use action3 key (default space) to lock the angle the trampoline is facing
 
 ### Boulders (Rock and roll mode is the block destroying mode like when launched from a catapult)
 - Team based collisions like TDM (allows friendly archers to shoot through them but not enemy)
