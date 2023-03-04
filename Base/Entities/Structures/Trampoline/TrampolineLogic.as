@@ -2,6 +2,22 @@
 
 #include "ArcherCommon.as";
 
+// Waffle: Readd folding
+namespace Trampoline
+{
+	enum State
+	{
+		folded = 0,
+		idle,
+		bounce
+	}
+
+	enum msg
+	{
+		msg_pack = 0
+	}
+}
+
 // Waffle: Add angle lock toggle
 const string ANGLE_IS_LOCKED = "angle is locked";
 const string LOCKED_ANGLE = "locked angle";
@@ -25,6 +41,7 @@ class TrampolineCooldown{
 
 void onInit(CBlob@ this)
 {
+	this.set_u8("trampolineState", Trampoline::folded);
 	TrampolineCooldown @[] cooldowns;
 	this.set(Trampoline::TIMER, cooldowns);
 	this.getShape().getConsts().collideWhenAttached = true;
@@ -56,7 +73,7 @@ void onTick(CBlob@ this)
 	if (point.isKeyPressed(key_action3) && gametime > this.get_u32(LOCK_COOLDOWN))
 	{
 		this.set_bool(ANGLE_IS_LOCKED, !this.get_bool(ANGLE_IS_LOCKED));
-		this.set_u32(LOCK_COOLDOWN, gametime + getTicksASecond() / 2);
+		this.set_u32(LOCK_COOLDOWN, gametime + getTicksASecond() / 3);
 		this.set_f32(LOCKED_ANGLE, -this.getAngleDegrees());
 	}
 
@@ -82,7 +99,7 @@ void onTick(CBlob@ this)
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1, Vec2f point2)
 {
-	if (blob is null || blob.isAttached() || blob.getShape().isStatic()) return;
+	if (blob is null || blob.isAttached() || blob.getShape().isStatic() || this.get_u8("trampolineState") == Trampoline::folded) return;  // Waffle: Readd folding
 
 	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 	CBlob@ holder = point.getOccupied();
@@ -183,6 +200,54 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
 	return blob.getShape().isStatic();
+}
+
+// Waffle: Readd folding
+void GetButtonsFor(CBlob@ this, CBlob@ caller)
+{
+	if (caller.getDistanceTo(this) > 32.0f)
+		return;
+
+	u8 state = this.get_u8("trampolineState");
+
+	if (state == Trampoline::folded)
+	{
+		caller.CreateGenericButton(6, Vec2f(0, -2), this, Trampoline::msg_pack, "Unpack Trampoline");
+	}
+	else
+	{
+		if (!this.hasTag("static"))
+		{
+			caller.CreateGenericButton(4, Vec2f(0, -2), this, Trampoline::msg_pack, "Pack up to move");
+		}
+	}
+}
+
+// Waffle: Readd folding
+void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
+{
+	string dbg = "TrampolineLogic.as: Unknown command ";
+	u8 state = this.get_u8("trampolineState");
+
+	switch (cmd)
+	{
+		case Trampoline::msg_pack:
+			if (state != Trampoline::folded)
+			{
+				this.set_u8("trampolineState", Trampoline::folded);
+			}
+			else
+			{
+				this.set_u8("trampolineState", Trampoline::idle); //logic for completion of this this is in anim script
+			}
+
+			break;
+
+		default:
+			dbg += cmd;
+			print(dbg);
+			warn(dbg);
+	}
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
