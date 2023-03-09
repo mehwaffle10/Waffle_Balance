@@ -108,9 +108,9 @@ void InitCosts()
 
 	//ArcherShop.as
 	CTFCosts::arrows =                      ReadCost(cfg, "cost_arrows"             , 15);
-	CTFCosts::waterarrows =                 ReadCost(cfg, "cost_waterarrows"        , 15);
-	CTFCosts::firearrows =                  ReadCost(cfg, "cost_firearrows"         , 30);
-	CTFCosts::bombarrows =                  ReadCost(cfg, "cost_bombarrows"         , 50);
+	CTFCosts::waterarrows =                 ReadCost(cfg, "cost_waterarrows"        , 25);  // Waffle: Increase water arrow cost
+	CTFCosts::firearrows =                  ReadCost(cfg, "cost_firearrows"         , 50);  // Waffle: Increase fire arrow cost
+	CTFCosts::bombarrows =                  ReadCost(cfg, "cost_bombarrows"         , 75);  // Waffle: Increase bomb arrow cost
 
 	//KnightShop.as
 	CTFCosts::bomb =                        ReadCost(cfg, "cost_bomb"               , 25);
@@ -144,10 +144,10 @@ void InitCosts()
 
 	//VehicleShop.as
 	CTFCosts::catapult =                    ReadCost(cfg, "cost_catapult"                   , 120);
-	CTFCosts::ballista =                    ReadCost(cfg, "cost_ballista"                   , 200);
+	CTFCosts::ballista =                    ReadCost(cfg, "cost_ballista"                   , 200);  // Waffle: Increase ballista cost
 	// CTFCosts::ballista_gold =               ReadCost(cfg, "cost_ballista_gold"              , 50);
 	CTFCosts::ballista_ammo =               ReadCost(cfg, "cost_ballista_ammo"              , 80);
-	CTFCosts::ballista_bomb_ammo =          ReadCost(cfg, "cost_ballista_bomb_ammo"         , 100);
+	CTFCosts::ballista_bomb_ammo =          ReadCost(cfg, "cost_ballista_bomb_ammo"         , 150);  // Waffle: Increase bomb bolt cost
 	// CTFCosts::outpost_coins =				ReadCost(cfg, "cost_outpost_coins"				, 150);  // Waffle: Remove outposts
 	// CTFCosts::outpost_gold =				ReadCost(cfg, "cost_outpost_gold"				, 50);
 

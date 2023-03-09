@@ -86,13 +86,6 @@ void onInit(CBlob@ this)
 			if (!this.server_PutInInventory(ammo))
 				ammo.server_Die();
 		}
-		// Waffle: Starts with some bomb bolts too
-		CBlob@ bomb_ammo = server_CreateBlob("mat_bomb_bolts");
-		if (bomb_ammo !is null)
-		{
-			if (!this.server_PutInInventory(bomb_ammo))
-				bomb_ammo.server_Die();
-		}
 	}
 
 	// init arm sprites

@@ -131,13 +131,13 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Cost 180 coins
 
 ### Ballistas
-- Start with 6 bomb bolts
 - Can aim up to 60° lower
 - Bomb bolt linear explosion damaged increase
 	- width from 1 to 2 blocks
 	- max depth from 2 to 4 blocks
 	- explosion damage (vs blobs) limited from 8 to 4 blocks
-- Cost 250 coins
+- Cost 200 coins instead of 150
+- Bomb bolts cost 150 coins instead of 100
 
 ### Mounted Bow
 - Health increased from 2 to 20
@@ -214,7 +214,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Have 5x the amount of health (will last 5x longer when climbed on)
 
 ### Water Arrows
-- Cost 20 coins for 1 instead of 15
+- Cost 25 coins for 1 instead of 15
 
 ### Fire Arrows
 - Cost 50 coins for 2 instead of 30
@@ -226,7 +226,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Direct arrow hits still do full damage plus burn damage
 
 ### Bomb Arrows
-- Cost 100 coins for 1 instead of 50
+- Cost 75 coins for 1 instead of 50
 
 ## KNIGHT SHOP
 
