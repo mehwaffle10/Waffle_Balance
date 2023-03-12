@@ -140,7 +140,9 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 		return; //------------------------------------------------------ END WHEN BOMBERMAN
 	}
 
-	for (int i = 0; i < radius * 0.16; i++)
+	// Waffle: Increase keg explosion visuals
+	bool keg = this.getName() == "keg";
+	for (int i = 0; i < radius * (keg ? 0.5 : 0.16); i++)
 	{
 		Vec2f partpos = pos + Vec2f(XORRandom(r * 2) - r, XORRandom(r * 2) - r);
 		Vec2f endpos = partpos;
@@ -148,7 +150,16 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 		if (map !is null)
 		{
 			if (!map.rayCastSolid(pos, partpos, endpos))
-				makeSmallExplosionParticle(endpos);
+			{
+				if (keg)
+				{
+					makeLargeExplosionParticle(endpos);
+				}
+				else
+				{
+					makeSmallExplosionParticle(endpos);
+				}
+			}
 		}
 	}
 
@@ -262,7 +273,7 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 							{
 								if (canExplosionDamage(map, tpos, tile))
 								{
-									if (!map.isTileBedrock(tile) && !map.isTileGold(tile))  // Waffle: Prevent explosives from breaking gold
+									if (!map.isTileBedrock(tile))
 									{
 										if (dist >= rad_thresh ||
 										        !canExplosionDestroy(map, tpos, tile))
