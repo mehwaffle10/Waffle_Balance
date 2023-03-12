@@ -493,7 +493,7 @@ bool canExplosionDamage(CMap@ map, Vec2f tpos, TileType t)
 	// return map.getSectorAtPosition(tpos, "no build") is null &&
 	//        (t != CMap::tile_ground_d0 && t != CMap::tile_stone_d0) && //don't _destroy_ ground, hit until its almost dead tho
 	// 	   !(hasValidFrontBlob && isBackwall); // don't destroy backwall if there is a door or trap block
-	return t != CMap::tile_ground_d0 && t != CMap::tile_stone_d0; //don't _destroy_ ground, hit until its almost dead tho
+	return t != CMap::tile_ground_d0 && t != CMap::tile_stone_d0 && !map.isTileGold(t); // Waffle: Prevent explosives from breaking gold; //don't _destroy_ ground, hit until its almost dead tho
 }
 
 bool canExplosionDestroy(CMap@ map, Vec2f tpos, TileType t)

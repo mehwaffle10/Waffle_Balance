@@ -255,7 +255,11 @@ void BallistaHitMap(CBlob@ this, const u32 offset, Vec2f hit_position, Vec2f vel
 	{
 		// Waffle: Ignore no build zones
 		// if (map.getSectorAtPosition(hit_position, "no build") is null)
-		map.server_DestroyTile(hit_position, 1.0f, this);
+		// Waffle: Ballista bolts can't break gold
+		if (!map.isTileBedrock(type) && !map.isTileGold(type))  
+		{
+			map.server_DestroyTile(hit_position, 1.0f, this);
+		}
 
 		u8 blocks_pierced = this.get_u8("blocks_pierced");
 		const f32 speed = velocity.getLength();
