@@ -262,7 +262,7 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 							{
 								if (canExplosionDamage(map, tpos, tile))
 								{
-									if (!map.isTileBedrock(tile))
+									if (!map.isTileBedrock(tile) && !map.isTileGold(tile))  // Waffle: Prevent explosives from breaking gold
 									{
 										if (dist >= rad_thresh ||
 										        !canExplosionDestroy(map, tpos, tile))

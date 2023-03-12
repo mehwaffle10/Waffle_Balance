@@ -52,6 +52,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Changed the threshold for a strong launch from 30% to 50% of the blast radius to make bomb jumps easier especially on laggy servers, damage remains the same
 - Do full damage to stone structures instead of half (3 shot stone doors and tunnels, 2 shot storage)
 - Do 2x damage to wood structures instead of 1.4x (1 shot wood doors, already 1 shot wood buildings)
+- No longer damage gold
 
 ### Fire
 - Can spread diagonally
@@ -60,6 +61,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Gold
 - Gives 8 coins per hit instead of gold
 - Gold is only present in middle of map
+- No longer damaged by explosives
 
 ### Trees
 - Can only grow if there is no more than 1 other tree within 16 blocks
