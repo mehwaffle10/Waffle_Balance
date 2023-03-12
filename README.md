@@ -62,6 +62,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Gives 8 coins per hit instead of gold
 - Gold is only present in middle of map
 - No longer damaged by explosives
+- Can no longer be drilled
 
 ### Trees
 - Can only grow if there is no more than 1 other tree within 16 blocks
@@ -196,6 +197,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- No longer automatically picks up normal arrows or logs
 
 ### Drills
+- Can no longer dig gold
 - Dig pure dirt 3x slower and properly detected (30 ticks instead of 10)
 - Digging pure dirt overheats the drill incredibly fast
 	- Will overheat even in water

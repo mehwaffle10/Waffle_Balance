@@ -349,9 +349,13 @@ void onTick(CBlob@ this)
 
 										if (!map.isTileSolid(map.getTile(hi.tileOffset))){ break; }
 
-										map.server_DestroyTile(hi.hitpos, 1.0f, this);
+										// Waffle: Drills can't dig gold
+										if (!map.isTileBedrock(tile) && !map.isTileGold(tile))  
+										{
+											map.server_DestroyTile(hi.hitpos, 1.0f, this);
+										}
 
-										if (map.isTileCastle(tile) || map.isTileWood(tile) || map.isTileGold(tile))
+										if (map.isTileCastle(tile) || map.isTileWood(tile))  // Waffle: Drills can't dig gold    || map.isTileGold(tile))    
 										{
 											Material::fromTile(holder, tile, 1.0f);
 										}
@@ -374,7 +378,7 @@ void onTick(CBlob@ this)
 
 								if (isClient())
 								{
-									if (map.isTileBedrock(tile))
+									if (map.isTileBedrock(tile) || map.isTileGold(tile))  // Waffle: Drills can't dig gold
 									{
 										sprite.PlaySound("metal_stone.ogg");
 										sparks(hi.hitpos, attackVel.Angle(), 1.0f);
@@ -382,7 +386,7 @@ void onTick(CBlob@ this)
 								}
 
 								//only counts as hitting something if its not mats, so you can drill out veins quickly
-								if (!map.isTileStone(tile) || !map.isTileGold(tile))
+								if (!map.isTileStone(tile))  // Waffle: Drills can't dig gold || !map.isTileGold(tile))
 								{
 									hitsomething = true;
 									if (map.isTileCastle(tile) || map.isTileWood(tile))
