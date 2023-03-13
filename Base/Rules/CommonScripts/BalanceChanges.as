@@ -55,7 +55,7 @@ class PopupGUI
 
 	void Update(CControls@ controls)
 	{
-		center = Vec2f(getScreenWidth() / 2, getScreenHeight() / 2);
+		center = Vec2f(getScreenWidth() - 8 - text_dim.x / 2, 8 + text_dim.y / 2);
 		tl = center - Vec2f(text_dim.x / 2, text_dim.y / 2);
 		tr = center + Vec2f(text_dim.x / 2, -text_dim.y / 2);
 		bl = center - Vec2f(text_dim.x / 2, -text_dim.y / 2 - 20);
