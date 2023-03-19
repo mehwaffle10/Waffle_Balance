@@ -16,7 +16,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer can go into the red zone during build phase
 
 ### Build Phase
-- 120 seconds
+- 150 seconds
 - Can build extremely fast during build phase
 - Single crate at the start of build phase per team with 3000 wood and 1500 stone
 

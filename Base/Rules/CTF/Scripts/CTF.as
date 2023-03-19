@@ -25,7 +25,7 @@ void Config(CTFCore@ this)
 	ConfigFile cfg = ConfigFile(configstr);
 
 	//how long to wait for everyone to spawn in?
-	s32 warmUpTimeSeconds = 120;  // cfg.read_s32("warmup_time", 30);  // Waffle: Override since cfg files are jank
+	s32 warmUpTimeSeconds = 150;  // cfg.read_s32("warmup_time", 30);  // Waffle: Override since cfg files are jank
 	this.warmUpTime = (getTicksASecond() * warmUpTimeSeconds);
 
 	s32 stalemateTimeSeconds = cfg.read_s32("stalemate_time", 30);
