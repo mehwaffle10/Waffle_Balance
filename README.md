@@ -70,6 +70,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can only grow if there is no more than 1 other tree within 16 blocks
 - Purchaseable at the quarters for 100 coins
 
+### Holidays
+- Force default texture pack
+
 # ITEMS
 
 ## BUILDINGS
