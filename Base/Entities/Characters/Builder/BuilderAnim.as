@@ -153,9 +153,10 @@ void onTick(CSprite@ this)
 						hitting_stone = true;
 					}
 
-					// Waffle: Add support for digging dirt slower
-					if (t.type == CMap::tile_ground ||  // Dirt Blocks
-						t.type >= 29 && t.type <= 31)   // Damaged Dirt Blocks
+					// Waffle: Add support for digging dirt and gold slower
+					if (t.type == CMap::tile_ground  ||  // Dirt Blocks
+						t.type >= 29 && t.type <= 31 ||  // Damaged Dirt Blocks
+						map.isTileGold(t.type))          // Gold Blocks
 					{
 						hitting_dirt = true;
 					}

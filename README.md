@@ -32,7 +32,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Builder
 - Increased swing speed on man-made structures and wood
-- Decreased swing speed on dirt
+- Decreased swing speed on dirt and gold
 
 ### Knight and Builder
 - Double damage for digging wood or stone (3 hits for wood block, 4 for stone block)
@@ -63,6 +63,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Gold is only present in middle of map
 - No longer damaged by explosives
 - Can no longer be drilled
+- Builders dig gold at the speed that they dig dirt
 
 ### Trees
 - Can only grow if there is no more than 1 other tree within 16 blocks
