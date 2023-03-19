@@ -13,6 +13,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Materials
 - No longer decay
+- No longer can go into the red zone during build phase
 
 ### Build Phase
 - 120 seconds
