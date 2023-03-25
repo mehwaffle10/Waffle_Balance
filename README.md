@@ -7,6 +7,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ## GENERAL
 
+### Respawn
+- Reduced from 10 to 5 seconds
+
 ### Resupplies
 - Removed for builders
 - Crates with 500 wood and 150 stone air drop every 5 minutes above team tents
