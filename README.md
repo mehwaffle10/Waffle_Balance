@@ -21,7 +21,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Build Phase
 - 150 seconds
 - Can build extremely fast during build phase
-- Single crate at the start of build phase per team with 3000 wood and 1500 stone
+- Single crate at the start of build phase per team with 4000 wood and 2000 stone
 
 ### Fall Damage
 - TDM fall damage (takes 1.3x longer falls)
@@ -196,13 +196,14 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Crates
 - Won't break when exiting
+- Inventory increased from 3x3 to 4x3
 - Heavily reduced air friction
 - Cost 100 wood instead of 150
 - Take 50% more damage from builders (takes 6 hits to break instead of 8)
 - No longer decay in water
 - No longer decay if spammed
 - Can automatically pick up materials again
-	- No longer automatically picks up normal arrows or logs
+	- No longer automatically picks up normal arrows
 
 ### Drills
 - Can no longer dig gold

@@ -19,7 +19,7 @@ bool crateTake(CBlob@ this, CBlob@ blob)
         || blobName == "mat_firearrows"
         || blobName == "mat_bombarrows"
         || blobName == "mat_waterarrows"
-        // || blobName == "log"  // Waffle: Sad but tend to be clutter
+        || blobName == "log"
         || blobName == "fishy"
         || blobName == "grain"
         || blobName == "food"
