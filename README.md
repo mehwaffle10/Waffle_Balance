@@ -251,6 +251,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Keg
 - Explode in a circular 6 block radius instead of doing bomberman plus shape
 - Improved explosion visuals
+- Fixed fuse sound not resetting when extinguished
+- Fixed screen shake happening when the keg wasn't exploding
 - Cost 160 coins
 
 ### Mines
