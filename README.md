@@ -90,7 +90,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Removed (Makes room for quarry and redundant with crates)
 
 ### Quarry
-- Costs 300 wood total and 100 stone
+- Costs 250 wood total and 50 stone
 - Produces 50 stone for 150 wood every 45 seconds
 
 ## VEHICLES
