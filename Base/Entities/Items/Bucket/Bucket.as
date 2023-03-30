@@ -4,8 +4,8 @@
 #include "ArcherCommon.as";
 //config
 
-const int splash_width = 9;
-const int splash_height = 7;
+const int splash_width = 10;  // 9; Increase splash halfwidth by 1
+const int splash_height = 8;  // 7; Increase splash halfheight by 1
 const int splashes = 1;  // Waffle: Buckets can only splash once
 
 //logic
@@ -159,7 +159,7 @@ void TakeWaterCount(CBlob@ this)
 
 const uint splash_halfwidth = splash_width / 2;
 const uint splash_halfheight = splash_height / 2;
-const f32 splash_offset = 0.7f;
+const f32 splash_offset = 0.5f;  // 0.7f;  Waffle: slightly decrease offset from bucket
 
 void DoSplash(CBlob@ this)
 {
