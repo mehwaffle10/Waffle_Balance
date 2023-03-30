@@ -274,6 +274,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Eggs
 - Are no longer buyable from the quarters
 - Hatch in 20 seconds instead of 50
+- Spawn chickens on the same team as the chicken that laid them
 
 ### Chickens
 - Are bought directly from the quarters for 80 coins
@@ -284,6 +285,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can have up to 4 simultaneous eggs instead of 2
 - Can have up to 10 chickens in close proximity instead of 6
 - Only have 0.1 health
+- Converted to your team when picked up (no friendly fire)
+- Spawn on your team during build phase
 
 ### Saplings
 - Can now be bought for 100 coins
+- Can no longer be placed on top of each other
+- Now show tree limit around existing trees and saplings while held

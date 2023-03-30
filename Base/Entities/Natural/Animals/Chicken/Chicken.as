@@ -114,6 +114,17 @@ void onInit(CBlob@ this)
 	vars.slowForce.Set(1.0f, 0.0f);
 	vars.jumpForce.Set(0.0f, -20.0f);
 	vars.maxVelocity = 1.1f;
+
+	// Waffle: Prevent chickens dying during build phase by setting them to their respective teams
+	CMap@ map = getMap();
+	if (map !is null)
+	{
+		Vec2f pos = this.getPosition();
+		if (map.getSectorAtPosition(pos, "barrier") is null)
+		{
+			this.server_setTeamNum(pos.x < map.tilemapwidth * map.tilesize / 2 ? 0 : 1);
+		}
+	}
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)

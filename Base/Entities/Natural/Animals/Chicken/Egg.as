@@ -53,7 +53,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			this.server_SetHealth(-1);
 			this.server_Die();
-			server_CreateBlob("chicken", -1, this.getPosition() + Vec2f(0, -5.0f));
+			server_CreateBlob("chicken", this.getTeamNum(), this.getPosition() + Vec2f(0, -5.0f));  // Waffle: Make chickens hatch to the correct team
 		}
 	}
 }
