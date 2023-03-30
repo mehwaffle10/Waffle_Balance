@@ -355,14 +355,15 @@ void onTick(CBlob@ this)
 											map.server_DestroyTile(hi.hitpos, 1.0f, this);
 										}
 
-										if (map.isTileCastle(tile) || map.isTileWood(tile))  // Waffle: Drills can't dig gold    || map.isTileGold(tile))    
-										{
-											Material::fromTile(holder, tile, 1.0f);
-										}
-										else
-										{
-											Material::fromTile(holder, tile, 0.75f);
-										}
+										Material::fromTile(holder, tile, 1.0f);  // Waffle: Drills give 100% tile resources
+										// if (map.isTileCastle(tile) || map.isTileWood(tile))  // Waffle: Drills can't dig gold    || map.isTileGold(tile))    
+										// {
+										// 	Material::fromTile(holder, tile, 1.0f);
+										// }
+										// else
+										// {
+										// 	Material::fromTile(holder, tile, 0.75f);
+										// }
 										
 										// Waffle: Only slowdown when hitting pure dirt
 										// if (map.isTileGround(tile)) || map.isTileStone(tile) || map.isTileThickStone(tile)) 
