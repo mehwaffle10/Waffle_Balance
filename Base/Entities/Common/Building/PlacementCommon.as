@@ -188,7 +188,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 
 						Vec2f bpos = b.getPosition();
 
-						bool cantBuild = isBlocking(b);
+						bool cantBuild = isBlocking(b) || isSeed && b.getName() == "seed";  // Waffle: Prevent seeds from being placed on each other
 						bool buildingOnTeam = isDoor && (b.getTeamNum() == this.getTeamNum() || b.getTeamNum() == 255) && !b.getShape().isStatic() && this !is b;
 						bool ladderBuild = isLadder && !b.getShape().isStatic();
 
