@@ -204,6 +204,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Take 50% more damage from builders (takes 6 hits to break instead of 8)
 - No longer decay in water
 - No longer decay if spammed
+- Can be picked up by enemy players without having to overlap the crate
 - Can automatically pick up materials again
 	- No longer automatically picks up normal arrows
 

@@ -196,10 +196,11 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 		|| ((blob.getShape().isStatic() || blob.hasTag("player") || blob.hasTag("projectile")) && !blob.hasTag("parachute"));
 }
 
-bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
-{
-	return (this.getTeamNum() == byBlob.getTeamNum() || this.isOverlapping(byBlob));
-}
+// Waffle: Allow enemy players to pick up crates
+// bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
+// {
+// 	return (this.getTeamNum() == byBlob.getTeamNum() || this.isOverlapping(byBlob));
+// }
 
 bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
