@@ -71,6 +71,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Trees
 - Can only grow if there is no more than 1 other tree within 16 blocks
+	- Added visible bounding box around saplings and trees when holding a sapling
 - Purchaseable at the quarters for 100 coins
 
 ### Holidays
