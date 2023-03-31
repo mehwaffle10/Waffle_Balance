@@ -4,9 +4,9 @@
 #include "ArcherCommon.as";
 //config
 
-const int splash_width = 10;  // 9; Increase splash halfwidth by 1
-const int splash_height = 8;  // 7; Increase splash halfheight by 1
-const int splashes = 1;  // Waffle: Buckets can only splash once
+const int splash_width = 10;  // 9; Waffle: Increase splash halfwidth by 1
+const int splash_height = 8;  // 7; Waffle: Increase splash halfheight by 1
+const int splashes = 1;  	  // 2; Waffle: Buckets can only splash once
 
 //logic
 void onInit(CBlob@ this)
