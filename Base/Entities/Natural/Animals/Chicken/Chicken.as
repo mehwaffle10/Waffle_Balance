@@ -114,17 +114,6 @@ void onInit(CBlob@ this)
 	vars.slowForce.Set(1.0f, 0.0f);
 	vars.jumpForce.Set(0.0f, -20.0f);
 	vars.maxVelocity = 1.1f;
-
-	// Waffle: Prevent chickens dying during build phase by setting them to their respective teams
-	CMap@ map = getMap();
-	if (map !is null)
-	{
-		Vec2f pos = this.getPosition();
-		if (map.getSectorAtPosition(pos, "barrier") is null)
-		{
-			this.server_setTeamNum(pos.x < map.tilemapwidth * map.tilesize / 2 ? 0 : 1);
-		}
-	}
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -160,6 +149,20 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 
 void onTick(CBlob@ this)
 {
+	// Waffle: Prevent chickens dying during build phase by setting them to their respective teams
+	if (isServer())
+	{
+		CMap@ map = getMap();
+		uint gametime = getGameTime();
+		if (map !is null && gametime > 30 && gametime < 35 && !this.get_bool("team swap init"))
+		{
+			Vec2f pos = this.getPosition();
+			this.set_bool("team swap init", true);
+			this.server_setTeamNum(map.getSectorAtPosition(pos, "barrier") !is null ? -1
+								: pos.x < map.tilemapwidth * map.tilesize / 2 ? 0 : 1);
+		}
+	}
+
 	f32 x = this.getVelocity().x;
 	if (Maths::Abs(x) > 1.0f)
 	{
