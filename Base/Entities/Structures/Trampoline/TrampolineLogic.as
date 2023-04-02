@@ -41,7 +41,21 @@ class TrampolineCooldown{
 
 void onInit(CBlob@ this)
 {
-	this.set_u8("trampolineState", Trampoline::folded);
+	// Waffle: Start open unless explicitly told to be closed
+	if (this.hasTag("start packed"))
+	{
+		this.set_u8("trampolineState", Trampoline::folded);
+		CSprite@ sprite = this.getSprite();
+		if (isClient() && sprite !is null)
+		{
+			sprite.SetAnimation("pack");
+			sprite.SetFrameIndex(3);
+		}
+	}
+	else
+	{
+		this.set_u8("trampolineState", Trampoline::idle);
+	}
 	TrampolineCooldown @[] cooldowns;
 	this.set(Trampoline::TIMER, cooldowns);
 	this.getShape().getConsts().collideWhenAttached = true;

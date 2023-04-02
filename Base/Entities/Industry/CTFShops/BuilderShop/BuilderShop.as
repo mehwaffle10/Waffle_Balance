@@ -63,7 +63,8 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::bucket_wood);
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Trampoline", getTeamIcon("trampoline", "Trampoline.png", team_num, Vec2f(32, 16), 3), "trampoline", Descriptions::trampoline, false);
+		ShopItem@ s = addShopItem(this, "Trampoline", getTeamIcon("trampoline", "Trampoline.png", team_num, Vec2f(32, 16), 3), "trampoline_folded", Descriptions::trampoline, false);
+		s.spawnNothing = true;
 		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::trampoline_wood);
 		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::trampoline);  // Waffle: Trampolines only cost coins
 	}
@@ -127,6 +128,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				b.setPosition(callerBlob.getPosition());
 				b.server_setTeamNum(callerBlob.getTeamNum());
 				b.Tag("_start_filled");
+				b.Init();
+				callerBlob.server_Pickup(b);
+			}
+			else if (name == "trampoline_folded")
+			{
+				CBlob@ b = server_CreateBlobNoInit("trampoline");
+				b.setPosition(callerBlob.getPosition());
+				b.server_setTeamNum(callerBlob.getTeamNum());
+				b.Tag("start packed");
 				b.Init();
 				callerBlob.server_Pickup(b);
 			}
