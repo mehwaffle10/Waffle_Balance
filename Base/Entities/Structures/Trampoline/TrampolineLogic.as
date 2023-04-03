@@ -21,8 +21,7 @@ namespace Trampoline
 // Waffle: Add angle lock toggle
 const string ANGLE_IS_LOCKED = "angle is locked";
 const string LOCKED_ANGLE = "locked angle";
-const string LOCK_COOLDOWN = "locked angle cooldown";
-
+bool lock_toggle = false;
 
 namespace Trampoline
 {
@@ -82,22 +81,16 @@ void onTick(CBlob@ this)
 	Vec2f ray = holder.getAimPos() - this.getPosition();
 	ray.Normalize();
 
-	// Waffle: Add angle lock toggle
-	u32 gametime = getGameTime();
-	if (point.isKeyPressed(key_action3) && gametime > this.get_u32(LOCK_COOLDOWN))
-	{
-		this.set_bool(ANGLE_IS_LOCKED, !this.get_bool(ANGLE_IS_LOCKED));
-		this.set_u32(LOCK_COOLDOWN, gametime + getTicksASecond() / 3);
-		this.set_f32(LOCKED_ANGLE, -this.getAngleDegrees());
-	}
-
-	// Waffle: Make it rotate vertical as well
 	f32 angle = ray.Angle();
-	if (this.get_bool(ANGLE_IS_LOCKED))
+	if (this.get_bool(ANGLE_IS_LOCKED))  // Waffle: Add angle lock toggle
 	{
 		angle = this.get_f32(LOCKED_ANGLE);
 	}
-	else if (angle > 180)
+	else if (point.isKeyPressed(key_down))  // Waffle: Add more accurate angle
+	{
+		angle -= 90;
+	}
+	else if (angle > 180)  // Waffle: Make it rotate vertical as well
 	{
 		angle = holder.isFacingLeft() ? 180 : 0;
 		angle -= 90;
@@ -109,6 +102,23 @@ void onTick(CBlob@ this)
 	}
 
 	this.setAngleDegrees(-angle);
+
+	// Waffle: Add angle lock toggle	
+	if (!lock_toggle && point.isKeyPressed(key_action3))
+	{
+		this.set_bool(ANGLE_IS_LOCKED, !this.get_bool(ANGLE_IS_LOCKED));
+		this.set_f32(LOCKED_ANGLE, angle);
+		lock_toggle = true;
+		CSprite@ sprite = this.getSprite();
+		if (sprite !is null)
+		{
+			sprite.PlaySound("bone_fall" + (this.get_bool(ANGLE_IS_LOCKED) ? 1 : 2));
+		}
+	}
+	else if (lock_toggle && !point.isKeyPressed(key_action3))
+	{
+		lock_toggle = false;
+	}
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point1, Vec2f point2)
@@ -272,5 +282,5 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
 	this.set_bool(ANGLE_IS_LOCKED, false);
-	this.set_u32(LOCK_COOLDOWN, 0);
+	lock_toggle = false;
 }

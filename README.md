@@ -175,7 +175,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Builders: Can only dig, since selecting a block makes you drop what you are holding
 - Can bounce boulders into rock and roll mode if a player is holding the trampoline
 - Cost 100 coins so they can be bought with by all classes but are less spammable
-- Snap to angles
+- Snap to angles by default
+	- Can hold down to get exact angles
 - Are now flammable
 - No longer bounce enemy fire arrows
 - Can use action3 key (default space) to lock the angle the trampoline is facing
