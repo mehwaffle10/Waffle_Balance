@@ -21,7 +21,7 @@ namespace Trampoline
 // Waffle: Add angle lock toggle
 const string ANGLE_IS_LOCKED = "angle is locked";
 const string LOCKED_ANGLE = "locked angle";
-bool lock_toggle = false;
+const string LOCK_TOGGLE = "locked angle toggle";
 
 namespace Trampoline
 {
@@ -103,12 +103,13 @@ void onTick(CBlob@ this)
 
 	this.setAngleDegrees(-angle);
 
-	// Waffle: Add angle lock toggle	
+	// Waffle: Add angle lock toggle
+	bool lock_toggle = this.get_bool(LOCK_TOGGLE);
 	if (!lock_toggle && point.isKeyPressed(key_action3))
 	{
 		this.set_bool(ANGLE_IS_LOCKED, !this.get_bool(ANGLE_IS_LOCKED));
 		this.set_f32(LOCKED_ANGLE, angle);
-		lock_toggle = true;
+		this.set_bool(LOCK_TOGGLE, true);
 		CSprite@ sprite = this.getSprite();
 		if (sprite !is null)
 		{
@@ -117,7 +118,7 @@ void onTick(CBlob@ this)
 	}
 	else if (lock_toggle && !point.isKeyPressed(key_action3))
 	{
-		lock_toggle = false;
+		this.set_bool(LOCK_TOGGLE, false);
 	}
 }
 
@@ -282,5 +283,5 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
 	this.set_bool(ANGLE_IS_LOCKED, false);
-	lock_toggle = false;
+	this.set_bool(LOCK_TOGGLE, false);
 }
