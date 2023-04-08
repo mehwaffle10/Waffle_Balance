@@ -201,6 +201,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Crates
 - Won't break when exiting
 - Inventory increased from 3x3 to 4x3
+- Displays label if anything is in inventory
 - Heavily reduced air friction
 - Cost 100 wood instead of 150
 - Take 50% more damage from builders (takes 6 hits to break instead of 8)

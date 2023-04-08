@@ -553,6 +553,15 @@ void onAddToInventory(CBlob@ this, CBlob@ blob)
 			this.Tag("medium weight");
 		}
 	}
+
+	// Waffle: Add inventory indicator
+	CSprite@ sprite = this.getSprite();
+	if (sprite !is null)
+	{
+		u16 frame = sprite.getFrameIndex();
+		sprite.SetAnimation("inventory");
+		sprite.SetFrameIndex(frame);	
+	}
 }
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
@@ -622,6 +631,16 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 	// {
 	// 	this.server_Die();
 	// }
+
+	// Waffle: Add inventory indicator
+	CInventory@ inventory = this.getInventory();
+	CSprite@ sprite = this.getSprite();
+	if (sprite !is null && inventory !is null && inventory.getItemsCount() == 0)
+	{
+		u16 frame = sprite.getFrameIndex();
+		sprite.SetAnimation("destruction");
+		sprite.SetFrameIndex(frame);	
+	}
 }
 
 f32 onHit( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData )
