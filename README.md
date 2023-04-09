@@ -289,6 +289,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can have up to 10 chickens in close proximity instead of 6
 - Only have 0.1 health
 - Converted to your team when picked up (no friendly fire)
+- Added team colors to sprite
 - Spawn on your team during build phase
 
 ### Saplings
