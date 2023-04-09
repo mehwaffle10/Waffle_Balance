@@ -154,7 +154,7 @@ void InitCosts()
 	//Quarters.as
 	CTFCosts::beer =                        ReadCost(cfg, "cost_beer"               , 5);
 	CTFCosts::meal =                        ReadCost(cfg, "cost_meal"               , 10);
-	CTFCosts::chicken =                     ReadCost(cfg, "cost_chicken"            , 80);  // Waffle: Chickens are bought directly instead of eggs
+	CTFCosts::chicken =                     ReadCost(cfg, "cost_chicken"            , 50);  // Waffle: Chickens are bought directly instead of eggs
 	CTFCosts::burger =                      ReadCost(cfg, "cost_burger"             , 20);
 	CTFCosts::seed =                        ReadCost(cfg, "cost_seed"               , 100);  // Waffle: Seeds can be bought from quarters
 

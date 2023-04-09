@@ -280,7 +280,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Spawn chickens on the same team as the chicken that laid them
 
 ### Chickens
-- Are bought directly from the quarters for 80 coins
+- Are bought directly from the quarters for 50 coins
 - Hover no longer decays
 - Dies if player holding it takes damage from an enemy
 - Max horizontal speed decreased with strong decay of speeds above threshold while in the air
