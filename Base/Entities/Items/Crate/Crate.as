@@ -933,3 +933,13 @@ bool hasNoBuildBlobs(Vec2f pos)
 
 	return false;
 }
+
+void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
+{
+	if (this is null || attached is null)
+	{
+		return;
+	}
+
+	this.server_setTeamNum(attached.getTeamNum());
+}
