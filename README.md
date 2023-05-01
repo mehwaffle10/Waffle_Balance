@@ -208,6 +208,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer decay in water
 - No longer decay if spammed
 - Can be picked up by enemy players without having to overlap the crate
+- Changes team when picked up
 - Can automatically pick up materials again
 	- No longer automatically picks up normal arrows
 
