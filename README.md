@@ -179,7 +179,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Can hold down to get exact angles
 - Are now flammable
 	- Burn until destroyed
-	- Take 1.5x fire damage
+	- Take 50% more fire damage
 	- Ignite things that they bounce while on fire
 		- Ignite any held objects as well
 - No longer bounce enemy fire arrows
