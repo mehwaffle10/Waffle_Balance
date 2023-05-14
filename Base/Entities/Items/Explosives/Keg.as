@@ -99,6 +99,14 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	switch (customData)
 	{
+		// Waffle: Any fire damage ignites kegs
+		case Hitters::fire:
+		case Hitters::burn:
+			if (!this.hasTag("exploding"))
+			{
+				this.SendCommand(this.getCommandID("activate"));
+			}
+			break;
 		case Hitters::sword:
 		case Hitters::arrow:
 			damage *= 0.25f; //quarter damage from these

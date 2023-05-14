@@ -1,6 +1,8 @@
 // TrampolineLogic.as
 
 #include "ArcherCommon.as";
+#include "FireCommon.as";
+#include "Hitters.as"
 
 // Waffle: Readd folding
 namespace Trampoline
@@ -40,6 +42,9 @@ class TrampolineCooldown{
 
 void onInit(CBlob@ this)
 {
+	// Waffle: Increase burn time so it one shots a trampoline
+	this.set_s16(burn_duration, 30000);
+
 	// Waffle: Start open unless explicitly told to be closed
 	if (this.hasTag("start packed"))
 	{
@@ -204,6 +209,17 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 		blob.setVelocity(velocity);
 
+		// Waffle: Trampolines on fire ignite things they launch
+		if (this.hasTag(burning_tag))
+		{
+			this.server_Hit(blob, this.getPosition(), Vec2f(0, 0), 0.0f, Hitters::fire, true);
+			CBlob@ carried = blob.getCarriedBlob();
+			if (carried !is null)
+			{
+				this.server_Hit(carried, this.getPosition(), Vec2f(0, 0), 0.0f, Hitters::fire, true);
+			}
+		}
+
 		// Waffle: Boulders enter rock and roll mode when bouncing off a trampoline held by a player
 		if (holder !is null && holder.hasTag("player") && blob.getName() == "boulder")
 		{
@@ -284,4 +300,9 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
 	this.set_bool(ANGLE_IS_LOCKED, false);
 	this.set_bool(LOCK_TOGGLE, false);
+}
+
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	return customData == Hitters::fire || customData == Hitters::burn ? damage * 1.5f : damage;
 }

@@ -178,6 +178,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Snap to angles by default
 	- Can hold down to get exact angles
 - Are now flammable
+	- Burn until destroyed
+	- Take 1.5x fire damage
+	- Ignite things that they bounce while on fire
+		- Ignite any held objects as well
 - No longer bounce enemy fire arrows
 - Can use action3 key (default space) to lock the angle the trampoline is facing
 	- Has small sound to indicate when the trampoline is locked
@@ -255,6 +259,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Keg
 - Explode in a circular 6 block radius instead of doing bomberman plus shape
 - Improved explosion visuals
+- Ignite from any fire damage
 - Fixed fuse sound not resetting when extinguished
 - Fixed screen shake happening when the keg wasn't exploding
 - Cost 160 coins
