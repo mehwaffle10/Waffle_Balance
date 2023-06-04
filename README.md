@@ -87,6 +87,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Tunnel
 - Costs 500 wood total and 250 stone
+- Can no longer travel with flags
 
 ### Storage
 - Removed (Makes room for quarry and redundant with crates)
