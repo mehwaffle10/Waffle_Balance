@@ -180,12 +180,13 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Knights: Slash, jab, and shield as normal
 	- Builders: Can only dig, since selecting a block makes you drop what you are holding
 - Can bounce boulders into rock and roll mode if a player is holding the trampoline
-- Cost 100 coins so they can be bought with by all classes but are less spammable
+- Cost 120 coins so they can be bought with by all classes but are less spammable
 - Snap to angles by default
 	- Can hold down to get exact angles
 - Are now flammable
 	- Burn until destroyed
-	- Take 50% more fire damage
+	- Take 2x fire damage
+	- Takes 1 heart of damage immediately from fire arrow
 	- Ignite things that they bounce while on fire
 		- Ignite any held objects as well
 - No longer bounce enemy fire arrows
@@ -235,6 +236,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Buckets
 - Can only splash once before needing a refill
 - Slightly bigger splash area
+- Cost 15 coins
 
 ### Sponges
 - Cost 10 instead of 15 coins to punish players less financially (a lost inventory slot is already a lot)
@@ -254,6 +256,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Ignite instantly on contact
 - Added animation and sound for instant feedback
 - Collide with enemy trampolines
+	- Does an immediate heart of damage to the trampoline
 - Fire arrow flares don't do an extra half heart to things they ignite
 	- Direct arrow hits still do full damage plus burn damage
 

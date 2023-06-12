@@ -147,6 +147,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	if (this.getTeamNum() != blob.getTeamNum() && blob.getName() == "arrow" && blob.get_u8("arrow type") == ArrowType::fire)
 	{
 		blob.setPosition(this.getPosition());
+		blob.server_Hit(this, this.getPosition(), blob.getVelocity(), 0.25f, Hitters::fire, false);
 		blob.server_Die();
 		return;
 	}
@@ -304,5 +305,5 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	return customData == Hitters::fire || customData == Hitters::burn ? damage * 1.5f : damage;
+	return customData == Hitters::fire || customData == Hitters::burn ? damage * 2.0f : damage;
 }
