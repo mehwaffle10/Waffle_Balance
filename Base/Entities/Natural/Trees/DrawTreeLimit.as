@@ -71,14 +71,38 @@ void onRender(CRules@ this)
         if (blob !is null)
         {
             Vec2f upper_left = driver.getScreenPosFromWorldPos(getUpperLeft(map, blob)),
-                bottom_right = driver.getScreenPosFromWorldPos(getBottomRight(map, blob));
+                  bottom_right = driver.getScreenPosFromWorldPos(getBottomRight(map, blob));
             if (upper_left.x < driver.getScreenWidth() && upper_left.y < driver.getScreenHeight() &&
                 bottom_right.x > 0 && bottom_right.y > 0)
-            GUI::DrawRectangle(
-                upper_left,
-                bottom_right,
-			    SColor(0x20ed1202)
-		    );
+            {
+                SColor color = SColor(0x200bfc03);
+                bool yellow = false;
+                CBlob@[] nearby;
+                getNearbyBlobs(map, blob, nearby);
+                
+                for (u16 i = 0; i < nearby.length(); i++)
+                {
+                    if (nearby[i] !is null && nearby[i] !is blob && (nearby[i].hasTag("tree") || isTreeSeed(nearby[i])))
+                    {
+                        if (!yellow)
+                        {
+                            color = SColor(0x20fcf803);
+                            yellow = true;
+                        }
+                        else
+                        {
+                            color = SColor(0x20ed1202);
+                            break;
+                        }
+                    }
+                }
+                
+                GUI::DrawRectangle(
+                    upper_left,
+                    bottom_right,
+                    color
+                );
+            }
         }
     }
 }
