@@ -2,6 +2,8 @@
 //converts wood into ores
 
 #include "GenericButtonCommon.as"
+#include "TreeLimitCommon.as"
+#include "canGrow.as"
 
 const string fuel = "mat_wood";
 const string ore = "mat_stone";
@@ -94,9 +96,16 @@ void onTick(CBlob@ this)
 	//only do "real" update logic on server
 	if (getNet().isServer())
 	{
-		PickupOverlap(this);  // Waffle: Quarries can pick up wood
+		bool can_produce = PickupOverlap(this);  // Waffle: Quarries can pick up wood, also check if we have the conditions to produce
 		int blobCount = this.get_s16(fuel_prop);
-		if ((blobCount >= min_input))
+
+		// Waffle: Quarries can only produce when overlapping a tree
+		if (!can_produce)
+		{
+			this.set_bool(working_prop, false);
+			this.Sync(working_prop, true);
+		}
+		else if ((blobCount >= min_input))
 		{
 			this.set_bool(working_prop, true);
 
@@ -267,15 +276,27 @@ void animateBelt(CBlob@ this, bool isActive)
 	}
 }
 
-void PickupOverlap(CBlob@ this)
+bool PickupOverlap(CBlob@ this)
 {
 	Vec2f tl, br;
 	this.getShape().getBoundingRect(tl, br);
 	CBlob@[] blobs;
 	this.getMap().getBlobsInBox(tl, br, @blobs);
+	u16 producers = 0;
 	for (uint i = 0; i < blobs.length; i++)
 	{
 		CBlob@ blob = blobs[i];
+		if (blob is null)
+		{
+			continue;
+		}
+
+		// Waffle: Check if we can produce
+		if (blob.hasTag("tree") || !blob.isAttached() && blob.isOnGround() && isTreeSeed(blob) && canGrowAt(blob, blob.getPosition()))
+		{
+			producers++;
+		}
+
 		if (!blob.isAttached() && blob.isOnGround() && blob.getName() == "mat_wood")
 		{
 			int quantity = blob.getQuantity();
@@ -287,4 +308,6 @@ void PickupOverlap(CBlob@ this)
 			}
 		}
 	}
+
+	return producers >= 2;
 }
