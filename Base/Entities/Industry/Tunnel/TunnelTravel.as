@@ -44,7 +44,10 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		// Waffle: Disable button if holding a flag
 		bool holding_flag = isHoldingFlag(caller);
 		CButton@ button = MakeTravelButton(this, caller, this.get_Vec2f("travel button pos"), holding_flag ? "Can't travel with flag" : "Travel", "Travel (requires Transport Tunnels)");
-		button.SetEnabled(!holding_flag);
+		if (button !is null)
+		{
+			button.SetEnabled(!holding_flag);
+		}
 	}
 }
 
