@@ -35,9 +35,19 @@ bool canGrowAt(CBlob@ this, Vec2f pos)
 	return false;
 	}*/   // waiting for better days
 
-	if (map.getSectorAtPosition(pos, "no build") !is null)
+	// Waffle: Ignore no build from buildings
+	CMap::Sector@[] sectors;
+	map.getSectorsAtPosition(pos, sectors);
+	for (u8 i = 0; i < sectors.length; i++)
 	{
-		return false;
+		if (sectors[i] !is null && sectors[i].name == "no build")
+		{
+			CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
+			if (owner is null || !owner.hasTag("building"))
+			{
+				return false;
+			}
+		}
 	}
 
 	// Waffle: Prevent trees from growing near more than one tree
