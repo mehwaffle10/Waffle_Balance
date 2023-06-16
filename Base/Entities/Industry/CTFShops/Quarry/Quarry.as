@@ -30,8 +30,10 @@ const int low_fuel = 150;
 const string fuel_prop = "fuel_level";
 const string working_prop = "working";
 const string unique_prop = "unique";
-const string last_working = "last_working";
-const string last_stopped = "last_stopped";
+const string last_working_prop = "last_working";  // Waffle: Add power up and down sounds
+const string last_working_time = "last_working_time";
+const string last_stopped_time = "last_stopped_time";
+
 
 void onInit(CSprite@ this)
 {
@@ -101,16 +103,16 @@ void onTick(CBlob@ this)
 		// Waffle: Quarries can only produce when overlapping at least 2 trees
 		if (!canProduce(this))
 		{
-			this.set_u32(last_stopped, getGameTime());
-			if (this.get_u32(last_working) + 10 < getGameTime())
+			this.set_u32(last_stopped_time, getGameTime());
+			if (this.get_u32(last_working_time) + 10 < getGameTime())  // Waffle: Need to delay since seeds take a couple ticks to spawn and land on the ground
 			{
 				this.set_bool(working_prop, false);
 				this.Sync(working_prop, true);
 			}
 		}
-		else if (this.get_u32(last_stopped) + 10 < getGameTime())
+		else if (this.get_u32(last_stopped_time) + 10 < getGameTime())
 		{
-			this.set_u32(last_working, getGameTime());
+			this.set_u32(last_working_time, getGameTime());
 			PickupOverlap(this);  // Waffle: Quarries can pick up wood
 			int blobCount = this.get_s16(fuel_prop);
 			if ((blobCount >= min_input))
@@ -135,24 +137,35 @@ void onTick(CBlob@ this)
 		}
 	}
 
+	// Waffle: Add power up and down sounds
 	CSprite@ sprite = this.getSprite();
+	bool working = this.get_bool(working_prop);
+	bool last_working = this.get_bool(last_working_prop);
 	if (sprite.getEmitSoundPaused())
 	{
-		if (this.get_bool(working_prop))
+		if (working)
 		{
-			sprite.PlaySound("PowerUp.ogg");
+			if (!last_working)
+			{
+				sprite.PlaySound("PowerUp.ogg");
+			}
 			sprite.SetEmitSoundPaused(false);
 		}
 	}
-	else if (!this.get_bool(working_prop))
+	else if (!working)
 	{
-		sprite.PlaySound("PowerDown.ogg");
+		if (last_working)
+		{
+			sprite.PlaySound("PowerDown.ogg");
+		}
 		sprite.SetEmitSoundPaused(true);
 	}
 
+	this.set_bool(last_working_prop, working);  // Waffle: Fix an issue where change classes reloaded sprites, causing the power up and down sounds to play
+
 	//update sprite based on modified or synced properties
 	updateWoodLayer(this.getSprite());
-	if (getGameTime() % (getTicksASecond()/2) == 0) animateBelt(this, this.get_bool(working_prop));
+	if (getGameTime() % (getTicksASecond()/2) == 0) animateBelt(this, working);
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
