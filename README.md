@@ -79,6 +79,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Added visible bounding box around saplings and trees when holding a sapling
 - Purchaseable at the quarters for 100 coins
 - Saplings can no longer be placed on each other
+- Can build buildings behind trees
 
 ### Holidays
 - Force default texture pack
