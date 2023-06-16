@@ -3,7 +3,6 @@
 
 #include "GenericButtonCommon.as"
 #include "TreeLimitCommon.as"
-#include "canGrow.as"
 
 const string fuel = "mat_wood";
 const string ore = "mat_stone";
@@ -18,6 +17,7 @@ const bool enable_rare = false;			// enable/disable
 const int rare_chance = 10;				// one-in
 const int rare_output = 20;				// output for rare ore
 const int conversion_frequency = 45;	// how often to convert, in seconds
+const u8 producer_check_offset = 6;     // Waffle: Prevent trees from slightly off the quarry
 
 const int min_input = Maths::Ceil(input/initial_output);
 
@@ -30,6 +30,8 @@ const int low_fuel = 150;
 const string fuel_prop = "fuel_level";
 const string working_prop = "working";
 const string unique_prop = "unique";
+const string last_working = "last_working";
+const string last_stopped = "last_stopped";
 
 void onInit(CSprite@ this)
 {
@@ -96,33 +98,40 @@ void onTick(CBlob@ this)
 	//only do "real" update logic on server
 	if (getNet().isServer())
 	{
-		bool can_produce = PickupOverlap(this);  // Waffle: Quarries can pick up wood, also check if we have the conditions to produce
-		int blobCount = this.get_s16(fuel_prop);
-
-		// Waffle: Quarries can only produce when overlapping a tree
-		if (!can_produce)
+		// Waffle: Quarries can only produce when overlapping at least 2 trees
+		if (!canProduce(this))
 		{
-			this.set_bool(working_prop, false);
-			this.Sync(working_prop, true);
-		}
-		else if ((blobCount >= min_input))
-		{
-			this.set_bool(working_prop, true);
-
-			//only convert every conversion_frequency seconds
-			if (getGameTime() % (conversion_frequency * getTicksASecond()) == this.get_u8(unique_prop))
+			this.set_u32(last_stopped, getGameTime());
+			if (this.get_u32(last_working) + 10 < getGameTime())
 			{
-				spawnOre(this);
+				this.set_bool(working_prop, false);
+				this.Sync(working_prop, true);
+			}
+		}
+		else if (this.get_u32(last_stopped) + 10 < getGameTime())
+		{
+			this.set_u32(last_working, getGameTime());
+			PickupOverlap(this);  // Waffle: Quarries can pick up wood
+			int blobCount = this.get_s16(fuel_prop);
+			if ((blobCount >= min_input))
+			{
+				this.set_bool(working_prop, true);
 
-				if (blobCount - input < min_input)
+				//only convert every conversion_frequency seconds
+				if (getGameTime() % (conversion_frequency * getTicksASecond()) == this.get_u8(unique_prop))
 				{
-					this.set_bool(working_prop, false);
+					spawnOre(this);
+
+					if (blobCount - input < min_input)
+					{
+						this.set_bool(working_prop, false);
+					}
+
+					this.Sync(fuel_prop, true);
 				}
 
-				this.Sync(fuel_prop, true);
+				this.Sync(working_prop, true);
 			}
-
-			this.Sync(working_prop, true);
 		}
 	}
 
@@ -131,11 +140,13 @@ void onTick(CBlob@ this)
 	{
 		if (this.get_bool(working_prop))
 		{
+			sprite.PlaySound("PowerUp.ogg");
 			sprite.SetEmitSoundPaused(false);
 		}
 	}
 	else if (!this.get_bool(working_prop))
 	{
+		sprite.PlaySound("PowerDown.ogg");
 		sprite.SetEmitSoundPaused(true);
 	}
 
@@ -151,14 +162,23 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	CBitStream params;
 	params.write_u16(caller.getNetworkID());
 
-	if (this.get_s16(fuel_prop) < max_fuel)
+	string text = "Add fuel";
+	bool enabled = caller.hasBlob(fuel, 1);
+	if (!canProduce(this))
 	{
-		CButton@ button = caller.CreateGenericButton("$mat_wood$", Vec2f(-4.0f, 0.0f), this, this.getCommandID("add fuel"), getTranslatedString("Add fuel"), params);
-		if (button !is null)
-		{
-			button.deleteAfterClick = false;
-			button.SetEnabled(caller.hasBlob(fuel, 1));
-		}
+		text = "Must have two overlapping trees that can grow";
+		enabled = false;
+	}
+	else if (this.get_s16(fuel_prop) >= max_fuel)
+	{
+		text = "Fuel is full";
+		enabled = false;
+	}
+	CButton@ button = caller.CreateGenericButton("$mat_wood$", Vec2f(-4.0f, 0.0f), this, this.getCommandID("add fuel"), getTranslatedString(text), params);
+	if (button !is null)
+	{
+		button.deleteAfterClick = false;
+		button.SetEnabled(enabled);
 	}
 }
 
@@ -276,25 +296,18 @@ void animateBelt(CBlob@ this, bool isActive)
 	}
 }
 
-bool PickupOverlap(CBlob@ this)
+void PickupOverlap(CBlob@ this)
 {
 	Vec2f tl, br;
 	this.getShape().getBoundingRect(tl, br);
 	CBlob@[] blobs;
 	this.getMap().getBlobsInBox(tl, br, @blobs);
-	u16 producers = 0;
 	for (uint i = 0; i < blobs.length; i++)
 	{
 		CBlob@ blob = blobs[i];
 		if (blob is null)
 		{
 			continue;
-		}
-
-		// Waffle: Check if we can produce
-		if (blob.hasTag("tree") || !blob.isAttached() && blob.isOnGround() && isTreeSeed(blob) && canGrowAt(blob, blob.getPosition()))
-		{
-			producers++;
 		}
 
 		if (!blob.isAttached() && blob.isOnGround() && blob.getName() == "mat_wood")
@@ -308,6 +321,53 @@ bool PickupOverlap(CBlob@ this)
 			}
 		}
 	}
+}
+
+bool canProduce(CBlob@ this)
+{
+	Vec2f tl, br;
+	this.getShape().getBoundingRect(tl, br);
+	tl.x += producer_check_offset;
+	br.x -= producer_check_offset;
+	CBlob@[] blobs;
+	this.getMap().getBlobsInBox(tl, br, @blobs);
+	u16 producers = 0;
+	for (uint i = 0; i < blobs.length; i++)
+	{
+		CBlob@ blob = blobs[i];
+		if (blob is null)
+		{
+			continue;
+		}
+
+		// Waffle: Check if we can produce
+		if (blob.hasTag("tree"))  // Trees are blocking
+		{
+			producers++;
+		}
+		else if (isLimitingSeed(blob))  // Seeds are only blocking if they can grow and dont already have too many seeds nearby
+		{
+			producers++;
+			CBlob@[] nearby;
+			getNearbyBlobs(getMap(), blob, nearby);
+			u16 tree_count = 0;
+			
+			for (u16 i = 0; i < nearby.length(); i++)
+			{
+				if (nearby[i] !is null && nearby[i] !is blob && (nearby[i].hasTag("tree") || isLimitingSeed(nearby[i])))
+				{
+					tree_count++;
+					if (tree_count >= 2)
+					{
+						producers--;
+						break;
+					}
+				}
+			}
+			
+		}
+	}
 
 	return producers >= 2;
 }
+

@@ -1,3 +1,7 @@
+
+
+#include "canGrow.as"
+
 const u8 radius = 16;
 const string tree_limit = "tree limit";
 const string tree_limit_delay = "tree limit delay";
@@ -31,4 +35,9 @@ Vec2f getOffset(CMap@ map)
 bool isTreeSeed(CBlob@ blob)
 {
     return blob !is null && blob.getName() == "seed" && (blob.get_string("seed_grow_blobname") == "tree_pine" || blob.get_string("seed_grow_blobname") == "tree_bushy");
+}
+
+bool isLimitingSeed(CBlob@ blob)
+{
+	return blob !is null && !blob.isAttached() && blob.isOnGround() && isTreeSeed(blob) && canGrowAt(blob, blob.getPosition());
 }

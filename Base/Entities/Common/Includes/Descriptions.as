@@ -81,7 +81,7 @@ namespace Descriptions
 	boatshop                   = getTranslatedString("Naval workshop for building boats"),
 	quarters                   = getTranslatedString("Place of merriment and healing"),
 	storagecache               = getTranslatedString("A Cache for storing your materials, items and armaments."),
-	quarry               	   = getTranslatedString("A Quarry intended to mine stone, fueled by wood."),
+	quarry               	   = getTranslatedString("A Quarry intended to mine stone, fueled by wood. Must have two overlapping trees that can grow to function."),
 
 	//Quarters.as
 	beer                       = getTranslatedString("A refreshing mug of beer."),
@@ -89,7 +89,7 @@ namespace Descriptions
 	// egg                        = getTranslatedString("A suspiciously undercooked egg, maybe it will hatch."),
 	chicken                    = getTranslatedString("A chicken to that can lay eggs and let you glide."),  // Waffle: Chickens are bought directly instead of eggs
 	burger                     = getTranslatedString("A burger to go."),
-	seed                       = getTranslatedString("A seed that will grow into a pine tree."),  // Waffle: Seeds can be bought from quarters
+	seed                       = getTranslatedString("A seed that will grow into a pine tree. Can only grow near at most one other tree."),  // Waffle: Seeds can be bought from quarters. Try to explain tree limit
 
 	//Magic Scrolls
 	scroll_carnage             = getTranslatedString("This magic scroll when cast will turn all nearby enemies into a pile of bloody gibs."),

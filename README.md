@@ -100,6 +100,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Quarry
 - Costs 250 wood total and 50 stone
 - Produces 50 stone for 150 wood every 45 seconds
+- Can only produce with two trees or saplings that can grow overlapping
+- Added sounds, button hints, and description for feedback
 
 ## VEHICLES
 
