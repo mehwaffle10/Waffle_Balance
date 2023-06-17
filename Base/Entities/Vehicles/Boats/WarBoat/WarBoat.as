@@ -74,10 +74,10 @@ void onInit(CBlob@ this)
 
 	// Waffle: Roof
 	{
-		Vec2f[] shape = { Vec2f(43.0f, 4.0f) - pos_off,
+		Vec2f[] shape = { Vec2f(28.0f, 4.0f) - pos_off,
 		                  Vec2f(83.0f, 4.0f) - pos_off,
 		                  Vec2f(90.0f, 9.0f) - pos_off,
-		                  Vec2f(43.0f, 9.0f) - pos_off
+		                  Vec2f(32.0f, 9.0f) - pos_off
 		                };
 		this.getShape().AddShape(shape);
 	}
@@ -153,7 +153,7 @@ void onInit(CBlob@ this)
 		flag.addAnimation("default", 3, true);
 		int[] frames = { 5, 4, 3 };
 		flag.animation.AddFrames(frames);
-		flag.SetRelativeZ(-5.0f);
+		flag.SetRelativeZ(515.0f);
 		flag.SetOffset(Vec2f(28, -24));
 	}
 
@@ -161,9 +161,9 @@ void onInit(CBlob@ this)
 
 	// Waffle: Make single ladder
 	// add pole ladder
-	getMap().server_AddMovingSector(Vec2f(-28.0f, -32.0f), Vec2f(-12.0f, 0.0f), "ladder", this.getNetworkID());
+	// getMap().server_AddMovingSector(Vec2f(-28.0f, -32.0f), Vec2f(-12.0f, 0.0f), "ladder", this.getNetworkID());
 	// add back ladder
-	getMap().server_AddMovingSector(Vec2f(-50.0f, 0.0f), Vec2f(-35.0f, 20.0f), "ladder", this.getNetworkID());
+	getMap().server_AddMovingSector(Vec2f(-50.0f, -32.0f), Vec2f(-35.0f, 20.0f), "ladder", this.getNetworkID());
 
 	//set custom minimap icon
 	this.SetMinimapOutsideBehaviour(CBlob::minimap_snap);
