@@ -198,7 +198,8 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 							cantBuild &&
 							!b.hasTag("dead") &&
 							!b.hasTag("material") &&
-							!b.hasTag("projectile"))
+							!b.hasTag("projectile") &&
+							!(isSeed && b.hasTag("building")))  // Waffle: Allow placing seeds on building
 						{
 							f32 angle_decomp = Maths::FMod(Maths::Abs(b.getAngleDegrees()), 180.0f);
 							bool rotated = angle_decomp > 45.0f && angle_decomp < 135.0f;
