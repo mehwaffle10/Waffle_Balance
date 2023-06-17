@@ -2,7 +2,7 @@
 const u8 inner_distance = 24;  // Distance from center to inner front wall
 const u8 open_offset = 16;     // Distance to add to open side
 const u8 top_distance = 24;    // Distance from center to top
-const u8 bottom_distance = 8;  // Distance from center to bottom
+const u8 bottom_distance = 10;  // Distance from center to bottom
 
 void onInit(CSprite@ this)
 {
