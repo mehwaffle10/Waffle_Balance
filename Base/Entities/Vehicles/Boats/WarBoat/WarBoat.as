@@ -10,7 +10,7 @@
 void onInit(CBlob@ this)
 {
 	Vehicle_Setup(this,
-	              307.0f, // move speed
+	              460.5f, // move speed  // Waffle: Move 50% faster
 	              0.47f,  // turn speed
 	              Vec2f(0.0f, -5.0f), // jump out velocity
 	              true  // inventory access
@@ -52,9 +52,11 @@ void onInit(CBlob@ this)
 	this.addCommandID("detach vehicle");
     this.addCommandID("attach vehicle");
 
-	InitRespawnCommand(this);
+	// Waffle: Can't spawn at warboats
+	// InitRespawnCommand(this);
 	InitClasses(this);
-	this.Tag("change class store inventory");
+	// Waffle: Can't spawn at warboats
+	// this.Tag("change class store inventory");
 
 	InitCosts();
 	// this.set_s32("gold building amount", CTFCosts::warboat_gold);  // Waffle: Remove gold cost
@@ -70,12 +72,40 @@ void onInit(CBlob@ this)
 	//	this.getShape().AddShape( shape );
 	//}
 
-	//front bits
+	// Waffle: Roof
 	{
-		Vec2f[] shape = { Vec2f(43.0f,  4.0f) - pos_off,
-		                  Vec2f(73.0f,  7.0f) - pos_off,
-		                  Vec2f(93.0f,  36.0f) - pos_off,
-		                  Vec2f(69.0f,  24.0f) - pos_off
+		Vec2f[] shape = { Vec2f(43.0f, 4.0f) - pos_off,
+		                  Vec2f(83.0f, 4.0f) - pos_off,
+		                  Vec2f(90.0f, 9.0f) - pos_off,
+		                  Vec2f(43.0f, 9.0f) - pos_off
+		                };
+		this.getShape().AddShape(shape);
+	}
+
+	// Waffle: Bottom Nose
+	{
+		Vec2f[] shape = { Vec2f(90.0f, 48.0f) - pos_off,
+		                  Vec2f(114.0f, 31.0f) - pos_off,
+		                  Vec2f(90.0f, 31.0f) - pos_off
+		                };
+		this.getShape().AddShape(shape);
+	}
+
+	// Waffle: Top Nose
+	{
+		Vec2f[] shape = { Vec2f(90.0f, 16.0f) - pos_off,
+		                  Vec2f(101.0f, 31.0f) - pos_off,
+		                  Vec2f(90.0f, 31.0f) - pos_off
+		                };
+		this.getShape().AddShape(shape);
+	}
+
+	// Waffle: Inner Wall
+	{
+		Vec2f[] shape = { Vec2f(87.0f, 9.0f) - pos_off,
+		                  Vec2f(90.0f, 9.0f) - pos_off,
+		                  Vec2f(90.0f, 36.0f) - pos_off,
+						  Vec2f(87.0f, 36.0f) - pos_off
 		                };
 		this.getShape().AddShape(shape);
 	}
@@ -88,15 +118,16 @@ void onInit(CBlob@ this)
 	//	this.getShape().AddShape( shape );
 	//}
 
+	// Waffle: Remove back bit
 	//back bit
-	{
-		Vec2f[] shape = { Vec2f(8.0f,  25.5f) - pos_off,
-		                  Vec2f(14.0f, 25.5f) - pos_off,
-		                  Vec2f(14.0f, 36.0f) - pos_off,
-		                  Vec2f(11.0f, 36.0f) - pos_off
-		                };
-		this.getShape().AddShape(shape);
-	}
+	// {
+	// 	Vec2f[] shape = { Vec2f(8.0f,  25.5f) - pos_off,
+	// 	                  Vec2f(14.0f, 25.5f) - pos_off,
+	// 	                  Vec2f(14.0f, 36.0f) - pos_off,
+	// 	                  Vec2f(11.0f, 36.0f) - pos_off
+	// 	                };
+	// 	this.getShape().AddShape(shape);
+	// }
 	//rudder
 	//{
 	//	Vec2f[] shape = { Vec2f( 8.0f,  48.0f ) -pos_off,
@@ -113,7 +144,7 @@ void onInit(CBlob@ this)
 		front.addAnimation("default", 0, false);
 		int[] frames = { 0, 4, 5 };
 		front.animation.AddFrames(frames);
-		front.SetRelativeZ(55.0f);
+		front.SetRelativeZ(510.0f);  // Waffle: Front layer renders in front of most things
 	}
 
 	CSpriteLayer@ flag = sprite.addSpriteLayer("flag", sprite.getConsts().filename, 40, 56);
@@ -128,6 +159,7 @@ void onInit(CBlob@ this)
 
 	this.set_f32("oar offset", 54.0f);
 
+	// Waffle: Make single ladder
 	// add pole ladder
 	getMap().server_AddMovingSector(Vec2f(-28.0f, -32.0f), Vec2f(-12.0f, 0.0f), "ladder", this.getNetworkID());
 	// add back ladder

@@ -10,7 +10,7 @@ void onInit(CBlob@ this)
 	AddIconToken("$store_inventory$", "InteractionIcons.png", Vec2f(32, 32), 28);
 
 	Vehicle_Setup(this,
-	              250.0f, // move speed
+	              375.0f, // move speed  // Waffle: Move 50% faster
 	              0.31f,  // turn speed
 	              Vec2f(0.0f, -2.5f), // jump out velocity
 	              true  // inventory access
