@@ -1,6 +1,6 @@
 
-const u8 inner_distance = 30;  // Distance from center to inner front wall
-const u8 open_offset = 12;     // Distance to add to open side
+const u8 inner_distance = 24;  // Distance from center to inner front wall
+const u8 open_offset = 16;     // Distance to add to open side
 const u8 top_distance = 24;    // Distance from center to top
 const u8 bottom_distance = 8;  // Distance from center to bottom
 
@@ -26,22 +26,18 @@ void onTick(CSprite@ this)
         CBlob@ local = p.getBlob();
         if (local !is null)
         {
-            Vec2f player_pos = local.getPosition();
-            Vec2f warboat_pos = warboat.getPosition();
-            u8 left_limit = inner_distance, right_limit = inner_distance;
-            if (warboat.isFacingLeft())
-            {
-                right_limit += open_offset;
-            }
-            else
-            {
-                left_limit += open_offset;
-            }
+            // Find center of box
+            Vec2f box_center = warboat.getPosition() + Vec2f(open_offset * (warboat.isFacingLeft() ? 1 : -1), bottom_distance - top_distance) / 2;
 
-            if (player_pos.x > warboat_pos.x - left_limit   &&
-                player_pos.x < warboat_pos.x + right_limit  &&
-                player_pos.y > warboat_pos.y - top_distance &&
-                player_pos.y < warboat_pos.y + bottom_distance)
+            // Move box and point to origin
+            Vec2f player_pos = local.getPosition() - box_center;
+
+            // Rotate point around center
+            player_pos = player_pos.RotateByRadians(-warboat.getAngleRadians());
+
+            // Check if rotated point is in box
+            if (Maths::Abs(player_pos.x) < inner_distance + open_offset / 2 &&
+                Maths::Abs(player_pos.y) < (top_distance + bottom_distance) / 2)
             {
                 visible = false;
             }
