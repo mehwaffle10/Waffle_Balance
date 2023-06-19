@@ -74,10 +74,10 @@ void onInit(CBlob@ this)
 
 	// Waffle: Roof
 	{
-		Vec2f[] shape = { Vec2f(28.0f, 4.0f) - pos_off,
-		                  Vec2f(83.0f, 4.0f) - pos_off,
-		                  Vec2f(90.0f, 9.0f) - pos_off,
-		                  Vec2f(32.0f, 9.0f) - pos_off
+		Vec2f[] shape = { Vec2f(28.0f, 4.0f)  - pos_off,
+		                  Vec2f(83.0f, 4.0f)  - pos_off,
+		                  Vec2f(90.0f, 10.0f) - pos_off,
+		                  Vec2f(32.0f, 10.0f) - pos_off
 		                };
 		this.getShape().AddShape(shape);
 	}
@@ -102,8 +102,8 @@ void onInit(CBlob@ this)
 
 	// Waffle: Inner Wall
 	{
-		Vec2f[] shape = { Vec2f(87.0f, 9.0f) - pos_off,
-		                  Vec2f(90.0f, 9.0f) - pos_off,
+		Vec2f[] shape = { Vec2f(87.0f, 10.0f) - pos_off,
+		                  Vec2f(90.0f, 10.0f) - pos_off,
 		                  Vec2f(90.0f, 36.0f) - pos_off,
 						  Vec2f(87.0f, 36.0f) - pos_off
 		                };
