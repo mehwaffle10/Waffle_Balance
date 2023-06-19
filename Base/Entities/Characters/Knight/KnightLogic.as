@@ -1210,6 +1210,8 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 		aimangle += 360.0f;
 	}
 
+	// print("DO ATTACK");
+
 	Vec2f blobPos = this.getPosition();
 	Vec2f vel = this.getVelocity();
 	Vec2f thinghy(1, 0);
@@ -1246,6 +1248,8 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 				if (!canHit(this, b)) continue;
 				if (knight_has_hit_actor(this, b)) continue;
 
+				// print("B HIT: " + b.getName());
+
 				Vec2f hitvec = hi.hitpos - pos;
 
 				// we do a raycast to given blob and hit everything hittable between knight and that blob
@@ -1265,6 +1269,7 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 					bool large = rayb.hasTag("blocks sword") && !rayb.isAttached() && rayb.isCollidable(); // usually doors, but can also be boats/some mechanisms
 					if (knight_has_hit_actor(this, rayb)) 
 					{
+						// print("RAYB HAS HIT ACTOR: " + rayb.getName() + " LARGE: " + large);
 						// check if we hit any of these on previous ticks of slash
 						if (large) break;
 						if (rayb.getName() == "log")
@@ -1273,6 +1278,8 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 						}
 						continue;
 					}
+
+					// print("RAYB HIT: " + rayb.getName() + " LARGE: " + large);
 
 					f32 temp_damage = damage;
 					
@@ -1320,6 +1327,7 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 
 					if (large)
 					{
+						// print("BREAKING");
 						break; // don't raycast past the door after we do damage to it
 					}
 				}
