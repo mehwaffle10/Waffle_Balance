@@ -76,8 +76,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 		}
 
 		//don't collide if crouching (but doesn't apply to blocks)
-		string name = blob.getName();
-		if (!shape.isStatic() && !colliding_block && isCrouching(this) && !(name == "warboat" || name == "longboat" || name == "dinghy"))
+		if (!shape.isStatic() && !colliding_block && isCrouching(this) && !blob.hasTag("boat"))  // Waffle: No crouching through boats
 		{
 			return false;
 		}
