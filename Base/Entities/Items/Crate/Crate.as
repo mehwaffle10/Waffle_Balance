@@ -478,7 +478,10 @@ void Unpack(CBlob@ this)
 			}
 		}
 
-		blob.SetFacingLeft(this.isFacingLeft());
+		if (!blob.hasTag("boat"))  // Waffle: Force facing right temporarily for boats to avoid bugged shape
+		{
+			blob.SetFacingLeft(this.isFacingLeft());
+		}
 	}
 
 	this.set_s32("gold building amount", 0); // for crates with vehicles that cost gold
