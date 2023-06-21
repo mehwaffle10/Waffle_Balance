@@ -567,7 +567,7 @@ void Vehicle_StandardControls(CBlob@ this, VehicleInfo@ v)
 
 				// DRIVER
 
-				if (ap.name == "DRIVER" && !this.hasTag("immobile"))
+				if (ap.name == "GUNNER" && !this.hasTag("immobile"))  // Waffle: Gunner is also driver
 				{
 					bool moveUp = false;
 					const f32 angle = this.getAngleDegrees();

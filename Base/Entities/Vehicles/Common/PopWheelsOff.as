@@ -16,7 +16,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (!canSeeButtons(this, caller)) return;
 
-	if (this.getAttachments().getAttachmentPointByName("DRIVER").getOccupied() !is null) return;
+	// if (this.getAttachments().getAttachmentPointByName("DRIVER").getOccupied() !is null) return;  // Waffle: Gunner is also driver
 
 	if (this.getTeamNum() == caller.getTeamNum() && isOverlapping(this, caller) && !caller.isAttached() && !this.isAttached())  // Waffle: Don't show buttons if attached
 	{
@@ -38,9 +38,10 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	{
 		if (!this.hasTag("immobile"))
 		{
-			CBlob@ chauffeur = this.getAttachments().getAttachmentPointByName("DRIVER").getOccupied();
+			// Waffle: Gunner is also driver
+			// CBlob@ chauffeur = this.getAttachments().getAttachmentPointByName("DRIVER").getOccupied();
 
-			if (chauffeur !is null) return;
+			// if (chauffeur !is null) return;
 
 			this.Tag("immobile");
 			PopWheels(this, false);

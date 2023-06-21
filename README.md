@@ -137,6 +137,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Projectiles ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - 50% Faster and can turn around easier
 - Can readd wheels after immobilizing
+- Gunner is also driver, driver seat is removed
 
 ### Catapults
 - Rocks reworked
