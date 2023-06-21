@@ -92,7 +92,8 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 	{
 		// can build stone on wood when not on fire, do nothing
 	}
-	else if (buildTile == CMap::tile_wood_back && backtile.type == CMap::tile_castle_back)
+	else if ((buildTile == CMap::tile_wood_back || buildTile == CMap::tile_castle_back) && 
+			 (backtile.type == CMap::tile_castle_back || backtile.type >= CMap::tile_castle_back_moss && backtile.type <= 231))  // Waffle: Also protect moss backwall
 	{
 		//cant build wood on stone background
 		return false;
