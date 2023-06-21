@@ -112,6 +112,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can't be captured
 - Don't break while flipped
 - No spawn points
+- Can deploy at the top of the map
+- Can not deploy on enemy players
 
 ### Boats
 - Don't break on land (or if left alone???)
@@ -120,6 +122,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer have an inventory
 - No longer can detach attached siege weapons
 - Automatically deploy when packed crates are in water
+- Can not deploy on top of other boats
 - Always deploy facing right to avoid a bug with CShape
 
 ### Dinghies
@@ -127,9 +130,11 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Longboats
 - Cost 100 coins
+- Need a 10 x 4 area to deploy
 
 ### Warboats
 - Cost 200 coins
+- Need a 12 x 6 area to deploy
 
 ### Siege Weapons
 - Don't break in water
@@ -163,6 +168,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- explosion damage (vs blobs) limited from 8 to 4 blocks
 - Cost 200 coins instead of 150
 - Bomb bolts cost 150 coins instead of 100
+- Need a 5 x 5 area to deploy
 
 ### Mounted Bow
 - Health increased from 2 to 20

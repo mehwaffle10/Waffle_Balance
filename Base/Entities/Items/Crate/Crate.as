@@ -41,7 +41,7 @@ void onInit(CBlob@ this)
 		string packed = this.get_string("packed");  // Waffle: Fix auto-pickup
 
 		// GIANT HACK!!!
-		if (packed == "catapult" || packed == "bomber" || packed == "ballista" || packed == "outpost" || packed == "mounted_bow" || packed == "longboat" || packed == "warboat")
+		if (packed == "catapult" || packed == "bomber" || packed == "ballista" || packed == "outpost" || packed == "mounted_bow" || isBoat(packed))
 		{
 			CSpriteLayer@ icon = this.getSprite().addSpriteLayer("icon", "/MiniIcons.png" , 16, 16, this.getTeamNum(), -1);
 			if (icon !is null)
@@ -58,6 +58,20 @@ void onInit(CBlob@ this)
 			const string iconToken = "$crate_" + packed + "$";
 			AddIconToken("$crate_" + packed + "$", "/MiniIcons.png", Vec2f(16, 16), frame);
 			SetHelp(this, "help use", "", iconToken + getTranslatedString("Unpack {ITEM}   $KEY_E$").replace("{ITEM}", packed), "", 4);
+
+			// Waffle: Adjust required space for different vehicles
+			if (packed == "ballista")
+			{
+				this.set_Vec2f(required_space, Vec2f(5, 5));
+			}
+			else if (packed == "warboat")
+			{
+				this.set_Vec2f(required_space, Vec2f(12, 6));
+			}
+			else if (packed == "longboat")
+			{
+				this.set_Vec2f(required_space, Vec2f(10, 4));
+			}
 		}
 		else
 		{
@@ -165,8 +179,7 @@ void onTick(CBlob@ this)
 		}
 
 		// Waffle: Make crates with boats deploy automatically in water
-		string packed = this.get_string("packed");
-		if (unpackTime != 0 && getGameTime() >= unpackTime || packed == "warboat" || packed == "longboat")
+		if (unpackTime != 0 && getGameTime() >= unpackTime || !this.isAttached() && isBoat(this.get_string("packed")))
 		{
 			Unpack(this);
 			return;
@@ -719,7 +732,7 @@ bool canUnpackHere(CBlob@ this)
 	Vec2f pos = this.getPosition();
 
 	Vec2f space = this.get_Vec2f(required_space);
-	Vec2f t_off = Vec2f(map.tilesize * 0.5f, map.tilesize * 0.5f);
+	// Vec2f t_off = Vec2f(map.tilesize * 0.5f, map.tilesize * 0.5f);  // Waffle: Unused
 	Vec2f offsetPos = crate_getOffsetPos(this, map);
 	for (f32 step_x = 0.0f; step_x < space.x ; ++step_x)
 	{
@@ -735,24 +748,37 @@ bool canUnpackHere(CBlob@ this)
 					return false;
 				}
 			}
-			if (v.y < map.tilesize || map.isTileSolid(v))
+			if (v.y < -map.tilesize || map.isTileSolid(v))  // Waffle: Allow unpacking at top of map
 			{
 				return false;
 			}
 		}
 	}
 
+	// Waffle: Check for boats and enemy players
 	string packed = this.get_string("packed");
-	//required vertical buffer for siege engines and boats
-	if (packed == "ballista" || packed == "catapult" || packed == "longboat" || packed == "warboat")
+	CBlob@[] blobs;
+	map.getBlobsInBox(offsetPos, offsetPos + space * map.tilesize, blobs);
+	for (u16 i = 0; i < blobs.length; i++)
 	{
-		if (pos.y < 40)
+		if (blobs[i] !is null && (isBoat(packed) && blobs[i].hasTag("boat") || blobs[i].hasTag("player") && !blobs[i].hasTag("dead") && blobs[i].getTeamNum() != this.getTeamNum()))
 		{
 			return false;
 		}
 	}
 
-	bool water = packed == "longboat" || packed == "warboat";
+	// Waffle: Allow unpacking at top of map
+	// string packed = this.get_string("packed");
+	//required vertical buffer for siege engines and boats
+	// if (packed == "ballista" || packed == "catapult" || packed == "longboat" || packed == "warboat")
+	// {
+	// 	if (pos.y < 40)
+	// 	{
+	// 		return false;
+	// 	}
+	// }
+
+	bool water = isBoat(packed);
 	if (this.isAttached())
 	{
 		CBlob@ parent = this.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
@@ -770,10 +796,11 @@ Vec2f crate_getOffsetPos(CBlob@ blob, CMap@ map)
 {
 	Vec2f halfSize = blob.get_Vec2f(required_space) * 0.5f;
 
-	Vec2f alignedWorldPos = map.getAlignedWorldPos(blob.getPosition() + Vec2f(0, -2)) + (Vec2f(0.5f, 0.0f) * map.tilesize);
-	Vec2f offsetPos = alignedWorldPos - Vec2f(halfSize.x , halfSize.y) * map.tilesize;
+	Vec2f alignedWorldPos = getAlignedWorldPos(map, blob.getPosition() + Vec2f(0, -2) + Vec2f(0.5f, 0.0f) * map.tilesize); // Waffle: Snap to grid after offset
+	Vec2f offsetPos = alignedWorldPos - Vec2f(halfSize.x, halfSize.y) * map.tilesize;
 	offsetPos += blob.get_Vec2f("space_offset") * map.tilesize;
-	offsetPos = map.getAlignedWorldPos(offsetPos);
+	// offsetPos = map.getAlignedWorldPos(offsetPos);  // Waffle: Allow out of bounds
+	offsetPos = getAlignedWorldPos(map, offsetPos);
 	return offsetPos;
 }
 
@@ -948,4 +975,16 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	}
 
 	this.server_setTeamNum(attached.getTeamNum());
+}
+
+// Waffle: Convenience function for boats
+bool isBoat(string name)
+{
+	return name == "warboat" || name == "longboat" || name == "dinghy";
+}
+
+// Waffle: Allow out of bounds
+Vec2f getAlignedWorldPos(CMap@ map, Vec2f pos)
+{
+	return Vec2f(pos.x - pos.x % map.tilesize, pos.y - pos.y % map.tilesize);
 }
