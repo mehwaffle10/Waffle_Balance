@@ -164,7 +164,9 @@ void onTick(CBlob@ this)
 			return;
 		}
 
-		if (unpackTime != 0 && getGameTime() >= unpackTime)
+		// Waffle: Make crates with boats deploy automatically in water
+		string packed = this.get_string("packed");
+		if (unpackTime != 0 && getGameTime() >= unpackTime || packed == "warboat" || packed == "longboat")
 		{
 			Unpack(this);
 			return;
@@ -478,7 +480,8 @@ void Unpack(CBlob@ this)
 			}
 		}
 
-		if (!blob.hasTag("boat"))  // Waffle: Force facing right temporarily for boats to avoid bugged shape
+		// Waffle: Force facing right temporarily for boats to avoid bugged shape
+		if (!blob.hasTag("boat"))
 		{
 			blob.SetFacingLeft(this.isFacingLeft());
 		}

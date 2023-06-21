@@ -119,6 +119,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer have wood cost
 - No longer have an inventory
 - No longer can detach attached siege weapons
+- Automatically deploy when packed crates are in water
+- Always deploy facing right to avoid a bug with CShape
 
 ### Dinghies
 - Cost 40 coins
