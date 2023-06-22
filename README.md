@@ -143,6 +143,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Cost 200 coins
 - Need a 12 x 6 area to deploy
 - Health decreased from 45 to 30
+- Removed front 3 seats
+- Moved vehicle attachment point to front
 
 ### Siege Weapons
 - Don't break in water
