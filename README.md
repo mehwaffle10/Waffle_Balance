@@ -108,6 +108,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Vehicles
 - Take full damage from swords and arrows
+- Take 5x damage from bomb arrows instead of 8x
+- Take 4.5x damage from kegs
 - Deploy instantly
 - Can't be captured
 - Don't break while flipped
@@ -127,6 +129,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Dinghies
 - Cost 40 coins
+- Damage taken is consistent with other vehicles
 
 ### Longboats
 - Cost 100 coins
@@ -135,6 +138,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Warboats
 - Cost 200 coins
 - Need a 12 x 6 area to deploy
+- Health decreased from 45 to 30
 
 ### Siege Weapons
 - Don't break in water

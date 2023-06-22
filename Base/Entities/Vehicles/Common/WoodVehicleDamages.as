@@ -28,11 +28,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 
 		case Hitters::explosion:
+		case Hitters::keg:  // Waffle: Kegs do increased damage
 			dmg *= 4.5f;
 			break;
 
 		case Hitters::bomb_arrow:
-			dmg *= 8.0f;
+			dmg *= 5.0f;
 			break;
 
 		case Hitters::arrow:
