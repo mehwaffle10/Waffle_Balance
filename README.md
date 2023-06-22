@@ -118,6 +118,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No spawn points
 - Can deploy at the top of the map
 - Can not deploy on enemy players
+- All seats render floating arrows and do not flicker
 
 ### Boats
 - Don't break on land (or if left alone???)
