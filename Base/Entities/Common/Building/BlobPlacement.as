@@ -33,7 +33,13 @@ bool PlaceBlob(CBlob@ this, CBlob @blob, Vec2f cursorPos, bool repairing = false
 			if (repairing && repairBlob !is null)
 			{
 				repairBlob.server_SetHealth(repairBlob.getInitialHealth());
-				getMap().server_SetTile(repairBlob.getPosition(), blob.get_TileType("background tile"));
+				// Waffle: Don't replace stone or moss backwall
+				CMap@ map = getMap();
+				TileType type = map.getTile(cursorPos).type;
+				if (blob.exists("background tile") && type != CMap::tile_castle_back && !(type >= CMap::tile_castle_back_moss && type <= 231))
+				{
+					map.server_SetTile(repairBlob.getPosition(), blob.get_TileType("background tile"));
+				}
 				blob.server_Die();
 			}
 			else
