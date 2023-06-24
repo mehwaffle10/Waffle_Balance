@@ -64,6 +64,13 @@ void Splash(Vec2f pos, Vec2f vel, int randomnum)
 
 void onTick(CBlob@ this)
 {
+	// Waffle: Turn around bug fix
+	s32 ticks = this.getTickSinceCreated();
+	if (this.getTeamNum() == 1 && ticks < 10 && ticks > 5)
+	{
+		this.SetFacingLeft(true);
+	}
+
 	// rower controls
 	AttachmentPoint@[] aps;
 

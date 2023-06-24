@@ -129,7 +129,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer can detach attached siege weapons
 - Automatically deploy when packed crates are in water
 - Can not deploy on top of other boats
-- Always deploy facing right to avoid a bug with CShape
+- Always deploy facing right if blue and left if red to avoid a bug with CShape
 
 ### Dinghies
 - Cost 40 coins
