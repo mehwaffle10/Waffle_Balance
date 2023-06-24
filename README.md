@@ -138,6 +138,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Longboats
 - Cost 100 coins
 - Need a 10 x 4 area to deploy
+- Removed front 3 seats, adjusted back 3 seats
+- Fixed bug where sail seat could drive on land
+- All rower seats also activate the sail
+- Slightly moved vehicle attachment point forward
 
 ### Warboats
 - Cost 200 coins

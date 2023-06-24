@@ -119,12 +119,12 @@ void onTick(CBlob@ this)
 						}
 					}
 
-				}
-				else if (ap.name == "SAIL")
-				{
+				// Waffle: Any rower enables sail
+				// }
+				// else if (ap.name == "SAIL")
+				// {
 					// manage oar sprite animation
-					CSpriteLayer@ sail = this.getSprite().getSpriteLayer("sail " + i);
-
+					CSpriteLayer@ sail = this.getSprite().getSpriteLayer("sail 0");  // Waffle: Any rower enables sail
 					if (sail !is null)
 					{
 						Animation@ anim = sail.getAnimation("default");
@@ -180,12 +180,13 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 				anim.loop = false;
 			}
 		}
-	}
-	else if (attachedPoint.name == "SAIL")
-	{
+	// Waffle: Any rower enables sail
+	// }
+	// else if (attachedPoint.name == "SAIL")
+	// {
 		if (!this.hasTag("no sail"))
 		{
-			CSpriteLayer@ sail = this.getSprite().getSpriteLayer("sail " + attachedPoint.getID());
+			CSpriteLayer@ sail = this.getSprite().getSpriteLayer("sail 0");  // Waffle: Any rower enables sail
 
 			if (sail !is null)
 			{
@@ -210,12 +211,13 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 		{
 			oar.SetVisible(false);
 		}
-	}
-	else if (attachedPoint.name == "SAIL")
-	{
-		if (!this.hasTag("no sail"))
+	// Waffle: Any rower enables sail
+	// }
+	// else if (attachedPoint.name == "SAIL")
+	// {
+		if (!this.hasTag("no sail") && !hasRower(this))
 		{
-			CSpriteLayer@ sail = this.getSprite().getSpriteLayer("sail " + attachedPoint.getID());
+			CSpriteLayer@ sail = this.getSprite().getSpriteLayer("sail 0");  // Waffle: Any rower enables sail
 
 			if (sail !is null)
 			{
@@ -223,4 +225,22 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 			}
 		}
 	}
+}
+
+bool hasRower(CBlob@ this)
+{
+	AttachmentPoint@[] aps;
+	if (this.getAttachmentPoints(@aps))
+	{
+		for (uint i = 0; i < aps.length; i++)
+		{
+			AttachmentPoint@ ap = aps[i];
+
+			if (ap.name == "ROWER" && ap.getOccupied() !is null)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
