@@ -120,6 +120,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can not deploy on enemy players
 - All seats render floating arrows that no longer flicker
 - Removed priority for seats for vehicles that are attached to other vehicles
+- Only attach to other vehicles on collision
 
 ### Boats
 - Don't break on land (or if left alone???)

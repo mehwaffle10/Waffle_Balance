@@ -478,7 +478,8 @@ void Unpack(CBlob@ this)
 
 		// attach to VEHICLE attachment if possible
 
-		TryToAttachVehicle(blob);
+		// Waffle: Only try to attach when vehicle collides with target, avoids issue with large scan radius
+		// TryToAttachVehicle(blob);
 
 		// msg back factory so it can add this item
 
