@@ -44,7 +44,6 @@ void onInit(CBlob@ this)
 	}
 
 	this.getSprite().SetZ(50.0f);
-	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 }
 
 void Splash(Vec2f pos, Vec2f vel, int randomnum)
@@ -69,6 +68,7 @@ void onTick(CBlob@ this)
 	if (this.getTeamNum() == 1 && ticks < 10 && ticks > 5)
 	{
 		this.SetFacingLeft(true);
+		this.getCurrentScript().runFlags |= Script::tick_hasattached;
 	}
 
 	// rower controls
