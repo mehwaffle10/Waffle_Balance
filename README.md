@@ -192,6 +192,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can fire every 15 ticks instead of every 25 ticks (every .75 seconds instead of 1.25 seconds)
 - Arrows no longer decay
 - Arrows no longer have random inaccuracy
+- Arrows no longer have 2x drag
+- Launch speed reduced from 25 to 21
 
 ## BUILDER SHOP
 

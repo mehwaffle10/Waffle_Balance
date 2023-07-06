@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 	                    "EmptyFire" // empty fire sound
 	                   );
 
-	v.charge = 400;
+	v.charge = 336;  // Waffle: Reduce velocity
 	// init arm + cage sprites
 	CSprite@ sprite = this.getSprite();
 	CSpriteLayer@ arm = sprite.addSpriteLayer("arm", sprite.getConsts().filename, 16, 16);
@@ -204,8 +204,9 @@ void Vehicle_onFire(CBlob@ this, VehicleInfo@ v, CBlob@ bullet, const u8 _unused
 		offset *= 3.5f;
 		bullet.setPosition(this.getPosition() + offset);
 
+		// Waffle: Remove extra drag
 		// set much higher drag than archer arrow
-		bullet.getShape().setDrag(bullet.getShape().getDrag() * 2.0f);
+		// bullet.getShape().setDrag(bullet.getShape().getDrag() * 2.0f);
 
 		// Waffle: Remove arrow decay 
 		// bullet.server_SetTimeToDie(-1);   // override lock
