@@ -132,7 +132,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can not deploy on top of other boats
 - Always deploy facing right if blue and left if red to avoid a bug with CShape
 - Collide with friendly boats
-- Removed FakeBoatCollision.as, fixes issues with boats warping and makes collisions better
+- Removed FakeBoatCollision.as, fixes issues with boats warping and makes boat collisions better
+- Removed RunOverPeople.as, Nerfs crushing people and other boats, makes boat collisions better
 
 ### Dinghies
 - Cost 40 coins
