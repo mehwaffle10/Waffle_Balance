@@ -72,6 +72,10 @@ void onInit(CBlob@ this)
 			{
 				this.set_Vec2f(required_space, Vec2f(10, 4));
 			}
+			else if (packed == "dinghy")
+			{
+				this.set_Vec2f(required_space, Vec2f(6, 3));
+			}
 		}
 		else
 		{
@@ -749,7 +753,7 @@ bool canUnpackHere(CBlob@ this)
 					return false;
 				}
 			}
-			if (v.y < -map.tilesize || map.isTileSolid(v))  // Waffle: Allow unpacking at top of map
+			if (map.isTileSolid(v))  // Waffle: Allow unpacking at top of map
 			{
 				return false;
 			}
@@ -795,10 +799,9 @@ bool canUnpackHere(CBlob@ this)
 
 Vec2f crate_getOffsetPos(CBlob@ blob, CMap@ map)
 {
-	Vec2f halfSize = blob.get_Vec2f(required_space) * 0.5f;
-
 	Vec2f alignedWorldPos = getAlignedWorldPos(map, blob.getPosition() + Vec2f(0, -2) + Vec2f(0.5f, 0.0f) * map.tilesize); // Waffle: Snap to grid after offset
-	Vec2f offsetPos = alignedWorldPos - Vec2f(halfSize.x, halfSize.y) * map.tilesize;
+	Vec2f space = blob.get_Vec2f(required_space);
+	Vec2f offsetPos = alignedWorldPos - Vec2f(space.x / 2, space.y - 2) * map.tilesize;  // Waffle: Make the crate unpack vertically
 	offsetPos += blob.get_Vec2f("space_offset") * map.tilesize;
 	// offsetPos = map.getAlignedWorldPos(offsetPos);  // Waffle: Allow out of bounds
 	offsetPos = getAlignedWorldPos(map, offsetPos);

@@ -138,6 +138,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Dinghies
 - Cost 40 coins
 - Damage taken is consistent with other vehicles
+- Spawn in crates like other vehicles
+- Need a 6 x 3 area to deploy
 
 ### Longboats
 - Cost 100 coins
@@ -254,6 +256,11 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Changes team when picked up
 - Can automatically pick up materials again
 	- No longer automatically picks up normal arrows
+- Fixed vehicle deployments
+	- Appropriately sized area checks for each vehicle
+	- Fixed map alignment for area check
+	- Can not deploy on enemy players
+	- Area check is now checked from crate upwards instead of centered on the crate
 
 ### Drills
 - Can no longer dig gold

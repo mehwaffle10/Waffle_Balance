@@ -28,9 +28,10 @@ void onInit(CBlob@ this)
 	// TODO: Better information + icons like the vehicle shop, also make boats not suck
 	{
 		string dinghy_icon = getTeamIcon("dinghy", "VehicleIcons.png", team_num, Vec2f(32, 32), 5);
-		ShopItem@ s = addShopItem(this, "Dinghy", dinghy_icon, "dinghy", dinghy_icon + "\n\n\n" + Descriptions::dinghy);
+		ShopItem@ s = addShopItem(this, "Dinghy", dinghy_icon, "dinghy", dinghy_icon + "\n\n\n" + Descriptions::dinghy, false, true);  // Waffle: Dinghies spawn in crates
 		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::dinghy);
 		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::dinghy_wood);  // Waffle: Remove wood cost from dinghies
+		s.crate_icon = 10;  // Waffle: Dinghies spawn in crates
 	}
 	{
 		string longboat_icon = getTeamIcon("longboat", "VehicleIcons.png", team_num, Vec2f(32, 32), 4);
