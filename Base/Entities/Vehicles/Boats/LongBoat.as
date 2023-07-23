@@ -34,10 +34,10 @@ void onInit(CBlob@ this)
 	// additional shape
 
 	Vec2f[] frontShape;
-	frontShape.push_back(Vec2f(74.0f, -19.0f));
-	frontShape.push_back(Vec2f(78.0f, -19.0f));
-	frontShape.push_back(Vec2f(80.0f, 0.0f));
-	frontShape.push_back(Vec2f(76.0f, 0.0f));
+	frontShape.push_back(Vec2f(76.0f, -22.0f));
+	frontShape.push_back(Vec2f(81.0f, -22.0f));
+	frontShape.push_back(Vec2f(82.0f, 0.0f));
+	frontShape.push_back(Vec2f(77.0f, 0.0f));
 	this.getShape().AddShape(frontShape);
 
 	// Waffle: Remove back bit
