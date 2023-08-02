@@ -34,6 +34,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Returns in 10 seconds
 - Can not speed up return by standing on it
 
+### Tent
+- Fixed sprite not being centered
+
 ### Map Ceiling
 - Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
 - Lightened the sky above the top of the map a bit to improve visibility
