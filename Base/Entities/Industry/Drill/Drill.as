@@ -387,18 +387,19 @@ void onTick(CBlob@ this)
 								}
 
 								//only counts as hitting something if its not mats, so you can drill out veins quickly
-								if (!map.isTileStone(tile))  // Waffle: Drills can't dig gold || !map.isTileGold(tile))
+								// Waffle: Stone heats up like everything else
+								// if (!map.isTileStone(tile))  // Waffle: Drills can't dig gold || !map.isTileGold(tile))
+								// {
+								hitsomething = true;
+								if (map.isTileStone(tile) || map.isTileThickStone(tile) || map.isTileCastle(tile) || map.isTileWood(tile))
 								{
-									hitsomething = true;
-									if (map.isTileCastle(tile) || map.isTileWood(tile))
-									{
-										hit_constructed = true;
-									}
-									else
-									{
-										hit_ground = true;
-									}
+									hit_constructed = true;
 								}
+								else
+								{
+									hit_ground = true;
+								}
+								// }
 
 							}
 							if (hitsomething)

@@ -265,6 +265,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Drills
 - Can no longer dig gold
 - Give 100% of tile resources dug
+- Digging stone heats up the drill at the same rate as constructed block
 - Dig pure dirt 3x slower and properly detected (30 ticks instead of 10)
 - Digging pure dirt overheats the drill incredibly fast
 	- Will overheat even in water
