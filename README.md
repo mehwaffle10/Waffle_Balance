@@ -89,6 +89,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Holidays
 - Force default texture pack
 
+### Nature Spawning
+- Fish, grain, flowers, and chickens no longer spawn randomly
+
 # ITEMS
 
 ## BUILDINGS
