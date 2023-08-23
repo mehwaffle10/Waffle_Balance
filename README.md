@@ -54,13 +54,16 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Wood Structure Damage
 - Arrows do full damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
-- Swords do half damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
-- Do the math:
-	- wood shops have 4 health
-	- storages have 10 health
-	- tunnels have 16 health
-	- wood doors have 7 health
-	- platforms have 5 health
+	- wood doors = 7 hearts
+	- platforms  = 5 hearts
+- Swords do 43.75% damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
+    - wood doors = 11 jabs
+    - platforms  = 12 jabs
+    - ladders    = 5  jabs
+	- wood shops = 10 jabs
+    - quarry     = 19 jabs
+	- tunnels    = 37 jabs
+
 
 ### Explosives
 - Ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
@@ -112,6 +115,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Produces 50 stone for 150 wood every 45 seconds
 - Can only produce with two trees or saplings that can grow overlapping
 - Added sounds, button hints, and description for feedback
+
+### Ladders
+- Increased health from 1.5 to 2.5
 
 ## VEHICLES
 
