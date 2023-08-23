@@ -45,6 +45,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Builder
 - Increased swing speed on man-made structures and wood
 - Decreased swing speed on dirt and gold
+- Increased backwall building speed
 - Moss backwall is now treated like stone backwall
 - Repairing blobs will no longer replace healthy stone backwall behind
 
