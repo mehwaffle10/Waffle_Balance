@@ -14,11 +14,12 @@ int g_layEggInterval = 0;
 
 //sprite
 
-void onInit(CSprite@ this)
-{
-	this.ReloadSprites(0, 0); //always blue
+// Waffle: Not always blue
+// void onInit(CSprite@ this)
+// {
+// 	this.ReloadSprites(0, 0); //always blue
 
-}
+// }
 
 void onTick(CSprite@ this)
 {
