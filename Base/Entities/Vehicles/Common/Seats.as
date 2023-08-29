@@ -78,7 +78,7 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 
 	// Z is modified when attaching (offsetZ)
 	// So we set Z back
-	if (detached.hasTag("important-pickup")) 
+	if (detached.exists("important-pickup"))  // Waffle: Fix type mismatch
 	{
 		f32 baseZ = detached.get_f32("important-pickup");
 	    detached.getSprite().SetZ(baseZ);
