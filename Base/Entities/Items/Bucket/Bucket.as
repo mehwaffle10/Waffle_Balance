@@ -25,6 +25,8 @@ void onInit(CBlob@ this)
 	this.set_u8("filled", this.hasTag("_start_filled") ? splashes : 0);
 	this.Tag("ignore fall");
 	this.getCurrentScript().runFlags |= Script::tick_attached;
+
+    this.set_f32("important-pickup", 1.0f);  // Waffle: Adjust Z values
 }
 
 void onTick(CBlob@ this)

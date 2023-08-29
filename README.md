@@ -96,6 +96,19 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Nature Spawning
 - Fish, grain, flowers, and chickens no longer spawn randomly
 
+### Z Indices
+- Adjusted Z index for the following items. A higher Z will render in front. Most things including players are at 0.
+- bucket              - 1
+- keg                 - 15
+- bomb bolts          - 18
+- water arrows        - 19
+- fire arrows         - 20
+- bomb arrows         - 21
+- mine                - 25
+- log                 - 30
+- crate               - 35
+- bush, grain, flower - 40
+
 # ITEMS
 
 ## BUILDINGS
@@ -280,7 +293,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Drills
 - Can no longer dig gold
 - Give 100% of tile resources dug
-- Only hits dirt and stone/thickstone once instead of twice
+- Only hits dirt and stone/thickstone once per hit instead of twice
 - Digging stone heats up the drill at the same rate as constructed block
 - Dig pure dirt 3x slower and properly detected (30 ticks instead of 10)
 - Digging pure dirt overheats the drill incredibly fast

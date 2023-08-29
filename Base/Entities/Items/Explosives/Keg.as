@@ -31,7 +31,7 @@ void onInit(CBlob@ this)
 		fuse.SetRelativeZ(1);
 	}
 
-	this.set_f32("important-pickup", 30.0f);
+	this.set_f32("important-pickup", 15.0f);  // Waffle: Adjust Z values
 }
 
 //sprite update

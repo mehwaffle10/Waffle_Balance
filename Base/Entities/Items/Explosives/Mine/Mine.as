@@ -57,6 +57,8 @@ void onInit(CBlob@ this)
 	this.addCommandID(MINE_PRIMED);
 
 	this.getCurrentScript().tickIfTag = MINE_PRIMING;
+
+    this.set_f32("important-pickup", 25.0f);  // Waffle: Adjust Z values
 }
 
 void onInit(CSprite@ this)

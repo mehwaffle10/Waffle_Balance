@@ -137,7 +137,10 @@ void onInit(CBlob@ this)
 		this.set_Vec2f(required_space, Vec2f(5, 4));
 	}
 
-	this.getSprite().SetZ(-10.0f);
+    // Waffle: Adjust Z values
+    float base_z = 35.0f;
+    this.set_f32("important-pickup", base_z);
+	this.getSprite().SetZ(base_z);
 }
 
 void onTick(CBlob@ this)
