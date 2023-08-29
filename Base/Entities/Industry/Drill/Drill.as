@@ -343,38 +343,35 @@ void onTick(CBlob@ this)
 
 								if (isServer())
 								{
-									for (uint i = 0; i < 2; i++)
-									{
-										//tile destroyed last hit
+                                    //tile destroyed last hit
 
-										if (!map.isTileSolid(map.getTile(hi.tileOffset))){ break; }
+                                    if (!map.isTileSolid(map.getTile(hi.tileOffset))){ break; }
 
-										// Waffle: Drills can't dig gold
-										if (!map.isTileBedrock(tile) && !map.isTileGold(tile))  
-										{
-											map.server_DestroyTile(hi.hitpos, 1.0f, this);
-										}
+                                    // Waffle: Drills can't dig gold
+                                    if (!map.isTileBedrock(tile) && !map.isTileGold(tile))  
+                                    {
+                                        // Waffle: Only hit dirt and stone once
+                                        for (uint i = 0; i < (tile == CMap::tile_ground || tile >= 29 && tile <= 31 || map.isTileStone(tile) || map.isTileThickStone(tile) ? 1 : 2); i++) {
+                                            map.server_DestroyTile(hi.hitpos, 1.0f, this);
+                                            Material::fromTile(holder, tile, 1.0f);  // Waffle: Drills give 100% tile resources
+                                        }
+                                    }
 
-										Material::fromTile(holder, tile, 1.0f);  // Waffle: Drills give 100% tile resources
-										// if (map.isTileCastle(tile) || map.isTileWood(tile))  // Waffle: Drills can't dig gold    || map.isTileGold(tile))    
-										// {
-										// 	Material::fromTile(holder, tile, 1.0f);
-										// }
-										// else
-										// {
-										// 	Material::fromTile(holder, tile, 0.75f);
-										// }
-										
-										// Waffle: Only slowdown when hitting pure dirt
-										// if (map.isTileGround(tile)) || map.isTileStone(tile) || map.isTileThickStone(tile)) 
-										if (tile == CMap::tile_ground || // Dirt Blocks
-											tile >= 29 && tile <= 31)   // Damaged Dirt Blocks
-										{
-											hit_nondirt = true;
-										}
-
-									}
-
+                                    // if (map.isTileCastle(tile) || map.isTileWood(tile))  // Waffle: Drills can't dig gold    || map.isTileGold(tile))    
+                                    // {
+                                    // 	Material::fromTile(holder, tile, 1.0f);
+                                    // }
+                                    // else
+                                    // {
+                                    // 	Material::fromTile(holder, tile, 0.75f);
+                                    // }
+                                    
+                                    // Waffle: Only slowdown when hitting pure dirt
+                                    // if (map.isTileGround(tile)) || map.isTileStone(tile) || map.isTileThickStone(tile)) 
+                                    if (tile == CMap::tile_ground || tile >= 29 && tile <= 31)
+                                    {
+                                        hit_nondirt = true;
+                                    }
 								}
 
 								if (isClient())
