@@ -611,16 +611,16 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 			blob.setVelocity(velocity * 8);
 			if (isKnockable(blob))
 			{
-				setKnocked(blob, 30);
+				setKnocked(blob, 0.5f * getTicksASecond());  // Waffle: Reduce stun time
 			}
 		}
 		else if (this.hasTag("crate escaped"))
 		{
 			Vec2f velocity = this.getOldVelocity();
-			if (-5 < velocity.y && velocity.y < 5)
-			{
-				velocity.y = -5; // Leap out of crate
-			}
+			// if (-5 < velocity.y && velocity.y < 5)  // Waffle: No longer leap out of crate
+			// {
+			// 	velocity.y = -5; // Leap out of crate
+			// }
 			Vec2f pos = this.getPosition();
 			pos.y -= 5;
 			blob.setPosition(pos);

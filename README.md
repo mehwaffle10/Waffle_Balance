@@ -258,6 +258,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Crates
 - Won't break when exiting
+- Exiting a crate no longer gives the player a jump
+- Opening a crate with an enemy player only stun for half a second instead of a full second
 - Inventory increased from 3x3 to 4x3
 - Displays label if anything is in inventory
 - Heavily reduced air friction
