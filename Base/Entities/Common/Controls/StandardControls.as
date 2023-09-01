@@ -61,9 +61,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ owner = getBlobByNetworkID(params.read_netid());
 		CBlob@ pick = getBlobByNetworkID(params.read_netid());
 
-		// Waffle: Prevent pickup if travelling through a tunnel
-		if (owner !is null && pick !is null && owner.get_u32("TUNNEL_TRAVEL_PICKUP_DELAY") + 1 * getTicksASecond() < getGameTime())
-		{
+        if (owner !is null 
+		    && !owner.isInInventory()
+		    && !owner.isAttached()
+		    && pick !is null 
+		    && !pick.isAttached()
+		    && pick.canBePickedUp(owner)
+            && owner.get_u32("TUNNEL_TRAVEL_PICKUP_DELAY") + 1 * getTicksASecond() < getGameTime()  // Waffle: Prevent pickup if travelling through a tunnel
+        {
 			owner.server_Pickup(pick);
 		}
 	}
@@ -327,7 +332,7 @@ void onTick(CBlob@ this)
 
 void onDie(CBlob@ this)
 {
-	set_emote(this, Emotes::off);
+	set_emote(this, "");
 }
 
 // CAMERA

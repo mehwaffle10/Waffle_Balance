@@ -13,13 +13,14 @@ const bool builder_only = false;
 
 void onInit(CBlob@ this)
 {
-	// Waffle: Readd quarries
-	AddIconToken("$stonequarry$", "Quarry.png", Vec2f(40, 24), 4);
+	AddIconToken("$stonequarry$", "Quarry.png", Vec2f(40, 24), 4);  // Waffle: Readd quarries
 	this.set_TileType("background tile", CMap::tile_wood_back);
 	//this.getSprite().getConsts().accurateLighting = true;
 
 	this.getSprite().SetZ(-50); //background
 	this.getShape().getConsts().mapCollisions = false;
+
+    this.Tag("has window");
 
 	//INIT COSTS
 	InitCosts();

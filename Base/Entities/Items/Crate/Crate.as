@@ -9,11 +9,32 @@
 #include "GenericButtonCommon.as"
 #include "KnockedCommon.as"
 
-//property name
-const string required_space = "required space";
+// crate tags and their uses
+
+// "parachute"      : this uses a parachute
+// "unpackall"       : this can unpack even if there is no "packed" blob
+// "unpack on land"    : this unpacks when touching ground
+// "destroy on touch"   : this dies when touching ground
+// "unpack_only_water"   : this can only unpack in water
+// "unpack_check_nobuild" : this can only unpack if block-type blobs arent in the way
 
 //proportion of distance allowed (1.0f == overlapping radius, 2.0f = within 1 extra radius)
-const float ally_allowed_distance = 2.0f;
+const f32 ally_allowed_distance = 2.0f;
+
+//time it takes to unpack the crate
+const u32 unpackSecs = 0;  // Waffle: Crates unpack instantly
+
+// Waffle: Adjust required space and gold for different vehicles, add dinghies
+Crate@[] base_presets = 
+{
+    Crate("dinghy",      FactoryFrame::dinghy,      Vec2f(6,  3),  0, "unpack_only_water"),
+	Crate("longboat",    FactoryFrame::longboat,    Vec2f(10, 4),  0, "unpack_only_water"),
+	Crate("warboat",     FactoryFrame::warboat,     Vec2f(12, 6),  0, "unpack_only_water"),  
+	Crate("catapult",    FactoryFrame::catapult,    Vec2f(5,  3)),
+	Crate("ballista",    FactoryFrame::ballista,    Vec2f(5,  5)),
+	Crate("mounted_bow", FactoryFrame::mounted_bow, Vec2f(3,  3)),
+	Crate("outpost",     FactoryFrame::outpost,     Vec2f(5,  5),  0, "unpack_check_nobuild")
+};
 
 void onInit(CBlob@ this)
 {
@@ -25,88 +46,36 @@ void onInit(CBlob@ this)
 	this.addCommandID("stop unpack");
 	this.addCommandID("boobytrap");
 
-	this.set_u32("boobytrap_cooldown_time", 0);
-	// Waffle: No more gold
-	// int goldAmount = 0;
-	// if (packed == "warboat")
-	// {
-	// 	goldAmount = 50;
-	// }
-	this.set_s32("gold building amount", 0);
-
-	u8 frame = 0;
-	if (this.exists("frame"))
+	const string packed = this.exists("packed") ? this.get_string("packed") : "";
+	if (!packed.isEmpty())
 	{
-		frame = this.get_u8("frame");
-		string packed = this.get_string("packed");  // Waffle: Fix auto-pickup
-
-		// GIANT HACK!!!
-		if (packed == "catapult" || packed == "bomber" || packed == "ballista" || packed == "outpost" || packed == "mounted_bow" || isBoat(packed))
+		// use a preset if we can
+		Crate@[] presets;
+		getRules().get("crate presets", presets); //take from rules if applicable
+		if (!UseCratePreset(this, packed, presets))
 		{
-			CSpriteLayer@ icon = this.getSprite().addSpriteLayer("icon", "/MiniIcons.png" , 16, 16, this.getTeamNum(), -1);
-			if (icon !is null)
-			{
-				Animation@ anim = icon.addAnimation("display", 0, false);
-				anim.AddFrame(frame);
-
-				icon.SetOffset(Vec2f(-2, 1));
-				icon.SetRelativeZ(1);
-			}
-			this.getSprite().SetAnimation("label");
-
-			// help
-			const string iconToken = "$crate_" + packed + "$";
-			AddIconToken("$crate_" + packed + "$", "/MiniIcons.png", Vec2f(16, 16), frame);
-			SetHelp(this, "help use", "", iconToken + getTranslatedString("Unpack {ITEM}   $KEY_E$").replace("{ITEM}", packed), "", 4);
-
-			// Waffle: Adjust required space for different vehicles
-			if (packed == "ballista")
-			{
-				this.set_Vec2f(required_space, Vec2f(5, 5));
-			}
-			else if (packed == "warboat")
-			{
-				this.set_Vec2f(required_space, Vec2f(12, 6));
-			}
-			else if (packed == "longboat")
-			{
-				this.set_Vec2f(required_space, Vec2f(10, 4));
-			}
-			else if (packed == "dinghy")
-			{
-				this.set_Vec2f(required_space, Vec2f(6, 3));
-			}
+			UseCratePreset(this, packed, base_presets);
 		}
-		else
+	}
+
+	if (this.exists("frame") && !packed.isEmpty())
+	{
+		const u8 frame = this.get_u8("frame");
+
+		CSpriteLayer@ icon = this.getSprite().addSpriteLayer("icon", "/MiniIcons.png", 16, 16, this.getTeamNum(), -1);
+		if (icon !is null)
 		{
-			u8 newFrame = 0;
+			Animation@ anim = icon.addAnimation("display", 0, false);
+			anim.AddFrame(frame);
+			icon.SetOffset(Vec2f(-2, 1));
+			icon.SetRelativeZ(1);
+		}
+		this.getSprite().SetAnimation("label");
 
-			if (packed == "kitchen")
-				newFrame = FactoryFrame::kitchen;
-			if (packed == "nursery")
-				newFrame = FactoryFrame::nursery;
-			if (packed == "tunnel")
-				newFrame = FactoryFrame::tunnel;
-			if (packed == "healing")
-				newFrame = FactoryFrame::healing;
-			if (packed == "factory")
-				newFrame = FactoryFrame::factory;
-			if (packed == "storage")
-				newFrame = FactoryFrame::storage;
-
-			if (newFrame > 0)
-			{
-				CSpriteLayer@ icon = this.getSprite().addSpriteLayer("icon", "/MiniIcons.png" , 16, 16, this.getTeamNum(), -1);
-				if (icon !is null)
-				{
-					icon.SetFrame(newFrame);
-					icon.SetOffset(Vec2f(-2, 1));
-					icon.SetRelativeZ(1);
-				}
-				this.getSprite().SetAnimation("label");
-			}
-
-		}	 //END OF HACK
+		// help
+		const string iconToken = "$crate_" + packed + "$";
+		AddIconToken(iconToken, "/MiniIcons.png", Vec2f(16, 16), frame);
+		SetHelp(this, "help use", "", iconToken + getTranslatedString("Unpack {ITEM}   $KEY_E$").replace("{ITEM}", packed), "", 4);
 	}
 	else
 	{
@@ -120,27 +89,52 @@ void onInit(CBlob@ this)
 	// Kinda hacky, only normal crates ^ with "dont deactivate" will ignore "activated"
 	this.Tag("activated");
 
-
-	// Waffle: Crates unpack instantly
-	const uint unpackSecs = 0;
 	this.set_u32("unpack secs", unpackSecs);
 	this.set_u32("unpack time", 0);
+	this.set_u32("boobytrap_cooldown_time", 0);
 
 	if (this.exists("packed name"))
 	{
-		if (this.get_string("packed name").length > 1)
-			this.setInventoryName("Crate with " + this.get_string("packed name"));
+		const string name = getTranslatedString(this.get_string("packed name"));
+		if (name.length > 1)
+			this.setInventoryName("Crate with " + name);
 	}
 
-	if (!this.exists(required_space))
+	if (!this.exists("required space"))
 	{
-		this.set_Vec2f(required_space, Vec2f(5, 4));
+		this.set_Vec2f("required space", Vec2f(5, 4));
+	}
+	
+	if (!this.exists("gold building amount"))
+	{
+		this.set_s32("gold building amount", 0);
 	}
 
     // Waffle: Adjust Z values
     float base_z = 35.0f;
     this.set_f32("important-pickup", base_z);
 	this.getSprite().SetZ(base_z);
+}
+
+bool UseCratePreset(CBlob@ this, const string &in packed, Crate@[] presets)
+{
+	for (int i = 0; i < presets.length; i++)
+	{
+		Crate@ preset = presets[i];
+		if (preset.name != packed) continue;
+
+		this.set_u8("frame", preset.frame);
+		this.set_Vec2f("required space", preset.space);
+		this.set_s32("gold building amount", preset.gold);
+
+		for (int i = 0; i < preset.tags.length; i++)
+		{
+			this.Tag(preset.tags[i]);
+		}
+
+		return true;
+	}
+	return false;
 }
 
 void onTick(CBlob@ this)
@@ -173,9 +167,6 @@ void onTick(CBlob@ this)
 			return;
 		}
 
-		// unpack
-		u32 unpackTime = this.get_u32("unpack time");
-
 		// can't unpack in no build sector or blocked in with walls!
 		if (!canUnpackHere(this))
 		{
@@ -186,6 +177,7 @@ void onTick(CBlob@ this)
 		}
 
 		// Waffle: Make crates with boats deploy automatically in water
+        const u32 unpackTime = this.get_u32("unpack time");
 		if (unpackTime != 0 && getGameTime() >= unpackTime || !this.isAttached() && isBoat(this.get_string("packed")))
 		{
 			Unpack(this);
@@ -228,42 +220,39 @@ bool isInventoryAccessible(CBlob@ this, CBlob@ forBlob)
 {
 	if (this.hasTag("unpackall") || !canSeeButtons(this, forBlob))
 		return false;
-
-	if (!hasSomethingPacked(this)) // It's a normal crate
-	{
-		if (forBlob.getCarriedBlob() !is null
-			&& this.getInventory().canPutItem(forBlob.getCarriedBlob()))
-		{
-			return true; // OK to put an item in whenever
-		}
-
-		if (getPlayerInside(this) !is null)
-		{
-			return false; // Player getout buttons instead
-		}
-
-		if (this.getTeamNum() == forBlob.getTeamNum())
-		{
-			f32 dist = (this.getPosition() - forBlob.getPosition()).Length();
-			f32 rad = (this.getRadius() + forBlob.getRadius());
-
-			if (dist < rad * ally_allowed_distance)
-			{
-				return true; // Allies can access from further away
-			}
-		}
-		else if (this.isOverlapping(forBlob))
-		{
-			return true; // Enemies can access when touching
-		}
-
-		return false;
-	}
-
-	else // has something packed
+		
+	if (hasSomethingPacked(this))
 	{
 		return false;
 	}
+
+	if (forBlob.getCarriedBlob() !is null
+		&& this.getInventory().canPutItem(forBlob.getCarriedBlob()))
+	{
+		return true; // OK to put an item in whenever
+	}
+
+	if (getPlayerInside(this) !is null)
+	{
+		return false; // Player getout buttons instead
+	}
+
+	if (this.getTeamNum() == forBlob.getTeamNum())
+	{
+		const f32 dist = (this.getPosition() - forBlob.getPosition()).Length();
+		const f32 rad = (this.getRadius() + forBlob.getRadius());
+
+		if (dist < rad * ally_allowed_distance)
+		{
+			return true; // Allies can access from further away
+		}
+	}
+	else if (this.isOverlapping(forBlob))
+	{
+		return true; // Enemies can access when touching
+	}
+
+	return false;
 }
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
@@ -272,8 +261,9 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 	Vec2f buttonpos(0, 0);
 
-	bool putting = caller.getCarriedBlob() !is null && caller.getCarriedBlob() !is this;
-	bool canput = putting && this.getInventory().canPutItem(caller.getCarriedBlob());
+	CBlob@ carried = caller.getCarriedBlob();
+	const bool putting = carried !is null && carried !is this;
+	const bool canput = putting && this.getInventory().canPutItem(carried);
 	CBlob@ sneaky_player = getPlayerInside(this);
 	// If there's a player inside and we aren't just dropping in an item
 	if (sneaky_player !is null && !(putting && canput))
@@ -281,8 +271,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		if (sneaky_player.getTeamNum() == caller.getTeamNum())
 		{
 			CBitStream params;
-			params.write_u16( caller.getNetworkID() );
-			CButton@ button = caller.CreateGenericButton( 6, Vec2f(0,0), this, this.getCommandID("getout"), getTranslatedString("Get out"), params);
+			params.write_netid(caller.getNetworkID());
+			CButton@ button = caller.CreateGenericButton(6, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Get out"), params);
 			if (putting)
 			{
 				button.SetEnabled(false);
@@ -295,16 +285,16 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		else // make fake buttons for enemy
 		{
 			CBitStream params;
-			params.write_u16(caller.getNetworkID());
-			if (caller.getCarriedBlob() is this)
+			params.write_netid(caller.getNetworkID());
+			if (carried is this)
 			{
 				// Fake get in button
-				caller.CreateGenericButton(4, Vec2f(), this, this.getCommandID("getout"), getTranslatedString("Get inside"), params);
+				caller.CreateGenericButton(4, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Get inside"), params);
 			}
 			else
 			{
 				// Fake inventory button
-				CButton@ button = caller.CreateGenericButton(13, Vec2f(), this, this.getCommandID("getout"), getTranslatedString("Crate"), params);
+				CButton@ button = caller.CreateGenericButton(13, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Crate"), params);
 				button.enableRadius = 20.0f;
 			}
 		}
@@ -315,8 +305,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	}
 	else if (hasSomethingPacked(this) && !canUnpackHere(this))
 	{
-		string msg = getTranslatedString("Can't unpack {ITEM} here").replace("{ITEM}", getTranslatedString(this.get_string("packed name")));
-
+		const string msg = getTranslatedString("Can't unpack {ITEM} here").replace("{ITEM}", getTranslatedString(this.get_string("packed name")));
 		CButton@ button = caller.CreateGenericButton(12, buttonpos, this, 0, msg);
 		if (button !is null)
 		{
@@ -324,26 +313,35 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		}
 	}
 	else if (isUnpacking(this))
-	{
-		caller.CreateGenericButton("$DISABLED$", buttonpos, this, this.getCommandID("stop unpack"), getTranslatedString("Stop {ITEM}").replace("{ITEM}", getTranslatedString(this.get_string("packed name"))));
+	{		
+		string text = getTranslatedString("Stop {ITEM}").replace("{ITEM}", getTranslatedString(this.get_string("packed name")));
+		CButton@ button = caller.CreateGenericButton("$DISABLED$", buttonpos, this, this.getCommandID("stop unpack"), text);
+		
+		button.enableRadius = 20.0f;
 	}
 	else if (hasSomethingPacked(this))
 	{
-		caller.CreateGenericButton(12, buttonpos, this, this.getCommandID("unpack"), getTranslatedString("Unpack {ITEM}").replace("{ITEM}", getTranslatedString(this.get_string("packed name"))));
+		CBitStream params;
+		params.write_netid(caller.getNetworkID());
+		
+		string text = getTranslatedString("Unpack {ITEM}").replace("{ITEM}", getTranslatedString(this.get_string("packed name")));
+		CButton@ button = caller.CreateGenericButton(12, buttonpos, this, this.getCommandID("unpack"), text, params);
+		
+		button.enableRadius = 20.0f;
 	}
-	else if (caller.getCarriedBlob() is this)
+	else if (carried is this)
 	{
 		CBitStream params;
-		params.write_u16( caller.getNetworkID() );
-		caller.CreateGenericButton( 4, Vec2f(0,0), this, this.getCommandID("getin"), getTranslatedString("Get inside"), params );
+		params.write_netid(caller.getNetworkID());
+		caller.CreateGenericButton(4, buttonpos, this, this.getCommandID("getin"), getTranslatedString("Get inside"), params);
 	}
 	else if (this.getTeamNum() != caller.getTeamNum() && !this.isOverlapping(caller))
 	{
 		// We need a fake crate inventory button to hint to players that they need to get closer
 		// And also so they're unable to discern which crates have hidden players
-		if (caller.getCarriedBlob() is null || (putting && !canput))
+		if (carried is null || (putting && !canput))
 		{
-			CButton@ button = caller.CreateGenericButton(13, Vec2f(), this, this.getCommandID("getout"), getTranslatedString("Crate"));
+			CButton@ button = caller.CreateGenericButton(13, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Crate"));
 			button.SetEnabled(false); // they shouldn't be able to actually press it tho
 		}
 	}
@@ -359,6 +357,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				this.set_u32("unpack time", getGameTime() + this.get_u32("unpack secs") * getTicksASecond());
 				this.getShape().setDrag(10.0f);
+
+                CBlob@ caller = getBlobByNetworkID(params.read_netid());
+				if (caller !is null) 
+				{ 
+					this.server_setTeamNum(caller.getTeamNum());
+				}
 			}
 		}
 		else
@@ -377,22 +381,20 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		{
 			return;
 		}
-		CBlob @caller = getBlobByNetworkID( params.read_u16() );
-
-		if (caller !is null && this.getInventory() !is null) 
+		CBlob@ caller = getBlobByNetworkID(params.read_netid());
+		CInventory@ inv = this.getInventory();
+		if (caller !is null && inv !is null) 
 		{
-			CInventory@ inv = this.getInventory();
 			u8 itemcount = inv.getItemsCount();
 			// Boobytrap if crate has enemy mine
-			CBlob@ mine = null;
 			for (int i = 0; i < inv.getItemsCount(); i++)
 			{
 				CBlob@ item = inv.getItem(i);
 				if (item.getName() == "mine" && item.getTeamNum() != caller.getTeamNum())
 				{
 					CBitStream params;
-					params.write_u16(caller.getNetworkID());
-					params.write_u16(item.getNetworkID());
+					params.write_netid(caller.getNetworkID());
+					params.write_netid(item.getNetworkID());
 					this.SendCommand(this.getCommandID("boobytrap"), params);
 					return;
 				}
@@ -402,21 +404,22 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 				// pop out last items until we can put in player or there's nothing left
 				CBlob@ item = inv.getItem(itemcount - 1);
 				this.server_PutOutInventory(item);
-				float magnitude = (1 - XORRandom(3) * 0.25) * 5.0f;
+				const f32 magnitude = (1 - XORRandom(3) * 0.25) * 5.0f;
 				item.setVelocity(caller.getVelocity() + getRandomVelocity(90, magnitude, 45));
 				itemcount--;
 			}
 
 			Vec2f velocity = caller.getVelocity();
-			this.server_PutInInventory( caller );
+			this.server_PutInInventory(caller);
 			this.setVelocity(velocity);
 		}
 	}
 	else if (cmd == this.getCommandID("getout"))
 	{
-		CBlob @caller = getBlobByNetworkID( params.read_u16() );
+		CBlob@ caller = getBlobByNetworkID(params.read_netid());
 		CBlob@ sneaky_player = getPlayerInside(this);
-		if (caller !is null && sneaky_player !is null) {
+		if (caller !is null && sneaky_player !is null)
+		{
 			if (caller.getTeamNum() != sneaky_player.getTeamNum())
 			{
 				if (isKnockable(caller))
@@ -434,8 +437,8 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if (cmd == this.getCommandID("boobytrap"))
 	{
-		CBlob@ caller = getBlobByNetworkID(params.read_u16());
-		CBlob@ mine = getBlobByNetworkID(params.read_u16());
+		CBlob@ caller = getBlobByNetworkID(params.read_netid());
+		CBlob@ mine = getBlobByNetworkID(params.read_netid());
 		if (caller !is null && mine !is null && this.get_u32("boobytrap_cooldown_time") <= getGameTime())
 		{
 			this.set_u32("boobytrap_cooldown_time", getGameTime() + 30);
@@ -462,34 +465,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 void Unpack(CBlob@ this)
 {
-	if (!getNet().isServer()) return;
+	if (!isServer()) return;
+	
+	CMap@ map = getMap();
+	Vec2f space = this.get_Vec2f("required space");
+	Vec2f offsetPos = crate_getOffsetPos(this, map);
+	Vec2f center = offsetPos + space * map.tilesize * 0.5f;
 
-	CBlob@ blob = server_CreateBlob(this.get_string("packed"), this.getTeamNum(), Vec2f_zero);
-
-	// put on ground if not in water
-
+	CBlob@ blob = server_CreateBlob(this.get_string("packed"), this.getTeamNum(), center);
 	if (blob !is null && blob.getShape() !is null)
 	{
-		CMap@ map = getMap();
-
-		Vec2f space = this.get_Vec2f(required_space);
-		Vec2f offsetPos = crate_getOffsetPos(this, map);
-		Vec2f center = offsetPos + (Vec2f(space.x * map.tilesize / 2, space.y * map.tilesize / 2));
-
-		blob.setPosition(center);
-
+		// put on ground if not in water
 		//	if (!getMap().isInWater(this.getPosition() + Vec2f(0.0f, this.getRadius())))
-		//	blob.getShape().PutOnGround();
+		//		blob.getShape().PutOnGround();
 		//	else
 		//		blob.getShape().ResolveInsideMapCollision();
 
 		// attach to VEHICLE attachment if possible
-
-		// Waffle: Only try to attach when vehicle collides with target, avoids issue with large scan radius
-		// TryToAttachVehicle(blob);
+		// TryToAttachVehicle(blob);  // Waffle: Only try to attach when vehicle collides with target, avoids issue with large scan radius
 
 		// msg back factory so it can add this item
-
 		if (this.exists("msg blob"))
 		{
 			CBitStream params;
@@ -501,11 +496,7 @@ void Unpack(CBlob@ this)
 			}
 		}
 
-		// Waffle: Force facing right temporarily for boats to avoid bugged shape
-		if (!blob.hasTag("boat"))
-		{
-			blob.SetFacingLeft(this.isFacingLeft());
-		}
+		blob.SetFacingLeft(this.isFacingLeft());
 	}
 
 	this.set_s32("gold building amount", 0); // for crates with vehicles that cost gold
@@ -521,8 +512,7 @@ bool isUnpacking(CBlob@ this)
 void ShowParachute(CBlob@ this)
 {
 	CSprite@ sprite = this.getSprite();
-	CSpriteLayer@ parachute = sprite.addSpriteLayer("parachute",   32, 32);
-
+	CSpriteLayer@ parachute = sprite.addSpriteLayer("parachute", 32, 32);
 	if (parachute !is null)
 	{
 		Animation@ anim = parachute.addAnimation("default", 0, true);
@@ -535,7 +525,6 @@ void HideParachute(CBlob@ this)
 {
 	CSprite@ sprite = this.getSprite();
 	CSpriteLayer@ parachute = sprite.getSpriteLayer("parachute");
-
 	if (parachute !is null && parachute.isVisible())
 	{
 		parachute.SetVisible(false);
@@ -546,7 +535,6 @@ void HideParachute(CBlob@ this)
 void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu @gridmenu)
 {
 	CInventory@ inv = this.getInventory();
-	CBlob@ mine = null;
 	for (int i = 0; i < inv.getItemsCount(); i++)
 	{
 		CBlob@ item = inv.getItem(i);
@@ -558,8 +546,8 @@ void onCreateInventoryMenu(CBlob@ this, CBlob@ forBlob, CGridMenu @gridmenu)
 		if (item.getName() == "mine" && item.getTeamNum() != forBlob.getTeamNum())
 		{
 			CBitStream params;
-			params.write_u16(forBlob.getNetworkID());
-			params.write_u16(item.getNetworkID());
+			params.write_netid(forBlob.getNetworkID());
+			params.write_netid(item.getNetworkID());
 			this.SendCommand(this.getCommandID("boobytrap"), params);
 			break;
 		}
@@ -670,7 +658,7 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 	}
 }
 
-f32 onHit( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData )
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
 	f32 dmg = damage;
 
@@ -687,9 +675,9 @@ f32 onHit( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hit
 		if (dmg > 50.0f) // inventory explosion
 		{
 			this.Tag("crate exploded");
-			CBlob@ sneaky_player = getPlayerInside(this);
 			DumpOutItems(this, 10);
 			// Nearly kill the player
+            CBlob@ sneaky_player = getPlayerInside(this);
 			if (sneaky_player !is null)
 			{
 				hitterBlob.server_Hit(sneaky_player, this.getPosition(), Vec2f(),
@@ -707,7 +695,7 @@ f32 onHit( CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hit
 			{
 				bool should_teamkill = (sneaky_player.getTeamNum() != hitterBlob.getTeamNum()
 										|| customData == Hitters::keg);
-				hitterBlob.server_Hit(getPlayerInside(this), this.getPosition(), Vec2f_zero,
+				hitterBlob.server_Hit(sneaky_player, this.getPosition(), Vec2f_zero,
 									  dmg / 2, customData, should_teamkill);
 			}
 		}
@@ -727,7 +715,7 @@ void onDie(CBlob@ this)
 	Vec2f pos = this.getPosition();
 	Vec2f vel = this.getVelocity();
 	//custom gibs
-	string fname = CFileMatcher("/Crate.png").getFirst();
+	const string fname = CFileMatcher("/Crate.png").getFirst();
 	for (int i = 0; i < 4; i++)
 	{
 		CParticle@ temp = makeGibParticle(fname, pos, vel + getRandomVelocity(90, 1 , 120), 9, 2 + i, Vec2f(16, 16), 2.0f, 20, "Sounds/material_drop.ogg", 0);
@@ -739,8 +727,7 @@ bool canUnpackHere(CBlob@ this)
 	CMap@ map = getMap();
 	Vec2f pos = this.getPosition();
 
-	Vec2f space = this.get_Vec2f(required_space);
-	// Vec2f t_off = Vec2f(map.tilesize * 0.5f, map.tilesize * 0.5f);  // Waffle: Unused
+	Vec2f space = this.get_Vec2f("required space");
 	Vec2f offsetPos = crate_getOffsetPos(this, map);
 	for (f32 step_x = 0.0f; step_x < space.x ; ++step_x)
 	{
@@ -763,40 +750,36 @@ bool canUnpackHere(CBlob@ this)
 		}
 	}
 
-	// Waffle: Check for boats and enemy players
-	string packed = this.get_string("packed");
+	// Waffle: Allow unpacking at top of map
+	// //no unpacking at map ceiling
+	// if (pos.y + 4 < (space.y + 2) * map.tilesize)
+	// {
+	// 	return false;
+	// }
+
+    // Waffle: Check for boats and enemy players
+    const bool water = this.hasTag("unpack_only_water");
 	CBlob@[] blobs;
 	map.getBlobsInBox(offsetPos, offsetPos + space * map.tilesize, blobs);
 	for (u16 i = 0; i < blobs.length; i++)
 	{
-		if (blobs[i] !is null && (isBoat(packed) && blobs[i].hasTag("boat") || blobs[i].hasTag("player") && !blobs[i].hasTag("dead") && blobs[i].getTeamNum() != this.getTeamNum()))
+		if (blobs[i] !is null && (water && blobs[i].hasTag("boat") || blobs[i].hasTag("player") && !blobs[i].hasTag("dead") && blobs[i].getTeamNum() != this.getTeamNum()))
 		{
 			return false;
 		}
 	}
 
-	// Waffle: Allow unpacking at top of map
-	// string packed = this.get_string("packed");
-	//required vertical buffer for siege engines and boats
-	// if (packed == "ballista" || packed == "catapult" || packed == "longboat" || packed == "warboat")
-	// {
-	// 	if (pos.y < 40)
-	// 	{
-	// 		return false;
-	// 	}
-	// }
-
-	bool water = isBoat(packed);
+	bool inwater = this.isInWater() || map.isInWater(pos + Vec2f(0.0f, map.tilesize));
 	if (this.isAttached())
 	{
 		CBlob@ parent = this.getAttachments().getAttachmentPointByName("PICKUP").getOccupied();
 		if (parent !is null)
 		{
-			return ((!water && parent.isOnGround()) || (water && map.isInWater(parent.getPosition() + Vec2f(0.0f, 8.0f))));
+			inwater = parent.isInWater() || map.isInWater(parent.getPosition() + Vec2f(0.0f, parent.getRadius()));
+			return ((!water && parent.isOnGround()) || (water && inwater));
 		}
 	}
-	bool inwater = map.isInWater(this.getPosition() + Vec2f(0.0f, 8.0f));
-	bool supported = ((!water && (this.isOnGround() || inwater)) || (water && inwater));
+	const bool supported = ((!water && this.isOnGround()) || (water && inwater));
 	return (supported);
 }
 
@@ -823,10 +806,10 @@ CBlob@ getPlayerInside(CBlob@ this)
 	return null;
 }
 
-bool DumpOutItems(CBlob@ this, float pop_out_speed = 5.0f, Vec2f init_velocity = Vec2f_zero, bool dump_special = true)
+bool DumpOutItems(CBlob@ this, f32 pop_out_speed = 5.0f, Vec2f init_velocity = Vec2f_zero, bool dump_special = true)
 {
 	bool dumped_anything = false;
-	if (getNet().isClient())
+	if (isClient())
 	{
 		if ((this.getInventory().getItemsCount() > 1)
 			 || (getPlayerInside(this) is null && this.getInventory().getItemsCount() > 0))
@@ -834,7 +817,7 @@ bool DumpOutItems(CBlob@ this, float pop_out_speed = 5.0f, Vec2f init_velocity =
 			this.getSprite().PlaySound("give.ogg");
 		}
 	}
-	if (getNet().isServer())
+	if (isServer())
 	{
 		Vec2f velocity = (init_velocity == Vec2f_zero) ? this.getOldVelocity() : init_velocity;
 		CInventory@ inv = this.getInventory();
@@ -855,7 +838,7 @@ bool DumpOutItems(CBlob@ this, float pop_out_speed = 5.0f, Vec2f init_velocity =
 				}
 				else
 				{
-					float magnitude = (1 - XORRandom(3) * 0.25) * pop_out_speed;
+					const f32 magnitude = (1 - XORRandom(3) * 0.25) * pop_out_speed;
 					item.setVelocity(velocity + getRandomVelocity(90, magnitude, 45));
 				}
 			}
@@ -880,21 +863,21 @@ bool DumpOutItems(CBlob@ this, float pop_out_speed = 5.0f, Vec2f init_velocity =
 void onRender(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
-	if (!(blob.exists("packed")) || blob.get_string("packed name").size() == 0) return;
+	if (!blob.exists("packed") || blob.get_string("packed name").size() == 0) return;
 
 	Vec2f pos2d = blob.getScreenPos();
-	u32 gameTime = getGameTime();
-	u32 unpackTime = blob.get_u32("unpack time");
+	const u32 gameTime = getGameTime();
+	const u32 unpackTime = blob.get_u32("unpack time");
 
 	if (unpackTime > gameTime)
 	{
 		// draw drop time progress bar
-		int top = pos2d.y - 1.0f * blob.getHeight();
+		const int top = pos2d.y - 1.0f * blob.getHeight();
 		Vec2f dim(32.0f, 12.0f);
-		int secs = 1 + (unpackTime - gameTime) / getTicksASecond();
+		const int secs = 1 + (unpackTime - gameTime) / getTicksASecond();
 		Vec2f upperleft(pos2d.x - dim.x / 2, top - dim.y - dim.y);
 		Vec2f lowerright(pos2d.x + dim.x / 2, top - dim.y);
-		f32 progress = 1.0f - (float(secs) / float(blob.get_u32("unpack secs")));
+		const f32 progress = 1.0f - (f32(secs) / f32(blob.get_u32("unpack secs")));
 		GUI::DrawProgressBar(upperleft, lowerright, progress);
 	}
 
@@ -903,46 +886,40 @@ void onRender(CSprite@ this)
 		AttachmentPoint@ point = blob.getAttachments().getAttachmentPointByName("PICKUP");
 
 		CBlob@ holder = point.getOccupied();
+		if (holder is null || !holder.isMyPlayer()) return;
 
-		if (holder is null) { return; }
+		CMap@ map = getMap();
+		if (map is null) return;
 
-		CPlayer@ local = getLocalPlayer();
-		if (local !is null && local.getBlob() is holder)
-		{
-			CMap@ map = blob.getMap();
-			if (map is null) return;
+		Vec2f space = blob.get_Vec2f("required space");
+		Vec2f offsetPos = crate_getOffsetPos(blob, map);
+		Vec2f aligned = getDriver().getScreenPosFromWorldPos(offsetPos);
 
-			Vec2f space = blob.get_Vec2f(required_space);
-			Vec2f offsetPos = crate_getOffsetPos(blob, map);
+		const f32 scalex = getDriver().getResolutionScaleFactor();
+		const f32 zoom = getCamera().targetDistance * scalex;
 
-			const f32 scalex = getDriver().getResolutionScaleFactor();
-			const f32 zoom = getCamera().targetDistance * scalex;
-			Vec2f aligned = getDriver().getScreenPosFromWorldPos(offsetPos);
-			//GUI::DrawIcon("CrateSlots.png", 0, Vec2f(40, 32), aligned, zoom);
-			DrawSlots(space, aligned, zoom); //if (getGameTime() % 30 == 0)
+		DrawSlots(space, aligned, zoom);
 
-			for (f32 step_x = 0.0f; step_x < space.x ; ++step_x)
-			{
-				for (f32 step_y = 0.0f; step_y < space.y ; ++step_y)
-				{
-					Vec2f temp = (Vec2f(step_x + 0.5, step_y + 0.5) * map.tilesize);
-					Vec2f v = offsetPos + temp;
-				
-					if (map.isTileSolid(v) || (blob.hasTag("unpack_check_nobuild") && (map.getSectorAtPosition(v, "no build") !is null || hasNoBuildBlobs(v))))
-					{
-						GUI::DrawIcon("CrateSlots.png", 5, Vec2f(8, 8), aligned + (temp - Vec2f(0.5f, 0.5f)* map.tilesize) * 2 * zoom, zoom);
-					}
-				}
-			}
-		}
+        for (f32 step_x = 0.0f; step_x < space.x ; ++step_x)
+        {
+            for (f32 step_y = 0.0f; step_y < space.y ; ++step_y)
+            {
+                Vec2f temp = (Vec2f(step_x + 0.5, step_y + 0.5) * map.tilesize);
+                Vec2f v = offsetPos + temp;
+            
+                if (map.isTileSolid(v) || (blob.hasTag("unpack_check_nobuild") && (map.getSectorAtPosition(v, "no build") !is null || hasNoBuildBlobs(v))))
+                {
+                    GUI::DrawIcon("CrateSlots.png", 5, Vec2f(8, 8), aligned + (temp - Vec2f(0.5f, 0.5f)* map.tilesize) * 2 * zoom, zoom);
+                }
+            }
+        }
 	}
-
 }
 
-void DrawSlots(Vec2f size, Vec2f pos, f32 zoom)
+void DrawSlots(Vec2f size, Vec2f pos, const f32 zoom)
 {
-	int x = Maths::Floor(size.x);
-	int y = Maths::Floor(size.y);
+	const int x = Maths::Floor(size.x);
+	const int y = Maths::Floor(size.y);
 	CMap@ map = getMap();
 
 	GUI::DrawRectangle(pos, pos + Vec2f(x, y) * map.tilesize * zoom * 2, SColor(125, 255, 255, 255));
@@ -974,6 +951,7 @@ bool hasNoBuildBlobs(Vec2f pos)
 	return false;
 }
 
+// Waffle: Convert on pickup
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	if (this is null || attached is null)
@@ -982,12 +960,6 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	}
 
 	this.server_setTeamNum(attached.getTeamNum());
-}
-
-// Waffle: Convenience function for boats
-bool isBoat(string name)
-{
-	return name == "warboat" || name == "longboat" || name == "dinghy";
 }
 
 // Waffle: Allow out of bounds

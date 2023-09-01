@@ -190,7 +190,7 @@ void onTick(CBlob@ this)
 		this.Sync(heat_prop, true);
 	}
 	sprite.SetEmitSoundPaused(true);
-	if (this.isAttached())
+	if (this.isAttachedToPoint("PICKUP"))
 	{
 		AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ holder = point.getOccupied();
@@ -449,6 +449,10 @@ void onTick(CBlob@ this)
 		if (heat <= 0)
 		{
 			this.getCurrentScript().runFlags |= Script::tick_not_sleeping;
+		}
+        else
+		{
+			this.getCurrentScript().runFlags &= ~Script::tick_not_sleeping;
 		}
 	}
 }

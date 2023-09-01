@@ -29,7 +29,7 @@ bool canGrowAt(CBlob@ this, Vec2f pos)
 		}
 	}
 
-	CMap@ map = this.getMap();
+	CMap@ map = getMap();
 
 	/*if ( map.isTileGrass( map.getTile( pos ) )) {
 	return false;
@@ -71,6 +71,6 @@ bool canGrowAt(CBlob@ this, Vec2f pos)
 	}*/
 
 	// Waffle: Let trees grow on natural blocks
-	u16 type = map.getTile(Vec2f(pos.x, pos.y + 8)).type;
+	u16 type = map.getTile(Vec2f(pos.x, pos.y + (this.getHeight() + map.tilesize) * 0.5f)).type;
 	return map.isTileGround(type) || map.isTileStone(type) || map.isTileThickStone(type) || map.isTileBedrock(type) || map.isTileGold(type);
 }

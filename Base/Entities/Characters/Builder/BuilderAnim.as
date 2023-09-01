@@ -136,8 +136,8 @@ void onTick(CSprite@ this)
 			{
 				bool hitting_wood = false;
 				bool hitting_stone = false;
-				bool hitting_built = false;
-				bool hitting_dirt = false;
+				bool hitting_built = false;  // Waffle: Add support for digging man made blocks faster
+				bool hitting_dirt = false;   // Waffle: Add support for digging dirt and gold slower
 
 				if (hitdata.tilepos != Vec2f_zero)
 				{

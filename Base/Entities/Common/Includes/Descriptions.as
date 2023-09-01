@@ -81,7 +81,7 @@ namespace Descriptions
 	boatshop                   = getTranslatedString("Naval workshop for building boats"),
 	quarters                   = getTranslatedString("Place of merriment and healing"),
 	storagecache               = getTranslatedString("A Cache for storing your materials, items and armaments."),
-	quarry               	   = getTranslatedString("A Quarry intended to mine stone, fueled by wood. Must have two overlapping trees that can grow to function."),
+	quarry               	   = getTranslatedString("A Quarry intended to mine stone, fueled by wood. Must have two overlapping trees that can grow to function."),  // Waffle: Extra quarry details
 
 	//Quarters.as
 	beer                       = getTranslatedString("A refreshing mug of beer."),

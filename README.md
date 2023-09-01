@@ -16,7 +16,6 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Materials
 - No longer decay
-- No longer can go into the red zone during build phase
 
 ### Build Phase
 - 150 seconds
@@ -166,6 +165,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Damage taken is consistent with other vehicles
 - Spawn in crates like other vehicles
 - Need a 6 x 3 area to deploy
+- No longer can be picked up
 
 ### Longboats
 - Cost 100 coins

@@ -17,5 +17,12 @@ void onInit(CBlob@ this)
 	this.SetInventoryIcon(this.getSprite().getConsts().filename, index, Vec2f(16, 16));
 	// this.server_setTeamNum(0); // blue fishy like in sprite sheet  // Waffle: Don't force team 0
 
+    // add icon to be used when loading into catapult
+	string iconName = "$" + this.getInventoryName() + "$";
+	if (!GUI::hasIconName(iconName))
+	{
+		AddIconToken(iconName, this.getSprite().getConsts().filename, Vec2f(16, 16), index);
+	}
+
 	this.getCurrentScript().runFlags |= Script::remove_after_this;
 }

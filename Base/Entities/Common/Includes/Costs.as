@@ -4,6 +4,8 @@
 //	the values are set in InitCosts,
 //	to prevent them from lingering between
 
+bool costs_loaded = false;
+
 //// CTF COSTS ////
 
 string ctf_costs_config_file = "CTFCosts.cfg";
@@ -72,19 +74,36 @@ namespace BuilderCosts
 		wooden_door, trap_block, bridge, ladder, wooden_platform, spikes;
 }
 
-s32 ReadCost(ConfigFile cfg, string cfg_name, s32 default_cost)
+s32 ReadCost(ConfigFile cfg, dictionary@ costs, const string &in cost_name, s32 &in cost)
 {
-	return cfg.read_s32(cfg_name, default_cost);
+	if (!costs.get(cost_name, cost) && cfg.exists(cost_name))
+	{
+		cost = cfg.read_s32(cost_name, cost);
+		costs.set(cost_name, cost);
+	}
+
+	return cost;
 }
 
 void InitCosts()
 {
-	//(shared config temporary)
-	ConfigFile cfg = ConfigFile();
+	if (costs_loaded) return;
+
+	costs_loaded = true;
+
+	CRules@ rules = getRules();
+	dictionary temporary;
+	if (!rules.get("costs", temporary))
+		rules.set("costs", temporary);
+
+	dictionary@ costs;
+	rules.get("costs", @costs);
+
+	ConfigFile cfg;
 
 	// ctf costs ///////////////////////////////////////////////////////////////
-	if (getRules().exists("ctf_costs_config"))
-		ctf_costs_config_file = getRules().get_string("ctf_costs_config");
+	if (rules.exists("ctf_costs_config"))
+		ctf_costs_config_file = rules.get_string("ctf_costs_config");
 
 	cfg.loadFile(ctf_costs_config_file);
 
@@ -164,8 +183,8 @@ void InitCosts()
 	// war costs ///////////////////////////////////////////////////////////////
 
 	//load config
-	if (getRules().exists("war_costs_config"))
-		war_costs_config_file = getRules().get_string("war_costs_config");
+	if (rules.exists("war_costs_config"))
+		war_costs_config_file = rules.get_string("war_costs_config");
 
 	cfg.loadFile(war_costs_config_file);
 

@@ -144,7 +144,6 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 							//done here to avoid a bunch of string comp earlier
 							if (isBlocking(o_blob))
 							{
-								print("Failing on blockingBlob");
 								fail = true;
 								break;
 							}

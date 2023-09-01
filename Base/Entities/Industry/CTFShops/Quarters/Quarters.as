@@ -74,6 +74,8 @@ void onInit(CBlob@ this)
 	this.addCommandID("rest");
 	this.getCurrentScript().runFlags |= Script::tick_hasattached;
 
+    this.Tag("has window");
+
 	//INIT COSTS
 	InitCosts();
 
@@ -196,47 +198,53 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 	if (cmd == this.getCommandID("shop made item"))
 	{
-		this.getSprite().PlaySound("/ChaChing.ogg");
 		u16 caller, item;
-		if (!params.saferead_netid(caller) || !params.saferead_netid(item))
+		string name;
+
+		if (!params.saferead_netid(caller) || !params.saferead_netid(item) || !params.saferead_string(name))
 		{
 			return;
 		}
-		string name = params.read_string();
+
+		CBlob@ callerBlob = getBlobByNetworkID(caller);
+		if (callerBlob is null)
 		{
-			CBlob@ callerBlob = getBlobByNetworkID(caller);
-			if (callerBlob is null)
-			{
-				return;
-			}
-			if (name == "beer")
-			{
-				this.getSprite().PlaySound("/Gulp.ogg");
-				if (isServer)
-				{
-					callerBlob.server_Heal(beer_amount);
-				}
-			}
-			else if (name == "meal")
-			{
-				this.getSprite().PlaySound("/Eat.ogg");
-				if (isServer)
-				{
-					callerBlob.server_SetHealth(callerBlob.getInitialHealth());
-				}
-			}
-			else if (name == "tree_seed")
-			{
-				if (isServer)
-				{
-					CBlob@ seed = server_MakeSeed(callerBlob.getPosition(), "tree_pine");
-					if (seed !is null)
-					{
-						callerBlob.server_PutInInventory(seed);
-					}
-				}
-			}
+			return;
 		}
+		
+        CBlob@ callerBlob = getBlobByNetworkID(caller);
+        if (callerBlob is null)
+        {
+            return;
+        }
+
+        if (name == "beer")
+        {
+            this.getSprite().PlaySound("/Gulp.ogg");
+            if (isServer)
+            {
+                callerBlob.server_Heal(beer_amount);
+            }
+        }
+        else if (name == "meal")
+        {
+            this.getSprite().PlaySound("/Eat.ogg");
+            if (isServer)
+            {
+                callerBlob.server_SetHealth(callerBlob.getInitialHealth());
+            }
+        }
+        else if (name == "tree_seed")
+        {
+            if (isServer)
+            {
+                CBlob@ seed = server_MakeSeed(callerBlob.getPosition(), "tree_pine");
+                if (seed !is null)
+                {
+                    callerBlob.server_PutInInventory(seed);
+                }
+            }
+        }
 	}
 	else if (cmd == this.getCommandID("rest"))
 	{
@@ -367,16 +375,14 @@ void updateLayer(CSprite@ sprite, string name, int index, bool visible, bool rem
 
 bool bedAvailable(CBlob@ this)
 {
+	if (this.getHealth() <= 0.0f) return false;
+
 	AttachmentPoint@ bed = this.getAttachments().getAttachmentPointByName("BED");
 	if (bed !is null)
 	{
-		CBlob@ patient = bed.getOccupied();
-		if (patient !is null)
-		{
-			return false;
-		}
+		return bed.getOccupied() is null;
 	}
-	return true;
+	return false;
 }
 
 bool requiresTreatment(CBlob@ this, CBlob@ caller)
