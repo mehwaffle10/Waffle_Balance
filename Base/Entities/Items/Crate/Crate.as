@@ -25,6 +25,7 @@ const f32 ally_allowed_distance = 2.0f;
 const u32 unpackSecs = 0;  // Waffle: Crates unpack instantly
 
 // Waffle: Adjust required space and gold for different vehicles, add dinghies
+const string required_space = "required space";
 Crate@[] base_presets = 
 {
     Crate("dinghy",      FactoryFrame::dinghy,      Vec2f(6,  3),  0, "unpack_only_water"),
@@ -100,9 +101,9 @@ void onInit(CBlob@ this)
 			this.setInventoryName("Crate with " + name);
 	}
 
-	if (!this.exists("required space"))
+	if (!this.exists(required_space))
 	{
-		this.set_Vec2f("required space", Vec2f(5, 4));
+		this.set_Vec2f(required_space, Vec2f(5, 4));
 	}
 	
 	if (!this.exists("gold building amount"))
@@ -124,7 +125,7 @@ bool UseCratePreset(CBlob@ this, const string &in packed, Crate@[] presets)
 		if (preset.name != packed) continue;
 
 		this.set_u8("frame", preset.frame);
-		this.set_Vec2f("required space", preset.space);
+		this.set_Vec2f(required_space, preset.space);
 		this.set_s32("gold building amount", preset.gold);
 
 		for (int i = 0; i < preset.tags.length; i++)
@@ -178,7 +179,7 @@ void onTick(CBlob@ this)
 
 		// Waffle: Make crates with boats deploy automatically in water
         const u32 unpackTime = this.get_u32("unpack time");
-		if (unpackTime != 0 && getGameTime() >= unpackTime || !this.isAttached() && isBoat(this.get_string("packed")))
+		if (unpackTime != 0 && getGameTime() >= unpackTime || !this.isAttached() && this.hasTag("unpack_only_water"))
 		{
 			Unpack(this);
 			return;
@@ -468,7 +469,7 @@ void Unpack(CBlob@ this)
 	if (!isServer()) return;
 	
 	CMap@ map = getMap();
-	Vec2f space = this.get_Vec2f("required space");
+	Vec2f space = this.get_Vec2f(required_space);
 	Vec2f offsetPos = crate_getOffsetPos(this, map);
 	Vec2f center = offsetPos + space * map.tilesize * 0.5f;
 
@@ -727,7 +728,7 @@ bool canUnpackHere(CBlob@ this)
 	CMap@ map = getMap();
 	Vec2f pos = this.getPosition();
 
-	Vec2f space = this.get_Vec2f("required space");
+	Vec2f space = this.get_Vec2f(required_space);
 	Vec2f offsetPos = crate_getOffsetPos(this, map);
 	for (f32 step_x = 0.0f; step_x < space.x ; ++step_x)
 	{
@@ -891,7 +892,7 @@ void onRender(CSprite@ this)
 		CMap@ map = getMap();
 		if (map is null) return;
 
-		Vec2f space = blob.get_Vec2f("required space");
+		Vec2f space = blob.get_Vec2f(required_space);
 		Vec2f offsetPos = crate_getOffsetPos(blob, map);
 		Vec2f aligned = getDriver().getScreenPosFromWorldPos(offsetPos);
 

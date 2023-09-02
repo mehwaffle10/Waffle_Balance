@@ -62,6 +62,7 @@ void onTick(CBlob@ this)
 	CMap@ map = this.getMap();
 	TileType type = map.getTile(pos).type;
 
+    // Waffle: Adjust checks
 	if ((type == CMap::tile_wood_back  ||  	  // Wood Backwall
 		type == 207 				   ||  	  // Damaged Wood Backwall
 		type == CMap::tile_castle_back ||  	  // Stone Backwall
@@ -182,7 +183,7 @@ float HitMap(CBlob@ this, CMap@ map, Vec2f tilepos, bool ricochet)
 
 		// a rock can do ~4 hits to wood, ~3 hits to stone
 		const float dmg = map.isTileCastle(t) ? 1.3f : 0.8f;
-		map.server_DestroyTile(tilepos, 1.0f, this);
+		map.server_DestroyTile(tilepos, 1.0f, this);  // Waffle: Hit blocks twice
 		map.server_DestroyTile(tilepos, 1.0f, this);
 		return dmg;
 		// }
@@ -216,12 +217,12 @@ void onDie(CBlob@ this)
 			"rocks.png", // not CataRocks.png
 			this.getPosition(),
 			getRandomVelocity(-this.getOldVelocity().getAngle(), XORRandom(4.0f) + 2.0f, 10.0f),
-			0,
+			1,
 			XORRandom(4), // any of the smaller frames
 			Vec2f(8, 8),
 			7.0f,
 			0,
-			"rock_hit",
+			"",
 			0
 		);
 
@@ -229,7 +230,7 @@ void onDie(CBlob@ this)
 		if (gametime > g_lastplayedsound + 2)
 		{
 			g_lastplayedsound = gametime;
-			Sound::Play("rock_hit", this.getPosition(), Maths::Min(Maths::Max(0.5f, this.getOldVelocity().Length()), 1.5f));
+			Sound::Play("/rock_hit", this.getPosition(), Maths::Min(Maths::Max(0.5f, this.getOldVelocity().Length()), 1.5f));
 		}
 	}
 }

@@ -61,7 +61,7 @@ void PopWheels(CBlob@ this, bool addparticles = true)
 {
 	this.getShape().setFriction(0.75f);   //grippy now
 
-	if (!getNet().isClient()) //don't bother w/o graphics
+	if (!isClient()) //don't bother w/o graphics
 		return;
 
 	CSprite@ sprite = this.getSprite();
@@ -87,6 +87,7 @@ void PopWheels(CBlob@ this, bool addparticles = true)
 			// Waffle: Just hide wheels
 			wheel.SetVisible(false);
 			// sprite.RemoveSpriteLayer(wheel.name);
+            // i--;
 		}
 	}
 

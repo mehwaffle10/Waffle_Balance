@@ -108,77 +108,77 @@ void InitCosts()
 	cfg.loadFile(ctf_costs_config_file);
 
 	//Building.as
-	CTFCosts::buildershop_wood =            ReadCost(cfg, "cost_buildershop_wood"   , 50);
-	CTFCosts::quarters_wood =               ReadCost(cfg, "cost_quarters_wood"      , 50);
-	CTFCosts::knightshop_wood =             ReadCost(cfg, "cost_knightshop_wood"    , 50);
-	CTFCosts::archershop_wood =             ReadCost(cfg, "cost_archershop_wood"    , 50);
-	CTFCosts::boatshop_wood =               ReadCost(cfg, "cost_boatshop_wood"      , 100);
-	CTFCosts::vehicleshop_wood =            ReadCost(cfg, "cost_vehicleshop_wood"   , 250);  // Waffle: Vehicle shop costs 400 wood
-	// CTFCosts::vehicleshop_gold =            ReadCost(cfg, "cost_vehicleshop_gold"   , 50);   // Waffle: Vehicle shops no longer cost gold
-	CTFCosts::storage_stone =               ReadCost(cfg, "cost_storage_stone"      , 50);
-	CTFCosts::storage_wood =                ReadCost(cfg, "cost_storage_wood"       , 50);
-	CTFCosts::tunnel_stone =                ReadCost(cfg, "cost_tunnel_stone"       , 250);  // Waffle: Tunnel costs 250 stone
-	CTFCosts::tunnel_wood =                 ReadCost(cfg, "cost_tunnel_wood"        , 350);  // Waffle: Tunnel costs 500 wood
-	// CTFCosts::tunnel_gold =                 ReadCost(cfg, "cost_tunnel_gold"        , 200);  // Waffle: Tunnels no longer cost gold
-	CTFCosts::quarry_wood =                 ReadCost(cfg, "cost_quarry_wood"        , 100);  // Waffle: Quarries cost 250 wood
-	CTFCosts::quarry_stone =				ReadCost(cfg, "cost_quarry_stone"       , 50);  // Waffle: Quarries cost 50 stone
-	// CTFCosts::quarry_gold =					ReadCost(cfg, "cost_quarry_gold"        , 80);  // Waffle: Quarries no longer cost gold
-	// CTFCosts::quarry_count =				ReadCost(cfg, "cost_quarry_count"       , 1);    // Waffle: No quarry limit
+	CTFCosts::buildershop_wood =            ReadCost(cfg, costs, "cost_buildershop_wood"   , 50);
+	CTFCosts::quarters_wood =               ReadCost(cfg, costs, "cost_quarters_wood"      , 50);
+	CTFCosts::knightshop_wood =             ReadCost(cfg, costs, "cost_knightshop_wood"    , 50);
+	CTFCosts::archershop_wood =             ReadCost(cfg, costs, "cost_archershop_wood"    , 50);
+	CTFCosts::boatshop_wood =               ReadCost(cfg, costs, "cost_boatshop_wood"      , 100);
+	CTFCosts::vehicleshop_wood =            ReadCost(cfg, costs, "cost_vehicleshop_wood"   , 250);  // Waffle: Vehicle shop costs 400 wood
+	// CTFCosts::vehicleshop_gold =         ReadCost(cfg, costs, "cost_vehicleshop_gold"   , 50);   // Waffle: Vehicle shops no longer cost gold
+	CTFCosts::storage_stone =               ReadCost(cfg, costs, "cost_storage_stone"      , 50);
+	CTFCosts::storage_wood =                ReadCost(cfg, costs, "cost_storage_wood"       , 50);
+	CTFCosts::tunnel_stone =                ReadCost(cfg, costs, "cost_tunnel_stone"       , 250);  // Waffle: Tunnel costs 250 stone
+	CTFCosts::tunnel_wood =                 ReadCost(cfg, costs, "cost_tunnel_wood"        , 350);  // Waffle: Tunnel costs 500 wood
+	// CTFCosts::tunnel_gold =              ReadCost(cfg, costs, "cost_tunnel_gold"        , 200);  // Waffle: Tunnels no longer cost gold
+	CTFCosts::quarry_wood =                 ReadCost(cfg, costs, "cost_quarry_wood"        , 100);  // Waffle: Quarries cost 250 wood
+	CTFCosts::quarry_stone =				ReadCost(cfg, costs, "cost_quarry_stone"       , 50);   // Waffle: Quarries cost 50 stone
+	// CTFCosts::quarry_gold =			    ReadCost(cfg, costs, "cost_quarry_gold"        , 80);   // Waffle: Quarries no longer cost gold
+	// CTFCosts::quarry_count =				ReadCost(cfg, costs, "cost_quarry_count"       , 1);    // Waffle: No quarry limit
 
 	//ArcherShop.as
-	CTFCosts::arrows =                      ReadCost(cfg, "cost_arrows"             , 15);
-	CTFCosts::waterarrows =                 ReadCost(cfg, "cost_waterarrows"        , 25);  // Waffle: Increase water arrow cost
-	CTFCosts::firearrows =                  ReadCost(cfg, "cost_firearrows"         , 50);  // Waffle: Increase fire arrow cost
-	CTFCosts::bombarrows =                  ReadCost(cfg, "cost_bombarrows"         , 75);  // Waffle: Increase bomb arrow cost
+	CTFCosts::arrows =                      ReadCost(cfg, costs, "cost_arrows"             , 15);
+	CTFCosts::waterarrows =                 ReadCost(cfg, costs, "cost_waterarrows"        , 25);  // Waffle: Increase water arrow cost
+	CTFCosts::firearrows =                  ReadCost(cfg, costs, "cost_firearrows"         , 50);  // Waffle: Increase fire arrow cost
+	CTFCosts::bombarrows =                  ReadCost(cfg, costs, "cost_bombarrows"         , 75);  // Waffle: Increase bomb arrow cost
 
 	//KnightShop.as
-	CTFCosts::bomb =                        ReadCost(cfg, "cost_bomb"               , 25);
-	CTFCosts::waterbomb =                   ReadCost(cfg, "cost_waterbomb"          , 30);
-	CTFCosts::mine =                        ReadCost(cfg, "cost_mine"               , 60);
-	CTFCosts::keg =                         ReadCost(cfg, "cost_keg"                , 200);  // Waffle: Offset strength of circular kegs
+	CTFCosts::bomb =                        ReadCost(cfg, costs, "cost_bomb"               , 25);
+	CTFCosts::waterbomb =                   ReadCost(cfg, costs, "cost_waterbomb"          , 30);
+	CTFCosts::mine =                        ReadCost(cfg, costs, "cost_mine"               , 60);
+	CTFCosts::keg =                         ReadCost(cfg, costs, "cost_keg"                , 200);  // Waffle: Offset strength of circular kegs
 
 	//BuilderShop.as
-	CTFCosts::lantern_wood =                ReadCost(cfg, "cost_lantern_wood"       , 10);
-	CTFCosts::bucket_wood =                 ReadCost(cfg, "cost_bucket_wood"        , 10);
-	CTFCosts::filled_bucket =               ReadCost(cfg, "cost_filled_bucket"      , 15);  // Waffle: Make buckets more expensive
-	CTFCosts::sponge =                      ReadCost(cfg, "cost_sponge"             , 10);  // Waffle: Make sponges cheaper
-	CTFCosts::boulder =                     ReadCost(cfg, "cost_boulder"    		, 40);  // Waffle: Boulders only cost coins
-	// CTFCosts::boulder_stone =               ReadCost(cfg, "cost_boulder_stone"      , 30);   // Waffle: Boulders no longer cost materials
-	CTFCosts::trampoline =             		ReadCost(cfg, "cost_trampoline"    		, 120);  // Waffle: Trampolines only cost coins
-	// CTFCosts::trampoline_wood =             ReadCost(cfg, "cost_trampoline_wood"    , 100);  // Waffle: Trampolines no longer cost materials
-	CTFCosts::saw_wood =                    ReadCost(cfg, "cost_saw_wood"           , 150);
-	CTFCosts::saw_stone =                   ReadCost(cfg, "cost_saw_stone"          , 100);
-	CTFCosts::drill_stone =                 ReadCost(cfg, "cost_drill_stone"        , 100);
-	CTFCosts::drill =                       ReadCost(cfg, "cost_drill"              , 25);
-	CTFCosts::crate_wood =                  ReadCost(cfg, "cost_crate_wood"         , 150);
-	CTFCosts::crate =                       ReadCost(cfg, "cost_crate"              , 20);
+	CTFCosts::lantern_wood =                ReadCost(cfg, costs, "cost_lantern_wood"       , 10);
+	CTFCosts::bucket_wood =                 ReadCost(cfg, costs, "cost_bucket_wood"        , 10);
+	CTFCosts::filled_bucket =               ReadCost(cfg, costs, "cost_filled_bucket"      , 15);   // Waffle: Make buckets more expensive
+	CTFCosts::sponge =                      ReadCost(cfg, costs, "cost_sponge"             , 10);   // Waffle: Make sponges cheaper
+	CTFCosts::boulder =                     ReadCost(cfg, costs, "cost_boulder"    		   , 40);   // Waffle: Boulders only cost coins
+	// CTFCosts::boulder_stone =            ReadCost(cfg, costs, "cost_boulder_stone"      , 30);   // Waffle: Boulders no longer cost materials
+	CTFCosts::trampoline =             		ReadCost(cfg, costs, "cost_trampoline"    	   , 120);  // Waffle: Trampolines only cost coins
+	// CTFCosts::trampoline_wood =          ReadCost(cfg, costs, "cost_trampoline_wood"    , 100);  // Waffle: Trampolines no longer cost materials
+	CTFCosts::saw_wood =                    ReadCost(cfg, costs, "cost_saw_wood"           , 150);
+	CTFCosts::saw_stone =                   ReadCost(cfg, costs, "cost_saw_stone"          , 100);
+	CTFCosts::drill_stone =                 ReadCost(cfg, costs, "cost_drill_stone"        , 100);
+	CTFCosts::drill =                       ReadCost(cfg, costs, "cost_drill"              , 25);
+	CTFCosts::crate_wood =                  ReadCost(cfg, costs, "cost_crate_wood"         , 150);
+	CTFCosts::crate =                       ReadCost(cfg, costs, "cost_crate"              , 20);
 
 	//BoatShop.as
-	CTFCosts::dinghy =                      ReadCost(cfg, "cost_dinghy"             , 40);
-	// CTFCosts::dinghy_wood =                 ReadCost(cfg, "cost_dinghy_wood"        , 100);  # Waffle: Remove wood cost on dinghies
-	CTFCosts::longboat =                    ReadCost(cfg, "cost_longboat"           , 100);
-	// CTFCosts::longboat_wood =               ReadCost(cfg, "cost_longboat_wood"      , 200);  # Waffle: Remove wood cost on longboats
-	CTFCosts::warboat =                     ReadCost(cfg, "cost_warboat"            , 200);
-	// CTFCosts::warboat_gold =                ReadCost(cfg, "cost_warboat_gold"       , 50);
+	CTFCosts::dinghy =                      ReadCost(cfg, costs, "cost_dinghy"             , 40);
+	// CTFCosts::dinghy_wood =              ReadCost(cfg, costs, "cost_dinghy_wood"        , 100);  // Waffle: Remove wood cost on dinghies
+	CTFCosts::longboat =                    ReadCost(cfg, costs, "cost_longboat"           , 100);
+	// CTFCosts::longboat_wood =            ReadCost(cfg, costs, "cost_longboat_wood"      , 200);  // Waffle: Remove wood cost on longboats
+	CTFCosts::warboat =                     ReadCost(cfg, costs, "cost_warboat"            , 200);
+	// CTFCosts::warboat_gold =             ReadCost(cfg, costs, "cost_warboat_gold"       , 50);
 
 	//VehicleShop.as
-	CTFCosts::catapult =                    ReadCost(cfg, "cost_catapult"                   , 120);
-	CTFCosts::ballista =                    ReadCost(cfg, "cost_ballista"                   , 200);  // Waffle: Increase ballista cost
-	// CTFCosts::ballista_gold =               ReadCost(cfg, "cost_ballista_gold"              , 50);
-	CTFCosts::ballista_ammo =               ReadCost(cfg, "cost_ballista_ammo"              , 80);
-	CTFCosts::ballista_bomb_ammo =          ReadCost(cfg, "cost_ballista_bomb_ammo"         , 150);  // Waffle: Increase bomb bolt cost
-	// CTFCosts::outpost_coins =				ReadCost(cfg, "cost_outpost_coins"				, 150);  // Waffle: Remove outposts
-	// CTFCosts::outpost_gold =				ReadCost(cfg, "cost_outpost_gold"				, 50);
+	CTFCosts::catapult =                    ReadCost(cfg, costs, "cost_catapult"                   , 120);
+	CTFCosts::ballista =                    ReadCost(cfg, costs, "cost_ballista"                   , 200);  // Waffle: Increase ballista cost
+	// CTFCosts::ballista_gold =            ReadCost(cfg, costs, "cost_ballista_gold"              , 50);
+	CTFCosts::ballista_ammo =               ReadCost(cfg, costs, "cost_ballista_ammo"              , 80);
+	CTFCosts::ballista_bomb_ammo =          ReadCost(cfg, costs, "cost_ballista_bomb_ammo"         , 150);  // Waffle: Increase bomb bolt cost
+	// CTFCosts::outpost_coins =		    ReadCost(cfg, costs, "cost_outpost_coins"			   , 150);  // Waffle: Remove outposts
+	// CTFCosts::outpost_gold =				ReadCost(cfg, costs, "cost_outpost_gold"			   , 50);
 
 	//Quarters.as
-	CTFCosts::beer =                        ReadCost(cfg, "cost_beer"               , 5);
-	CTFCosts::meal =                        ReadCost(cfg, "cost_meal"               , 10);
-	CTFCosts::chicken =                     ReadCost(cfg, "cost_chicken"            , 50);  // Waffle: Chickens are bought directly instead of eggs
-	CTFCosts::burger =                      ReadCost(cfg, "cost_burger"             , 20);
-	CTFCosts::seed =                        ReadCost(cfg, "cost_seed"               , 100);  // Waffle: Seeds can be bought from quarters
+	CTFCosts::beer =                        ReadCost(cfg, costs, "cost_beer"               , 5);
+	CTFCosts::meal =                        ReadCost(cfg, costs, "cost_meal"               , 10);
+	CTFCosts::chicken =                     ReadCost(cfg, costs, "cost_chicken"            , 50);   // Waffle: Chickens are bought directly instead of eggs
+	CTFCosts::burger =                      ReadCost(cfg, costs, "cost_burger"             , 20);
+	CTFCosts::seed =                        ReadCost(cfg, costs, "cost_seed"               , 100);  // Waffle: Seeds can be bought from quarters
 
 	//CommonBuilderBlocks.as
-	CTFCosts::workshop_wood =               ReadCost(cfg, "cost_workshop_wood"      , 150);
+	CTFCosts::workshop_wood =               ReadCost(cfg, costs, "cost_workshop_wood"      , 150);
 
 	// war costs ///////////////////////////////////////////////////////////////
 
@@ -189,45 +189,45 @@ void InitCosts()
 	cfg.loadFile(war_costs_config_file);
 
 	//Workbench.as
-	WARCosts::lantern_wood =            ReadCost(cfg, "cost_lantern_wood"       , 10);
-	WARCosts::bucket_wood =             ReadCost(cfg, "cost_bucket_wood"        , 10);
-	WARCosts::sponge_wood =             ReadCost(cfg, "cost_sponge_wood"        , 50);
-	WARCosts::trampoline =         		ReadCost(cfg, "cost_trampoline"    		, 80);   // Waffle: Trampolines cost coins alongside the wood
-	WARCosts::trampoline_wood =         ReadCost(cfg, "cost_trampoline_wood"    , 100);  // Waffle: Trampolines only cost wood from a single resupply
-	WARCosts::crate_wood =              ReadCost(cfg, "cost_crate_wood"         , 30);
-	WARCosts::drill_stone =             ReadCost(cfg, "cost_drill_stone"        , 100);
-	WARCosts::saw_wood =                ReadCost(cfg, "cost_saw_wood"           , 150);
-	WARCosts::dinghy_wood =             ReadCost(cfg, "cost_dinghy_wood"        , 100);
-	WARCosts::boulder_stone =           ReadCost(cfg, "cost_boulder_stone"      , 30);
+	WARCosts::lantern_wood =            ReadCost(cfg, costs, "cost_lantern_wood"       , 10);
+	WARCosts::bucket_wood =             ReadCost(cfg, costs, "cost_bucket_wood"        , 10);
+	WARCosts::sponge_wood =             ReadCost(cfg, costs, "cost_sponge_wood"        , 50);
+	WARCosts::trampoline =         		ReadCost(cfg, costs, "cost_trampoline"    		, 80);   // Waffle: Trampolines cost coins alongside the wood
+	WARCosts::trampoline_wood =         ReadCost(cfg, costs, "cost_trampoline_wood"    , 100);  // Waffle: Trampolines only cost wood from a single resupply
+	WARCosts::crate_wood =              ReadCost(cfg, costs, "cost_crate_wood"         , 30);
+	WARCosts::drill_stone =             ReadCost(cfg, costs, "cost_drill_stone"        , 100);
+	WARCosts::saw_wood =                ReadCost(cfg, costs, "cost_saw_wood"           , 150);
+	WARCosts::dinghy_wood =             ReadCost(cfg, costs, "cost_dinghy_wood"        , 100);
+	WARCosts::boulder_stone =           ReadCost(cfg, costs, "cost_boulder_stone"      , 30);
 
 	//Scrolls
-	WARCosts::crappiest_scroll =        ReadCost(cfg, "cost_crappiest_scroll"   , 60);
-	WARCosts::crappy_scroll =           ReadCost(cfg, "cost_crappy_scroll"      , 100);
-	WARCosts::medium_scroll =           ReadCost(cfg, "cost_medium_scroll"      , 200);
-	WARCosts::big_scroll =              ReadCost(cfg, "cost_big_scroll"         , 300);
-	WARCosts::super_scroll =            ReadCost(cfg, "cost_super_scroll"       , 500);
+	WARCosts::crappiest_scroll =        ReadCost(cfg, costs, "cost_crappiest_scroll"   , 60);
+	WARCosts::crappy_scroll =           ReadCost(cfg, costs, "cost_crappy_scroll"      , 100);
+	WARCosts::medium_scroll =           ReadCost(cfg, costs, "cost_medium_scroll"      , 200);
+	WARCosts::big_scroll =              ReadCost(cfg, costs, "cost_big_scroll"         , 300);
+	WARCosts::super_scroll =            ReadCost(cfg, costs, "cost_super_scroll"       , 500);
 
 	//CommonBuilderBlocks.as
-	WARCosts::factory_wood =            ReadCost(cfg, "cost_factory_wood"       , 150);
-	WARCosts::workbench_wood =          ReadCost(cfg, "cost_workbench_wood"     , 120);
+	WARCosts::factory_wood =            ReadCost(cfg, costs, "cost_factory_wood"       , 150);
+	WARCosts::workbench_wood =          ReadCost(cfg, costs, "cost_workbench_wood"     , 120);
 
 	//WAR_Base.as
-	WARCosts::tunnel_stone =            ReadCost(cfg, "cost_tunnel_stone"       , 100);
-	WARCosts::kitchen_wood =            ReadCost(cfg, "cost_kitchen_wood"       , 100);
+	WARCosts::tunnel_stone =            ReadCost(cfg, costs, "cost_tunnel_stone"       , 100);
+	WARCosts::kitchen_wood =            ReadCost(cfg, costs, "cost_kitchen_wood"       , 100);
 
 	// builder costs ////////////////////////////////////////////////////////////
 
 	cfg.loadFile(builder_costs_config_file);
 
-	BuilderCosts::stone_block =         ReadCost(cfg, "cost_stone_block"        , 10);
-	BuilderCosts::back_stone_block =    ReadCost(cfg, "cost_back_stone_block"   , 2);
-	BuilderCosts::stone_door =          ReadCost(cfg, "cost_stone_door"         , 50);
-	BuilderCosts::wood_block =          ReadCost(cfg, "cost_wood_block"         , 10);
-	BuilderCosts::back_wood_block =     ReadCost(cfg, "cost_back_wood_block"    , 2);
-	BuilderCosts::wooden_door =         ReadCost(cfg, "cost_wooden_door"        , 30);
-	BuilderCosts::trap_block =          ReadCost(cfg, "cost_trap_block"         , 25);
-	BuilderCosts::bridge =              ReadCost(cfg, "cost_bridge"             , 30);
-	BuilderCosts::ladder =              ReadCost(cfg, "cost_ladder"             , 10);
-	BuilderCosts::wooden_platform =     ReadCost(cfg, "cost_wooden_platform"    , 15);
-	BuilderCosts::spikes =              ReadCost(cfg, "cost_spikes"             , 30);
+	BuilderCosts::stone_block =         ReadCost(cfg, costs, "cost_stone_block"        , 10);
+	BuilderCosts::back_stone_block =    ReadCost(cfg, costs, "cost_back_stone_block"   , 2);
+	BuilderCosts::stone_door =          ReadCost(cfg, costs, "cost_stone_door"         , 50);
+	BuilderCosts::wood_block =          ReadCost(cfg, costs, "cost_wood_block"         , 10);
+	BuilderCosts::back_wood_block =     ReadCost(cfg, costs, "cost_back_wood_block"    , 2);
+	BuilderCosts::wooden_door =         ReadCost(cfg, costs, "cost_wooden_door"        , 30);
+	BuilderCosts::trap_block =          ReadCost(cfg, costs, "cost_trap_block"         , 25);
+	BuilderCosts::bridge =              ReadCost(cfg, costs, "cost_bridge"             , 30);
+	BuilderCosts::ladder =              ReadCost(cfg, costs, "cost_ladder"             , 10);
+	BuilderCosts::wooden_platform =     ReadCost(cfg, costs, "cost_wooden_platform"    , 15);
+	BuilderCosts::spikes =              ReadCost(cfg, costs, "cost_spikes"             , 30);
 }

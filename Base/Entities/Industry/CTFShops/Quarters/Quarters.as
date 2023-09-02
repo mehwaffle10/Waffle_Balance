@@ -212,12 +212,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			return;
 		}
 		
-        CBlob@ callerBlob = getBlobByNetworkID(caller);
-        if (callerBlob is null)
-        {
-            return;
-        }
-
         if (name == "beer")
         {
             this.getSprite().PlaySound("/Gulp.ogg");

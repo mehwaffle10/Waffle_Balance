@@ -3,8 +3,6 @@
 #include "CTF_FlagCommon.as"
 #include "CTF_Structs.as"
 
-const string return_prop = "return time";
-const u16 return_time = 10 * getTicksASecond();  // Waffle: Flag returns in 10 seconds instead of 20
 // const u16 fast_return_speedup = 3;  // Waffle: No fast return time
 
 void onInit(CBlob@ this)

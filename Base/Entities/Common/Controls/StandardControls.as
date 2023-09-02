@@ -67,7 +67,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		    && pick !is null 
 		    && !pick.isAttached()
 		    && pick.canBePickedUp(owner)
-            && owner.get_u32("TUNNEL_TRAVEL_PICKUP_DELAY") + 1 * getTicksASecond() < getGameTime()  // Waffle: Prevent pickup if travelling through a tunnel
+            && owner.get_u32("TUNNEL_TRAVEL_PICKUP_DELAY") + 1 * getTicksASecond() < getGameTime())  // Waffle: Prevent pickup if travelling through a tunnel
         {
 			owner.server_Pickup(pick);
 		}

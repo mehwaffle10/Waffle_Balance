@@ -33,7 +33,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 
 		case Hitters::bomb_arrow:
-			dmg *= 5.0f;
+			dmg *= 5.0f;  // Waffle: Reduce bomb arrow damage
 			break;
 
 		case Hitters::arrow:

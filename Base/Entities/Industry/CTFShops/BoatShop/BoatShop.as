@@ -75,7 +75,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			CBlob@ crate = getBlobByNetworkID(item);
 
 			crate.set_Vec2f("required space", Vec2f(10, 6));
-			crate.set_s32("gold building amount", CTFCosts::warboat_gold);
+			// crate.set_s32("gold building amount", CTFCosts::warboat_gold);  // Waffle: Remove gold cost from warboats
 		}
 	}
 }
