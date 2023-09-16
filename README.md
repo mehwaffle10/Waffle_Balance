@@ -284,6 +284,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Changes team when picked up
 - Can automatically pick up materials again
 	- No longer automatically picks up normal arrows
+    - Automatically pickup ballista bolts and bomb bolts
 - Fixed vehicle deployments
 	- Appropriately sized area checks for each vehicle
 	- Fixed map alignment for area check
