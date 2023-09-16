@@ -2,9 +2,15 @@
 #include "CTF_Structs.as";
 #include "RulesCore.as";
 #include "RespawnSystem.as";
+#include "HallCommon.as";             // Waffle: Fix for staging
+#include "CTF_PopulateSpawnList.as";  // Waffle: --
 //CTF spawn system
 
 const s32 spawnspam_limit_time = 10;
+
+shared string base_name() { return "tent"; }
+shared string flag_name() { return "ctf_flag"; }
+shared string flag_spawn_name() { return "flag_base"; }
 
 shared class CTFSpawns : RespawnSystem
 {

@@ -52,10 +52,6 @@ void Config(CTFCore@ this)
 
 }
 
-shared string base_name() { return "tent"; }
-shared string flag_name() { return "ctf_flag"; }
-shared string flag_spawn_name() { return "flag_base"; }
-
 //pass stuff to the core from each of the hooks
 
 void Reset(CRules@ this)

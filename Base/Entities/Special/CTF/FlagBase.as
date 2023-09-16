@@ -2,8 +2,9 @@
 
 #include "CTF_FlagCommon.as"
 #include "GameplayEvents.as";
+#include "CTF_SharedClasses.as"  // Waffle: Fix for staging
 
-const string flag_name = "ctf_flag";
+// const string flag_name = "ctf_flag";  // Waffle: Fix for staging
 
 void onInit(CBlob@ this)
 {
@@ -12,7 +13,7 @@ void onInit(CBlob@ this)
 
 	if (isServer())
 	{
-		CBlob@ flag = server_CreateBlob(flag_name, this.getTeamNum(), pos);
+		CBlob@ flag = server_CreateBlob(flag_name(), this.getTeamNum(), pos);
 		if (flag !is null)
 		{
 			this.server_AttachTo(flag, "FLAG");
@@ -148,7 +149,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	{
 		//carrying enemy flag
 		CBlob@ flag = blob.getCarriedBlob();
-		if (flag !is null && flag.getName() == flag_name && flag.getTeamNum() != this.getTeamNum())
+		if (flag !is null && flag.getName() == flag_name() && flag.getTeamNum() != this.getTeamNum())
 		{
 			SendGameplayEvent(createFlagCaptureEvent(blob.getPlayer()));
 
