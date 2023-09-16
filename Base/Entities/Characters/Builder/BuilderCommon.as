@@ -60,9 +60,8 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 	{
 		const bool onground = this.isOnGround();
 
-		bool fail = !onground;
-
 		CMap@ map = getMap();
+        bool fail = !onground || !map.isTileSolid(map.getTile(this.getPosition() + Vec2f(0, (this.getWidth() + map.tilesize) / 2)).type);  // Waffle: Make sure there's a block underneath
 
 		Vec2f space = Vec2f(b.size.x / 8, b.size.y / 8);
 		Vec2f offsetPos = getBuildingOffsetPos(this, map, space);
