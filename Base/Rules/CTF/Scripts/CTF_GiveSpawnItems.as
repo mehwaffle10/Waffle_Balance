@@ -158,69 +158,6 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
 	}
 }
 
-void displayResupply(CRules@ this, string player_class, string resupply_class, Vec2f offset, Vec2f offset_second, string propname)
-{
-	s32 next_items = this.get_s32(propname);
-
-	u32 secs = ((next_items - 1 - getGameTime()) / getTicksASecond()) + 1;
-	string units = ((secs != 1) ? " seconds" : " second");
-
-	string resupply_available;
-	string resupply_unavailable;
-
-	if (resupply_class == "archer")
-	{
-		// TODO: maybe only draw the cooldown/helptext for archer if low on arrows?
-		resupply_available = getTranslatedString("Go to an archer shop or a respawn point to get a resupply of 30 arrows.");
-
-		resupply_unavailable = getTranslatedString("Next resupply of 30 arrows in {SEC}{TIMESUFFIX}.")
-			.replace("{SEC}", "" + secs)
-			.replace("{TIMESUFFIX}", getTranslatedString(units));
-	}
-	else // Waffle: Display crate resupply information instead
-	{
-		if (isBuildPhase(this))
-		{
-			resupply_available = getTranslatedString("Starting airdrop of {WOOD} wood and {STONE} stone supplied. More materials will be airdropped after build time.")
-				.replace("{WOOD}", "" + crate_warmup_wood_amount)
-				.replace("{STONE}", "" + crate_warmup_stone_amount);
-		}
-		else
-		{
-			resupply_available = getTranslatedString("Next airdrop of {WOOD} wood and {STONE} stone in {SEC}{TIMESUFFIX}.")
-				.replace("{SEC}", "" + secs)
-				.replace("{TIMESUFFIX}", getTranslatedString(units))
-				.replace("{WOOD}", "" + crate_wood_amount)
-				.replace("{STONE}", "" + crate_stone_amount);
-		}
-	}
-		
-	if (next_items > getGameTime() && resupply_class == "archer") // Unavailable resupply - shown on upper center of screen
-	{
-		SColor color = SColor(255, 255, 55, 55);
-			
-		string text = resupply_unavailable;
-
-		float x = getScreenWidth() / 2;
-		float y = getScreenHeight() / 3 - offset_second.y;
-
-		GUI::DrawTextCentered(text, Vec2f(x, y), color);
-	}
-	else  // Waffle: Always display if available  // if (this.getCurrentState() == GAME) // Available resupply & not warmup - shown above inventory GUI
-	{
-		SColor color = SColor(200, 135, 185, 45);
-
-		string text = resupply_available;
-
-		float x = getScreenWidth() / 3 + offset.x;
-		float y = getScreenHeight() - offset.y;
-
-		GUI::DrawTextCentered(text, Vec2f(x, y), color);
-	}
-}
-
-// normal hooks
-
 void Reset(CRules@ this)
 {
 	// Waffle: Do build phase resupply
@@ -311,42 +248,6 @@ void onTick(CRules@ this)
 				doGiveSpawnMats(this, p, overlapped);
 			}
 		}
-	}
-}
-
-// render gui for the player
-void onRender(CRules@ this)
-{
-	if (g_videorecording || this.isGameOver())
-		return;
-	
-	CPlayer@ p = getLocalPlayer();
-	if (p is null || !p.isMyPlayer()) return;
-	
-	CBlob@ b = p.getBlob();
-	if (b is null) return;
-	
-	string name = b.getName();
-
-	GUI::SetFont("menu");
-
-	// Waffle: No builder tooltip, display resupply crate text instead
-	if (this.exists(RESUPPLY_TIME_STRING))
-	{
-		Vec2f offset = Vec2f(20, 64);
-		Vec2f offset_second = Vec2f(0, 70);
-		string resupply_class = "builder";
-		displayResupply(this, name, resupply_class, offset, offset_second, RESUPPLY_TIME_STRING);
-	}
-	
-	// Display archer resupply text for archers
-	string propname = getCTFTimerPropertyName(p, "archer");
-	if (name == "archer" && this.exists(propname))
-	{
-		Vec2f offset = Vec2f(20, 96);
-		Vec2f offset_second = Vec2f(0, 16);
-		string resupply_class = "archer";
-		displayResupply(this, name, resupply_class, offset, offset_second, propname);
 	}
 }
 

@@ -13,6 +13,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Resupplies
 - Removed for builders
 - Crates with 500 wood and 150 stone air drop every 10 minutes above team tents
+- All classes can see time until next resupply air drop where builder resupply info would be
 
 ### Materials
 - No longer decay
