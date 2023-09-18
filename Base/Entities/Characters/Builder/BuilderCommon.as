@@ -60,8 +60,22 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 	{
 		const bool onground = this.isOnGround();
 
+        // Waffle: Make sure there's a block or platform underneath
 		CMap@ map = getMap();
-        bool fail = !onground || !map.isTileSolid(map.getTile(this.getPosition() + Vec2f(0, (this.getWidth() + map.tilesize) / 2)).type);  // Waffle: Make sure there's a block underneath
+        Vec2f below = this.getPosition() + Vec2f(0, (this.getWidth() + map.tilesize) / 2);
+        bool blob_supported = false;
+        CBlob@[] blobs_below;
+        map.getBlobsAtPosition(below, blobs_below);
+        for (u8 i = 0; i < blobs_below.length; i++)
+        {
+            CBlob@ blob = blobs_below[i];
+            if (blob !is null && (blob.hasTag("door") || blob.isPlatform() && blob.getAngleDegrees() == 0.0f))
+            {
+                blob_supported = true;
+                break;
+            }
+        }
+        bool fail = !onground || !(map.isTileSolid(map.getTile(below).type) || blob_supported);
 
 		Vec2f space = Vec2f(b.size.x / 8, b.size.y / 8);
 		Vec2f offsetPos = getBuildingOffsetPos(this, map, space);
