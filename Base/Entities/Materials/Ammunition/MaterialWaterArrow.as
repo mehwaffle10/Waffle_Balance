@@ -13,5 +13,5 @@ void onInit(CBlob@ this)
 
   setArrowHoverRect(this);
 
-  this.set_f32("important-pickup", 21.0f);  // Waffle: Adjust Z values
+  this.set_f32("important-pickup", 19.0f);  // Waffle: Adjust Z values
 }
