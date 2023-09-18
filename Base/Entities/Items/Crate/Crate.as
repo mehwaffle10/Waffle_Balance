@@ -384,7 +384,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 		CBlob@ caller = getBlobByNetworkID(params.read_netid());
 		CInventory@ inv = this.getInventory();
-		if (caller !is null && inv !is null) 
+		if (caller !is null && inv !is null && this.isAttachedTo(caller))  // Waffle: Prevent crate warping
 		{
 			u8 itemcount = inv.getItemsCount();
 			// Boobytrap if crate has enemy mine
