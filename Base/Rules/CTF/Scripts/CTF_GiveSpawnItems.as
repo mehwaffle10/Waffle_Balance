@@ -2,6 +2,7 @@
 
 #include "RulesCore.as";
 #include "CTF_Structs.as";
+#include "CTF_Common.as"; // resupply stuff
 
 const u32 materials_wait = 20; //seconds between free mats
 const u32 materials_wait_warmup = materials_wait; //seconds between free mats  // Waffle: Set to same cooldown since it's only for archers
@@ -76,34 +77,6 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ attacker, u8 customData
 	{
 		SetCTFTimer(this, victim, 0, "archer");
 	}
-}
-
-string getCTFTimerPropertyName(CPlayer@ p, string classname)
-{
-	if (classname == "builder")
-	{
-		return SPAWN_ITEMS_TIMER_BUILDER + p.getUsername();
-	}
-	else
-	{
-		return SPAWN_ITEMS_TIMER_ARCHER + p.getUsername();
-	} 
-}
-
-s32 getCTFTimer(CRules@ this, CPlayer@ p, string classname)
-{
-	string property = getCTFTimerPropertyName(p, classname);
-	if (this.exists(property))
-		return this.get_s32(property);
-	else
-		return 0;
-}
-
-void SetCTFTimer(CRules@ this, CPlayer@ p, s32 time, string classname)
-{
-	string property = getCTFTimerPropertyName(p, classname);
-	this.set_s32(property, time);
-	this.SyncToPlayer(property, p);
 }
 
 //takes into account and sets the limiting timer
@@ -218,7 +191,7 @@ void onTick(CRules@ this)
 		getBlobsByName(base_name(),   @spots);
 		getBlobsByName("outpost",	@spots);
 		getBlobsByName("warboat",	 @spots);
-		// getBlobsByName("buildershop", @spots);  // Waffle: No builer resupplies
+		// getBlobsByName("buildershop", @spots);  // Waffle: No builder resupplies
 		getBlobsByName("archershop",  @spots);
 		// getBlobsByName("knightshop",  @spots);
 		for (uint step = 0; step < spots.length; ++step) 

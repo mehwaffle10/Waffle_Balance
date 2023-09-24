@@ -34,7 +34,7 @@ void onInit(CBlob@ this)
 	int team_num = this.getTeamNum();
 
 	{
-		ShopItem@ s = addShopItem(this, "Drill", "$drill$", "drill", Descriptions::drill, false);
+		ShopItem@ s = addShopItem(this, "Drill", getTeamIcon("drill", "Drill.png", team_num, Vec2f(32, 16), 0), "drill", Descriptions::drill, false);
 		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", CTFCosts::drill_stone);
 		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::drill);
 	}
@@ -105,43 +105,41 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (cmd == this.getCommandID("shop made item"))
+if (cmd == this.getCommandID("shop made item"))
 	{
 		this.getSprite().PlaySound("/ChaChing.ogg");
 
-		if (!getNet().isServer()) return; /////////////////////// server only past here
-
 		u16 caller, item;
-		if (!params.saferead_netid(caller) || !params.saferead_netid(item))
+		string name;
+
+		if (!params.saferead_netid(caller) || !params.saferead_netid(item) || !params.saferead_string(name))
 		{
 			return;
 		}
-		string name = params.read_string();
-		{
-			CBlob@ callerBlob = getBlobByNetworkID(caller);
-			if (callerBlob is null)
-			{
-				return;
-			}
 
-			if (name == "filled_bucket")
-			{
-				CBlob@ b = server_CreateBlobNoInit("bucket");
-				b.setPosition(callerBlob.getPosition());
-				b.server_setTeamNum(callerBlob.getTeamNum());
-				b.Tag("_start_filled");
-				b.Init();
-				callerBlob.server_Pickup(b);
-			}
-			else if (name == "trampoline_folded")
-			{
-				CBlob@ b = server_CreateBlobNoInit("trampoline");
-				b.setPosition(callerBlob.getPosition());
-				b.server_setTeamNum(callerBlob.getTeamNum());
-				b.Tag("start packed");
-				b.Init();
-				callerBlob.server_Pickup(b);
-			}
+		CBlob@ callerBlob = getBlobByNetworkID(caller);
+		if (callerBlob is null)
+		{
+			return;
 		}
+
+        if (name == "filled_bucket" && isServer())
+        {
+            CBlob@ b = server_CreateBlobNoInit("bucket");
+            b.setPosition(callerBlob.getPosition());
+            b.server_setTeamNum(callerBlob.getTeamNum());
+            b.Tag("_start_filled");
+            b.Init();
+            callerBlob.server_Pickup(b);
+        }
+        else if (name == "trampoline_folded" && isServer())  // Waffle: Trampolines start folded
+        {
+            CBlob@ b = server_CreateBlobNoInit("trampoline");
+            b.setPosition(callerBlob.getPosition());
+            b.server_setTeamNum(callerBlob.getTeamNum());
+            b.Tag("start packed");
+            b.Init();
+            callerBlob.server_Pickup(b);
+        }
 	}
 }

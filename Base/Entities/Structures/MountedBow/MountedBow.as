@@ -43,7 +43,7 @@ void onInit(CBlob@ this)
 
 	Vehicle_AddAmmo(this, v,
 	                    15, // fire delay (ticks)  // Waffle: Increase firerate
-	                    1, // fire bullets amount
+                        1, // fire bullets amount
 	                    1, // fire cost
 	                    "mat_arrows", // bullet ammo config name
 	                    "Arrows", // name for ammo selection
@@ -83,7 +83,7 @@ void onInit(CBlob@ this)
 	string[] autograb_blobs = {"mat_arrows"};
 	this.set("autograb blobs", autograb_blobs);
 
-	this.getCurrentScript().runFlags |= Script::tick_hasattached;
+	this.set_bool("facing", true);
 
 	// auto-load on creation
 	if (isServer())
@@ -138,7 +138,7 @@ f32 getAimAngle(CBlob@ this, VehicleInfo@ v)
 
 void onTick(CBlob@ this)
 {
-	if (this.hasAttached())
+	if (this.hasAttached() || this.get_bool("facing") != this.isFacingLeft())
 	{
 		VehicleInfo@ v;
 		if (!this.get("VehicleInfo", @v)) return;
@@ -160,6 +160,7 @@ void onTick(CBlob@ this)
 
 		Vehicle_StandardControls(this, v);
 	}
+	this.set_bool("facing", this.isFacingLeft());
 }
 
 void onHealthChange(CBlob@ this, f32 oldHealth)

@@ -299,11 +299,12 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
+    // Waffle: Reset angle lock
 	this.set_bool(ANGLE_IS_LOCKED, false);
 	this.set_bool(LOCK_TOGGLE, false);
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
-	return customData == Hitters::fire || customData == Hitters::burn ? damage * 2.0f : damage;
+	return customData == Hitters::fire || customData == Hitters::burn ? damage * 2.0f : damage;  // Waffle: Increase fire damage
 }

@@ -38,7 +38,7 @@ namespace CTFCosts
 	//VehicleShop.as
 	s32 catapult, ballista, ballista_ammo, ballista_bomb_ammo;  // ballista_gold, outpost_coins, outpost_gold;
 
-
+    // Waffle: Buy chickens directly instead of eggs
 	//Quarters.as
 	s32 beer, meal, chicken, burger, seed;  // egg
 

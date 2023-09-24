@@ -31,9 +31,13 @@ void onInit(CBlob@ this)
 
 	//block knight sword
 	this.Tag("blocks sword");
+    
+	//bomb arrow damage value
+	// this.set_f32("bomb resistance", 2.5f);  // Waffle: Use global value
 
 	// additional shape
 
+    // Waffle: Adjust shape
 	Vec2f[] frontShape;
 	frontShape.push_back(Vec2f(76.0f, -22.0f));
 	frontShape.push_back(Vec2f(81.0f, -22.0f));
