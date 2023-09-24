@@ -4,32 +4,6 @@
 #include "CTF_Structs.as";
 #include "CTF_Common.as"; // resupply stuff
 
-const u32 materials_wait = 20; //seconds between free mats
-const u32 materials_wait_warmup = materials_wait; //seconds between free mats  // Waffle: Set to same cooldown since it's only for archers
-
-const int warmup_wood_amount = 250;
-const int warmup_stone_amount = 80;
-
-const int matchtime_wood_amount = 100;
-const int matchtime_stone_amount = 30;
-
-//property
-const string SPAWN_ITEMS_TIMER_BUILDER = "CTF SpawnItems Builder:";
-const string SPAWN_ITEMS_TIMER_ARCHER  = "CTF SpawnItems Archer:";
-
-const string RESUPPLY_TIME_STRING = "team resupply timer";
-
-// Waffle: Materials for the entire team. Drop once at the start of the game
-const int crate_warmup_wood_amount = 4000;  
-const int crate_warmup_stone_amount = 2000;
-
-// Waffle: Builders no longer can resupply. Crates drop for each team with team materials
-const u32 crate_wait = 10 * 60 * getTicksASecond();
-const int crate_wood_amount = 500;
-const int crate_stone_amount = 150;
-
-string base_name() { return "tent"; }
-
 bool SetMaterials(CBlob@ blob,  const string &in name, const int quantity, bool drop = false)
 {
 	CInventory@ inv = blob.getInventory();
@@ -298,9 +272,4 @@ void onStateChange(CRules@ this, const u8 oldState)
     {
 		this.set_s32(RESUPPLY_TIME_STRING, getGameTime() + crate_wait);
     }
-}
-
-bool isBuildPhase(CRules@ this)
-{
-	return this.isWarmup() || this.isIntermission();
 }
