@@ -61,21 +61,36 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 		const bool onground = this.isOnGround();
 
         // Waffle: Make sure there's a block or platform underneath
-		CMap@ map = getMap();
+        CMap@ map = getMap();
+        bool supported = false;
         Vec2f below = this.getPosition() + Vec2f(0, (this.getWidth() + map.tilesize) / 2);
-        bool blob_supported = false;
-        CBlob@[] blobs_below;
-        map.getBlobsAtPosition(below, blobs_below);
-        for (u8 i = 0; i < blobs_below.length; i++)
+        Vec2f below_tile_pos = map.getTileSpacePosition(below);
+        if (below_tile_pos.y >= 3 && below_tile_pos.y < map.tilemapheight &&
+            below_tile_pos.x >= 2 && below_tile_pos.x <= map.tilemapwidth - 3)
         {
-            CBlob@ blob = blobs_below[i];
-            if (blob !is null && (blob.hasTag("door") || blob.isPlatform() && blob.getAngleDegrees() == 0.0f))
+            for (s8 x = -1; x <= 1; x++)
             {
-                blob_supported = true;
-                break;
+                Vec2f check_pos = below + Vec2f(x, 0) * map.tilesize;
+                CBlob@[] blobs_below;
+                map.getBlobsAtPosition(check_pos, blobs_below);
+                for (u8 i = 0; i < blobs_below.length; i++)
+                {
+                    CBlob@ blob = blobs_below[i];
+                    if (blob !is null && (blob.hasTag("door") || blob.isPlatform() && blob.getAngleDegrees() == 0.0f))
+                    {
+                        supported = true;
+                        break;
+                    }
+                }
+
+                if (map.isTileSolid(map.getTile(check_pos).type) || supported)
+                {
+                    supported = true;
+                    break;
+                }
             }
         }
-        bool fail = !onground || !(map.isTileSolid(map.getTile(below).type) || blob_supported);
+        bool fail = !onground || !supported;
 
 		Vec2f space = Vec2f(b.size.x / 8, b.size.y / 8);
 		Vec2f offsetPos = getBuildingOffsetPos(this, map, space);
