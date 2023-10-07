@@ -101,8 +101,8 @@ Vec2f getBombForce(CBlob@ this, f32 radius, Vec2f hit_blob_pos, Vec2f pos, f32 h
 	bombforce.Normalize();
 	bombforce *= 2.0f;
 	bombforce.y -= 0.2f; // push up for greater cinematic effect
-	bombforce.x = Maths::Round(bombforce.x);
-	bombforce.y = Maths::Round(bombforce.y);
+	// bombforce.x = Maths::Round(bombforce.x);  // Waffle: Remove inconsistency with rounding
+	// bombforce.y = Maths::Round(bombforce.y);  // Waffle: --
 	bombforce /= 2.0f;
 	bombforce *= hit_blob_mass * (3.0f) * ((distance > (radius * 0.5f)) ? 0.5f : 1.0f);  // Waffle: Make it so bombs have a bigger radius that launch you at full force
 	return bombforce;
