@@ -284,7 +284,7 @@ void onTick(CBlob@ this)
 						bool hit_nondirt = false;
 						for (uint i = 0; i < hitInfos.length; i++)
 						{
-							f32 attack_dam = 1.0f;
+							f32 attack_dam = 0.5f;  // Waffle: Reduce attack damage
 							HitInfo@ hi = hitInfos[i];
 							bool hit_constructed = false;
 							CBlob@ b = hi.blob;
@@ -312,23 +312,23 @@ void onTick(CBlob@ this)
 									continue;
 								}
 
+                                // Waffle: Remove overheat damage
+                                // if (int(heat) >= heat_max - high_damage_window) // are we at high heat? more damage!
+                                // {
+                                // 	attack_dam += 0.5f;
+                                // }
 
-								if (isServer())
-								{
-									if (int(heat) >= heat_max - high_damage_window) // are we at high heat? more damage!
-									{
-										attack_dam += 0.5f;
-									}
-
-									if (b.hasTag("shielded") && blockAttack(b, attackVel, 0.0f)) // are they shielding? reduce damage!
-									{
-										attack_dam /= 2;
-									}
-
-									this.server_Hit(b, hi.hitpos, attackVel, attack_dam, Hitters::drill);
-
-									Material::fromBlob(holder, hi.blob, attack_dam, this);
-								}
+                                // Waffle: Allow blocking drills
+                                if (b.hasTag("shielded") && blockAttack(b, attackVel, 0.0f)) // are they shielding? reduce damage!
+                                {
+                                    Sound::Play("Entities/Characters/Knight/ShieldHit.ogg", hi.hitpos);
+                                    sparks(hi.hitpos, -attackVel.Angle(), 0.1f);
+                                }
+                                else if (isServer())
+                                {
+                                    this.server_Hit(b, hi.hitpos, attackVel, attack_dam, Hitters::drill);
+                                    Material::fromBlob(holder, hi.blob, attack_dam, this);
+                                }
 
 								hitsomething = true;
 								hitblob = true;

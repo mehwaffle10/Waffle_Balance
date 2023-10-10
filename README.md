@@ -301,6 +301,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Drills
 - Can no longer dig gold
+- Deals half a heart base damage instead of a full heart
+- No longer deals overheat damage
+- Blocked completely by shield
 - Give 100% of tile resources dug
 - Only hits dirt and stone/thickstone once per hit instead of twice
 - Digging stone heats up the drill at the same rate as constructed block
