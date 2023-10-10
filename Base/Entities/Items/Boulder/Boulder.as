@@ -272,6 +272,12 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	}
 }
 
+bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
+{
+    // Waffle: Don't collide with friendly players
+    return blob !is null && !(blob.hasTag("player") && blob.getTeamNum() == this.getTeamNum());
+}
+
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
 {
 	if (customData == Hitters::sword || customData == Hitters::arrow)
