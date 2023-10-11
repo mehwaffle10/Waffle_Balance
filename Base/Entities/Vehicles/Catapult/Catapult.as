@@ -154,6 +154,8 @@ void onInit(CBlob@ this)
 	this.set("autograb blobs", autograb_blobs);
     this.set_u16(MAX_AMMO, max_ammo);  // Waffle: Limit ammo
 
+    this.set_bool("facing", true);
+
 	// auto-load on creation
 	if (isServer())
 	{
