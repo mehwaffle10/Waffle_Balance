@@ -193,6 +193,12 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - 50% Faster and can turn around easier
 - Can readd wheels after immobilizing
 - Gunner is also driver, driver seat is removed
+- Vehicle driving changes to be able to drive over terrain better
+    - Lowered center of mass
+    - Removed shape elasticity
+    - Adjusted shape to ramp over blocks better
+    - Clamped max rotation to 45 degrees
+    - Removed terrain damage to allow for better bridging
 
 ### Catapults
 - Rocks reworked

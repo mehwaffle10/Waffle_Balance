@@ -1,6 +1,8 @@
 #include "VehicleCommon.as"
 #include "GenericButtonCommon.as"
-#include "LimitAmmo.as"
+#include "LimitAmmo.as"  // Waffle: Limit ammo
+
+const f32 angle_delta = 45; // Waffle: Lock rotations to a max angle
 
 void onInit(CBlob@ this)
 {
@@ -11,6 +13,19 @@ void onTick(CBlob@ this)
 {
 	VehicleInfo@ v;
 	if (!this.get("VehicleInfo", @v)) return;
+
+    // Waffle: Lock rotations to a max angle
+    f32 angle = this.getAngleDegrees();
+    if (angle > angle_delta && angle < 90)
+    {
+        this.setAngleDegrees(angle_delta);
+        // this.setVelocity(this.getVelocity().RotateByDegrees(angle_delta - angle));
+    }
+    else if (angle < 360 - angle_delta && angle >= 270)
+    {
+        this.setAngleDegrees(360 - angle_delta);
+        // this.setVelocity(this.getVelocity().RotateByDegrees(360 - angle_delta - angle));
+    }
 
 	// reload
 	if (this.hasAttached() && v.ammo_types.size() > 0)

@@ -145,7 +145,8 @@ void onInit(CBlob@ this)
 	Vehicle_addWheel(this, v, "WoodenWheels.png", 16, 16, 1, Vec2f(-10.0f, 11.0f));
 	Vehicle_addWheel(this, v, "WoodenWheels.png", 16, 16, 0, Vec2f(8.0f, 10.0f));
 
-	this.getShape().SetOffset(Vec2f(0, 6));
+	this.getShape().SetOffset(Vec2f(0, 4));
+    this.getShape().SetCenterOfMassOffset(Vec2f(0, 9));  // Waffle: Adjust driving
 	
 	this.addCommandID("putin_mag");
 	this.addCommandID("fire mag blob");

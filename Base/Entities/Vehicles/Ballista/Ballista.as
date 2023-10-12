@@ -119,6 +119,7 @@ void onInit(CBlob@ this)
 	Vehicle_addWoodenWheel(this, v, 0, Vec2f(-11.0f, 18.0f), 10.0f);
 
 	this.getShape().SetOffset(Vec2f(0, 8));
+    this.getShape().SetCenterOfMassOffset(Vec2f(0, 9));  // Waffle: Adjust driving
 
 	v.wep_angle = (low_angle - high_angle) / 2;  // low_angle;  // Waffle: Make starting aim position a little less weird
 
