@@ -19,12 +19,10 @@ void onTick(CBlob@ this)
     if (angle > angle_delta && angle < 90)
     {
         this.setAngleDegrees(angle_delta);
-        // this.setVelocity(this.getVelocity().RotateByDegrees(angle_delta - angle));
     }
     else if (angle < 360 - angle_delta && angle >= 270)
     {
         this.setAngleDegrees(360 - angle_delta);
-        // this.setVelocity(this.getVelocity().RotateByDegrees(360 - angle_delta - angle));
     }
 
 	// reload
