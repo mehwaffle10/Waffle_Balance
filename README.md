@@ -139,6 +139,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Vehicles
 - Take full damage from swords and arrows
+- Take 3x damage from builders instead of 2x
 - Take 5x damage from bomb arrows instead of 8x
 - Take 4.5x damage from kegs
 - Deploy instantly
@@ -189,10 +190,11 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Siege Weapons
 - Don't break in water
 - Can no longer shoot through platforms
+- Can no longer crush players
 - Projectiles ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - 50% Faster and can turn around easier
 - Can readd wheels after immobilizing
-- Gunner is also driver, driver seat is removed
+- Driver is also gunner, gunner seat is removed
 - Vehicle driving changes to be able to drive over terrain better
     - Lowered center of mass
     - Removed shape elasticity

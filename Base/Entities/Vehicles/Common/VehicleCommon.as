@@ -629,7 +629,7 @@ bool Vehicle_doesCollideWithBlob_ground(CBlob@ this, CBlob@ blob)
 	if (!blob.isCollidable() || blob.isAttached()) // no colliding against people inside vehicles
 		return false;
 	if (blob.getRadius() > this.getRadius() ||
-	        (blob.getTeamNum() != this.getTeamNum() && blob.hasTag("player") && this.getShape().vellen > 1.0f) ||
+	        // (blob.getTeamNum() != this.getTeamNum() && blob.hasTag("player") && this.getShape().vellen > 1.0f) ||  // Waffle: No more crushing players
 	        (blob.getShape().isStatic()) || blob.hasTag("projectile"))
 	{
 		return true;

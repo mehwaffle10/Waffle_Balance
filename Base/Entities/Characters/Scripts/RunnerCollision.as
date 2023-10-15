@@ -25,6 +25,12 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 		return false;
 	}
 
+    // Waffle: Don't collide with attached blobs
+    if (blob.isAttached())
+    {
+        return false;
+    }
+
 	bool colliding_block = (oShape.isStatic() && oShape.getConsts().collidable);
 
 	// when dead, collide only if its moving and some time has passed after death
