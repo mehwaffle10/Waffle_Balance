@@ -212,6 +212,12 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 		v.charge = 0;
 	}
 
+    // // Waffle: Rowers and Gunners are invincible
+    // if (attachedPoint.name == "GUNNER" || attachedPoint.name == "ROWER")
+	// {
+    //     detached.Untag("invincible");
+	// }
+
 	// jump out
 	if (detached.hasTag("player") && attachedPoint.socket)
 	{
@@ -221,6 +227,15 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 		this.IgnoreCollisionWhileOverlapped(null);
 	}
 }
+
+// void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
+// {
+//     // Waffle: Rowers and Gunners are invincible
+// 	if (attachedPoint.name == "GUNNER" || attachedPoint.name == "ROWER")
+// 	{
+//         attached.Tag("invincible");
+// 	}
+// }
 
 ///NETWORKING
 
@@ -255,4 +270,12 @@ bool onReceiveCreateData(CBlob@ this, CBitStream@ stream)
 		if (!stream.saferead_u16(ammo.ammo_stocked)) return false;
 	}
 	return true;
+}
+
+void onAddToInventory(CBlob@ this, CBlob@ blob)
+{
+    if (isServer() && blob !is null)
+    {
+        blob.AddScript("DieOnRemove.as");
+    }
 }

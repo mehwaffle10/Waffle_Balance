@@ -7,8 +7,8 @@
 
 const u8 cooldown_time_ammo = 45;
 const u8 cooldown_time_player = 91;
-const u8 startStone = 100;
-const u16 max_ammo = 100;  // Waffle: Limit ammo
+const u8 startStone = 200;
+const u16 max_ammo = 200;  // Waffle: Limit ammo
 
 class CatapultInfo : VehicleInfo
 {

@@ -191,6 +191,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Don't break in water
 - Can no longer shoot through platforms
 - Can no longer crush players
+- No longer drop ammo on death
 - Projectiles ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - 50% Faster and can turn around easier
 - Can readd wheels after immobilizing
@@ -213,9 +214,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 		- No ricochets
 		- Makes for more consistency in gameplay and visuals
 - Now shoots 25 rocks instead of 7
-- Each rock costs 2 stone instead of 3
+- Each rock costs 2 stone instead of 3 (max of 50 stone per shot)
 - Doubled the amount of vertical spread on catapult shots
-- Can hold 100 stone in reserve
+- Can hold 200 stone in reserve
 - Cost 180 coins
 
 ### Ballistas
