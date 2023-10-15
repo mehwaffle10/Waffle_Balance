@@ -274,7 +274,7 @@ bool onReceiveCreateData(CBlob@ this, CBitStream@ stream)
 
 void onAddToInventory(CBlob@ this, CBlob@ blob)
 {
-    if (isServer() && blob !is null)
+    if (blob !is null)
     {
         blob.AddScript("DieOnRemove.as");
     }
