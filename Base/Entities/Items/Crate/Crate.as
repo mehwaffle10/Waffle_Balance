@@ -471,7 +471,7 @@ void Unpack(CBlob@ this)
 	CMap@ map = getMap();
 	Vec2f space = this.get_Vec2f(required_space);
 	Vec2f offsetPos = crate_getOffsetPos(this, map);
-	Vec2f center = offsetPos + space * map.tilesize * 0.5f;
+	Vec2f center = offsetPos + space * map.tilesize * 0.5f + Vec2f(0, -2);  // Waffle: Shift spawn up slightly
 
 	CBlob@ blob = server_CreateBlob(this.get_string("packed"), this.getTeamNum(), center);
 	if (blob !is null && blob.getShape() !is null)
