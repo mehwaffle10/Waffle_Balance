@@ -1754,7 +1754,7 @@ void SetFirstAvailableBomb(CBlob@ this)
 // Blame Fuzzle.
 bool canHit(CBlob@ this, CBlob@ b)
 {
-	if (b.hasTag("invincible") || b.hasTag("temp blob"))
+	if (b.hasTag("invincible") || b.hasTag("temp blob") || b.hasTag("vehicle protection"))  // Waffle: Protect drivers
 		return false;
 	
 	// don't hit picked up items (except players and specially tagged items)

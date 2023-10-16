@@ -294,7 +294,7 @@ void onTick(CBlob@ this)
 								// or blobs to increase damage to (for the future)
 								string name = b.getName();
 
-								if (b.hasTag("invincible") || b.getName() == "bush")
+								if (b.hasTag("invincible") || b.getName() == "bush" || b.hasTag("vehicle protection"))  // Waffle: Protect drivers
 								{
 									continue; // carry on onto the next loop, dont waste time & heat on this
 								}

@@ -1,6 +1,8 @@
 #include "VehicleCommon.as"
 #include "GenericButtonCommon.as"
 #include "LimitAmmo.as"  // Waffle: Limit ammo
+// #include "Hitters.as"  // Waffle: Burn passengers
+// #include "FireCommon.as"  // Waffle: Burn passengers
 
 const f32 angle_delta = 45; // Waffle: Lock rotations to a max angle
 
@@ -210,13 +212,18 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 	if (attachedPoint.name == "GUNNER")
 	{
 		v.charge = 0;
+        // if (this.hasTag(burning_tag))
+        // {
+        //     server_setFireOn(detached);
+        // }
 	}
 
-    // // Waffle: Rowers and Gunners are invincible
-    // if (attachedPoint.name == "GUNNER" || attachedPoint.name == "ROWER")
-	// {
-    //     detached.Untag("invincible");
-	// }
+    // Waffle: Protect drivers
+    if (attachedPoint.name == "GUNNER" || attachedPoint.name == "ROWER")
+	{
+        detached.Untag("vehicle protection");
+	}
+
 
 	// jump out
 	if (detached.hasTag("player") && attachedPoint.socket)
@@ -228,14 +235,14 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 	}
 }
 
-// void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
-// {
-//     // Waffle: Rowers and Gunners are invincible
-// 	if (attachedPoint.name == "GUNNER" || attachedPoint.name == "ROWER")
-// 	{
-//         attached.Tag("invincible");
-// 	}
-// }
+void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
+{
+    // Waffle: Protect drivers
+	if (attachedPoint.name == "GUNNER" || attachedPoint.name == "ROWER")
+	{
+        attached.Tag("vehicle protection");
+	}
+}
 
 ///NETWORKING
 
@@ -274,8 +281,28 @@ bool onReceiveCreateData(CBlob@ this, CBitStream@ stream)
 
 void onAddToInventory(CBlob@ this, CBlob@ blob)
 {
+    // Waffle: Don't drop ammo
     if (blob !is null)
     {
         blob.AddScript("DieOnRemove.as");
     }
 }
+
+// f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+// {
+//     // Waffle: Burn passengers
+//     if (!this.hasTag("boat") && customData == Hitters::burn)
+//     {
+//         AttachmentPoint@[] attachment_points;
+//         this.getAttachmentPoints(attachment_points);
+//         for (u8 i = 0; i < attachment_points.length; i++)
+//         {
+//             CBlob@ blob = attachment_points[i].getOccupied();
+//             if (blob !is null)
+//             {
+//                 hitterBlob.server_Hit(blob, worldPoint, velocity, damage, customData);
+//             }
+//         }
+//     }
+//     return damage;
+// }

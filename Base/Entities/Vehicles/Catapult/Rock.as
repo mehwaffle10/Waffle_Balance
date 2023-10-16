@@ -116,7 +116,7 @@ bool canHitBlob(CBlob@ this, CBlob@ blob)
 			return false;
 
 	return (this.getTeamNum() != blob.getTeamNum() || blob.getShape().isStatic())
-	       && !blob.hasTag("invincible");
+	       && !blob.hasTag("invincible") && !b.hasTag("vehicle protection");  // Waffle: Protect drivers
 
 }
 

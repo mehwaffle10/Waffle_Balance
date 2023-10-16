@@ -524,7 +524,7 @@ bool canHit(CBlob@ this, CBlob@ b, Vec2f tpos, bool extra = true)
 		return false;
 	}
 
-	if (b.hasTag("invincible"))
+	if (b.hasTag("invincible") || b.hasTag("vehicle protection"))  // Waffle: Protect drivers
 	{
 		return false;
 	}

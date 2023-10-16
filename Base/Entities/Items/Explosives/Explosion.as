@@ -515,6 +515,12 @@ bool canExplosionDestroy(CMap@ map, Vec2f tpos, TileType t)
 bool HitBlob(CBlob@ this, Vec2f mapPos, CBlob@ hit_blob, f32 radius, f32 damage, const u8 hitter,
              const bool bother_raycasting = true, const bool should_teamkill = false)
 {
+    // Waffle: Protect drivers
+    if (hitter != Hitters::water && hit_blob.hasTag("vehicle protection"))
+    {
+        return false;
+    }
+
 	Vec2f pos = this.getPosition();
 	CMap@ map = this.getMap();
 	Vec2f hit_blob_pos = hit_blob.getPosition();
@@ -582,13 +588,13 @@ bool HitBlob(CBlob@ this, Vec2f mapPos, CBlob@ hit_blob, f32 radius, f32 damage,
 	}
 
 	f32 scale;
-	Vec2f bombforce = hit_blob.hasTag("invincible") ? Vec2f_zero : getBombForce(this, radius, hit_blob_pos, pos, hit_blob.getMass(), scale);
+	Vec2f bombforce = hit_blob.hasTag("invincible") ? Vec2f_zero : getBombForce(this, radius, hit_blob_pos, pos, hit_blob.getMass(), scale); 
 	f32 dam = damage * scale;
 
 	//explosion particle
 	makeSmallExplosionParticle(hit_blob_pos);
 
-	//hit the object
+    //hit the object
 	this.server_Hit(hit_blob, hit_blob_pos,
 	                bombforce, dam,
 	                hitter, hitter == Hitters::water || //hit with water

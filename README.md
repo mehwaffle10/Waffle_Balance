@@ -109,6 +109,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - crate               - 35
 - bush, grain, flower - 40
 
+### Bison
+- Hit vehicles instead of their drivers
+
 # ITEMS
 
 ## BUILDINGS
@@ -138,6 +141,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ## VEHICLES
 
 ### Vehicles
+- Drivers are protected from damage besides drowning
 - Take full damage from swords and arrows
 - Take 3x damage from builders instead of 2x
 - Take 5x damage from bomb arrows instead of 8x
