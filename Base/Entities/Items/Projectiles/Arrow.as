@@ -358,13 +358,19 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	// Waffle: don't collide with friendly boulders, collide with enemy boulders
+    // Waffle: Protect drivers
+    if (blob.hasTag("vehicle protection"))
+    {
+        return false;
+    }
+
+	// Waffle: Don't collide with friendly boulders, collide with enemy boulders
 	if (blob.getName() == "boulder")
 	{
 		return this.getTeamNum() != blob.getTeamNum();
 	}
 
-	// Waffle: collide with other projectiles
+	// Waffle: Collide with other projectiles
 	if (blob.hasTag("projectile") && this.getTeamNum() != blob.getTeamNum())
 	{
 		return true;

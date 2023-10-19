@@ -78,6 +78,11 @@ void onTick(CBlob@ this)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
+    // Waffle: Protect drivers
+    if (blob.hasTag("vehicle protection"))
+    {
+        return false;
+    }
 
 	CBlob@ carrier = blob.getCarriedBlob();
 
