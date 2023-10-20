@@ -44,6 +44,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 		case Hitters::ballista:
 			dmg *= 2.0f;
 			break;
+
+        // Waffle: Adjust catapult damage
+        case Hitters::cata_stones:
+            dmg /= 4.0f;
+            break;
 	}
 
 	if (dmg > 0 && hitterBlob !is null && hitterBlob !is this)
