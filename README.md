@@ -146,6 +146,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Take 3x damage from builders instead of 2x
 - Take 5x damage from bomb arrows instead of 8x
 - Take 4.5x damage from kegs
+- Take .25x damage from catapult rocks
 - Deploy instantly
 - Can't be captured
 - Don't break while flipped
@@ -198,6 +199,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer drop ammo on death
 - Projectiles ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - 50% Faster and can turn around easier
+- No longer turn around while firing or on cooldown
 - Can readd wheels after immobilizing
 - Driver is also gunner, gunner seat is removed
 - Vehicle driving changes to be able to drive over terrain better

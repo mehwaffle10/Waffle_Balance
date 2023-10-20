@@ -396,7 +396,7 @@ void Vehicle_DriverControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, Vehic
 				force.x -= moveForce;
 			}
 
-			if (vel.x < -turnSpeed)
+			if (vel.x < -turnSpeed && !ap.isKeyPressed(key_action1) && v.canFire() && v.cooldown_time <= 0 && v.charge < 15)  // Waffle: Prevent turning while shooting
 			{
 				this.SetFacingLeft(true);
 			}
@@ -414,7 +414,7 @@ void Vehicle_DriverControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, Vehic
 				force.x += moveForce;
 			}
 
-			if (vel.x > turnSpeed)
+			if (vel.x > turnSpeed && !ap.isKeyPressed(key_action1) && v.canFire() && v.cooldown_time <= 0 && v.charge < 15)  // Waffle: Prevent turning while shooting
 			{
 				this.SetFacingLeft(false);
 			}
