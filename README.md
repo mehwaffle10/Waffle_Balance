@@ -74,7 +74,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Fire
 - Can spread diagonally
-- Can spread from non-player blobs
+- Can spread from non-player and non-vehicle blobs
 
 ### Gold
 - Gives 8 coins per hit instead of gold
@@ -142,6 +142,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Vehicles
 - Drivers are protected from damage besides drowning
+- Drivers take burn damage if their vehicle is on fire
 - Take full damage from swords and arrows
 - Take 3x damage from builders instead of 2x
 - Take 5x damage from bomb arrows instead of 8x
