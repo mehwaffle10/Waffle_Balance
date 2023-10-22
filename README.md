@@ -225,6 +225,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Doubled the amount of vertical spread on catapult shots
 - Can hold 200 stone in reserve
 - Cost 180 coins
+- Fixed arm angle not being correct when deployed from a crate
 
 ### Ballistas
 - Can aim up to 60° lower
