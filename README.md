@@ -203,6 +203,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer turn around while firing or on cooldown
 - Can readd wheels after immobilizing
 - Driver is also gunner, gunner seat is removed
+- Drivers render in front of arms but behind front layers
 - Vehicle driving changes to be able to drive over terrain better
     - Lowered center of mass
     - Removed shape elasticity

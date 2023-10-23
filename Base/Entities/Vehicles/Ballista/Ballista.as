@@ -261,14 +261,15 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
-	attachedPoint.offsetZ = 1.0f;
-	UpdateFrontLayer(this.getSprite(), attached, false);
+	attachedPoint.offsetZ = -1.83f;  // Waffle: Don't render in front of front layer
+	// UpdateFrontLayer(this.getSprite(), attached, false);  // Waffle: No dynamic front layer
 }
 
-void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint @attachedPoint)
-{
-	UpdateFrontLayer(this.getSprite(), detached, true);
-}
+// Waffle: No dynamic front layer
+// void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint @attachedPoint)
+// {
+// 	UpdateFrontLayer(this.getSprite(), detached, true);
+// }
 
 void UpdateFrontLayer(CSprite@ sprite, CBlob@ occupied, const bool &in visible)
 {

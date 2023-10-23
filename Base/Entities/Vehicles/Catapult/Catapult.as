@@ -320,4 +320,10 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 		this.server_PutInInventory(attached);
 		server_LoadAmmo(this, attached, v.getCurrentAmmo().fire_amount, v);
 	}
+
+    // Waffle: Render people in gunner in front of arm
+    if (attachedPoint.name == "GUNNER")
+    {
+        attachedPoint.offsetZ = -3.0f;
+    }
 }
