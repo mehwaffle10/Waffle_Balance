@@ -77,7 +77,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can spread from non-player and non-vehicle blobs
 
 ### Gold
-- Gives 8 coins per hit instead of gold
+- Gives 10 coins per hit instead of gold
 - Gold is only present in middle of map
 - No longer damaged by explosives
 - Can no longer be drilled
