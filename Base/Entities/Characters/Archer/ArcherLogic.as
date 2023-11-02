@@ -805,7 +805,7 @@ bool grappleHitMap(ArcherInfo@ archer, CMap@ map, const f32 dist = 16.0f)
 
 bool shouldReleaseGrapple(CBlob@ this, ArcherInfo@ archer, CMap@ map)
 {
-	return !grappleHitMap(archer, map) || this.isKeyPressed(key_use);
+	return !grappleHitMap(archer, map);  // || this.isKeyPressed(key_use);  // Waffle: Use key doesn't cancel grapple
 }
 
 bool canSend(CBlob@ this)
