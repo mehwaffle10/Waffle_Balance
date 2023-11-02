@@ -26,7 +26,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	}
 
     // Waffle: Don't collide with attached blobs
-    if (blob.isAttached())
+    if (blob.isAttached() || this.isAttached())
     {
         return false;
     }
