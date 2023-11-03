@@ -210,7 +210,7 @@ void onDie(CBlob@ this)
 		for(u16 i = 0; i < blobs.length; i++)
 		{
 			CBlob@ target = blobs[i];
-			if (target.hasTag("flesh") &&
+			if (target.hasTag("flesh") && !target.hasTag("vehicle protection") &&
 			(target.getTeamNum() != this.getTeamNum() || target.getPlayer() is this.getDamageOwnerPlayer()))
 			{
 				this.server_Hit(target, POSITION, Vec2f_zero, 8.0f, Hitters::mine_special, true);
