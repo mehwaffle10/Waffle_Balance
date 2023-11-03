@@ -121,6 +121,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Buildings
 - Can no longer be built on top of crates or boats
+- Shops close and can not be opened when stunned
 
 ### Siege Shop
 - Costs 400 wood total
