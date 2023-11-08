@@ -62,7 +62,6 @@ void ChangeTeam(CPlayer@ player, u8 team, string[] args)
     CPlayer@ target = player !is null && player.isMod() && args.length > 0 ? GetPlayerByIdent(args[0], player) : player;
     if (target is null)
     {
-        LocalError("Invalid target", player);
         return;
     }
 
