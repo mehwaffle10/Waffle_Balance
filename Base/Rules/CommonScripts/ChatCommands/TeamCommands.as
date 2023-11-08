@@ -1,7 +1,8 @@
 
-#include "WaffleUtilities"
+#include "WaffleUtilities.as"
 #include "CTF_SharedClasses.as"
 #include "ChatCommand.as"
+#include "SwitchFromSpec.as"
 
 void onInit(CRules@ this)
 {
@@ -58,15 +59,29 @@ class SpecCommand : ChatCommand
 
 void ChangeTeam(CPlayer@ player, u8 team, string[] args)
 {
-    CPlayer@ target = player !is null && player.isMod() && args.length > 0 ? GetPlayerByIdent(args[0]) : player;
-    if (!isServer() || target is null)
+    CPlayer@ target = player !is null && player.isMod() && args.length > 0 ? GetPlayerByIdent(args[0], player) : player;
+    if (target is null)
     {
+        LocalError("Invalid target", player);
         return;
     }
-    RulesCore@ core;
-    getRules().get("core", @core);
-    if (core !is null)
+
+    if (!CanSwitchFromSpec(getRules(), player, team))
     {
-        core.ChangePlayerTeam(target, team);
+        LocalError("You can not switch to that team", player);
+    }
+
+    if (player.isMod())
+    {
+        RulesCore@ core;
+        getRules().get("core", @core);
+        if (isServer() && core !is null)
+        {
+            core.ChangePlayerTeam(target, team);
+        }
+    }
+    else
+    {
+        target.client_ChangeTeam(team);
     }
 }
