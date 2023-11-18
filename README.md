@@ -92,6 +92,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Purchaseable at the quarters for 100 coins
 - Saplings can no longer be placed on each other
 - Can build buildings behind trees
+- Can be placed on players
 
 ### Holidays
 - Force default texture pack

@@ -200,7 +200,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 							!b.hasTag("dead") &&
 							!b.hasTag("material") &&
 							!b.hasTag("projectile") &&
-							!(isSeed && b.hasTag("building")))  // Waffle: Allow placing seeds on building
+							!(isSeed && (b.hasTag("building") || b.hasTag("player"))))  // Waffle: Allow placing seeds on building and players
 						{
 							f32 angle_decomp = Maths::FMod(Maths::Abs(b.getAngleDegrees()), 180.0f);
 							bool rotated = angle_decomp > 45.0f && angle_decomp < 135.0f;
@@ -221,7 +221,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		if (isSeed)
 		{
 			// from canGrow.as
-			return canGrowAt(this, p);  // Waffle: Use the proper function instead of copy pasting it
+			return canGrowAt(blob, p, true);  // Waffle: Use the proper function instead of copy pasting it
 			// return (map.isTileGround(map.getTile(p + Vec2f(0, 8)).type));
 
 		}

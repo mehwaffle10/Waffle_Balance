@@ -19,17 +19,36 @@ bool isNotTouchingOthers(CBlob@ this)
 	return true;
 }
 
-bool canGrowAt(CBlob@ this, Vec2f pos)
+bool canGrowAt(CBlob@ this, Vec2f pos, bool prospective=false)
 {
+    CMap@ map = getMap();
+
 	if (!this.getShape().isStatic()) // they can be static from grid placement
 	{
-		if (!this.isOnGround() || this.isInWater() || this.isAttached() || !isNotTouchingOthers(this))
+        // Waffle: Add prospective checking for another position
+        if (prospective)
+        {
+            if (!map.isTileSolid(pos + Vec2f(0, map.tilesize)) || map.isInWater(pos))
+            {
+                return false;
+            }
+
+            CBlob@[] overlapping;
+            map.getBlobsAtPosition(pos, overlapping);
+            for (uint i = 0; i < overlapping.length; i++)
+            {
+                CBlob@ blob = overlapping[i];
+                if (blob.getName() == "seed" || blob.getName() == "tree_bushy" || blob.getName() == "tree_pine")
+                {
+                    return false;
+                }
+            }
+        }
+		else if (!this.isOnGround() || this.isInWater() || this.isAttached() || !isNotTouchingOthers(this))
 		{
 			return false;
 		}
 	}
-
-	CMap@ map = getMap();
 
 	/*if ( map.isTileGrass( map.getTile( pos ) )) {
 	return false;
