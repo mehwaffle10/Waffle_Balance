@@ -370,6 +370,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Keg
 - Explode in a circular 6 block radius instead of doing bomberman plus shape
+- Deal double damage to structures
+- Deal full damage in the inner 80% of their explosion instead of 70%
+    - Can 1-shot a tunnel from a 1-wide wall on the side or 2-tall wall vertically
 - Improved explosion visuals
 - Ignite from any fire damage
 - Fixed fuse sound not resetting when extinguished

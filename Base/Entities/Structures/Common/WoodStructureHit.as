@@ -38,6 +38,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			dmg = 1.0f;
 			break;
 
+        case Hitters::keg:  // Waffle: Double keg damage to structures so they can 1 shot tunnels in the inner radius
 		case Hitters::bomb:
 			dmg *= 2.0f;  // Waffle: Up bomb damage to one shot wood doors
 			break;
