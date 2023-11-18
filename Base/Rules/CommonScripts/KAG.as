@@ -8,10 +8,11 @@ void onInit(CRules@ this)
 	LoadDefaultMapLoaders();
 	LoadDefaultGUI();
 
-	if (isServer())
-	{
-		getSecurity().reloadSecurity();
-	}
+    // Waffle: Reload security on clients
+	// if (isServer())
+	// {
+    getSecurity().reloadSecurity();
+	// }
 
 	sv_gravity = 9.81f;
 	particles_gravity.y = 0.25f;
