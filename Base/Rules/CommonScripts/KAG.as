@@ -113,3 +113,11 @@ void onExitChat(CRules @this)
 	if (localblob !is null)
 		set_emoteByCommand(localblob, "");
 }
+
+void onNewPlayerJoin(CRules@ this, CPlayer@ player)
+{
+    if (isServer())
+    {
+        getSecurity().sendSeclevs();
+    }
+}
