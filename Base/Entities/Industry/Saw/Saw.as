@@ -160,7 +160,7 @@ bool canSaw(CBlob@ this, CBlob@ blob)
 	}
 
 	//flesh blobs & mines have to be fed into the saw part
-	if (blob.hasTag("flesh") || (name == "mine"))
+	if (blob.hasTag("flesh"))  // || (name == "mine"))  // Waffle: Mines don't need to be fed through the top
 	{
 		Vec2f pos = this.getPosition();
 		Vec2f bpos = blob.getPosition();
