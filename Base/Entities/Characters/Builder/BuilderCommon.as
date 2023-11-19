@@ -34,6 +34,8 @@ Vec2f getBuildingOffsetPos(CBlob@ blob, CMap@ map, Vec2f required_tile_space)
 
 CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 {
+
+    
 	if (index >= blocks.length)
 	{
 		return null;
@@ -58,39 +60,8 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 
 	if (b.buildOnGround)
 	{
-		const bool onground = this.isOnGround();
-
-        // Waffle: Make sure there's a block or platform underneath
         CMap@ map = getMap();
-        bool supported = false;
-        Vec2f below = this.getPosition() + Vec2f(0, (this.getWidth() + map.tilesize) / 2);
-        Vec2f below_tile_pos = map.getTileSpacePosition(below);
-        if (below_tile_pos.y >= 3 && below_tile_pos.y < map.tilemapheight &&
-            below_tile_pos.x >= 2 && below_tile_pos.x <= map.tilemapwidth - 3)
-        {
-            for (s8 x = -1; x <= 1; x++)
-            {
-                Vec2f check_pos = below + Vec2f(x, 0) * map.tilesize;
-                CBlob@[] blobs_below;
-                map.getBlobsAtPosition(check_pos, blobs_below);
-                for (u8 i = 0; i < blobs_below.length; i++)
-                {
-                    CBlob@ blob = blobs_below[i];
-                    if (blob !is null && (blob.hasTag("door") || blob.isPlatform() && blob.getAngleDegrees() == 0.0f))
-                    {
-                        supported = true;
-                        break;
-                    }
-                }
-
-                if (map.isTileSolid(map.getTile(check_pos).type) || supported)
-                {
-                    supported = true;
-                    break;
-                }
-            }
-        }
-        bool fail = !onground || !supported;
+        bool fail = !fakeOnGround(map, this);  // Waffle: Make sure there's a supporting block or blob underneath
 
 		Vec2f space = Vec2f(b.size.x / 8, b.size.y / 8);
 		Vec2f offsetPos = getBuildingOffsetPos(this, map, space);
@@ -269,4 +240,38 @@ void ClearCarriedBlock(CBlob@ this)
 		carried.Untag("temp blob");
 		carried.server_Die();
 	}
+}
+
+bool fakeOnGround(CMap@ map, CBlob@ this)
+{
+    // Waffle: Make sure there's a supporting block or blob underneath
+    bool supported = false;
+    Vec2f below = this.getPosition() + Vec2f(0, (this.getWidth() + map.tilesize) / 2);
+    Vec2f below_tile_pos = map.getTileSpacePosition(below);
+    if (below_tile_pos.y >= 3 && below_tile_pos.y < map.tilemapheight &&
+        below_tile_pos.x >= 2 && below_tile_pos.x <= map.tilemapwidth - 3)
+    {
+        for (s8 x = -1; x <= 1; x++)
+        {
+            Vec2f check_pos = below + Vec2f(x, 0) * map.tilesize;
+            CBlob@[] blobs_below;
+            map.getBlobsAtPosition(check_pos, blobs_below);
+            for (u8 i = 0; i < blobs_below.length; i++)
+            {
+                CBlob@ blob = blobs_below[i];
+                if (blob !is null && (blob.hasTag("door") || blob.isPlatform() && blob.getAngleDegrees() == 0.0f))
+                {
+                    supported = true;
+                    break;
+                }
+            }
+
+            if (map.isTileSolid(map.getTile(check_pos).type) || supported)
+            {
+                supported = true;
+                break;
+            }
+        }
+    }
+    return this.isOnGround() && supported;
 }
