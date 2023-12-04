@@ -12,7 +12,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			break;
 
 		case Hitters::sword:
-			// Waffle: Swords do full damage
+			// Waffle: Swords do increased damage
 			// if (dmg <= 1.0f)
 			// {
 			// 	dmg = 0.25f;
@@ -21,6 +21,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			// {
 			// 	dmg = 0.5f;
 			// }
+            dmg *= 1.5f;
 			break;
 
 		case Hitters::bomb:

@@ -148,7 +148,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Vehicles
 - Drivers are protected from damage besides drowning
 - Drivers take burn damage if their vehicle is on fire
-- Take full damage from swords and arrows
+- Take full damage from arrows
+- Take 1.5x damage from swords
+- Can collide when attached (can be shot)
 - Take 3x damage from builders instead of 2x
 - Take 5x damage from bomb arrows instead of 8x
 - Take 4.5x damage from kegs
@@ -244,12 +246,13 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Need a 5 x 5 area to deploy
 
 ### Mounted Bow
-- Health increased from 2 to 20
+- Health increased from 2 to 10
 - Can fire every 15 ticks instead of every 25 ticks (every .75 seconds instead of 1.25 seconds)
 - Arrows no longer decay
 - Arrows no longer have random inaccuracy
 - Arrows no longer have 2x drag
 - Launch speed reduced from 25 to 21
+- Can be hit by enemy projectiles
 
 ## BUILDER SHOP
 

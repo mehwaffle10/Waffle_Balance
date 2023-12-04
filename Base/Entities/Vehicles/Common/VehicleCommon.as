@@ -96,7 +96,7 @@ void Vehicle_Setup(CBlob@ this, const f32 &in move_speed, const f32 &in turn_spe
 	this.addCommandID("swap_ammo");
 	this.addCommandID("recount ammo");
 	this.Tag("vehicle");
-	this.getShape().getConsts().collideWhenAttached = false;
+	this.getShape().getConsts().collideWhenAttached = true;  // Waffle: Allow collisions when attached
 	this.set("VehicleInfo", @v);
 }
 
