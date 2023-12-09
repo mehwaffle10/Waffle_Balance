@@ -39,5 +39,5 @@ bool isTreeSeed(CBlob@ blob)
 
 bool isLimitingSeed(CBlob@ blob)
 {
-	return blob !is null && !blob.isAttached() && blob.isOnGround() && isTreeSeed(blob) && canGrowAt(blob, blob.getPosition());
+	return blob !is null && !blob.isAttached() && (blob.isOnGround() || blob.getShape() !is null && blob.getShape().isStatic()) && isTreeSeed(blob) && canGrowAt(blob, blob.getPosition());
 }

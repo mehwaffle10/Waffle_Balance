@@ -348,7 +348,7 @@ bool canProduce(CBlob@ this)
 	for (uint i = 0; i < blobs.length; i++)
 	{
 		CBlob@ blob = blobs[i];
-		if (blob is null)
+		if (blob is null || blob is this)
 		{
 			continue;
 		}
