@@ -145,7 +145,7 @@ void onInit(CBlob@ this)
 		front.addAnimation("default", 0, false);
 		int[] frames = { 0, 4, 5 };
 		front.animation.AddFrames(frames);
-		front.SetRelativeZ(510.0f);  // Waffle: Front layer renders in front of most things
+		front.SetRelativeZ(310.0f);  // Waffle: Front layer renders in front of most things
         front.SetOffset(Vec2f(-6, 0));
 	}
 
