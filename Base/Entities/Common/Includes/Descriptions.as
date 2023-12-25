@@ -87,7 +87,7 @@ namespace Descriptions
 	beer                       = getTranslatedString("A refreshing mug of beer."),
 	meal                       = getTranslatedString("A hearty meal to get you back on your feet."),
 	// egg                        = getTranslatedString("A suspiciously undercooked egg, maybe it will hatch."),
-	chicken                    = getTranslatedString("A chicken to that can lay eggs and let you glide."),  // Waffle: Chickens are bought directly instead of eggs
+	chicken                    = getTranslatedString("A chicken that can lay eggs and let you glide."),  // Waffle: Chickens are bought directly instead of eggs
 	burger                     = getTranslatedString("A burger to go."),
 	seed                       = getTranslatedString("A seed that will grow into a pine tree. Can only grow near at most one other tree."),  // Waffle: Seeds can be bought from quarters. Try to explain tree limit
 
