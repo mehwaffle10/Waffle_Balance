@@ -1,5 +1,7 @@
 //common "can a plant grow at this tile" code
 
+const string LAST_BLOCKED_TIME = "last blocked time";
+
 bool isNotTouchingOthers(CBlob@ this, CMap@ map, Vec2f pos)
 {
 	CBlob@[] overlapping;
@@ -7,7 +9,7 @@ bool isNotTouchingOthers(CBlob@ this, CMap@ map, Vec2f pos)
     for (uint i = 0; i < overlapping.length; i++)
     {
         CBlob@ blob = overlapping[i];
-        if (blob !is this && (blob.getName() == "seed" || blob.getName() == "tree_bushy" || blob.getName() == "tree_pine" || (!blob.hasTag("building") && blob.getShape().isStatic())))
+        if (blob !is this && (blob.getName() == "seed" || (!blob.hasTag("building") && blob.getShape().isStatic())))
         {
             return false;
         }
@@ -19,21 +21,18 @@ bool isNotTouchingOthers(CBlob@ this, CMap@ map, Vec2f pos)
 bool canGrowAt(CBlob@ this, Vec2f pos, bool prospective=false)
 {
     CMap@ map = getMap();
-	if (!this.getShape().isStatic()) // they can be static from grid placement
-	{
-        // Waffle: Add prospective checking for another position
-        if (prospective)
-        {
-            if (!map.isTileSolid(pos + Vec2f(0, map.tilesize)) || map.isInWater(pos) || !isNotTouchingOthers(this, map, pos))
-            {
-                return false;
-            }
-        }
-        else if (!this.isOnGround() || this.isInWater() || this.isAttached() || !isNotTouchingOthers(this, map, pos))
+    // Waffle: Add prospective checking for another position
+    if (prospective)
+    {
+        if (!map.isTileSolid(pos + Vec2f(0, map.tilesize)) || map.isInWater(pos) || !isNotTouchingOthers(this, map, pos))
         {
             return false;
-		}
-	}
+        }
+    }
+    else if (!(this.getShape().isStatic() || this.isOnGround()) || this.isInWater() || this.isAttached() || !isNotTouchingOthers(this, map, pos))  // Waffle: Still check for static blobs
+    {
+        return false;
+    }
 
 	/*if ( map.isTileGrass( map.getTile( pos ) )) {
 	return false;

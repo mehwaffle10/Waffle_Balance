@@ -93,7 +93,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Saplings can no longer be placed on each other
 - Can build buildings behind trees
 - Can be placed on non-static blobs
-- Can no longer grow inside of static blobs
+- Can no longer grow inside of static blobs or on other trees
 
 ### Holidays
 - Force default texture pack
