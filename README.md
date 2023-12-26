@@ -92,7 +92,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Purchaseable at the quarters for 100 coins
 - Saplings can no longer be placed on each other
 - Can build buildings behind trees
-- Can be placed on players
+- Can be placed on non-static blobs
+- Can no longer grow inside of static blobs
 
 ### Holidays
 - Force default texture pack
