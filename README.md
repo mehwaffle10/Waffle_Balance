@@ -144,9 +144,14 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Quarry
 - Costs 250 wood total and 50 stone
-- Produces 50 stone for 150 wood every 45 seconds
+- Produces 20 stone for 100 wood every 15 seconds after starting
+    - Consumes almost all of the wood from the trees in front of it
 - Can only produce with two trees or saplings that can grow overlapping
 - Added sounds, button hints, and description for feedback
+- Can hold 800 wood total
+    - Shows full fuel level above 500 wood
+    - Shows mid fuel level above 200 wood
+    - Shows low fuel level above 0
 
 ### Ladders
 - Increased health from 1.5 to 2.5

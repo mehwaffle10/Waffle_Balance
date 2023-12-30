@@ -9,22 +9,22 @@ const string ore = "mat_stone";
 const string rare_ore = "mat_gold";
 
 //balance
-const int input = 150;					// input cost in fuel
-const int initial_output = 50;			// output amount in ore
-const int min_output = 50;				// minimal possible output in ore
+const int input = 100;					// input cost in fuel
+const int initial_output = 20;			// output amount in ore
+const int min_output = 20;				// minimal possible output in ore
 const int output_decrease = 0;			// by how much output decreases every time ore is dropped  // Waffle: Quarries never slow down
 const bool enable_rare = false;			// enable/disable
 const int rare_chance = 10;				// one-in
 const int rare_output = 20;				// output for rare ore
-const int conversion_frequency = 45;	// how often to convert, in seconds
+const int conversion_frequency = 15;	// how often to convert, in seconds
 const u8 producer_check_offset = 6;     // Waffle: Prevent trees from slightly off the quarry
 
 const int min_input = Maths::Ceil(input/initial_output);
 
 //fuel levels for animation
-const int max_fuel = 500;
-const int mid_fuel = 300;
-const int low_fuel = 150;
+const int max_fuel = 800;
+const int mid_fuel = 500;
+const int low_fuel = 200;
 
 //property names
 const string fuel_prop = "fuel_level";
@@ -33,6 +33,7 @@ const string unique_prop = "unique";
 const string last_working_prop = "last_working";  // Waffle: Add power up and down sounds
 const string last_working_time = "last_working_time";
 const string last_stopped_time = "last_stopped_time";
+const string next_production_time = "next_production_time";  // Waffle: Remove RNG from production time
 
 
 void onInit(CSprite@ this)
@@ -104,36 +105,55 @@ void onTick(CBlob@ this)
 		if (!canProduce(this))
 		{
 			this.set_u32(last_stopped_time, getGameTime());
-			if (this.get_u32(last_working_time) + 10 < getGameTime())  // Waffle: Need to delay since seeds take a couple ticks to spawn and land on the ground
+			if (this.get_bool(working_prop) && this.get_u32(last_working_time) + 10 < getGameTime())  // Waffle: Need to delay since seeds take a couple ticks to spawn and land on the ground
 			{
 				this.set_bool(working_prop, false);
 				this.Sync(working_prop, true);
 			}
 		}
-		else if (this.get_u32(last_stopped_time) + 10 < getGameTime())
+		else
 		{
-			this.set_u32(last_working_time, getGameTime());
-			PickupOverlap(this);  // Waffle: Quarries can pick up wood
-			int blobCount = this.get_s16(fuel_prop);
-			if ((blobCount >= min_input))
-			{
-				this.set_bool(working_prop, true);
+            this.set_u32(last_working_time, getGameTime());
+            if (this.get_u32(last_stopped_time) + 10 < getGameTime())
+            {
+                int oldBlobCount = this.get_s16(fuel_prop);
+                PickupOverlap(this);  // Waffle: Quarries can pick up wood
+                int blobCount = this.get_s16(fuel_prop);
+                if ((blobCount >= min_input))
+                {
+                    bool oldWorking = this.get_bool(working_prop);
+                    if (!oldWorking)
+                    {
+                        this.set_bool(working_prop, true);
+                        this.set_u32(next_production_time, getGameTime() + conversion_frequency * getTicksASecond());
+                    }
 
-				//only convert every conversion_frequency seconds
-				if (getGameTime() % (conversion_frequency * getTicksASecond()) == this.get_u8(unique_prop))
-				{
-					spawnOre(this);
+                    //only convert every conversion_frequency seconds
+                    u32 next_production = this.get_u32(next_production_time);
+                    if (next_production <= getGameTime())  // Waffle: Remove RNG from production time
+                    {
+                        spawnOre(this);
+                        this.set_u32(next_production_time, next_production + conversion_frequency * getTicksASecond());  // Waffle: Remove RNG from production time
 
-					if (blobCount - input < min_input)
-					{
-						this.set_bool(working_prop, false);
-					}
+                        if (blobCount - input < min_input)
+                        {
+                            this.set_bool(working_prop, false);
+                        }
+                    }
 
-					this.Sync(fuel_prop, true);
-				}
+                    bool newWorking = this.get_bool(working_prop);
+                    if (newWorking != oldWorking)
+                    {
+                        this.Sync(working_prop, true);
+                    }
+                }
 
-				this.Sync(working_prop, true);
-			}
+                int newBlobCount = this.get_s16(fuel_prop);
+                if (newBlobCount != oldBlobCount)
+                {
+                    this.Sync(fuel_prop, true);
+                }
+            }
 		}
 	}
 
@@ -160,7 +180,6 @@ void onTick(CBlob@ this)
 		}
 		sprite.SetEmitSoundPaused(true);
 	}
-
 	this.set_bool(last_working_prop, working);  // Waffle: Fix an issue where change classes reloaded sprites, causing the power up and down sounds to play
 
 	//update sprite based on modified or synced properties
