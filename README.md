@@ -111,6 +111,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Z Indices
 - Adjusted Z index for the following items. A higher Z will render in front. Most things including players are at 0.
+- tree trunks         - ~-9.9  (Render in front of saws and buildings)
 - bucket              - 1
 - keg                 - 15
 - bomb bolts          - 18

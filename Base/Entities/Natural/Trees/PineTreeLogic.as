@@ -42,6 +42,8 @@ void onInit(CBlob@ this)
 
 	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", icon_frame, Vec2f(8, 32));
 	this.SetMinimapRenderAlways(true);
+
+    this.getSprite().SetZ(-9.99f);  // Waffle: Render trunk in front of saws
 }
 
 void GrowSprite(CSprite@ this, TreeVars@ vars)
@@ -99,7 +101,9 @@ void GrowSprite(CSprite@ this, TreeVars@ vars)
 
 					newsegment.SetAnimation(animGrow);
 					newsegment.ResetTransform();
-					newsegment.SetRelativeZ(-100.0f - vars.height);
+                    // Waffle: Render trunk in front of saws
+                    newsegment.SetRelativeZ(vars.height / 100.0f);
+					// newsegment.SetRelativeZ(-100.0f - vars.height);
 
 					newsegment.RotateBy(segment.angle, Vec2f(0, 0));
 
