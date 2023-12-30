@@ -89,6 +89,13 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Trees
 - Can only grow if there is no more than 1 other tree within 16 blocks
 	- Added visible bounding box around saplings and trees when holding a sapling
+- Removed RNG
+    - Pine and Bushy trees now have the same stats
+    - Always grow to 7 segments
+    - Grows a segment every 350 ticks
+    - Seeds grow into saplings in 500 ticks
+- Can be automatically harvested using saws
+    - Produces ~200 wood per minute
 - Purchaseable at the quarters for 100 coins
 - Saplings can no longer be placed on each other
 - Can build buildings behind trees
