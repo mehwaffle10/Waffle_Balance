@@ -121,6 +121,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - log                 - 30
 - crate               - 35
 - bush, grain, flower - 40
+- saplings            - 45
 
 ### Bison
 - Hit vehicles instead of their drivers
