@@ -9,7 +9,7 @@ bool isNotTouchingOthers(CBlob@ this, CMap@ map, Vec2f pos)
     for (uint i = 0; i < overlapping.length; i++)
     {
         CBlob@ blob = overlapping[i];
-        if (blob !is this && (blob.getName() == "seed" || (!blob.hasTag("building") && blob.getShape().isStatic())))
+        if (blob !is this && (blob.getName() == "seed" || (!blob.hasTag("building") && blob.getShape().isStatic() && !blob.hasTag("scenary"))))
         {
             return false;
         }

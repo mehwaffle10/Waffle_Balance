@@ -93,7 +93,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - Pine and Bushy trees now have the same stats
     - Always grow to 7 segments
     - Grows a segment every 350 ticks
-    - Seeds grow into saplings in 500 ticks
+    - Saplings turn into trees in 500 ticks
 - Can be automatically harvested using saws
     - Produces ~200 wood per minute
 - Purchaseable at the quarters for 100 coins
@@ -101,6 +101,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can build buildings behind trees
 - Can be placed on non-static blobs
 - Can no longer grow inside of static blobs or on other trees
+- Can no longer build blocks on top of saplings placed with left click
 
 ### Holidays
 - Force default texture pack
@@ -435,3 +436,5 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can now be bought for 100 coins
 - Can no longer be placed on top of each other
 - Now show tree limit around existing trees and saplings while held
+- Can no longer place blocks on top of them when placed with left click
+- Turn into trees in 500 ticks

@@ -232,7 +232,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 
 bool isBlocking(CBlob@ blob)
 {
-	if (blob.hasTag("pushedByDoor") || blob.hasTag("scenary") || blob.hasTag("projectile"))
+	if ((blob.hasTag("pushedByDoor") && !blob.getShape().isStatic()) || blob.hasTag("scenary") || blob.hasTag("projectile"))  // Waffle: Don't build on static things that can be pushed by doors
 		return false;
 
 	return blob.isCollidable() || blob.getShape().isStatic();
