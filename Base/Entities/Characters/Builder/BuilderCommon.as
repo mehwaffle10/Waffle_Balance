@@ -129,7 +129,8 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 					        !o_blob.isAttached() &&
 					        o_shape.isStatic() &&
 					        !o_shape.getVars().isladder &&
-							!o_blob.hasTag("tree"))  // Waffle: Exclude trees
+							!o_blob.hasTag("tree") &&    // Waffle: Exclude trees
+                            o_blob.getName() != "seed")  // Waffle: --
 					{
 						//check if any of those blobs are overlapping
 						Vec2f o_pos = o_blob.getPosition();

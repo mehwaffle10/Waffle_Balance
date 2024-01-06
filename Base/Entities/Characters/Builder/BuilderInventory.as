@@ -553,8 +553,9 @@ bool blobBlockingBuilding(CMap@ map, Vec2f v)
 			!o_blob.isAttached() &&
 			o_shape.isStatic() &&
 			!o_shape.getVars().isladder &&
-            !o_blob.hasTag("tree") &&   // Waffle: Buildings can be placed behind trees or over scenary
-            !o_blob.hasTag("scenary"))  // Waffle: --
+            !o_blob.hasTag("tree") &&      // Waffle: Buildings can be placed behind trees or over scenary
+            o_blob.getName() != "seed" &&  // Waffle: --
+            !o_blob.hasTag("scenary"))     // Waffle: --
 		{
 			return true;
 		}
