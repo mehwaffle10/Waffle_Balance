@@ -42,6 +42,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Lightened the sky above the top of the map a bit to improve visibility
 - Maps tend to have significantly shorter sky boxes
 
+### Dirt Backwall
+- Properly synced to clients
+
 ### Builder
 - Increased swing speed on man-made structures and wood
 - Decreased swing speed on dirt and gold
