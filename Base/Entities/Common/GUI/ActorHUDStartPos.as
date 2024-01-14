@@ -53,8 +53,8 @@ void DrawResupplyOnHUD(CBlob@ this, Vec2f tl)
 	int stone_amount = crate_stone_amount;  // matchtime_stone_amount;  // Waffle: --
 	if (getRules().isWarmup())
 	{
-		wood_amount = crate_warmup_wood_amount;  // warmup_wood_amount;     // Waffle: Resupply crate not builder resupply
-		stone_amount = crate_warmup_stone_amount;  // warmup_stone_amount;  // Waffle: --
+		wood_amount = crate_wood_amount;  // warmup_wood_amount;     // Waffle: Resupply crate not builder resupply
+		stone_amount = crate_stone_amount;  // warmup_stone_amount;  // Waffle: --
 	}
 
 	s32 next_items = getRules().get_s32(propname);
@@ -63,7 +63,7 @@ void DrawResupplyOnHUD(CBlob@ this, Vec2f tl)
 	string units = ((secs != 1) ? " seconds" : " second");
 
     // Waffle: Update text
-	string resupply_available = "Starting airdrop of {WOOD} wood and {STONE} stone supplied."  // getTranslatedString("Go to a builder shop or a respawn point to get a resupply of {WOOD} wood and {STONE} stone.")
+	string resupply_available = "Airdrops of {WOOD} wood and {STONE} stone will be supplied every 10 min after build phase."  // getTranslatedString("Go to a builder shop or a respawn point to get a resupply of {WOOD} wood and {STONE} stone.")
         .replace("{WOOD}", "" + wood_amount)
 		.replace("{STONE}", "" + stone_amount);
 
@@ -103,9 +103,7 @@ void DrawResupplyOnHUD(CBlob@ this, Vec2f tl)
 
 		if (hover)
 		{
-            // Waffle: Add second line of text
 			GUI::DrawText(resupply_available, icon_pos + Vec2f(icon_size.x * 2 - dim_res_av.x + 8, -24 - dim_res_av.y), color_white);
-            GUI::DrawText("More materials will be airdropped after build time.", icon_pos + Vec2f(icon_size.x * 2 - dim_res_av.x + 8, -24), color_white);
 		}
 	}
 }

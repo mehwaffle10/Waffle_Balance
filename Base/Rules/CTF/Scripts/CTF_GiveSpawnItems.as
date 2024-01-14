@@ -107,8 +107,8 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
 
 void Reset(CRules@ this)
 {
-	// Waffle: Do build phase resupply
-	this.set_s32(RESUPPLY_TIME_STRING, 1);
+	// Waffle: Don't do build phase resupply
+	this.set_s32(RESUPPLY_TIME_STRING, 9999999999);
 	
 	//restart everyone's timers
 	for (uint i = 0; i < getPlayersCount(); ++i) {

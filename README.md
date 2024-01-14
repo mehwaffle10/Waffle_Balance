@@ -19,9 +19,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer decay
 
 ### Build Phase
-- 150 seconds
+- 20 seconds
+- Bases are prebuilt
 - Can build extremely fast during build phase
-- Single crate at the start of build phase per team with 4000 wood and 2000 stone
 
 ### Fall Damage
 - TDM fall damage (takes 1.3x longer falls)
