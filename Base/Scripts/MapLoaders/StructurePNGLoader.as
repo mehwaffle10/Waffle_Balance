@@ -295,7 +295,7 @@ class StructurePNGLoader
 			case map_colors::platform_up:    autotile(offset); spawnBlob(map, "wooden_platform", offset, 255, true); break;
 			case map_colors::platform_right: autotile(offset); spawnBlob(map, "wooden_platform", offset, 255, true, Vec2f_zero,  90); break;
 			case map_colors::platform_down:  autotile(offset); spawnBlob(map, "wooden_platform", offset, 255, true, Vec2f_zero, 180); break;
-			case map_colors::platform_left:  autotile(offset); spawnBlob(map, "wooden_platform", offset, 255, true, Vec2f_zero, -90); break;
+			case map_colors::platform_left:  autotile(offset); spawnBlob(map, "wooden_platform", offset, 255, true, Vec2f_zero, 270); break;
 
 			// Doors
 			case map_colors::wooden_door_h_blue:   autotile(offset); spawnBlob(map, "wooden_door", offset,   0, true); break;
@@ -626,7 +626,7 @@ CBlob@ spawnBlob(CMap@ map, const string &in name, u8 team, Vec2f position, s16 
 {
     // Waffle: Base team off of position
 	CBlob@ blob = spawnBlob(map, name, team, position);
-	blob.setAngleDegrees(position.x < map.tilemapwidth * map.tilesize / 2 ? angle : -angle);
+	blob.setAngleDegrees(position.x < map.tilemapwidth * map.tilesize / 2 && angle % 180 == 90 ? angle : 360 - angle);
 
 	return blob;
 }
