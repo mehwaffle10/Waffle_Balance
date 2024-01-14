@@ -26,11 +26,6 @@ void Reset(CRules@ this)
         map.AddScript("DirtBackwallMapUpdates");
     }
 
-    if (!isServer())
-    {
-        return;
-    }
-
     MapFlag@ dirt_backwall_flags = MapFlag(map.tilemapwidth * map.tilemapheight);
     for (int x = 0; x < map.tilemapwidth; x++)
     {
