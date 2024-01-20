@@ -278,6 +278,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Saws
 - Automatically cut fully grown trees down that are behind them
+    - Will not automatically cut trees when there are not enough players on each team if the match has not started
 - Are now flammable
 - Take increased damage in alignment with `Wood Structure Damage` section above
 - Can destroy enemy mines from all sides instead of just the top

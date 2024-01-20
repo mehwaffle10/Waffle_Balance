@@ -4,6 +4,7 @@
 #include "GenericButtonCommon.as"
 #include "ParticleSparks.as"
 #include "TreeCommon.as"  // Waffle: Need tree vars
+#include "MaterialsPauseCommon.as"  // Waffle: Only generate materials with enough players
 
 const string toggle_id = "toggle_power";
 const string sawteammate_id = "sawteammate";
@@ -367,7 +368,7 @@ void onTick(CSprite@ this)
 void onTick(CBlob@ this)
 {
 	// Waffle: Automatically chop trees behind the saw if they're fully grown
-	if (this.getTickSinceCreated() % 15 == 0 && !this.isAttached() && getSawOn(this))
+	if (isServer() && this.getTickSinceCreated() % 15 == 0 && !this.isAttached() && getSawOn(this) && !materialsPaused())
 	{
 		CMap@ map = getMap();
 		if (map is null)
