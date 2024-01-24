@@ -48,7 +48,7 @@ void Config(CTFCore@ this)
 	this.scramble_teams = cfg.read_bool("scramble_teams", true);
 
 	//spawn after death time
-	this.spawnTime = getTicksASecond() * 5;  // (getTicksASecond() * cfg.read_s32("spawn_time", 15));  // Waffle: Override since cfg files are jank
+	this.spawnTime = getTicksASecond() * 8;  // (getTicksASecond() * cfg.read_s32("spawn_time", 15));  // Waffle: Override since cfg files are jank
 
 }
 
