@@ -8,7 +8,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ## GENERAL
 
 ### Respawn
-- Reduced from 10 to 5 seconds
+- Reduced from 10 to 8 seconds
 
 ### Resupplies
 - Removed for builders
