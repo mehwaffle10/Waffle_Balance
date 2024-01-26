@@ -25,6 +25,7 @@ class MountedBowInfo : VehicleInfo
 			// bullet.server_SetTimeToDie(-1);   // override lock
 			// bullet.server_SetTimeToDie(0.69f);
 			bullet.Tag("bow arrow");
+            bullet.set_u16("source_mounted_bow", this.getNetworkID()); // Waffle: Don't collide with this bow
 		}
 	}
 }

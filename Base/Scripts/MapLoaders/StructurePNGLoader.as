@@ -358,7 +358,7 @@ class StructurePNGLoader
 			// Ground siege
 			case map_colors::catapult:    autotile(offset); spawnVehicle(map, "catapult", offset, 0); break; // HACK: team for Challenge
 			case map_colors::ballista:    autotile(offset); spawnVehicle(map, "ballista", offset); break;
-			case map_colors::mountedbow:  autotile(offset); spawnBlob(map, "mounted_bow", offset, 255, true, Vec2f(0.0f, 4.0f)); break;
+			case map_colors::mountedbow:  autotile(offset); spawnVehicle(map, "mounted_bow", offset); break;  // spawnBlob(map, "mounted_bow", offset, 255, false, Vec2f(0.0f, 4.0f));  // Waffle: Don't make mounted bows static
 
 			// Water/air vehicles
 			case map_colors::longboat:    autotile(offset); spawnVehicle(map, "longboat", offset); break;
