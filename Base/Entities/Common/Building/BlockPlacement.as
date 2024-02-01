@@ -77,15 +77,15 @@ bool serverTileCheck(CBlob@ blob, u8 tileIndex, Vec2f cursorPos)
 		return false;
 
 	// Is our tile solid and are we trying to place it into a no build area
-	if (map.isTileSolid(tileIndex))
+    BuildBlock @blockToPlace = getBlockByIndex(blob, tileIndex);
+	if (map.isTileSolid(blockToPlace.tile))
 	{
 		pos = cursorPos + Vec2f(map.tilesize * 0.5f, map.tilesize * 0.5f);
 
-		if (map.getSectorAtPosition(pos, "no build") !is null)
+		if (map.getSectorAtPosition(pos, "no build") !is null || map.getSectorAtPosition(pos, "no solids") !is null)  // Waffle: Prevent blocks in no solids zone
 			return false;
 	}
 
-	BuildBlock @blockToPlace = getBlockByIndex(blob, tileIndex);
 	// Are we trying to place a tile on the same tile (usually due to lag)?
 	if (backtile.type == blockToPlace.tile)
 	{

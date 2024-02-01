@@ -98,7 +98,7 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
 		map.getSectorsAtPosition(pos, sectors);
 		for (u8 i = 0; i < sectors.length; i++)
 		{
-			if (sectors[i] !is null && sectors[i].name == "no build")
+			if (sectors[i] !is null && sectors[i].name == "no build" || sectors[i].name == "no solids" || sectors[i].name == "no blobs")  // Waffle: Prevent solids and blobs
 			{
 				CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
 				if (owner is null || !owner.hasTag("building") || !isTreeSeed(blobToPlace))
@@ -488,6 +488,7 @@ void onRender(CSprite@ this)
 
 		if (bc !is null)
 		{
+            print("bc.cursorClose: " + bc.cursorClose + ", bc.hasReqs: " + bc.hasReqs + ", bc.buildable: " + bc.buildable + ", bc.supported: " + bc.supported);
 			if (bc.cursorClose && bc.hasReqs && bc.buildable)
 			{
 				SColor color;

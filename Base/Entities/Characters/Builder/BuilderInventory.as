@@ -489,9 +489,19 @@ void onRender(CSprite@ this)
 
 						if (!bc.buildableAtPos && !bc.sameTileOnBack) //no build indicator drawing
 						{
+                            // Waffle: Add no solids and no blobs
 							CMap@ map = getMap();
-							Vec2f middle = blob.getAimPos() + Vec2f(map.tilesize*0.5f, map.tilesize*0.5f);
-							CMap::Sector@ sector = map.getSectorAtPosition( middle, "no build");
+							// Vec2f middle = blob.getAimPos() + Vec2f(map.tilesize*0.5f, map.tilesize*0.5f);  // Waffle: Snap to grid for check
+                            Vec2f middle = map.getAlignedWorldPos(blob.getAimPos());
+							CMap::Sector@ sector = map.getSectorAtPosition( middle, "no blobs");
+                            if (sector is null || !bc.blobActive)
+                            {
+                                @sector = map.getSectorAtPosition( middle, "no solids");  
+                            }
+                            if (sector is null && !bc.blockActive)
+                            {
+                                @sector = map.getSectorAtPosition( middle, "no build");
+                            }
 							if (sector !is null)
 							{
 								GUI::DrawRectangle( getDriver().getScreenPosFromWorldPos(sector.upperleft), getDriver().getScreenPosFromWorldPos(sector.lowerright), SColor(0x65ed1202) );

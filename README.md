@@ -41,6 +41,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Blobs no longer collide with the ceiling on non-cave maps (no blocks at the top of the map)
 - Lightened the sky above the top of the map a bit to improve visibility
 - Maps tend to have significantly shorter sky boxes
+- Non-cave maps have extra sectors at the top of the map in addition to the normal 3-block tall no build sector:
+    - No blobs are allowed to be built in the top 7 blocks
+    - No solid blocks are allowed to be built in the top 6 blocks
+    - This allows doors to always be blocked and shops to always be built on top of bases
 
 ### Dirt Backwall
 - Properly synced to clients

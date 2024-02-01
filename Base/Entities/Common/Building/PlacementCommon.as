@@ -166,7 +166,11 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 			}
 		}
 
-		if (!isSeed && !isLadder && (buildSolid || isSpikes || isDoor || isPlatform) && map.getSectorAtPosition(middle, "no build") !is null)
+        // Waffle: Add no solids and no blobs
+        const bool no_build  = (buildSolid || isSpikes || isDoor || isPlatform) && map.getSectorAtPosition(middle, "no build") !is null;
+        const bool no_solids = buildSolid && map.getSectorAtPosition(middle, "no solids") !is null;
+        const bool no_blobs  = blob !is null && map.getSectorAtPosition(middle, "no blobs") !is null;
+		if (!isSeed && !isLadder && (no_build || no_solids || no_blobs))
 		{
 			return false;
 		}
