@@ -5,29 +5,29 @@
 void onInit(CRules@ this)
 {
     this.addCommandID(DIRT_BACKWALL_SYNC_COMMAND);
-    Reset(this);
+    onRestart(this);
 }
 
 void onRestart(CRules@ this)
 {
-    Reset(this);
-}
-
-void Reset(CRules@ this)
-{
+    print("isServer: " + isServer() + ", DirtBackwallSyncCore.as onRestart Start");
     CMap@ map = getMap();
     if (map is null)
     {
+        print("isServer: " + isServer() + ", DirtBackwallSyncCore.as onRestart map is null");
         return;
     }
 
+    print("isServer: " + isServer() + ", DirtBackwallSyncCore.as onRestart map is not null");
     if (!map.hasScript("DirtBackwallMapUpdates"))
     {
+        print("isServer: " + isServer() + ", DirtBackwallSyncCore.as onRestart adding DirtBackwallMapUpdates");
         map.AddScript("DirtBackwallMapUpdates");
     }
 
     if (!isServer())
     {
+        print("isServer: " + isServer() + ", DirtBackwallSyncCore.as onRestart clearing DIRT_BACKWALL_FLAGS");
         this.set(DIRT_BACKWALL_FLAGS, null);
         return;
     }
@@ -69,11 +69,13 @@ void onCommand(CRules@ this, u8 cmd, CBitStream@ params)
 {
     if (isClient() && cmd == this.getCommandID(DIRT_BACKWALL_SYNC_COMMAND))
     {
+        print("isServer: " + isServer() + ", DirtBackwallSyncCore.as onCommand DIRT_BACKWALL_SYNC_COMMAND Start");
         u32 length;
         if (!params.saferead_u32(length))
         {
             return;
         }
+        print("isServer: " + isServer() + ", DirtBackwallSyncCore.as onCommand DIRT_BACKWALL_SYNC_COMMAND read length");
         MapFlag@ dirt_backwall_flags = MapFlag(length);
         for (u32 i = 0; i < length; i++)
         {
@@ -84,6 +86,7 @@ void onCommand(CRules@ this, u8 cmd, CBitStream@ params)
             }
             dirt_backwall_flags.flags[i] = dirt_backwall_flag;
         }
+        print("isServer: " + isServer() + ", DirtBackwallSyncCore.as onCommand DIRT_BACKWALL_SYNC_COMMAND read values");
         this.set(DIRT_BACKWALL_FLAGS, dirt_backwall_flags);
     }
 }

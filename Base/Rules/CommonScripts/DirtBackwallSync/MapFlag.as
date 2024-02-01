@@ -5,6 +5,7 @@ class MapFlag
 
     MapFlag(u32 size)
     {
+        print("isServer: " + isServer() + ", MapFlag.as constructor size: " + size);
         flags = bool[](size);
     }
 
