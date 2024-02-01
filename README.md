@@ -69,13 +69,13 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- wood shops = 10 jabs
     - quarry     = 19 jabs
 	- tunnels    = 37 jabs
-
+- Drills do 2x damage to wood and stone structures
 
 ### Explosives
 - Ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - Changed the threshold for a strong launch from 30% to 50% of the blast radius to make bomb jumps easier especially on laggy servers, damage remains the same
-- Do full damage to stone structures instead of half (3 shot stone doors and tunnels, 2 shot storage)
-- Do 2x damage to wood structures instead of 1.4x (1 shot wood doors, already 1 shot wood buildings)
+- Do 1.2x damage to stone structures instead of half (2 shot stone doors and spikes)
+- Do 2x damage to wood structures instead of 1.4x (1 shot wood doors, already 1 shot wood buildings, 3 shot tunnel)
 - No longer damage gold
 
 ### Fire
@@ -354,6 +354,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer deals overheat damage
 - Blocked completely by shield
 - Give 100% of tile resources dug
+- Drills do 2x damage to wood and stone structures
 - Only hits dirt and stone/thickstone once per hit instead of twice
 - Digging stone heats up the drill at the same rate as constructed block
 - Dig pure dirt 3x slower and properly detected (30 ticks instead of 10)

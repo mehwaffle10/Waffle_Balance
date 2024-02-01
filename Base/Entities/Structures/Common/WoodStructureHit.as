@@ -12,6 +12,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	switch (customData)
 	{
 		case Hitters::builder:
+        case Hitters::drill:  // Waffle: Buff drill damage to doors
 			dmg *= 2.0f;
 			break;
 
