@@ -26,6 +26,12 @@ void Reset(CRules@ this)
         map.AddScript("DirtBackwallMapUpdates");
     }
 
+    if (!isServer())
+    {
+        this.set(DIRT_BACKWALL_FLAGS, null);
+        return;
+    }
+
     MapFlag@ dirt_backwall_flags = MapFlag(map.tilemapwidth * map.tilemapheight);
     for (int x = 0; x < map.tilemapwidth; x++)
     {
@@ -36,6 +42,7 @@ void Reset(CRules@ this)
         }
     }
     this.set(DIRT_BACKWALL_FLAGS, @dirt_backwall_flags);
+    dirt_backwall_flags.Sync(this, null, DIRT_BACKWALL_SYNC_COMMAND);
 }
 
 bool hasDirtBackwall(TileType type)

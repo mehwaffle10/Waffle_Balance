@@ -10,7 +10,7 @@ class MapFlag
 
     void Sync(CRules@ rules, CPlayer@ player, string command)
     {
-        if (!isServer() || rules is null || player is null)
+        if (!isServer() || rules is null)
         {
             return;
         }
@@ -22,6 +22,13 @@ class MapFlag
             params.write_bool(flags[i]);
         }
 
-        rules.SendCommand(rules.getCommandID(command), params, player);
+        if (player is null)
+        {
+            rules.SendCommand(rules.getCommandID(command), params);
+        }
+        else
+        {
+            rules.SendCommand(rules.getCommandID(command), params, player);
+        }
     }
 }
