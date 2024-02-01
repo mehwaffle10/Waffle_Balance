@@ -162,6 +162,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Ladders
 - Increased health from 1.5 to 2.5
+- Reduced wood on hit from 3 to 2 to account for the extra hit needed
 
 ## VEHICLES
 
