@@ -298,7 +298,7 @@ void SetupBuildDelay(CBlob@ this)
 {
 	this.set_u32("build time", getGameTime());
 	this.set_u32("build delay", 7);
-	this.set_u32("warmup build delay", 1);  // Waffle: Faster building in build phase
+	this.set_u32("warmup build delay", 7);  // Waffle: Same building in build phase since it's short
 }
 
 bool isBuildDelayed(CBlob@ this)

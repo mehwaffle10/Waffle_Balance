@@ -21,7 +21,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Build Phase
 - 20 seconds
 - Bases are prebuilt
-- Can build extremely fast during build phase
+- No fast building since it's just to get to the front lines
 
 ### Fall Damage
 - TDM fall damage (takes 1.3x longer falls)
