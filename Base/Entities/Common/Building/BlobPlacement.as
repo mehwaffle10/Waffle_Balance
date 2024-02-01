@@ -488,7 +488,6 @@ void onRender(CSprite@ this)
 
 		if (bc !is null)
 		{
-            print("bc.cursorClose: " + bc.cursorClose + ", bc.hasReqs: " + bc.hasReqs + ", bc.buildable: " + bc.buildable + ", bc.supported: " + bc.supported);
 			if (bc.cursorClose && bc.hasReqs && bc.buildable)
 			{
 				SColor color;
