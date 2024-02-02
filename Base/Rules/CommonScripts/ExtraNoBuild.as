@@ -25,15 +25,12 @@ void onRestart(CRules@ this)
 	map.server_AddSector(tlCeiling, brCeiling, "no build");
 
     // Waffle: Add no solids and no blobs
-    if (!this.get_bool("collide with ceiling"))
-    {
-        brCeiling.y += barrierHeight;
-        map.server_AddSector(tlCeiling, brCeiling, "no solids");
+    brCeiling.y += barrierHeight;
+    map.server_AddSector(tlCeiling, brCeiling, "no solids");
 
-        brCeiling.y += map.tilesize;
-        map.server_AddSector(tlCeiling, brCeiling, "no blobs");
-    }
-
+    brCeiling.y += map.tilesize;
+    map.server_AddSector(tlCeiling, brCeiling, "no blobs");
+    
 	// Left
 	Vec2f tlLeft = Vec2f(0.0f, barrierHeight);
 	Vec2f brLeft = Vec2f(barrierWidth, mapHeight);
