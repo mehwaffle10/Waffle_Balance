@@ -111,7 +111,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can no longer build blocks on top of saplings placed with left click
 
 ### Holidays
-- Force default texture pack
+- Disabled
 
 ### Nature Spawning
 - Fish, grain, flowers, and chickens no longer spawn randomly
@@ -134,6 +134,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Bison
 - Hit vehicles instead of their drivers
+
+### Server Features
+- Seclevs are properly synced to clients
+- Players are always moved to spec when AFK instead of being kicked
 
 # ITEMS
 
