@@ -18,10 +18,14 @@ shared class BlockCursor
 	bool blobActive;
 	bool sameTileOnBack;
 	CBitStream missing;
+    string blobName;  // Waffle: Add specific type
+    u16 blockType;    // Waffle: --
 
 	BlockCursor()
 	{
 		blobActive = blockActive = buildableAtPos = rayBlocked = hasReqs = supported = buildable = cursorClose = sameTileOnBack = false;
+        blobName = "";  // Waffle: Add specific type
+        blockType = 0;  // Waffle: --
 	}
 };
 

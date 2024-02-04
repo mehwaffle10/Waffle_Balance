@@ -333,6 +333,7 @@ void onTick(CBlob@ this)
 
 		if (snap) // activate help line
 		{
+            bc.blobName = carryBlob.getName();  // Waffle: Add specific type
 			bc.blobActive = true;
 			bc.blockActive = false;
 		}

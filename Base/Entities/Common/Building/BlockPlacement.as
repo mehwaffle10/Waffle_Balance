@@ -152,6 +152,7 @@ void onTick(CBlob@ this)
 
 	if (buildtile > 0)
 	{
+        bc.blockType = buildtile;  // Waffle: Add specific type
 		bc.blockActive = true;
 		bc.blobActive = false;
 		CMap@ map = this.getMap();
