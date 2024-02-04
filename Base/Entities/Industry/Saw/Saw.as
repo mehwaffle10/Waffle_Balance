@@ -252,7 +252,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
                 // mostly random x position, but keep some horizontal momentum when coming from the top
                 70.0f * ((float(XORRandom(100)) / 100.0f) - 0.5f) + xboost,
                 // small vertical boost to bombs coming from the top, big boost with some randomness for the others
-                -(Maths::Max(80.0f + XORRandom(30), 500.0f * ratio - XORRandom(300)))
+                0  // -(Maths::Max(80.0f + XORRandom(30), 500.0f * ratio - XORRandom(300)))  // Waffle: Make bombing saws easier
             );
             
             // make some sparks that go towards the direction the bomb was headed towards
@@ -393,4 +393,14 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
+}
+
+// Waffle: Increase bomb damage to saws
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+    if (isExplosionHitter(customData) || customData == Hitters::keg)
+    {
+        damage *= 2;
+    }
+    return damage;
 }

@@ -287,6 +287,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Are now flammable
 - Take increased damage in alignment with `Wood Structure Damage` section above
 - Can destroy enemy mines from all sides instead of just the top
+- Take double damage from explosives
+- No longer launch bombs vertically
 
 ### Trampoline
 - Increase bounce velocity from 10 to 11
