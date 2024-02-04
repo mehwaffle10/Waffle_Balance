@@ -246,7 +246,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - Adjusted shape to ramp over blocks better
     - Clamped max rotation to 45 degrees
     - Removed terrain damage to allow for better bridging
-    - Increased margin for being able to wall climb (can reliably climb over 4 block walls)
+    - Increased margin for being able to wall climb (can reliably climb over 3 block walls)
 
 ### Catapults
 - Rocks reworked
