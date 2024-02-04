@@ -23,13 +23,6 @@ class MapFlag
             params.write_bool(flags[i]);
         }
 
-        if (player is null)
-        {
-            rules.SendCommand(rules.getCommandID(command), params);
-        }
-        else
-        {
-            rules.SendCommand(rules.getCommandID(command), params, player);
-        }
+        rules.SendCommand(rules.getCommandID(command), params, player);
     }
 }
