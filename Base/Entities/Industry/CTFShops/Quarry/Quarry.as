@@ -189,7 +189,7 @@ void onTick(CBlob@ this)
 
 void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
-	if (!canSeeButtons(this, caller)) return;
+	if (!canSeeButtons(this, caller) || !this.isOverlapping(caller)) return;
 
 	CBitStream params;
 	params.write_u16(caller.getNetworkID());
@@ -211,6 +211,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		button.deleteAfterClick = false;
 		button.SetEnabled(enabled);
+        CShape@ shape = this.getShape();
+        button.enableRadius = shape is null ? 16 : Maths::Max(this.getRadius(), (shape.getWidth() + shape.getHeight()) / 2);
 	}
 }
 
