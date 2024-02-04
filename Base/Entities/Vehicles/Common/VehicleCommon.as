@@ -428,7 +428,7 @@ void Vehicle_DriverControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, Vehic
 			Vec2f end;
 			Vec2f forceoffset(this.getRadius() * (this.isFacingLeft() ? 1 : -1) * 0.5f, 0.0f);
 			Vec2f forcepos = pos + forceoffset;
-			const bool rearHasGround = getMap().rayCastSolid(pos, forcepos + Vec2f(0.0f, getMap().tilesize * 3.0f), end);
+			const bool rearHasGround = getMap().rayCastSolid(pos, forcepos + Vec2f(0.0f, getMap().tilesize * 4.0f), end);  // Waffle: Increase height for wall climb
 			if (rearHasGround)
 			{
 				this.AddForceAtPosition(Vec2f(0.0f, -290.0f), pos + Vec2f(-forceoffset.x, forceoffset.y) * 0.2f);
