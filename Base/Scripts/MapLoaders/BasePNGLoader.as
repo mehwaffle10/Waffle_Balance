@@ -48,7 +48,7 @@ class PNGLoader
 			return true;
 		}
 
-		@image = CFileImage( filename.replace(".png", "1.png") );
+		@image = CFileImage( filename );
 
 		if(image.isLoaded())
 		{

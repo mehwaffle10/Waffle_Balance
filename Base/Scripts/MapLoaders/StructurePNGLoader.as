@@ -40,7 +40,7 @@ class StructurePNGLoader
 		@map = _map;
 		@map_random = Random();
 
-		@image = CFileImage( filename.replace(".png", "2.png") );
+		@image = CFileImage( filename );
 
 		if(image.isLoaded())
 		{
