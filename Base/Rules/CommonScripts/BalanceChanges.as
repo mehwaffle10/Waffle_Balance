@@ -5,15 +5,18 @@
 
 #define CLIENT_ONLY
 
-const string link = "https://github.com/mehwaffle10/Waffle_Balance"; 
+const string link = "https://github.com/mehwaffle10/Waffle_Balance";
+const string discord_link = "https://discord.gg/3g5jTDF";
 const Vec2f text_offset = Vec2f(10, 10);
 bool hide = true;
 
 class PopupGUI
 {
-	string text = "Welcome to Waffle Balance!\n\nThis menu can be reopened from the main menu\n\nCheck out the GitHub repo for a full list of balance changes";
+	string text = "Welcome to Waffle Balance!\n\nThis server is hosted and modded by mehwaffle10. Feel free to say hi!\n\nCheck out the GitHub repo for a full list of balance changes\n\nWe play organized matches every Sunday at 9PM EST\n\nJoin the DWI discord if you're interested!\n\nThis menu can be reopened from the main menu under \"Balance Changes\"";
 	ClickButton@ website_button;
+    ClickButton@ discord_button;
 	string website_text = "GitHub Repo";
+    string discord_text = "DWI Discord";
 	Vec2f website_text_dim;
 	ClickButton@ close_button;
 	string close_text = "x"; // nobody will give a fuck
@@ -37,6 +40,7 @@ class PopupGUI
 
 		this.Update(null);
 		@website_button = ClickButton(0, SColor(255, 0, 170, 0), website_text, "slightly bigger text 2");
+        @discord_button = ClickButton(2, SColor(255, 0, 170, 0), discord_text, "slightly bigger text 2");
 		@close_button = ClickButton(1, SColor(255, 200, 0, 0), "X");
 	}
 
@@ -50,6 +54,7 @@ class PopupGUI
 		Vec2f button_tl = bl;
 
 		website_button.RenderGUI(button_tl, Vec2f(text_dim.x, website_text_dim.y * 2));
+        discord_button.RenderGUI(button_tl + Vec2f(0, website_text_dim.y * 2), Vec2f(text_dim.x, website_text_dim.y * 2));
 		close_button.RenderGUI(tr - Vec2f(24, 0), Vec2f(24, 24));
 	}
 
@@ -66,6 +71,7 @@ class PopupGUI
 		if (controls is null) return;
 
 		website_button.Update(button_tl, Vec2f(text_dim.x, website_text_dim.y * 2), controls);
+        discord_button.Update(button_tl + Vec2f(0, website_text_dim.y * 2), Vec2f(text_dim.x, website_text_dim.y * 2), controls);
 		close_button.Update(tr - Vec2f(24, 0), Vec2f(24, 24), controls);
 	}
 }
@@ -135,6 +141,7 @@ class ClickButton
 		{
 			hide = true;
 			if (id == 0) OpenWebsite(link);
+            if (id == 2) OpenWebsite(discord_link);
 			Sound::Play("buttonclick.ogg");
 		}
 	}
