@@ -89,25 +89,22 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
 		return false;
 
 	// Is our blob not a ladder and are we trying to place it into a no build area
-	if (blobToPlace.getName() != "ladder")
-	{
-		pos = cursorPos + Vec2f(map.tilesize * 0.2f, map.tilesize * 0.2f);
+    pos = cursorPos + Vec2f(map.tilesize * 0.2f, map.tilesize * 0.2f);
 
-		// Waffle: Trees can be placed on buildings
-		CMap::Sector@[] sectors;
-		map.getSectorsAtPosition(pos, sectors);
-		for (u8 i = 0; i < sectors.length; i++)
-		{
-			if (sectors[i] !is null && sectors[i].name == "no build" || sectors[i].name == "no solids" || sectors[i].name == "no blobs")  // Waffle: Prevent solids and blobs
-			{
-				CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
-				if (owner is null || !owner.hasTag("building") || !isTreeSeed(blobToPlace))
-				{
-					return false;
-				}
-			}
-		}
-	}
+    // Waffle: Trees can be placed on buildings
+    CMap::Sector@[] sectors;
+    map.getSectorsAtPosition(pos, sectors);
+    for (u8 i = 0; i < sectors.length; i++)
+    {
+        if (sectors[i] !is null && (sectors[i].name == "no build" && blobToPlace.getName() != "ladder" || sectors[i].name == "no solids" || sectors[i].name == "no blobs"))  // Waffle: Prevent solids and blobs
+        {
+            CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
+            if (owner is null || !owner.hasTag("building") || !isTreeSeed(blobToPlace))
+            {
+                return false;
+            }
+        }
+    }
 
 	// Are we trying to place a blob on a door/ladder/platform/bridge (usually due to lag)?
 	if (fakeHasTileSolidBlobs(cursorPos) && !repairing)

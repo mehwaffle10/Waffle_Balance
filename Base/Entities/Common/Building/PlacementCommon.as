@@ -171,60 +171,61 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		}
 
         // Waffle: Add no solids and no blobs
-        const bool no_build  = (buildSolid || isSpikes || isDoor || isPlatform) && map.getSectorAtPosition(middle, "no build") !is null;
+        const bool no_build  = !isLadder && (buildSolid || isSpikes || isDoor || isPlatform) && map.getSectorAtPosition(middle, "no build") !is null;
         const bool no_solids = buildSolid && map.getSectorAtPosition(middle, "no solids") !is null;
         const bool no_blobs  = blob !is null && map.getSectorAtPosition(middle, "no blobs") !is null;
-		if (!isSeed && !isLadder && (no_build || no_solids || no_blobs))
+		if (!isSeed && (no_build || no_solids || no_blobs))
 		{
 			return false;
 		}
 
 		//if (blob is null)
 		//middle += Vec2f(map.tilesize*0.5f, map.tilesize*0.5f);
+        if (!isLadder)
+        {
+            const string name = blob !is null ? blob.getName() : "";
+            CBlob@[] blobsInRadius;
+            if (map.getBlobsInRadius(middle, buildSolid ? map.tilesize : 0.0f, @blobsInRadius))
+            {
+                for (uint i = 0; i < blobsInRadius.length; i++)
+                {
+                    CBlob @b = blobsInRadius[i];
+                    if (!b.isAttached() && b !is blob)
+                    {
+                        if (blob !is null || buildSolid)
+                        {
+                            if (b is this && b.getName() == "spikes") continue;
 
-		const string name = blob !is null ? blob.getName() : "";
-		CBlob@[] blobsInRadius;
-		if (map.getBlobsInRadius(middle, buildSolid ? map.tilesize : 0.0f, @blobsInRadius))
-		{
-			for (uint i = 0; i < blobsInRadius.length; i++)
-			{
-				CBlob @b = blobsInRadius[i];
-				if (!b.isAttached() && b !is blob)
-				{
-					if (blob !is null || buildSolid)
-					{
-						if (b is this && b.getName() == "spikes") continue;
+                            Vec2f bpos = b.getPosition();
 
-						Vec2f bpos = b.getPosition();
+                            bool cantBuild = isBlocking(b) || isSeed && b.getName() == "seed";  // Waffle: Prevent seeds from being placed on each other
+                            bool buildingOnTeam = isDoor && (b.getTeamNum() == this.getTeamNum() || b.getTeamNum() == 255) && !b.getShape().isStatic() && this !is b;
+                            bool ladderBuild = isLadder && !b.getShape().isStatic();
 
-						bool cantBuild = isBlocking(b) || isSeed && b.getName() == "seed";  // Waffle: Prevent seeds from being placed on each other
-						bool buildingOnTeam = isDoor && (b.getTeamNum() == this.getTeamNum() || b.getTeamNum() == 255) && !b.getShape().isStatic() && this !is b;
-						bool ladderBuild = isLadder && !b.getShape().isStatic();
-
-						// cant place on any other blob
-						if (!ladderBuild &&
-							!buildingOnTeam &&
-							cantBuild &&
-							!b.hasTag("dead") &&
-							!b.hasTag("material") &&
-							!b.hasTag("projectile") &&
-							!(isSeed && (b.hasTag("building") || !b.getShape().isStatic())))  // Waffle: Allow placing seeds on building and non-static blobs
-						{
-							f32 angle_decomp = Maths::FMod(Maths::Abs(b.getAngleDegrees()), 180.0f);
-							bool rotated = angle_decomp > 45.0f && angle_decomp < 135.0f;
-							f32 width = rotated ? b.getHeight() : b.getWidth();
-							f32 height = rotated ? b.getWidth() : b.getHeight();
-							if ((middle.x > bpos.x - width * 0.5f) && (middle.x < bpos.x + width * 0.5f)
-								&& (middle.y > bpos.y - height * 0.5f) && (middle.y < bpos.y + height * 0.5f))
-							{
-								return false;
-							}
-						}
-					}
-				}
-			}
-		}
-
+                            // cant place on any other blob
+                            if (!ladderBuild &&
+                                !buildingOnTeam &&
+                                cantBuild &&
+                                !b.hasTag("dead") &&
+                                !b.hasTag("material") &&
+                                !b.hasTag("projectile") &&
+                                !(isSeed && (b.hasTag("building") || !b.getShape().isStatic())))  // Waffle: Allow placing seeds on building and non-static blobs
+                            {
+                                f32 angle_decomp = Maths::FMod(Maths::Abs(b.getAngleDegrees()), 180.0f);
+                                bool rotated = angle_decomp > 45.0f && angle_decomp < 135.0f;
+                                f32 width = rotated ? b.getHeight() : b.getWidth();
+                                f32 height = rotated ? b.getWidth() : b.getHeight();
+                                if ((middle.x > bpos.x - width * 0.5f) && (middle.x < bpos.x + width * 0.5f)
+                                    && (middle.y > bpos.y - height * 0.5f) && (middle.y < bpos.y + height * 0.5f))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
 		if (isSeed)
 		{

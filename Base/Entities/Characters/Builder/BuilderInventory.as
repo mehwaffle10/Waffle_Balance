@@ -494,18 +494,17 @@ void onRender(CSprite@ this)
 							// Vec2f middle = blob.getAimPos() + Vec2f(map.tilesize*0.5f, map.tilesize*0.5f);  // Waffle: Snap to grid for check
                             Vec2f middle = map.getAlignedWorldPos(blob.getAimPos());
 							CMap::Sector@ sector;
-                            print("BLOBNAME: " + bc.blobName + " BLOCKTYPE: " + bc.blockType);
-                            if (bc.blobActive && bc.blobName != "ladder")
+                            if (bc.blobActive)
                             {
-                                @sector = map.getSectorAtPosition( middle, "no blobs");
+                                @sector = map.getSectorAtPosition(middle, "no blobs");
                             }
                             if (sector is null && bc.blockActive && map.isTileSolid(bc.blockType))
                             {
-                                @sector = map.getSectorAtPosition( middle, "no solids");  
+                                @sector = map.getSectorAtPosition(middle, "no solids");  
                             }
                             if (sector is null)
                             {
-                                @sector = map.getSectorAtPosition( middle, "no build");
+                                @sector = map.getSectorAtPosition(middle, "no build");
                             }
 							if (sector !is null)
 							{

@@ -4,7 +4,7 @@
 
 void onInit(CBlob@ this)
 {
-	this.Tag("ignore blocking actors");
+	// this.Tag("ignore blocking actors");  // Waffle: Allow no blobs zone to block
 
 	CShape@ shape = this.getShape();
 	if (shape is null) return;
