@@ -1,5 +1,6 @@
 // Pine tree Logic
 
+#include "TreeCommon.as"  // Waffle: Fix staging
 #include "TreeSync.as"
 
 void onInit(CBlob@ this)
