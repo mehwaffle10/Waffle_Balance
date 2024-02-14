@@ -132,7 +132,7 @@ void onTick(CMovement@ this)
 		blob.AddForce(ladderforce * moveVars.overallScale * 100.0f * ((up || down) && (left || right) ? 0.85f : 1.0f));  // Waffle: Slow down diagonals
 		//damp vel
 		Vec2f vel = blob.getVelocity();
-		vel *= 0.25f;  // 0.05f;' // Waffle: Speed up movement on ladders
+		vel *= 0.25f;  // 0.05f;  // Waffle: Speed up movement on ladders
 		blob.setVelocity(vel);
 
 		moveVars.jumpCount = -1;
