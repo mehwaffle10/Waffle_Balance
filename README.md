@@ -282,6 +282,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Cost 200 coins instead of 150
 - Bomb bolts cost 150 coins instead of 100
 - Need a 5 x 5 area to deploy
+- Bolt drag multiplier in water decreased from 5 to 1.5
 
 ### Mounted Bow
 - Health increased from 2 to 10
@@ -396,6 +397,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Arrows
 - Collide with enemy arrows
 - Have 5x the amount of health (will last 5x longer when climbed on)
+- Decreased drag multiplier in water from 5 to 1.5
 
 ### Water Arrows
 - Cost 25 coins for 1 instead of 15

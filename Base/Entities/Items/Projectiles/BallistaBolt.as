@@ -20,6 +20,7 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().mapCollisions = false;
 	this.getShape().getConsts().bullet = true;
 	this.getShape().getConsts().net_threshold_multiplier = 4.0f;
+    this.getShape().getVars().waterDragScale = 1.5f;  // Waffle: Ballista bolts have decreased drag in water
 
 	LimitedAttack_setup(this);
 

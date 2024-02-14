@@ -31,6 +31,7 @@ void onInit(CBlob@ this)
 	consts.mapCollisions = false;	 // we have our own map collision
 	consts.bullet = false;
 	consts.net_threshold_multiplier = 4.0f;
+    shape.getVars().waterDragScale = 1.5f;  // Waffle: Arrows have decreased drag in water
 	this.Tag("projectile");
 
 	//dont collide with top of the map
