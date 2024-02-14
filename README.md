@@ -23,8 +23,12 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Bases are prebuilt
 - No fast building since it's just to get to the front lines
 
-### Fall Damage
+### Movement
 - TDM fall damage (takes 1.3x longer falls)
+- Increased move speed in water (~33% faster)
+- Increased move speed on ladders
+    - Velocity decay decreased from 95% to 75%
+    - Diagonal move force reduced by 15%
 
 ### Flag Room
 - Increased size from 3x5 to 5x6
@@ -171,6 +175,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Ladders
 - Increased health from 1.5 to 2.5
 - Reduced wood on hit from 3 to 2 to account for the extra hit needed
+- Increased player move speed
+    - Velocity decay decreased from 95% to 75%
+    - Diagonal move force reduced by 15%
 
 ## VEHICLES
 
