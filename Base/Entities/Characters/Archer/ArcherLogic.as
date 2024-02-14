@@ -206,7 +206,7 @@ void ManageGrapple(CBlob@ this, ArcherInfo@ archer)
 			}
 			else if (archer.grapple_id == 0xffff) //not stuck
 			{
-				const f32 drag = map.isInWater(archer.grapple_pos) ? 0.7f : 0.90f;
+				const f32 drag = 0.90f;  // map.isInWater(archer.grapple_pos) ? 0.7f : 0.90f;  // Waffle: No water drag
 				const Vec2f gravity(0, 1);
 
 				archer.grapple_vel = (archer.grapple_vel * drag) + gravity - (force * (2 / this.getMass()));

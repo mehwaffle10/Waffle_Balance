@@ -65,6 +65,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Archer
 - Grapple is no longer cancelled when pressing use key
+- Grapple no longer has increased drag in water
 
 ### Wood Structure Damage
 - Arrows do full damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
