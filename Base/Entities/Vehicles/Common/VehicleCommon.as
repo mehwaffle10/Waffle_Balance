@@ -572,7 +572,6 @@ void Vehicle_RowerControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, Vehicl
 	if (left || right)
 	{
 		this.AddForce(force);
-        this.AddForce(force);
 	}
 }
 
@@ -665,7 +664,8 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
 {
     // Waffle: Add better map damage
     CMap@ map = getMap();
-    f32 speed = Maths::Abs(this.getVelocity().x);
+    Vec2f velocity = this.getVelocity();
+    f32 speed = Maths::Abs(velocity.x);
     if (map is null || speed < BLOCK_BREAKING_SPEED_THRESHOLD)
     {
         return;
@@ -759,8 +759,9 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
                     default: file = "SmallSmoke2.png"; break;
                 }
                 MakeDustParticle(hit_pos, file);
-                this.setVelocity(this.getVelocity() * 0.9f);
+                velocity *= 0.9f;
             }
         }
     }
+    this.setVelocity(velocity);
 }
