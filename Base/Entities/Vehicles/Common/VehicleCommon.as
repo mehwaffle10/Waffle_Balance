@@ -1,6 +1,11 @@
 #include "VehicleAttachmentCommon.as"
 #include "KnockedCommon.as"
 
+// Waffle: Add better map damage
+#include "Hitters.as"
+#include "MakeDustParticle.as"
+#include "BoatVars.as"
+
 class AmmoInfo
 {
 	u8 loaded_ammo;             // next ammunition amount in queue to be shot
@@ -539,7 +544,7 @@ void Vehicle_FlyerControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, Vehicl
 void Vehicle_RowerControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, VehicleInfo@ v)
 {
 	const f32 moveForce = v.move_speed;
-	const f32 turnSpeed = v.turn_speed;
+	const f32 turnSpeed = BLOCK_BREAKING_SPEED_THRESHOLD;  // v.turn_speed;  // Waffle: Only allow turning when you can break blocks
 	const Vec2f vel = this.getVelocity();
 	Vec2f force;
 
@@ -567,6 +572,7 @@ void Vehicle_RowerControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, Vehicl
 	if (left || right)
 	{
 		this.AddForce(force);
+        this.AddForce(force);
 	}
 }
 
@@ -653,4 +659,108 @@ bool isFlipped(CBlob@ this)
 {
 	const f32 angle = this.getAngleDegrees();
 	return (angle > 80 && angle < 290);
+}
+
+void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
+{
+    // Waffle: Add better map damage
+    CMap@ map = getMap();
+    f32 speed = Maths::Abs(this.getVelocity().x);
+    if (map is null || speed < BLOCK_BREAKING_SPEED_THRESHOLD)
+    {
+        return;
+    }
+
+    f32 angle = this.getAngleDegrees() + (this.isFacingLeft() ? 180 : 0);
+    for (s8 i = 0; i < x_offsets.length; i++)
+    {
+        HitInfo@[] hit_infos;
+        map.getHitInfosFromRay(
+            this.getPosition() + Vec2f((x_offsets[i] + this.getWidth() / 2) * (this.isFacingLeft() ? -1 : 1), (i - x_offsets.length / 2) * map.tilesize).RotateByDegrees(this.getAngleDegrees()),
+            angle,
+            speed * 5,
+            this,
+            hit_infos
+        );
+
+        for (int i = 0; i < hit_infos.size(); i++)
+        {
+            bool hit = false;
+            CBlob@ hit_blob = hit_infos[i].blob;
+            Vec2f hit_pos = hit_infos[i].hitpos;
+            Vec2f particle_velocity = getRandomVelocity((this.getPosition() - hit_pos).getAngle(), 1.0f + speed, 90.0f) + Vec2f(0.0f, -2.0f);
+
+            if (hit_blob is null)
+            {
+                TileType tile = map.getTile(hit_infos[i].tileOffset).type;
+                if (map.getSectorAtPosition(hit_pos, "no build") !is null)
+                {
+                    continue;
+                }
+
+                if (tile >= CMap::tile_wood && tile <= 198 ||                  // Wood block
+                    tile >= CMap::tile_wood_d1 && tile <= CMap::tile_wood_d0)  // Damaged wood block
+                {
+                    hit = true;
+                    makeGibParticle(
+                        "/GenericGibs",
+                        hit_pos,
+                        particle_velocity,
+		                1,
+                        4 + XORRandom(4),
+                        Vec2f(8, 8),
+                        2.0f,
+                        0,
+                        "",
+                        0
+                    );
+                    Sound::Play("destroy_wood.ogg", hit_pos);
+                }
+
+                else if (tile >= CMap::tile_castle && tile <= 54 ||                       // Castle block
+                         tile >= CMap::tile_castle_d1 && tile <= CMap::tile_castle_d0 ||  // Damaged castle block
+                         tile >= CMap::tile_castle_moss && tile <= 226)                   // Mossy castle block
+                {
+                    hit = true;
+                    makeGibParticle(
+                        "GenericGibs",
+                        hit_pos,
+                        particle_velocity,
+                        2,
+                        4 + XORRandom(4),
+                        Vec2f(8, 8),
+                        2.0f, 0,
+                        "",
+                        0
+                    );
+                    Sound::Play("destroy_wall.ogg", hit_pos);
+                }
+
+                if (hit)
+                {
+                    map.server_DestroyTile(hit_pos, 100.0f, this);
+                }    
+            }
+            else
+			{
+				if (hit_blob.getShape().isStatic() && (hit_blob.getTeamNum() != this.getTeamNum() && hit_blob.hasTag("door") || hit_blob.isPlatform() && hit_blob.getAngleDegrees() == (this.isFacingLeft() ? 90.0f : 270.0f)))
+                {
+                    this.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
+				}
+			}
+
+            if (hit)
+            {
+                string file = "";
+                switch (XORRandom(3))
+                {
+                    case 0:  file = "Smoke.png"; break;
+                    case 1:  file = "SmallSmoke1.png"; break;
+                    default: file = "SmallSmoke2.png"; break;
+                }
+                MakeDustParticle(hit_pos, file);
+                this.setVelocity(this.getVelocity() * 0.9f);
+            }
+        }
+    }
 }

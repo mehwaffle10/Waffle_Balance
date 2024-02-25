@@ -5,11 +5,13 @@
 //attachment point of the sail
 const int sail_index = 0;
 
+const s8[] destruction_offsets = {2, 2, 2, 2, 2};  // Waffle: Add better map damage
+
 void onInit(CBlob@ this)
 {
 	Vehicle_Setup(this,
-	              450.0f, // move speed  // Waffle: Move 50% faster
-	              0.30f,  // turn speed  // Waffle: Turn around slower
+	              100.0f, // move speed
+	              0.30f,  // turn speed
 	              Vec2f(0.0f, -2.5f), // jump out velocity
 	              true  // inventory access
 	             );
@@ -108,6 +110,8 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+    DestructiveRayCast(this, destruction_offsets);  // Waffle: Add better map damage
+
 	if (this.hasAttached())
 	{
 		VehicleInfo@ v;
