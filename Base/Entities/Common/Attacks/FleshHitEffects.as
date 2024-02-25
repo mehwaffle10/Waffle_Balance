@@ -12,7 +12,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
             CBlob@ blob = attachment_points[i].getOccupied();
             if (blob !is null && blob.hasTag("vehicle"))
             {
-                print("hitterblob " + hitterBlob.getName() + " hit " + blob.getName() + " for " + damage + " damage");
                 hitterBlob.server_Hit(blob, worldPoint, velocity, damage, customData);
             }
         }
