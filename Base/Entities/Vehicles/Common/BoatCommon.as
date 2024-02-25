@@ -47,7 +47,7 @@ void onInit(CBlob@ this)
 	}
 
 	this.getSprite().SetZ(50.0f);
-    this.getCurrentScript().runFlags |= Script::tick_hasattached;
+    // this.getCurrentScript().runFlags |= Script::tick_hasattached;  // Waffle: Prevent bobbing
 }
 
 void Splash(Vec2f pos, Vec2f vel, int randomnum)
@@ -67,6 +67,14 @@ void Splash(Vec2f pos, Vec2f vel, int randomnum)
 
 void onTick(CBlob@ this)
 {
+    // Waffle: Prevent bobbing
+    if (this.isInWater())
+    {
+        Vec2f velocity = this.getVelocity();
+        velocity.y *= 0.75f;
+        this.setVelocity(velocity);
+    }
+
 	// rower controls
 	AttachmentPoint@[] aps;
 

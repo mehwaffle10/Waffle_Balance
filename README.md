@@ -207,6 +207,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Much less drag
 - Slower acceleration
 - Rear water only shows when you have enough speed to break blocks
+- Reduced bobbing in water
 - Don't break on land (or if left alone???)
 - Doesn't sink on low health
 - No longer have wood cost
