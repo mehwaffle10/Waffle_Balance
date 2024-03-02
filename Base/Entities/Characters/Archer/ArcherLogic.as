@@ -31,6 +31,7 @@ void onInit(CBlob@ this)
 	this.set_u8("charge_state", ArcherParams::not_aiming);
 	this.set_bool("has_arrow", false);
 	this.set_f32("gib health", -1.5f);
+    this.set_Vec2f("grapple_offset", Vec2f(0,0));  // Waffle: Add grappling to boats from gold floats
 	this.Tag("player");
 	this.Tag("flesh");
 
@@ -269,7 +270,7 @@ void ManageGrapple(CBlob@ this, ArcherInfo@ archer)
 
 				if (b !is null)
 				{
-					archer.grapple_pos = b.getPosition();
+					archer.grapple_pos = b.getPosition() + this.get_Vec2f("grapple_offset");  // Waffle: Add grappling to boats from gold floats
 					if (b.isKeyJustPressed(key_action1) ||
 					        b.isKeyJustPressed(key_action2) ||
 					        this.isKeyPressed(key_use))
@@ -298,8 +299,9 @@ void ManageGrapple(CBlob@ this, ArcherInfo@ archer)
 					this.setPosition(target);
 				}
 
-				if (b !is null)
-					b.AddForce(-force * (b.getMass() / this.getMass()));
+                // Waffle: Add grappling to boats from gold floats
+				// if (b !is null)
+				// 	b.AddForce(-force * (b.getMass() / this.getMass()));
 
 			}
 		}
@@ -773,7 +775,7 @@ bool checkGrappleStep(CBlob@ this, ArcherInfo@ archer, CMap@ map, const f32 dist
 
 				return true;
 			}
-			else if (b.isCollidable() && b.getShape().isStatic() && !b.hasTag("ignore_arrow"))
+			else if (b.isCollidable() && (b.getShape().isStatic() || b.hasTag("boat")) && !b.hasTag("ignore_arrow"))  // Waffle: Add grappling to boats from gold floats
 			{
 				//TODO: Maybe figure out a way to grapple moving blobs
 				//		without massive desync + forces :)
@@ -781,6 +783,7 @@ bool checkGrappleStep(CBlob@ this, ArcherInfo@ archer, CMap@ map, const f32 dist
 				archer.grapple_ratio = Maths::Max(0.2, Maths::Min(archer.grapple_ratio, b.getDistanceTo(this) / archer_grapple_length));
 
 				archer.grapple_id = b.getNetworkID();
+                this.set_Vec2f("grapple_offset", archer.grapple_pos - b.getPosition());  // Waffle: Add grappling to boats from gold floats
 				if (canSend(this))
 				{
 					SyncGrapple(this);
