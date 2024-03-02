@@ -433,6 +433,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Fixed fuse sound not resetting when extinguished
 - Fixed screen shake happening when the keg wasn't exploding
 - Cost 160 coins
+- Removed 10 tick inconsistency in fuse timer (thanks bunnie!)
 
 ### Mines
 - Deploy after timer like they used to 

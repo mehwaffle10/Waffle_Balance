@@ -16,7 +16,7 @@ void onInit(CBlob@ this)
 	this.set_f32("keg_time", 300.0f);
 	this.set_bool("explosive_teamkill", true);
 
-	this.getCurrentScript().tickFrequency = 10;
+	// this.getCurrentScript().tickFrequency = 10;  // Waffle: Prevent fuse RNG. Thanks bunnie!
 	this.getCurrentScript().tickIfTag = "exploding";
 }
 
@@ -40,7 +40,7 @@ void onTick(CBlob@ this)
 				// Boom(this);
 			}
 		}
-		else
+		else if (this.getTickSinceCreated() % 10 == 0)  // Waffle: Prevent fuse RNG. Thanks bunnie!
 		{
 			SColor lightColor = SColor(255, 255, Maths::Min(255, uint(timer * 0.7)), 0);
 			this.SetLightColor(lightColor);
