@@ -745,6 +745,7 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
 			{
 				if (hit_blob.getShape().isStatic() && (hit_blob.getTeamNum() != this.getTeamNum() && hit_blob.hasTag("door") || hit_blob.isPlatform() && hit_blob.getAngleDegrees() == (this.isFacingLeft() ? 90.0f : 270.0f)))
                 {
+                    hit = true;
                     this.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
 				}
 			}
