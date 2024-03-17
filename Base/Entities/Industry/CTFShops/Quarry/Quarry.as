@@ -267,7 +267,7 @@ void spawnOre(CBlob@ this)
 	//setup res
 	_ore.Tag("custom quantity");
 	_ore.Init();
-	_ore.setPosition(this.getPosition() + Vec2f(-8.0f, 0.0f));
+	_ore.setPosition(this.getPosition());  // + Vec2f(-8.0f, 0.0f));  // Waffle: Center quarry output
 	_ore.server_SetQuantity(!rare ? amountToSpawn : rare_output);
 
 	this.set_s16(fuel_prop, blobCount - actual_input); //burn wood

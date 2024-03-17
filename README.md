@@ -170,6 +170,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - Consumes almost all of the wood from the trees in front of it
 - Can only produce with two trees or saplings that can grow overlapping
 - Added sounds, button hints, and description for feedback
+- Produced stone in center instead of offset to the left one block
 - Can hold 800 wood total
     - Shows full fuel level above 500 wood
     - Shows mid fuel level above 200 wood
