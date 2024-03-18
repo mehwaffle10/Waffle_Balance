@@ -1,5 +1,5 @@
 #include "VehicleCommon.as"
-#include "KnockedCommon.as";
+// #include "KnockedCommon.as";  // Waffle: Remove stun from catapult
 #include "GenericButtonCommon.as";
 #include "LimitAmmo.as";  // Waffle: Limit ammo
 
@@ -84,20 +84,23 @@ class CatapultInfo : VehicleInfo
 			vel += (Vec2f((_r.NextFloat() - 0.5f) * 128, (_r.NextFloat() - 0.5f) * 128) * 0.01f);
 			vel.RotateBy(this.getAngleDegrees());
 
+            // Waffle: Only adjust horizontal speed
 			if (bullet.hasTag("player"))
 			{
 				delay *= f32(cooldown_time_player) / cooldown_time_ammo;
-				bullet.setVelocity(vel * player_launch_modifier);
+                vel.x *= player_launch_modifier;
 			}
 			else
 			{
-				bullet.setVelocity(vel * other_launch_modifier);
+                vel.x *= other_launch_modifier;
 			}
+            bullet.setVelocity(vel);
 
-			if (isKnockable(bullet)) //causes an error on reload
-			{
-				setKnocked(bullet, 30);
-			}
+            // Waffle: Remove stun from catapult
+			// if (isKnockable(bullet)) //causes an error on reload
+			// {
+			// 	setKnocked(bullet, 30);
+			// }
 
 			if (bullet.getName() == "boulder") // rock n' roll baby
 			{

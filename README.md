@@ -280,6 +280,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Doubled the amount of vertical spread on catapult shots
 - Can hold 200 stone in reserve
 - Cost 180 coins
+- No longer stuns players when launching them
+- Anything launched has an unmodified vertical launch force (normally .75 for players and 1.1 for anything else)
 - Fixed arm angle not being correct when deployed from a crate
 
 ### Ballistas
