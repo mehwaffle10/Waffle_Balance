@@ -37,6 +37,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can no longer go through tunnels
 - Returns in 10 seconds
 - Can not speed up return by standing on it
+- Tripled drag in water
 
 ### Tent
 - Fixed sprite not being centered

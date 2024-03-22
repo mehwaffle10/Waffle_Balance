@@ -8,6 +8,7 @@
 void onInit(CBlob@ this)
 {
 	this.getShape().SetRotationsAllowed(false);
+    this.getShape().getVars().waterDragScale = 15.0f;  // Waffle: Increase drag on flag in water
 
 	this.getCurrentScript().tickFrequency = 5;
 
