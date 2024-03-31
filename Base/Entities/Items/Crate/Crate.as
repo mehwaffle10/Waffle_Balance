@@ -870,6 +870,8 @@ void onRender(CSprite@ this)
 	const u32 gameTime = getGameTime();
 	const u32 unpackTime = blob.get_u32("unpack time");
 
+    // Waffle: Crates unpack instantly
+    /*
 	if (unpackTime > gameTime)
 	{
 		// draw drop time progress bar
@@ -881,6 +883,7 @@ void onRender(CSprite@ this)
 		const f32 progress = 1.0f - (f32(secs) / f32(blob.get_u32("unpack secs")));
 		GUI::DrawProgressBar(upperleft, lowerright, progress);
 	}
+    */
 
 	if (blob.isAttached())
 	{
