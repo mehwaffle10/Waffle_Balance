@@ -1326,103 +1326,88 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 					}
 				}
 			}
-			else  // hitmap
-				if (!dontHitMoreMap && (deltaInt == DELTA_BEGIN_ATTACK + 1))
-				{
-					bool ground = map.isTileGround(hi.tile);
-					bool dirt_stone = map.isTileStone(hi.tile);
-					bool dirt_thick_stone = map.isTileThickStone(hi.tile);
-					bool gold = map.isTileGold(hi.tile);
-					bool wood = map.isTileWood(hi.tile);
-					if (ground || wood || dirt_stone || gold)
-					{
-						Vec2f tpos = map.getTileWorldPosition(hi.tileOffset) + Vec2f(4, 4);
-						Vec2f offset = (tpos - blobPos);
-						f32 tileangle = offset.Angle();
-						f32 dif = Maths::Abs(exact_aimangle - tileangle);
-						if (dif > 180)
-							dif -= 360;
-						if (dif < -180)
-							dif += 360;
-
-						dif = Maths::Abs(dif);
-						//print("dif: "+dif);
-
-						if (dif < 20.0f)
-						{
-							//detect corner
-
-							int check_x = -(offset.x > 0 ? -1 : 1);
-							int check_y = -(offset.y > 0 ? -1 : 1);
-							if (map.isTileSolid(hi.hitpos - Vec2f(map.tilesize * check_x, 0)) &&
-							        map.isTileSolid(hi.hitpos - Vec2f(0, map.tilesize * check_y)))
-								continue;
-
-							bool canhit = true; //default true if not jab
-							if (jab) //fake damage
-							{
-								info.tileDestructionLimiter++;
-								canhit = ((info.tileDestructionLimiter % ((wood || dirt_stone) ? 3 : 2)) == 0);
-							}
-							else //reset fake dmg for next time
-							{
-								info.tileDestructionLimiter = 0;
-							}
-
-							//dont dig through no build zones
-							canhit = canhit && map.getSectorAtPosition(tpos, "no build") is null;
-
-							dontHitMoreMap = true;
-							if (canhit)
-							{
-								// Waffle: Double damage vs wood
-								if (wood) 
-								{
-									map.server_DestroyTile(hi.hitpos, 0.1f, this);
-								}
-								map.server_DestroyTile(hi.hitpos, 0.1f, this);
-								if (gold)
-								{
-									// Note: 0.1f damage doesn't harvest anything I guess
-									// This puts it in inventory - include MaterialCommon
-									//Material::fromTile(this, hi.tile, 1.f);
-									// Waffle: Gold mines for coins instead of gold material
-									CPlayer@ player = this.getPlayer();
-									if (player !is null)
-									{
-										player.server_setCoins(player.getCoins() + gold_coins);
-									}
-									// CBlob@ ore = server_CreateBlobNoInit("mat_gold");
-									// if (ore !is null)
-									// {
-									// 	ore.Tag('custom quantity');
-									// 	ore.Init();
-									// 	ore.setPosition(hi.hitpos);
-									// 	ore.server_SetQuantity(4);
-									// }
-								}
-								else if (dirt_stone)
-								{
-									int quantity = 4;
-									if(dirt_thick_stone)
-									{
-										quantity = 6;
-									}
-									CBlob@ ore = server_CreateBlobNoInit("mat_stone");
-									if (ore !is null)
-									{
-										ore.Tag('custom quantity');
-										ore.Init();
-										ore.setPosition(hi.hitpos);
-										ore.server_SetQuantity(quantity);
-									}
-								}
-							}
-						}
-					}
-				}
 		}
 	}
+
+    // Waffle: Use code from KnightAnim.as instead
+    Vec2f cursor_position = this.getAimPos();
+    Vec2f surface_position;
+    map.rayCastSolid(blobPos, cursor_position, surface_position);
+    Vec2f vector = surface_position - blobPos;
+    f32 distance = vector.getLength();
+
+    if (distance < DEFAULT_ATTACK_DISTANCE && deltaInt == DELTA_BEGIN_ATTACK + 1)
+    {
+        Tile tile = map.getTile(surface_position);
+
+        bool ground = map.isTileGround(tile.type);
+        bool dirt_stone = map.isTileStone(tile.type);
+        bool dirt_thick_stone = map.isTileThickStone(tile.type);
+        bool gold = map.isTileGold(tile.type);
+        bool wood = map.isTileWood(tile.type);
+        if (ground || wood || dirt_stone || gold)
+        {
+            bool canhit = true; //default true if not jab
+            if (jab) //fake damage
+            {
+                info.tileDestructionLimiter++;
+                canhit = ((info.tileDestructionLimiter % ((wood || dirt_stone) ? 3 : 2)) == 0);
+            }
+            else //reset fake dmg for next time
+            {
+                info.tileDestructionLimiter = 0;
+            }
+
+            //dont dig through no build zones
+            canhit = canhit && map.getSectorAtPosition(surface_position, "no build") is null;
+
+            if (canhit)
+            {
+                // Waffle: Double damage vs wood
+                if (wood) 
+                {
+                    map.server_DestroyTile(surface_position, 0.1f, this);
+                }
+                map.server_DestroyTile(surface_position, 0.1f, this);
+                if (gold)
+                {
+                    // Note: 0.1f damage doesn't harvest anything I guess
+                    // This puts it in inventory - include MaterialCommon
+                    //Material::fromTile(this, hi.tile, 1.f);
+                    // Waffle: Gold mines for coins instead of gold material
+                    CPlayer@ player = this.getPlayer();
+                    if (player !is null)
+                    {
+                        player.server_setCoins(player.getCoins() + gold_coins);
+                    }
+                    // CBlob@ ore = server_CreateBlobNoInit("mat_gold");
+                    // if (ore !is null)
+                    // {
+                    // 	ore.Tag('custom quantity');
+                    // 	ore.Init();
+                    // 	ore.setPosition(hi.hitpos);
+                    // 	ore.server_SetQuantity(4);
+                    // }
+                }
+                else if (dirt_stone)
+                {
+                    int quantity = 4;
+                    if(dirt_thick_stone)
+                    {
+                        quantity = 6;
+                    }
+                    CBlob@ ore = server_CreateBlobNoInit("mat_stone");
+                    if (ore !is null)
+                    {
+                        ore.Tag('custom quantity');
+                        ore.Init();
+                        ore.setPosition(blobPos);
+                        ore.server_SetQuantity(quantity);
+                    }
+                }
+            }
+        }
+    }
 
 	// destroy grass
 

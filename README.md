@@ -58,11 +58,13 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Increased swing speed on man-made structures and wood
 - Decreased swing speed on dirt and gold
 - Increased backwall building speed
+- Double damage for digging wood or stone (3 hits for wood block, 4 for stone block)
 - Moss backwall is now treated like stone backwall
 - Repairing blobs will no longer replace healthy stone backwall behind
 
-### Knight and Builder
-- Double damage for digging wood or stone (3 hits for wood block, 4 for stone block)
+### Knight
+- Double damage for digging wood (3 hits for wood block)
+- Uses same logic as indicator for breaking blocks (block highlighting will always be accurate)
 
 ### Archer
 - Grapple is no longer cancelled when pressing use key
