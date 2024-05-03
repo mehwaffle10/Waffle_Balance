@@ -8,7 +8,6 @@ const u8 MINE_PRIMING_TIME = 45;
 const string MINE_STATE = "mine_state";
 const string MINE_TIMER = "mine_timer";
 const string MINE_PRIMING = "mine_priming";
-const string MINE_PRIMED = "mine_primed";
 
 enum State
 {
@@ -54,7 +53,7 @@ void onInit(CBlob@ this)
 	}
 
 	this.set_u8(MINE_TIMER, 0);
-	this.addCommandID(MINE_PRIMED);
+	this.addCommandID("mine_primed_client");
 
 	this.getCurrentScript().tickIfTag = MINE_PRIMING;
 
@@ -69,41 +68,47 @@ void onInit(CSprite@ this)
 
 void onTick(CBlob@ this)
 {
-	if (getNet().isServer())
+	if (isServer())
 	{
-		// Waffle: Allow mines to start arming as soon as they are thrown
 		//tick down
-		//if (this.getVelocity().LengthSquared() < 1.0f && !this.isAttached())
-		//{
-		u8 timer = this.get_u8(MINE_TIMER);
-		timer++;
-		this.set_u8(MINE_TIMER, timer);
+        // Waffle: Allow mines to start arming as soon as they are thrown
+		// if (this.getVelocity().LengthSquared() < 1.0f && !this.isAttached())
+		// {
+        u8 timer = this.get_u8(MINE_TIMER);
+        timer++;
+        this.set_u8(MINE_TIMER, timer);
 
-		if (timer >= MINE_PRIMING_TIME)
-		{
-			this.Untag(MINE_PRIMING);
-			this.SendCommand(this.getCommandID(MINE_PRIMED));
-		}
-		//}
+        if (timer >= MINE_PRIMING_TIME)
+        {
+            this.Untag(MINE_PRIMING);
+
+            if (this.isAttached()) return;
+
+            if (this.isInInventory()) return;
+
+            if (this.get_u8(MINE_STATE) == PRIMED) return;
+
+            this.set_u8(MINE_STATE, PRIMED);
+
+            this.getShape().checkCollisionsAgain = true;
+
+            this.SendCommand(this.getCommandID("mine_primed_client"));
+        }
+		// }
 		//reset if bumped/moved
-		//else if (this.hasTag(MINE_PRIMING))
-		//{
-		//	this.set_u8(MINE_TIMER, 0);
-		//}
+		// else if (this.hasTag(MINE_PRIMING))
+		// {
+		// 	this.set_u8(MINE_TIMER, 0);
+		// }
 	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream@ params)
 {
-	if (cmd == this.getCommandID(MINE_PRIMED))
+	if (cmd == this.getCommandID("mine_primed_client") && isClient())
 	{
-		if (this.isAttached()) return;
-
-		if (this.isInInventory()) return;
-
-		if (this.get_u8(MINE_STATE) == PRIMED) return;
-
 		this.set_u8(MINE_STATE, PRIMED);
+		
 		this.getShape().checkCollisionsAgain = true;
 
 		CSprite@ sprite = this.getSprite();
@@ -210,7 +215,7 @@ void onDie(CBlob@ this)
 		for(u16 i = 0; i < blobs.length; i++)
 		{
 			CBlob@ target = blobs[i];
-			if (target.hasTag("flesh") && !target.hasTag("vehicle protection") &&
+			if (target.hasTag("flesh") &&
 			(target.getTeamNum() != this.getTeamNum() || target.getPlayer() is this.getDamageOwnerPlayer()))
 			{
 				this.server_Hit(target, POSITION, Vec2f_zero, 8.0f, Hitters::mine_special, true);
