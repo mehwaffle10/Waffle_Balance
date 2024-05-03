@@ -103,7 +103,7 @@ void DrawResupplyOnHUD(CBlob@ this, Vec2f tl)
 
 		if (hover)
 		{
-			GUI::DrawText(resupply_available, icon_pos + Vec2f(icon_size.x * 2 - dim_res_av.x + 8, -24 - dim_res_av.y), color_white);
+			GUI::DrawText(resupply_available, icon_pos + Vec2f(icon_size.x * 2 - dim_res_av.x + 8, -24 - dim_res_av.y), color_white);  // Waffle: Update text
 		}
 	}
 }

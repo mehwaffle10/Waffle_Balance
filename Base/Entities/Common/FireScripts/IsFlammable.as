@@ -25,7 +25,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {
 	if (!this.hasTag("vehicle protection") && (  // Waffle: Protect drivers
 		isIgniteHitter(customData) ||		// Fire arrows
-		(this.isOverlapping(hitterBlob) && hitterBlob.isInFlames() && !this.isInFlames()))) 	// Flaming enemy
+		(this.isOverlapping(hitterBlob) && hitterBlob.isInFlames() && !this.isInFlames())) 	// Flaming enemy
 	{
 		server_setFireOn(this);
 		if (hitterBlob.getDamageOwnerPlayer() !is null){

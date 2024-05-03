@@ -1,8 +1,7 @@
 #include "PlacementCommon.as"
 #include "BuildBlock.as"
 #include "Requirements.as"
-
-#include "GameplayEvents.as"
+#include "GameplayEventsCommon.as";
 
 // Called server side
 void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
@@ -28,23 +27,30 @@ void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
 	bool validTile = bc.tile > 0;
 	bool hasReqs = hasRequirements(inv, bc.reqs, missing);
 	bool passesChecks = serverTileCheck(this, index, cursorPos);
+	bool stillOnDelay = isBuildDelayed(this);
 
-	if (validTile && hasReqs && passesChecks)
+	if (validTile && hasReqs && passesChecks && !stillOnDelay)
 	{
 		CMap@ map = getMap();
 		DestroyScenary(cursorPos, Vec2f(cursorPos.x+map.tilesize, cursorPos.y+map.tilesize));
 		server_TakeRequirements(inv, bc.reqs);
 		map.server_SetTile(cursorPos, bc.tile);
 
-		u32 delay = getCurrentBuildDelay(this);
+        // one day we will reach an ideal world without latency, dumb edge cases and bad netcode
+		// that day is not today
+		u32 delay = getCurrentBuildDelay(this) - 1;
         // Waffle: Build backwall faster
         if (bc.tile == CMap::tile_castle_back || bc.tile == CMap::tile_wood_back)
         {
             delay /= 2;
         }
-		SetBuildDelay(this, delay / 2); // Set a smaller delay to compensate for lag/late packets etc
+		SetBuildDelay(this, delay);
 
-		SendGameplayEvent(createBuiltBlockEvent(this.getPlayer(), bc.tile));
+		// GameplayEvent
+		if (p !is null)
+		{
+			GE_BuildBlock(p.getNetworkID(), bc.tile); // gameplay event for coins
+		}
 	}
 }
 
@@ -77,12 +83,13 @@ bool serverTileCheck(CBlob@ blob, u8 tileIndex, Vec2f cursorPos)
 		return false;
 
 	// Is our tile solid and are we trying to place it into a no build area
-    BuildBlock @blockToPlace = getBlockByIndex(blob, tileIndex);
+    // Waffle: Prevent blocks in no solids zone
+    BuildBlock @blockToPlace = getBlockByIndex(blob, tileIndex);   
 	if (map.isTileSolid(blockToPlace.tile))
 	{
 		pos = cursorPos + Vec2f(map.tilesize * 0.5f, map.tilesize * 0.5f);
 
-		if (map.getSectorAtPosition(pos, "no build") !is null || map.getSectorAtPosition(pos, "no solids") !is null)  // Waffle: Prevent blocks in no solids zone
+		if (map.getSectorAtPosition(pos, "no build") !is null || map.getSectorAtPosition(pos, "no solids") !is null)
 			return false;
 	}
 
@@ -183,7 +190,8 @@ void onTick(CBlob@ this)
 			{
 				CBitStream params;
 				params.write_u8(blockIndex);
-				params.write_Vec2f(bc.tileAimPos);
+				//params.write_Vec2f(bc.tileAimPos);
+				params.write_Vec2f(this.getAimPos()); // we're gonna send the aimpos and double-check range on server for safety
 				this.SendCommand(this.getCommandID("placeBlock"), params);
 				u32 delay = getCurrentBuildDelay(this);
                 // Waffle: Build backwall faster
@@ -300,10 +308,39 @@ void onRender(CSprite@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (getNet().isServer() && cmd == this.getCommandID("placeBlock"))
+	if (cmd == this.getCommandID("placeBlock") && isServer())
 	{
-		u8 index = params.read_u8();
-		Vec2f pos = params.read_Vec2f();
-		PlaceBlock(this, index, pos);
+		u8 index;
+		if (!params.saferead_u8(index)) return;
+
+		Vec2f aimpos;
+		if (!params.saferead_Vec2f(aimpos)) return;
+
+		// convert aimpos to tileaimpos (on server this time);
+		Vec2f pos = this.getPosition();
+		Vec2f mouseNorm = aimpos - pos;
+		f32 mouseLen = mouseNorm.Length();
+		const f32 maxLen = MAX_BUILD_LENGTH;
+		mouseNorm /= mouseLen;
+
+		Vec2f tileaimpos;
+
+		if (mouseLen > maxLen * getMap().tilesize)
+		{
+			f32 d = maxLen * getMap().tilesize;
+			Vec2f p = pos + Vec2f(d * mouseNorm.x, d * mouseNorm.y);
+			tileaimpos = getMap().getTileWorldPosition(getMap().getTileSpacePosition(p));
+		}
+		else
+		{
+			tileaimpos = getMap().getTileWorldPosition(getMap().getTileSpacePosition(aimpos));
+		}
+
+		// out of range
+		if (mouseLen >= getMaxBuildDistance(this))
+		{
+			return;
+		} 
+		PlaceBlock(this, index, tileaimpos);
 	}
 }
