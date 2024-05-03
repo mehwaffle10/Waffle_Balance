@@ -1,7 +1,5 @@
 //common "can a plant grow at this tile" code
 
-const string LAST_BLOCKED_TIME = "last blocked time";
-
 bool isNotTouchingOthers(CBlob@ this, CMap@ map, Vec2f pos)
 {
 	CBlob@[] overlapping;

@@ -5,8 +5,8 @@
 #include "KnockedCommon.as";  // Waffle: Fix issue with HitHeld + shieldbashing
 
 const u8 DEFAULT_PERSONALITY = SCARED_BIT;
-const int MAX_EGGS = 4; //maximum symultaneous eggs  // Waffle: Increase chicken spawning
-const int MAX_CHICKENS = 10;
+const int MAX_EGGS = 4; //maximum symultaneous eggs  // 2  // Waffle: Increase chicken spawning
+const int MAX_CHICKENS = 10;                         // 6  // Waffle: --
 const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
 
 int g_lastSoundPlayedTime = 0;

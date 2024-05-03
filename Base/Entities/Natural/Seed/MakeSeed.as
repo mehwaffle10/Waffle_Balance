@@ -19,7 +19,7 @@ CBlob@ server_MakeSeed(Vec2f atpos, string blobname, u16 growtime, u8 spriteInde
 		seed.set_u16("seed_grow_time", growtime);
 		seed.set_u8("sprite index", spriteIndex);
 		seed.set_u8("created_blob_radius", created_blob_radius);
-        seed.set_f32("important-pickup", 45.0f);
+        seed.set_f32("important-pickup", 45.0f);  // Waffle: Adjust Z values
 		seed.Init();
 	}
 
