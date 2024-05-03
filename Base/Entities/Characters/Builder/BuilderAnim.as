@@ -341,7 +341,6 @@ void onRender(CSprite@ this)
 	// Waffle: Add support for alternate strike animations
 	if (blob.isKeyPressed(key_action1) || this.isAnimation("slow_strike") || this.isAnimation("strike") || this.isAnimation("fast_strike") || this.isAnimation("chop") || this.isAnimation("fast_chop"))
 	{
-
 		HitData@ hitdata;
 		blob.get("hitdata", @hitdata);
 		CBlob@ hitBlob = hitdata.blobID > 0 ? getBlobByNetworkID(hitdata.blobID) : null;
