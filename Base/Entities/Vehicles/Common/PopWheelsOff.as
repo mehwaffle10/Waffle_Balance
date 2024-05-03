@@ -5,7 +5,9 @@
 void onInit(CBlob@ this)
 {
 	this.addCommandID("pop_wheels");
-	this.addCommandID("add_wheels");  // Waffle: Add support for readding wheels
+    this.addCommandID("pop_wheels_client");
+	this.addCommandID("add_wheels");         // Waffle: Add support for readding wheels
+    this.addCommandID("add_wheels_client");  // Waffle: --
 	if (this.hasTag("immobile"))
 	{
 		PopWheels(this, false);
@@ -16,9 +18,11 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 {
 	if (!canSeeButtons(this, caller)) return;
 
+    if (this.isAttached() || caller.isAttached()) return;
+
 	// if (this.getAttachments().getAttachmentPointByName("DRIVER").getOccupied() !is null) return;  // Waffle: Gunner is also driver
 
-	if (this.getTeamNum() == caller.getTeamNum() && isOverlapping(this, caller) && !caller.isAttached() && !this.isAttached())  // Waffle: Don't show buttons if attached
+	if (this.getTeamNum() == caller.getTeamNum() && isOverlapping(this, caller) && !caller.isAttached())  // Waffle: Use isOverlapping instead of distance
 	{
 		// Waffle: Add support for readding wheels
 		if (this.hasTag("immobile"))
@@ -34,26 +38,52 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
-	if (cmd == this.getCommandID("pop_wheels"))
+	if (cmd == this.getCommandID("pop_wheels") && isServer())
 	{
 		if (!this.hasTag("immobile"))
 		{
-			// Waffle: Gunner is also driver
-			// CBlob@ chauffeur = this.getAttachments().getAttachmentPointByName("DRIVER").getOccupied();
+			if (isServer())
+			{
+				CPlayer@ caller = getNet().getActiveCommandPlayer();
+				if (caller is null) return;
 
+				CBlob@ blob = caller.getBlob();
+				if (blob is null) return;
+
+				if (this.getDistanceTo(blob) > (this.getRadius() * 2)) return;
+
+				if (this.getTeamNum() != blob.getTeamNum()) return;
+			}
+
+            // Waffle: Gunner is also driver
+			// CBlob@ chauffeur = this.getAttachments().getAttachmentPointByName("DRIVER").getOccupied();
 			// if (chauffeur !is null) return;
 
 			this.Tag("immobile");
-			PopWheels(this, false);
+			PopWheels(this, true);
+
+			this.SendCommand(this.getCommandID("pop_wheels_client"));
 		}
 	}
-	else if (cmd == this.getCommandID("add_wheels"))  // Waffle: Add support for readding wheels
+	else if (cmd == this.getCommandID("pop_wheels_client") && isClient())
+	{
+		this.Tag("immobile");
+		PopWheels(this, true);
+	}
+    else if (cmd == this.getCommandID("add_wheels") && isServer())  // Waffle: Add support for readding wheels
 	{
 		if (this.hasTag("immobile"))
 		{
 			this.Untag("immobile");
 			AddWheels(this);
+
+            this.SendCommand(this.getCommandID("add_wheels_client"));
 		}
+	}
+    else if (cmd == this.getCommandID("add_wheels_client") && isClient())
+	{
+		this.Untag("immobile");
+		AddWheels(this);
 	}
 }
 
@@ -74,7 +104,6 @@ void PopWheels(CBlob@ this, bool addparticles = true)
 	for (int i = 0; i < sprite.getSpriteLayerCount(); ++i)
 	{
 		CSpriteLayer@ wheel = sprite.getSpriteLayer(i);
-
 		if (wheel !is null && wheel.name.substr(0, 2) == "!w")
 		{
 			// Waffle: Never launch wheels
@@ -93,7 +122,6 @@ void PopWheels(CBlob@ this, bool addparticles = true)
 
 	//add chocks
 	CSpriteLayer@ chocks = sprite.addSpriteLayer("!chocks", "Entities/Vehicles/Common/WoodenChocks.png", 32, 16);
-
 	if (chocks !is null)
 	{
 		Animation@ anim = chocks.addAnimation("default", 0, false);

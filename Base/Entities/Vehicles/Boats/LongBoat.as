@@ -10,8 +10,8 @@ const s8[] destruction_offsets = {2, 2, 2, 2, 2};  // Waffle: Add better map dam
 void onInit(CBlob@ this)
 {
 	Vehicle_Setup(this,
-	              100.0f, // move speed
-	              0.30f,  // turn speed
+	              100.0f, // move speed  // Waffle: Adjust move speed
+	              0.30f,  // turn speed  // Waffle: Adjust turn speed
 	              Vec2f(0.0f, -2.5f), // jump out velocity
 	              true  // inventory access
 	             );
