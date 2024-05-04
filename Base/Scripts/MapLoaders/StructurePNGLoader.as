@@ -1258,5 +1258,4 @@ const SColor[] TILE_LUT = {
     map_colors::unused,                // | 252 |
     map_colors::unused,                // | 253 |
     map_colors::unused,                // | 254 |
-    map_colors::unused                 // | 255 |
-};
+    map_colors::unused};               // | 255 |

@@ -171,7 +171,7 @@ namespace map_colors
 		kitchen                = 0xFFFFD9D9, // ARGB(255, 255, 217, 217);
 		nursery                = 0xFFD9FFDF, // ARGB(255, 217, 255, 223);
 		research               = 0xFFE1E1E1, // ARGB(255, 225, 225, 225);
-        quarry                 = 0xFFE8E8E8, // ARGB(255, 232, 232, 232)
+        quarry                 = 0xFFE8E8E8, // ARGB(255, 232, 232, 232);  // Waffle: Add quarries
 
 		// MARKERS
 		blue_main_spawn        = 0xFF00FFFF, // ARGB(255,   0, 255, 255);
