@@ -149,7 +149,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	{
 		//carrying enemy flag
 		CBlob@ flag = blob.getCarriedBlob();
-		if (flag !is null && flag.getName() == flag_name && flag.getTeamNum() != this.getTeamNum())
+		if (flag !is null && flag.getName() == flag_name() && flag.getTeamNum() != this.getTeamNum())  // Waffle: Use function
 		{
 			CPlayer@ p = blob.getPlayer();
 			if (p !is null)

@@ -1,5 +1,6 @@
 // Keg logic
 #include "Hitters.as";
+#include "ActivationThrowCommon.as"
 
 void onInit(CBlob@ this)
 {

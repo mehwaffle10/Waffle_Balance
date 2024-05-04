@@ -404,14 +404,14 @@ void onTick(CBlob@ this)
         }
 	}
 
-    CSprite@ sprite = blob.getSprite();
+    CSprite@ sprite = this.getSprite();
 	if (sprite is null) return;
 
-	sprite.SetZ(blob.isAttached() ? 10.0f : -10.0f);
+	sprite.SetZ(this.isAttached() ? 10.0f : -10.0f);
 
 	//spin saw blade
 	CSpriteLayer@ chop = sprite.getSpriteLayer("chop");
-	if (chop !is null && getSawOn(blob))
+	if (chop !is null && getSawOn(this))
 	{
 		chop.SetFacingLeft(false);
 
@@ -419,7 +419,7 @@ void onTick(CBlob@ this)
 		chop.RotateBy(30.0f, around);
 	}
 
-	UpdateSprite(blob);
+	UpdateSprite(this);
 }
 
 // Waffle: Increase bomb damage to saws

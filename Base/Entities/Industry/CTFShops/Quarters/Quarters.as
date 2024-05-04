@@ -217,10 +217,10 @@ void onShopMadeItem(CBitStream@ params)
 	}
     else if (name == "tree_seed")  // Waffle: Seeds can be bought from quarters
     {
-        CBlob@ seed = server_MakeSeed(callerBlob.getPosition(), "tree_pine");
+        CBlob@ seed = server_MakeSeed(caller.getPosition(), "tree_pine");
         if (seed !is null)
         {
-            callerBlob.server_PutInInventory(seed);
+            caller.server_PutInInventory(seed);
         }
     }
 }

@@ -133,11 +133,11 @@ void onShopMadeItem(CBitStream@ params)
     else if (name == "trampoline_folded")  // Waffle: Trampolines start folded
     {
         CBlob@ b = server_CreateBlobNoInit("trampoline");
-        b.setPosition(callerBlob.getPosition());
-        b.server_setTeamNum(callerBlob.getTeamNum());
+        b.setPosition(caller.getPosition());
+        b.server_setTeamNum(caller.getTeamNum());
         b.Tag("start packed");
         b.Init();
-        callerBlob.server_Pickup(b);
+        caller.server_Pickup(b);
     }
 }
 
