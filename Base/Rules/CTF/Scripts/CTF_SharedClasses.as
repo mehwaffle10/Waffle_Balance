@@ -150,8 +150,9 @@ shared class CTFSpawns : RespawnSystem
 		if (c_info !is null)
 		{
 			CBlob@ pickSpawn = getBlobByNetworkID(c_info.spawn_point);
-			if (pickSpawn !is null &&
-			        pickSpawn.hasTag("respawn") && !isUnderRaid(pickSpawn) &&
+            if (pickSpawn !is null &&
+			        pickSpawn.hasTag("respawn") &&
+			        !pickSpawn.hasTag("under raid") &&
 			        pickSpawn.getTeamNum() == p_info.team)
 			{
 				return pickSpawn.getPosition();
@@ -181,7 +182,8 @@ shared class CTFSpawns : RespawnSystem
 		{
 			CBlob@ pickSpawn = getBlobByNetworkID(c_info.spawn_point);
 			if (pickSpawn !is null &&
-			        pickSpawn.hasTag("respawn") && !isUnderRaid(pickSpawn) &&
+			        pickSpawn.hasTag("respawn") && 
+			        !pickSpawn.hasTag("under raid") &&
 			        pickSpawn.getTeamNum() == p_info.team)
 			{
 				return pickSpawn;
@@ -262,7 +264,7 @@ shared class CTFSpawns : RespawnSystem
 		}
 		else
 		{
-			error("PLAYER TEAM NOT SET CORRECTLY! " + info.team + " / " + CTF_core.teams.length);
+			error("PLAYER TEAM NOT SET CORRECTLY! " + info.team + " / " + CTF_core.teams.length + " for player " + player.getUsername());
 		}
 	}
 
