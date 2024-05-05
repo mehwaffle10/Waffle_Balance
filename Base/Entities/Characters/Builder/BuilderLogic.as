@@ -68,9 +68,9 @@ void onTick(CBlob@ this)
 	}
 
 	// activate/throw
+    Pickaxe(this);
 	if (ismyplayer)
 	{
-		Pickaxe(this);
 		if (this.isKeyJustPressed(key_action3))
 		{
 			CBlob@ carried = this.getCarriedBlob();
@@ -478,7 +478,7 @@ bool canHit(CBlob@ this, CBlob@ b, Vec2f tpos, bool extra = true)
 		return false;
 	}
 
-	if (b.hasTag("invincible") || b.hasTag("vehicle protection"))  // Waffle: Protect drivers
+	if (b.hasTag("invincible"))
 	{
 		return false;
 	}
@@ -570,13 +570,6 @@ void HandlePickaxeCommand(CBlob@ this, CBitStream@ params)
 			uint16 type = map.getTile(tilepos).type;
 			if (!inNoBuildZone(map, tilepos, type))
 			{
-                // Waffle: Hit wood and stone blocks twice
-                if (map.isTileWood(type) || map.isTileCastle(type))
-                {
-                    map.server_DestroyTile(tilepos, 1.0f, this);
-                    //TODO Figure out how to not make this give extra mats
-                    //Material::fromTile(this, type, 1.0f);
-                }
 				map.server_DestroyTile(tilepos, 1.0f, this);
 				Material::fromTile(this, type, 1.0f);
 			}
