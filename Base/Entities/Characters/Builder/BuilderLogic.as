@@ -15,7 +15,8 @@ const f32 hit_damage = 0.5f;
 
 f32 pickaxe_distance = 10.0f;
 u8 delay_between_hit = 12;
-u8 delay_between_hit_structure = 10;
+u8 delay_between_hit_structure = 8;  // 10  // Waffle: Dig structures faster 
+u8 delay_between_hit_dirt = 20;  // Waffle: Add support for digging dirt and gold slower
 
 void onInit(CBlob@ this)
 {
@@ -68,9 +69,9 @@ void onTick(CBlob@ this)
 	}
 
 	// activate/throw
-    Pickaxe(this);
 	if (ismyplayer)
 	{
+		Pickaxe(this);
 		if (this.isKeyJustPressed(key_action3))
 		{
 			CBlob@ carried = this.getCarriedBlob();
@@ -150,6 +151,7 @@ class PickaxeInfo
 	u32 pickaxe_timer;
 	u32 last_pickaxed;
 	bool last_hit_structure;
+    bool last_hit_dirt;  // Waffle: Add support for digging dirt and gold slower
 };
 
 void Pickaxe(CBlob@ this)
@@ -160,16 +162,25 @@ void Pickaxe(CBlob@ this)
 	PickaxeInfo@ PI;
 	if (!this.get("pi", @PI)) return;
 
-	// magic number :D
-	if (getGameTime() - PI.last_pickaxed >= 12 && isClient())
+    // Waffle: Add support for digging dirt and gold slower. Change frame that we deal damage on
+	u8 delay = delay_between_hit;
+    u8 damage_tick = 5;
+	if (PI.last_hit_structure) {
+        delay = delay_between_hit_structure;
+        damage_tick = 3;
+    }
+    if (PI.last_hit_dirt) {
+        delay = delay_between_hit_dirt;
+        damage_tick = 9;
+    }
+
+    // magic number :D
+	if (getGameTime() - PI.last_pickaxed >= delay && isClient())
 	{
 		this.get("hitdata", @hitdata);
 		hitdata.blobID = 0;
 		hitdata.tilepos = Vec2f_zero;
 	}
-
-	u8 delay = delay_between_hit;
-	if (PI.last_hit_structure) delay = delay_between_hit_structure;
 
 	if (PI.pickaxe_timer >= delay)
 	{
@@ -190,7 +201,7 @@ void Pickaxe(CBlob@ this)
 		PI.pickaxe_timer++;
 	}
 
-	bool justCheck = PI.pickaxe_timer == 5;
+	bool justCheck = PI.pickaxe_timer == damage_tick;  // Waffle: Change frame that we deal damage on
 	if (!justCheck) return;
 
 	// we can only hit blocks with pickaxe on 5th tick of hitting, every 10/12 ticks
@@ -328,6 +339,7 @@ void Pickaxe(CBlob@ this)
 	}
 
 	bool hitting_structure = false; // hitting player-built blocks -> smaller delay
+    bool hitting_dirt = false;  // Waffle: Add support for digging dirt and gold slower
 
 	if (hitdata.blobID == 0)
 	{
@@ -351,6 +363,14 @@ void Pickaxe(CBlob@ this)
 				{
 					hitting_structure = true;
 				}
+
+                // Waffle: Add support for digging dirt and gold slower
+                if (type == CMap::tile_ground  ||  // Dirt Blocks
+                    type >= 29 && type <= 31   ||  // Damaged Dirt Blocks
+                    map.isTileGold(type))          // Gold Blocks
+                {
+                    hitting_dirt = true;
+                }
 			}
 
 			if (map.isTileBedrock(type))
@@ -372,12 +392,14 @@ void Pickaxe(CBlob@ this)
 
 			// for smaller delay
 			string attacked_name = b.getName();
-			if (attacked_name == "bridge" ||
+			if (attacked_name == "bridge"          ||
 				attacked_name == "wooden_platform" ||
-				b.hasTag("door") ||
-				attacked_name == "ladder" ||
-				attacked_name == "spikes"
-				)
+				b.hasTag("door")                   ||
+				attacked_name == "ladder"          ||
+				attacked_name == "spikes"          ||
+                b.hasTag("wooden")                 ||  // Waffle: Include all wooden 
+                b.hasTag("building")               ||  // Waffle: Include all buildings
+                b.hasTag("tree"))                      // Waffle: Include trees
 			{
 				hitting_structure = true;
 			}
@@ -385,6 +407,7 @@ void Pickaxe(CBlob@ this)
 	}
 
 	PI.last_hit_structure = hitting_structure;
+    PI.last_hit_dirt = hitting_dirt;  // Waffle: Add support for digging dirt and gold slower
 	PI.last_pickaxed = getGameTime();
 }
 
@@ -478,7 +501,7 @@ bool canHit(CBlob@ this, CBlob@ b, Vec2f tpos, bool extra = true)
 		return false;
 	}
 
-	if (b.hasTag("invincible"))
+	if (b.hasTag("invincible") || b.hasTag("vehicle protection"))  // Waffle: Protect drivers
 	{
 		return false;
 	}
@@ -553,6 +576,7 @@ void HandlePickaxeCommand(CBlob@ this, CBitStream@ params)
 	attackVel.Normalize();
 
 	bool hitting_structure = false;
+    bool hitting_dirt = false; // Waffle: Add support for digging dirt and gold slower
 
 	if (blobID == 0)
 	{
@@ -570,6 +594,13 @@ void HandlePickaxeCommand(CBlob@ this, CBitStream@ params)
 			uint16 type = map.getTile(tilepos).type;
 			if (!inNoBuildZone(map, tilepos, type))
 			{
+                // Waffle: Hit wood and stone blocks twice
+                if (map.isTileWood(type) || map.isTileCastle(type))
+                {
+                    map.server_DestroyTile(tilepos, 1.0f, this);
+                    //TODO Figure out how to not make this give extra mats
+                    //Material::fromTile(this, type, 1.0f);
+                }
 				map.server_DestroyTile(tilepos, 1.0f, this);
 				Material::fromTile(this, type, 1.0f);
 			}
@@ -583,6 +614,14 @@ void HandlePickaxeCommand(CBlob@ this, CBitStream@ params)
 			{
 				hitting_structure = true;
 			}
+
+            // Waffle: Add support for digging dirt and gold slower
+            if (type == CMap::tile_ground  ||  // Dirt Blocks
+                type >= 29 && type <= 31   ||  // Damaged Dirt Blocks
+                map.isTileGold(type))          // Gold Blocks
+            {
+                hitting_dirt = true;
+            }
 		}
 	}
 	else
@@ -613,12 +652,14 @@ void HandlePickaxeCommand(CBlob@ this, CBitStream@ params)
 
 			// for smaller delay
 			string attacked_name = b.getName();
-			if (attacked_name == "bridge" ||
+			if (attacked_name == "bridge"          ||
 				attacked_name == "wooden_platform" ||
-				b.hasTag("door") ||
-				attacked_name == "ladder" ||
-				attacked_name == "spikes"
-				)
+				b.hasTag("door")                   ||
+				attacked_name == "ladder"          ||
+				attacked_name == "spikes"          ||
+                b.hasTag("wooden")                 ||  // Waffle: Include all wooden 
+                b.hasTag("building")               ||  // Waffle: Include all buildings
+                b.hasTag("tree"))                      // Waffle: Include trees
 			{
 				hitting_structure = true;
 			}
@@ -626,6 +667,7 @@ void HandlePickaxeCommand(CBlob@ this, CBitStream@ params)
 	}
 
 	SPI.last_hit_structure = hitting_structure;
+    SPI.last_hit_dirt = hitting_dirt;  // Waffle: Add support for digging dirt and gold slower
 	SPI.last_pickaxed = getGameTime();
 }
 
@@ -638,6 +680,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		u8 delay = delay_between_hit;
 		if (SPI.last_hit_structure) delay = delay_between_hit_structure;
+        if (SPI.last_hit_dirt)      delay = delay_between_hit_dirt;  // Waffle: Add support for digging dirt and gold slower
 
 		QueuedHit@ queued_hit;
 		if (this.get("queued pickaxe", @queued_hit))
