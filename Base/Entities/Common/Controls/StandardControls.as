@@ -283,7 +283,8 @@ void onTick(CBlob@ this)
 			if (isTap(this, minimum_ticks))     // tap - put thing in inventory
 			{
 				CBlob@ held = this.getCarriedBlob();
-				if (held !is null)
+                CInventory@ inventory = this.getInventory();                            // Waffle: Allow swapping if you're holding something that can't go in your inventory
+				if (held !is null && inventory !is null && inventory.canPutItem(held))  // Waffle: --
 				{
 					this.SendCommand(this.getCommandID("putinheld"));
 				}
