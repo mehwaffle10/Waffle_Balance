@@ -1,4 +1,4 @@
-#define CLIENT_ONLY
+// #define CLIENT_ONLY  // Waffle: Simple fix for match timer desync
 
 #include "ScoreboardCommon.as";
 #include "Accolades.as";
