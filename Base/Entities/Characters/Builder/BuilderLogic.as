@@ -69,9 +69,9 @@ void onTick(CBlob@ this)
 	}
 
 	// activate/throw
+    Pickaxe(this);  // Waffle: Let other clients see anims properly
 	if (ismyplayer)
 	{
-		Pickaxe(this);
 		if (this.isKeyJustPressed(key_action3))
 		{
 			CBlob@ carried = this.getCarriedBlob();
@@ -177,7 +177,7 @@ void Pickaxe(CBlob@ this)
     // magic number :D
 	if (getGameTime() - PI.last_pickaxed >= delay && isClient())
 	{
-		this.get("hitdata", @hitdata);
+		// this.get("hitdata", @hitdata);  // Waffle: This does nothing?
 		hitdata.blobID = 0;
 		hitdata.tilepos = Vec2f_zero;
 	}
@@ -206,7 +206,7 @@ void Pickaxe(CBlob@ this)
 
 	// we can only hit blocks with pickaxe on 5th tick of hitting, every 10/12 ticks
 
-	this.get("hitdata", @hitdata);
+	// this.get("hitdata", @hitdata);  // Waffle: This does nothing?
 
 	if (hitdata is null) return;
 
@@ -341,12 +341,15 @@ void Pickaxe(CBlob@ this)
 	bool hitting_structure = false; // hitting player-built blocks -> smaller delay
     bool hitting_dirt = false;  // Waffle: Add support for digging dirt and gold slower
 
+    const bool ismyplayer = this.isMyPlayer();  // Waffle: Let other clients see anims properly
 	if (hitdata.blobID == 0)
 	{
-		CBitStream params;
-		params.write_u16(0);
-		params.write_Vec2f(hitdata.tilepos);
-		this.SendCommand(this.getCommandID("pickaxe"), params);
+        if (ismyplayer) {  // Waffle: Let other clients see anims properly
+            CBitStream params;
+            params.write_u16(0);
+            params.write_Vec2f(hitdata.tilepos);
+            this.SendCommand(this.getCommandID("pickaxe"), params);
+        }
 
 		TileType t = getMap().getTile(hitdata.tilepos).type;
 		if (t != CMap::tile_empty && t != CMap::tile_ground_back)
@@ -385,10 +388,12 @@ void Pickaxe(CBlob@ this)
 		CBlob@ b = getBlobByNetworkID(hitdata.blobID);
 		if (b !is null)
 		{
-			CBitStream params;
-			params.write_u16(hitdata.blobID);
-			params.write_Vec2f(hitdata.tilepos);
-			this.SendCommand(this.getCommandID("pickaxe"), params);
+            if (ismyplayer) {  // Waffle: Let other clients see anims properly
+                CBitStream params;
+                params.write_u16(hitdata.blobID);
+                params.write_Vec2f(hitdata.tilepos);
+                this.SendCommand(this.getCommandID("pickaxe"), params);
+            }
 
 			// for smaller delay
 			string attacked_name = b.getName();
