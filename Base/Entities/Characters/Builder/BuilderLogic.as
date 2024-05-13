@@ -165,11 +165,13 @@ void Pickaxe(CBlob@ this)
     // Waffle: Add support for digging dirt and gold slower. Change frame that we deal damage on
 	u8 delay = delay_between_hit;
     u8 damage_tick = 5;
-	if (PI.last_hit_structure) {
+	if (PI.last_hit_structure)
+    {
         delay = delay_between_hit_structure;
         damage_tick = 3;
     }
-    if (PI.last_hit_dirt) {
+    if (PI.last_hit_dirt)
+    {
         delay = delay_between_hit_dirt;
         damage_tick = 9;
     }
@@ -344,7 +346,8 @@ void Pickaxe(CBlob@ this)
     const bool ismyplayer = this.isMyPlayer();  // Waffle: Let other clients see anims properly
 	if (hitdata.blobID == 0)
 	{
-        if (ismyplayer) {  // Waffle: Let other clients see anims properly
+        if (ismyplayer)  // Waffle: Let other clients see anims properly
+        {
             CBitStream params;
             params.write_u16(0);
             params.write_Vec2f(hitdata.tilepos);
@@ -388,7 +391,8 @@ void Pickaxe(CBlob@ this)
 		CBlob@ b = getBlobByNetworkID(hitdata.blobID);
 		if (b !is null)
 		{
-            if (ismyplayer) {  // Waffle: Let other clients see anims properly
+            if (ismyplayer) // Waffle: Let other clients see anims properly
+            {
                 CBitStream params;
                 params.write_u16(hitdata.blobID);
                 params.write_Vec2f(hitdata.tilepos);
@@ -704,8 +708,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
         u16 blobID;
         Vec2f tilepos;
 
-        if (!params.saferead_u16(blobID)) return;
-        if (!params.saferead_Vec2f(tilepos)) return;
+        if (!params.saferead_u16(blobID) || !params.saferead_Vec2f(tilepos)) return;
 
 		// allow for one queued hit in-flight; reject any incoming one in the
 		// mean time (would only happen with massive lag in legit scenarios)
