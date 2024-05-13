@@ -161,14 +161,15 @@ void onTick(CSprite@ this)
 						hitting_dirt = true;
 					}
 
-					// Waffle: Add support for digging man made blocks faster
-					if (map.isTileWood(t.type) 			 	||  // Wood Blocks
-						t.type == CMap::tile_wood_back 	 	||  // Wood Backwall
-						t.type == 207 					 	||  // Damaged Wood Backwall
-						map.isTileCastle(t.type)		 	||  // Stone Blocks
-						t.type == CMap::tile_castle_back 	||  // Stone Backwall
-						t.type >= 76 && t.type <= 79	 	||  // Damaged Stone Backwall
-					 	t.type == CMap::tile_castle_back_moss)  // Mossy Stone Backwall
+					// Waffle: Add support for digging man made blocks and grass faster
+					if (map.isTileWood(t.type) 			 	          ||  // Wood Blocks
+						t.type == CMap::tile_wood_back 	 	          ||  // Wood Backwall
+						t.type == 207 					 	          ||  // Damaged Wood Backwall
+						map.isTileCastle(t.type)		 	          ||  // Stone Blocks
+						t.type == CMap::tile_castle_back 	          ||  // Stone Backwall
+						t.type >= 76 && t.type <= 79	 	          ||  // Damaged Stone Backwall
+					 	t.type == CMap::tile_castle_back_moss         ||  // Mossy Stone Backwall
+                        t.type >= CMap::tile_grass && t.type <= 28)       // Grass
 					{
 						hitting_built = true;
 					}
@@ -194,8 +195,8 @@ void onTick(CSprite@ this)
 						if (attacked.hasTag("wooden")   ||
 							attacked.hasTag("building")	||
 							attacked_name == "spikes"   ||
-							attacked.hasTag("tree")
-							)
+							attacked.hasTag("tree")     ||
+                            attacked.hasTag("scenary"))
 						{
 							hitting_built = true;
 						}

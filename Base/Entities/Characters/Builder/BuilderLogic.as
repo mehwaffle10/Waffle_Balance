@@ -361,11 +361,12 @@ void Pickaxe(CBlob@ this)
 			if (!inNoBuildZone(map, hitdata.tilepos, type))
 			{
 				// for smaller delay
-				if (map.isTileWood(type) || // wood tile
-					(type >= CMap::tile_wood_back && type <= 207) || // wood backwall
-					map.isTileCastle(type) || // castle block
-					(type >= CMap::tile_castle_back && type <= 79) || // castle backwall
-					 type == CMap::tile_castle_back_moss) // castle mossbackwall
+				if (map.isTileWood(type)                           ||  // wood tile
+					(type >= CMap::tile_wood_back && type <= 207)  ||  // wood backwall
+					map.isTileCastle(type)                         ||  // castle block
+					(type >= CMap::tile_castle_back && type <= 79) ||  // castle backwall
+					type == CMap::tile_castle_back_moss            ||  // castle mossbackwall
+                    (type >= CMap::tile_grass && type <= 28))          // Waffle: Dig grass faster
 				{
 					hitting_structure = true;
 				}
@@ -408,7 +409,8 @@ void Pickaxe(CBlob@ this)
 				attacked_name == "spikes"          ||
                 b.hasTag("wooden")                 ||  // Waffle: Include all wooden 
                 b.hasTag("building")               ||  // Waffle: Include all buildings
-                b.hasTag("tree"))                      // Waffle: Include trees
+                b.hasTag("tree")                   ||  // Waffle: Include trees
+                b.hasTag("scenary"))                   // Waffle: Include scenary
 			{
 				hitting_structure = true;
 			}
@@ -618,14 +620,15 @@ void HandlePickaxeCommand(CBlob@ this, u16 blobID, Vec2f tilepos)  // CBitStream
 			}
 
 			// for smaller delay
-			if (map.isTileWood(type) || // wood tile
-				(type >= CMap::tile_wood_back && type <= 207) || // wood backwall
-				map.isTileCastle(type) || // castle block
-				(type >= CMap::tile_castle_back && type <= 79) || // castle backwall
-					type == CMap::tile_castle_back_moss) // castle mossbackwall
-			{
-				hitting_structure = true;
-			}
+            if (map.isTileWood(type)                           ||  // wood tile
+                (type >= CMap::tile_wood_back && type <= 207)  ||  // wood backwall
+                map.isTileCastle(type)                         ||  // castle block
+                (type >= CMap::tile_castle_back && type <= 79) ||  // castle backwall
+                type == CMap::tile_castle_back_moss            ||  // castle mossbackwall
+                (type >= CMap::tile_grass && type <= 28))          // Waffle: Dig grass faster
+            {
+                hitting_structure = true;
+            }
 
             // Waffle: Add support for digging dirt and gold slower
             if (type == CMap::tile_ground  ||  // Dirt Blocks
@@ -671,7 +674,8 @@ void HandlePickaxeCommand(CBlob@ this, u16 blobID, Vec2f tilepos)  // CBitStream
 				attacked_name == "spikes"          ||
                 b.hasTag("wooden")                 ||  // Waffle: Include all wooden 
                 b.hasTag("building")               ||  // Waffle: Include all buildings
-                b.hasTag("tree"))                      // Waffle: Include trees
+                b.hasTag("tree")                   ||  // Waffle: Include trees
+                b.hasTag("scenary"))                   // Waffle: Include scenary
 			{
 				hitting_structure = true;
 			}
