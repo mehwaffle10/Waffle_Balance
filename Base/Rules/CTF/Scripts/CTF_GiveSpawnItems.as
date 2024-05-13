@@ -9,9 +9,12 @@ bool SetMaterials(CBlob@ blob,  const string &in name, const int quantity, bool 
 	CInventory@ inv = blob.getInventory();
 	
 	//avoid over-stacking arrows
+    u16 quantity_to_spawn = quantity;
 	if (name == "mat_arrows")
 	{
-		inv.server_RemoveItems(name, quantity);
+        // Waffle: Don't remove cause resupply will reset charge on client
+		// inv.server_RemoveItems(name, quantity);
+        quantity_to_spawn = quantity - blob.getBlobCount(name);
 	}
 	
 	CBlob@ mat = server_CreateBlobNoInit(name);
@@ -21,7 +24,7 @@ bool SetMaterials(CBlob@ blob,  const string &in name, const int quantity, bool 
 		mat.Tag('custom quantity');
 		mat.Init();
 		
-		mat.server_SetQuantity(quantity);
+		mat.server_SetQuantity(quantity_to_spawn);
 		
 		if (drop || not blob.server_PutInInventory(mat))
 		{
@@ -97,9 +100,18 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
 			{
 				return; // don't give arrows if they have 30 already
 			}
-			else if (SetMaterials(b, "mat_arrows", 30)) 
+			else 
 			{
-				SetCTFTimer(this, p, gametime + (isBuildPhase(this) ? materials_wait_warmup : materials_wait)*getTicksASecond(), "archer");
+                // Waffle: Play sound when picking up arrows
+                CSprite@ sprite = b.getSprite();
+                if (sprite !is null)
+                {
+                    sprite.PlaySound("/PutInInventory.ogg");
+                }
+                if (isServer() && SetMaterials(b, "mat_arrows", 30))
+                {
+				    SetCTFTimer(this, p, gametime + (isBuildPhase(this) ? materials_wait_warmup : materials_wait)*getTicksASecond(), "archer");
+                }
 			}
 		}
 	}
@@ -141,10 +153,11 @@ void onTick(CRules@ this)
 		this.set_s32(RESUPPLY_TIME_STRING, isBuildPhase(this) ? 9999999999 : gametime + crate_wait);
 	}
 
-	if(!isServer())
-	{
-		return;
-	}
+    // Waffle: Play sound when picking up arrows
+	// if(!isServer())
+	// {
+	// 	return;
+	// }
 
 	if (isBuildPhase(this)) 
 	{
