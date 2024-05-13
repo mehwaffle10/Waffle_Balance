@@ -268,6 +268,10 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 // Waffle: Readd folding
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
+    if (!isServer()) {
+        return;
+    }
+
 	string dbg = "TrampolineLogic.as: Unknown command ";
 	u8 state = this.get_u8("trampolineState");
 
@@ -282,7 +286,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			{
 				this.set_u8("trampolineState", Trampoline::idle); //logic for completion of this this is in anim script
 			}
-
+            this.Sync("trampolineState", true);
 			break;
 
 		default:
