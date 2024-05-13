@@ -163,7 +163,7 @@ void onInit(CBlob@ this)
     this.getShape().SetCenterOfMassOffset(Vec2f(0, 9));  // Waffle: Adjust driving
 	
 	this.addCommandID("putin_mag");
-	this.addCommandID("fire mag blob");
+	this.addCommandID("fire mag blob client");
 
 	string[] autograb_blobs = {"mat_stone"};
 	this.set("autograb blobs", autograb_blobs);
