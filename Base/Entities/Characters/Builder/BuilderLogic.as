@@ -87,7 +87,7 @@ void onTick(CBlob@ this)
 	{
 		if (queued_hit !is null && getGameTime() >= queued_hit.scheduled_tick)
 		{
-			HandlePickaxeCommand(this, queued_hit.params);
+			HandlePickaxeCommand(this, queued_hit.blobID, queued_hit.tilepos);  // Waffle: Fix queued hits not working
 			this.set("queued pickaxe", null);
 		}
 	}
@@ -559,20 +559,23 @@ bool canHit(CBlob@ this, CBlob@ b, Vec2f tpos, bool extra = true)
 
 class QueuedHit
 {
-	CBitStream params;
+	// CBitStream params;  // Waffle: Fix queued hits not working
+    u16 blobID;
+    Vec2f tilepos;
 	int scheduled_tick;
 }
 
-void HandlePickaxeCommand(CBlob@ this, CBitStream@ params)
+void HandlePickaxeCommand(CBlob@ this, u16 blobID, Vec2f tilepos)  // CBitStream@ params  // Waffle: Fix queued hits not working
 {
 	PickaxeInfo@ SPI;
 	if (!this.get("spi", @SPI)) return;
 
-	u16 blobID;
-	Vec2f tilepos;
+    // Waffle: Fix queued hits not working
+	// u16 blobID;
+	// Vec2f tilepos;
 
-	if (!params.saferead_u16(blobID)) return;
-	if (!params.saferead_Vec2f(tilepos)) return;
+	// if (!params.saferead_u16(blobID)) return;
+	// if (!params.saferead_Vec2f(tilepos)) return;
 
 	Vec2f blobPos = this.getPosition();
 	Vec2f aimPos = this.getAimPos();
@@ -697,18 +700,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 
+        // Waffle: Fix queued hits not working
+        u16 blobID;
+        Vec2f tilepos;
+
+        if (!params.saferead_u16(blobID)) return;
+        if (!params.saferead_Vec2f(tilepos)) return;
+
 		// allow for one queued hit in-flight; reject any incoming one in the
 		// mean time (would only happen with massive lag in legit scenarios)
 		if (getGameTime() - SPI.last_pickaxed < delay)
 		{
 			QueuedHit queued_hit;
-			queued_hit.params = params;
+			queued_hit.blobID = blobID;
+            queued_hit.tilepos = tilepos;
 			queued_hit.scheduled_tick = SPI.last_pickaxed + delay;
 			this.set("queued pickaxe", @queued_hit);
 			return;
 		}
 
-		HandlePickaxeCommand(this, @params);
+		HandlePickaxeCommand(this, blobID, tilepos);
 	}
 }
 
