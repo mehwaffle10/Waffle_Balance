@@ -315,7 +315,10 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 {
 	if (customData == Hitters::bomb || customData == Hitters::water)
 	{
-		hitBlob.AddForce(velocity);
+		if (!hitBlob.hasTag("player"))
+		{
+			hitBlob.AddForce(velocity);
+		}
 	}
 }
 
@@ -588,8 +591,8 @@ bool HitBlob(CBlob@ this, Vec2f mapPos, CBlob@ hit_blob, f32 radius, f32 damage,
 	}
 
 	f32 scale;
-	Vec2f bombforce = hit_blob.hasTag("invincible") ? Vec2f_zero : getBombForce(this, radius, hit_blob_pos, pos, hit_blob.getMass(), scale); 
-	f32 dam = damage * scale;
+    Vec2f bombforce = hit_blob.hasTag("invincible") ? Vec2f_zero : getBombForce(this, radius, hit_blob_pos, pos, hit_blob.getMass());  // Waffle: Add Bunnie bomb buff
+	f32 dam = damage * getBombDamageScale(this, radius, hit_blob_pos, pos);                                                            // Waffle: --
 
 	//explosion particle
 	makeSmallExplosionParticle(hit_blob_pos);

@@ -69,8 +69,7 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 				bool hitHard = blob.getTeamNum() != this.getTeamNum() || ownerBlob is blob;
 
 				Vec2f hit_blob_pos = blob.getPosition();
-				f32 scale;
-				Vec2f bombforce = getBombForce(this, radius, hit_blob_pos, pos, blob.getMass(), scale);
+				Vec2f bombforce = getBombForce(this, radius, hit_blob_pos, pos, blob.getMass());  // Waffle: Add Bunnie bomb buff
 
 				if (shouldStun && (ownerBlob is blob || (this.isOverlapping(blob) && hitHard)))
 				{
@@ -89,21 +88,26 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 	}
 }
 
-// copied from Explosion.as ...... should be in bombcommon?
-Vec2f getBombForce(CBlob@ this, f32 radius, Vec2f hit_blob_pos, Vec2f pos, f32 hit_blob_mass, f32 &out scale)
+// Waffle: Add Bunnie bomb buff
+f32 getBombDamageScale(CBlob@ this, f32 radius, Vec2f hit_blob_pos, Vec2f pos)
 {
 	Vec2f offset = hit_blob_pos - pos;
 	f32 distance = offset.Length();
-	//set the scale (2 step)
-	scale = (distance > (radius * (this.getName() == "keg" ? 0.8 : 0.7))) ? 0.5f : 1.0f;  // Waffle: Kegs deal full damage in a larger radius 
+
+	f32 scale =  (distance > (radius * (this.getName() == "keg" ? 0.8 : 0.7))) ? 0.5f : 1.0f;  // Waffle: Kegs deal full damage in a larger radius
+	return scale;
+}
+
+Vec2f getBombForce(CBlob@ this, f32 radius, Vec2f hit_blob_pos, Vec2f pos, f32 hit_blob_mass)
+{
+	Vec2f offset = hit_blob_pos - pos;
+	// f32 distance = offset.Length();  // Waffle: Add Bunnie bomb buff
 	//the force, copy across
 	Vec2f bombforce = offset;
 	bombforce.Normalize();
 	bombforce *= 2.0f;
-	bombforce.y -= 0.2f; // push up for greater cinematic effect
-	// bombforce.x = Maths::Round(bombforce.x);  // Waffle: Remove inconsistency with rounding
-	// bombforce.y = Maths::Round(bombforce.y);  // Waffle: --
+	bombforce.y -= 0.2f;
 	bombforce /= 2.0f;
-	bombforce *= hit_blob_mass * (3.0f) * ((distance > (radius * 0.5f)) ? 0.5f : 1.0f);  // Waffle: Make it so bombs have a bigger radius that launch you at full force
+	bombforce *= hit_blob_mass * (3.0f);
 	return bombforce;
 }

@@ -87,7 +87,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Explosives
 - Ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
-- Changed the threshold for a strong launch from 30% to 50% of the blast radius to make bomb jumps easier especially on laggy servers, damage remains the same
+- Removed threshold for weaker blast force
+- Blast force applied client side to fix issues with dud jumps 
 - Do 1.2x damage to stone structures instead of half (2 shot stone doors and spikes)
 - Do 2x damage to wood structures instead of 1.4x (1 shot wood doors, already 1 shot wood buildings, 3 shot tunnel)
 - No longer damage gold
