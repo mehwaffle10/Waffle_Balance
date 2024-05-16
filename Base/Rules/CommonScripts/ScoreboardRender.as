@@ -1,4 +1,4 @@
-// #define CLIENT_ONLY  // Waffle: Simple fix for match timer desync
+// #define CLIENT_ONLY  // Waffle: Fix match timer desync
 
 #include "ScoreboardCommon.as";
 #include "Accolades.as";
@@ -807,10 +807,11 @@ void onInit(CRules@ this)
 
 void onRestart(CRules@ this)
 {
-	if(isServer())
+    // Waffle: Fix match timer desync
+    this.set_u32("match_time", 0);
+    // this.Sync("match_time", true);
+	if (isServer())
 	{
-		this.set_u32("match_time", 0);
-		this.Sync("match_time", true);
 		getMapName(this);
 	}
 }
