@@ -62,13 +62,29 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 			}
 		}
 	}
-    if (isServer())  // Waffle: Play sound when picking up arrows
+
+    // Waffle: Play sound when picking up fire arrows
+    if (blobName == "mat_firearrows")
+	{
+		u32 arrows_count = this.getBlobCount("mat_firearrows");
+		u32 blob_quantity = blob.getQuantity();
+        CInventory@ inventory = this.getInventory();
+		if (arrows_count % 2 == 1 && inventory.isFull())
+		{
+            this.getSprite().PlaySound("/PutInInventory.ogg");
+		}
+
+        if (isServer())
+        {
+            this.server_PutInInventory(blob);
+        }
+	}
+    if (!isServer())  // Waffle: Play sound when picking up arrows
     {
         return;
     }
 
-	if (blobName == "mat_firearrows" || blobName == "mat_bombarrows" ||
-	        blobName == "mat_waterarrows")
+	if (blobName == "mat_bombarrows" || blobName == "mat_waterarrows")
 	{
 		if (this.server_PutInInventory(blob))
 		{
