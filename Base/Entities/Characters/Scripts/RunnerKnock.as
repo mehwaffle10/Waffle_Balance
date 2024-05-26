@@ -42,7 +42,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				}
 				else
 				{
-					time = 2;
+					time = 3;  // 2  // Waffle: Fix jabs locking archer charge
 				}
 
 				break;
