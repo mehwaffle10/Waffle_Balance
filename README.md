@@ -65,12 +65,14 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Knight
 - Double damage for digging wood (3 hits for wood block)
 - Uses same logic as indicator for breaking blocks (block highlighting will always be accurate)
+- Fixed fake client slash if stunned at the wrong time between double slashing
 
 ### Archer
 - Grapple is no longer cancelled when pressing use key
 - Grapple no longer has increased drag in water
 - Grapple can collide with boats
 - Grapple no longer pulls objects
+- Fixed charge getting stuck when jabbed
 
 ### Wood Structure Damage
 - Arrows do full damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
@@ -443,6 +445,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Fixed screen shake happening when the keg wasn't exploding
 - Cost 160 coins
 - Removed 10 tick inconsistency in fuse timer (thanks bunnie!)
+- Now make sounds on damage and gibs on death (thanks mugg91!)
 
 ### Mines
 - Deploy after timer like they used to 
