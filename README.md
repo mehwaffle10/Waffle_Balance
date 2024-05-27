@@ -74,6 +74,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Grapple no longer pulls objects
 - Fixed charge getting stuck when jabbed
 
+### Stomp
+- Added bullet stomps (thanks bunnie!)
+- Stomping now briefly prevents fall damage
+
 ### Wood Structure Damage
 - Arrows do full damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
 	- wood doors = 7 hearts
@@ -343,6 +347,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can use action3 key (default space) to lock the angle the trampoline is facing
 	- Has small sound to indicate when the trampoline is locked
 - Can be folded using interact (e by default)
+- Fixed getting stunned when jumping on trampolines on the ground
 
 ### Boulders (Rock and roll mode is the block destroying mode like when launched from a catapult)
 - Team based collisions
