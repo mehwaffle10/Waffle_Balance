@@ -49,7 +49,7 @@ void Stomp(CBlob@ this, CBlob@ blob) {
     float enemydam = 0.0f;
     f32 vely = this.getOldVelocity().y;
 
-    if (vely > 10.0f || (this.getName() == "archer" && vely > 5.5f))
+    if (vely > 10.0f)
     {
         enemydam = 2.0f;
     }
