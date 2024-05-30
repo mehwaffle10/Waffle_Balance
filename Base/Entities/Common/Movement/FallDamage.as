@@ -34,15 +34,34 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		bool doknockdown = true;
 
         // check if we aren't touching a trampoline  // Waffle: Always check for trampolines
-        CBlob@[] overlapping;
+        CMap@ map = getMap();
+        if (map !is null) {
+            u8 width = this.getWidth() / 2 + 1;
+            u8 height = this.getHeight();
 
-        if (getMap().getBlobsAtPosition(point1 - Vec2f(0, 4), @overlapping))  // Waffle: Better check for trampolines. Courtesy of bunnie
-        {
+            CBlob@[] overlapping;
+            for (s8 x = -width; x <= width; x += width) {
+                for (s8 y = 0; y <= height; y += height / 2) {
+                    map.getBlobsAtPosition(point1 - Vec2f(x, y), @overlapping);
+                }
+            }
+
             for (uint i = 0; i < overlapping.length; i++)
             {
-                CBlob@ b = overlapping[i];
+                CBlob@ overlapping_blob = overlapping[i];
 
-                if (b.hasTag("no falldamage"))
+                if (overlapping_blob is null || overlapping_blob is this)
+                {
+                    continue;
+                }
+
+                if (overlapping_blob.hasTag("no falldamage"))
+                {
+                    return;
+                }
+
+                CBlob@ carried_blob = overlapping_blob.getCarriedBlob();
+                if (carried_blob !is null && carried_blob.hasTag("no falldamage"))
                 {
                     return;
                 }
