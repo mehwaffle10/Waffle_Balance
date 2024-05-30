@@ -46,6 +46,11 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 }
 
 void Stomp(CBlob@ this, CBlob@ blob) {
+    // Waffle: No double stomp
+    if (getGameTime() - this.get_u32("laststomptime" + blob.getNetworkID()) < 4) {
+        return;
+    }
+
     float enemydam = 0.0f;
     f32 vely = this.getOldVelocity().y;
 
@@ -60,6 +65,7 @@ void Stomp(CBlob@ this, CBlob@ blob) {
 
     if (enemydam > 0)
     {
+        this.set_u32("laststomptime" + blob.getNetworkID(), getGameTime());
         this.set_u32("laststomptime", getGameTime());
         this.Sync("laststomptime", true);
         this.server_Hit(blob, this.getPosition(), Vec2f(0, 1) , enemydam, Hitters::stomp);
