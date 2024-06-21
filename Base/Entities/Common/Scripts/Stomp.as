@@ -29,7 +29,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
                     old_pos.y < target.getPosition().y - 2 &&
                     target.getTeamNum() != this.getTeamNum() &&
                     !isCrouching(target) &&
-                    !target.hasTag("dead")
+                    !target.hasTag("dead") &&
+                    !target.isAttached()
                 )
 				{
                     Stomp(this, target);
