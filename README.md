@@ -126,6 +126,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can be placed on non-static blobs
 - Can no longer grow inside of static blobs or on other trees
 - Can no longer build blocks on top of saplings placed with left click
+- Fixed misalignment from seeds (no build would float half a block off the ground)
 
 ### Holidays
 - Disabled
