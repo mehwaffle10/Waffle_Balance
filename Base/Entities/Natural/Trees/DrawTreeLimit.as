@@ -97,11 +97,14 @@ void onRender(CRules@ this)
                     }
                 }
                 
+                // Draw Limit
                 GUI::DrawRectangle(
                     upper_left,
                     bottom_right,
                     color
                 );
+
+                DrawTreeHeight(driver, map, blob);
             }
         }
     }

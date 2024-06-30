@@ -526,6 +526,12 @@ void onRender(CSprite@ this)
 				{
 					color.set(255, 255, 255, 255);
 					carryBlob.RenderForHUD(getBottomOfCursor(bc.tileAimPos, carryBlob) - carryBlob.getPosition(), 0.0f, color, RenderStyle::normal);
+
+                    // Waffle: Render tree heights
+                    if (isTreeSeed(carryBlob))
+                    {
+                        DrawTreeHeight(getDriver(), getMap(), bc.tileAimPos);
+                    }
 				}
 				else
 				{

@@ -490,6 +490,6 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Saplings
 - Can now be bought for 100 coins
 - Can no longer be placed on top of each other
-- Now show tree limit around existing trees and saplings while held
+- Now show tree limit and growth height around existing trees and saplings while held
 - Can no longer place blocks on top of them when placed with left click
 - Turn into trees in 500 ticks
