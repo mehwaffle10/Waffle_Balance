@@ -106,6 +106,8 @@ class ChatCommandManager
 
 	bool processCommand(string text, ChatCommand@ &out command, string[] &out args)
 	{
+        text = text.toLower();  // Waffle: Ignore case
+
         string prefix = ChatCommands::getPrefix();
 		if (text.substr(0, prefix.size()) != prefix && text.substr(0, 1) != "!") return false;  // Waffle: Allow ! instead of /
 
