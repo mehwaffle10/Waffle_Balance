@@ -63,8 +63,12 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Repairing blobs will no longer replace healthy stone backwall behind
 
 ### Knight
-- Double damage for digging wood (3 hits for wood block)
-- Uses same logic as indicator for breaking blocks (block highlighting will always be accurate)
+- Block Breaking
+    - Double damage for digging wood (3 hits for wood block)
+    - Uses same logic as indicator for breaking blocks (block highlighting will always be accurate)
+    - Distance increased from 2 to 3
+    - Now has a wider window to trigger instead of a single tick
+    - Displays indicator while slashing
 - Fixed fake client slash if stunned at the wrong time between double slashing
 
 ### Archer

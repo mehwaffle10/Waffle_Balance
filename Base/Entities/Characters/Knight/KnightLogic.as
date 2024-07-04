@@ -54,6 +54,7 @@ void onInit(CBlob@ this)
 	knight.doubleslash = false;
 	knight.shield_down = getGameTime();
 	knight.tileDestructionLimiter = 0;
+    knight.canHitMap = true;  // Waffle: Add bigger map hit window
 
 	this.set("knightInfo", @knight);
 
@@ -1044,6 +1045,12 @@ class ResheathState : KnightState
 
 		return false;
 	}
+
+    // Waffle: Add bigger map hit window
+    void StateExited(CBlob@ this, KnightInfo@ knight, u8 next_state)
+    {
+        knight.canHitMap = true;
+    }
 }
 
 void SwordCursorUpdate(CBlob@ this, KnightInfo@ knight)
@@ -1260,6 +1267,13 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
 		aimangle += 360.0f;
 	}
 
+    // Waffle: Add bigger map hit window
+    KnightInfo@ knight;
+    if (!this.get("knightInfo", @knight))
+    {
+        return;
+    }
+
 	Vec2f blobPos = this.getPosition();
 	Vec2f vel = this.getVelocity();
 	Vec2f thinghy(1, 0);
@@ -1386,7 +1400,7 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
     Vec2f vector = surface_position - blobPos;
     f32 distance = vector.getLength();
 
-    if (distance < DEFAULT_ATTACK_DISTANCE && deltaInt == DELTA_BEGIN_ATTACK + 1)
+    if (distance < BLOCK_ATTACK_DISTANCE && deltaInt >= DELTA_BEGIN_ATTACK + 1 && deltaInt <= DELTA_END_ATTACK)
     {
         Tile tile = map.getTile(surface_position);
 
@@ -1411,8 +1425,11 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
             //dont dig through no build zones
             canhit = canhit && map.getSectorAtPosition(surface_position, "no build") is null;
 
-            if (canhit)
+            // Waffle: Add bigger map hit window
+            if (canhit && knight.canHitMap)
             {
+                knight.canHitMap = false;
+
                 // Waffle: Double damage vs wood
                 if (wood) 
                 {
