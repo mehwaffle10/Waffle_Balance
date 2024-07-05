@@ -476,7 +476,7 @@ void onRender(CSprite@ this)
 		f32 distance = vector.getLength();
 		Tile tile = map.getTile(surface_position);
 
-		if ((map.isTileSolid(tile) || map.isTileGrass(tile.type)) && map.getSectorAtPosition(surface_position, "no build") is null && distance < BLOCK_ATTACK_DISTANCE)
+		if (map.isTileSolid(tile) && map.getSectorAtPosition(surface_position, "no build") is null && distance < BLOCK_ATTACK_DISTANCE)  // map.isTileGrass(tile.type)  // Waffle: No longer target grass
 		{
 			DrawCursorAt(surface_position, cursorTexture);
 		}

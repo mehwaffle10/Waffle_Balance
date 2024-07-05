@@ -69,6 +69,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - Distance increased from 2 to 3
     - Now has a wider window to trigger instead of a single tick
     - Displays indicator while slashing
+    - Indicator no longer targets grass
 - Fixed fake client slash if stunned at the wrong time between double slashing
 
 ### Archer
