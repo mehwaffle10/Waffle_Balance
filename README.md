@@ -26,6 +26,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Movement
 - TDM fall damage (takes 1.3x longer falls)
 - Increased move speed in water (~33% faster)
+- Increased breath timer from 6 to 8 seconds 
 - Increased move speed on ladders
     - Velocity decay decreased from 95% to 75%
     - Diagonal move force reduced by 15%
