@@ -1400,7 +1400,7 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
     Vec2f vector = surface_position - blobPos;
     f32 distance = vector.getLength();
 
-    if (distance < BLOCK_ATTACK_DISTANCE && deltaInt >= DELTA_BEGIN_ATTACK + 1 && deltaInt <= DELTA_END_ATTACK)
+    if (distance < BLOCK_ATTACK_DISTANCE && deltaInt >= DELTA_BEGIN_ATTACK + 1 && deltaInt <= DELTA_END_ATTACK && knight.canHitMap)  // Waffle: Add bigger map hit window
     {
         Tile tile = map.getTile(surface_position);
 
@@ -1415,7 +1415,8 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
             if (jab) //fake damage
             {
                 info.tileDestructionLimiter++;
-                canhit = ((info.tileDestructionLimiter % ((wood || dirt_stone) ? 3 : 2)) == 0);
+                canhit = ((info.tileDestructionLimiter % (gold ? 3 : 2)) == 0);  // Waffle: Change gold to be 3 hits instead of wood and stone
+                knight.canHitMap = false;  // Waffle: Add bigger map hit window
             }
             else //reset fake dmg for next time
             {
@@ -1425,11 +1426,9 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
             //dont dig through no build zones
             canhit = canhit && map.getSectorAtPosition(surface_position, "no build") is null;
 
-            // Waffle: Add bigger map hit window
-            if (canhit && knight.canHitMap)
+            if (canhit)
             {
-                knight.canHitMap = false;
-
+                knight.canHitMap = false;  // Waffle: Add bigger map hit window
                 // Waffle: Double damage vs wood
                 if (wood) 
                 {

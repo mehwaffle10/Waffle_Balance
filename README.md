@@ -65,6 +65,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Knight
 - Block Breaking
     - Double damage for digging wood (3 hits for wood block)
+    - Takes 3 jabs to break gold and 2 jabs to break everything else (instead of 3 jabs for wood and stone and 2 jabs for everything else)
     - Uses same logic as indicator for breaking blocks (block highlighting will always be accurate)
     - Distance increased from 2 to 3
     - Now has a wider window to trigger instead of a single tick
