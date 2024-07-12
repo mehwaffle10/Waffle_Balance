@@ -902,6 +902,12 @@ class CutState : KnightState
 		return false;
 
 	}
+
+    // Waffle: Add bigger map hit window
+    void StateExited(CBlob@ this, KnightInfo@ knight, u8 next_state)
+    {
+        knight.canHitMap = true;
+    }
 }
 
 Vec2f getSlashDirection(CBlob@ this)
@@ -1006,6 +1012,12 @@ class SlashState : KnightState
 		return false;
 
 	}
+
+    // Waffle: Add bigger map hit window
+    void StateExited(CBlob@ this, KnightInfo@ knight, u8 next_state)
+    {
+        knight.canHitMap = true;
+    }
 }
 
 class ResheathState : KnightState
@@ -1045,12 +1057,6 @@ class ResheathState : KnightState
 
 		return false;
 	}
-
-    // Waffle: Add bigger map hit window
-    void StateExited(CBlob@ this, KnightInfo@ knight, u8 next_state)
-    {
-        knight.canHitMap = true;
-    }
 }
 
 void SwordCursorUpdate(CBlob@ this, KnightInfo@ knight)
