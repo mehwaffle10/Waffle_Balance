@@ -380,7 +380,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Reworked getting into crates to use attachments instead of inventories, which are less buggy especially for laggy players
     - Has the side effect that players do not take up space in the inventory
 - Uses the same protection logic as vehicles
-- Pressing `Use` will automatically try to get in or out of the crate instead of displaying a button
+- Pressing `Use` will automatically try to get into or out of the crate instead of displaying a button
 - Exiting a crate no longer gives the player a jump
 - Fixed players getting in crates while not holding them
 - Opening a crate with an enemy player only stun for half a second instead of a full second
