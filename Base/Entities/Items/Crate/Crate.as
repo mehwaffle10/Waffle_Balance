@@ -278,27 +278,40 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		if (sneaky_player.getTeamNum() == caller.getTeamNum())
 		{
-			CButton@ button = caller.CreateGenericButton(6, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Get out"));
-			if (putting)
-			{
-				button.SetEnabled(false);
-			}
-			if (sneaky_player !is caller) // it's a teammate, so they have to be close to use button
-			{
-				button.enableRadius = 20.0f;
-			}
+			CBitStream params;
+			params.write_netid(caller.getNetworkID());
+            if (carried is this || caller is sneaky_player)  // Waffle: Less buttons
+            {
+                this.SendCommand(this.getCommandID("getout"), params);
+            }
+            else
+            {
+                CButton@ button = caller.CreateGenericButton(6, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Get out"), params);
+                if (putting)
+                {
+                    button.SetEnabled(false);
+                }
+                if (sneaky_player !is caller) // it's a teammate, so they have to be close to use button
+                {
+                    button.enableRadius = 20.0f;
+                }
+            }
 		}
 		else // make fake buttons for enemy
 		{
+			CBitStream params;
+			params.write_netid(caller.getNetworkID());
 			if (carried is this)
 			{
+                // Waffle: Less buttons
+                this.SendCommand(this.getCommandID("getout"), params);
 				// Fake get in button
-				caller.CreateGenericButton(4, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Get inside"));
+				// caller.CreateGenericButton(4, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Get inside"), params);
 			}
 			else
 			{
 				// Fake inventory button
-				CButton@ button = caller.CreateGenericButton(13, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Crate"));
+				CButton@ button = caller.CreateGenericButton(13, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Crate"), params);
 				button.enableRadius = 20.0f;
 			}
 		}
@@ -332,7 +345,11 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	}
 	else if (carried is this)
 	{
-		caller.CreateGenericButton(4, buttonpos, this, this.getCommandID("getin"), getTranslatedString("Get inside"));
+		CBitStream params;
+		params.write_netid(caller.getNetworkID());
+        // Waffle: Less buttons
+        this.SendCommand(this.getCommandID("getin"), params);
+		// caller.CreateGenericButton(4, buttonpos, this, this.getCommandID("getin"), getTranslatedString("Get inside"), params);
 	}
 	else if (this.getTeamNum() != caller.getTeamNum() && !this.isOverlapping(caller))
 	{
@@ -433,6 +450,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (helditem is null) return;
 		if (helditem !is this) return;
 
+        // Waffle: Use attachments since they're less buggy
+        if (getPlayerInside(this) !is null) return;
+        this.server_DetachFromAll();
+        this.server_AttachTo(caller, "SNEAKY");
+        /*
 		CInventory@ inv = this.getInventory();
 		if (caller !is null && inv !is null) 
 		{
@@ -461,6 +483,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			this.server_PutInInventory(caller);
 			this.setVelocity(velocity);
 		}
+        */
 	}
 	else if (cmd == this.getCommandID("getout") && isServer())
 	{
@@ -486,7 +509,11 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 			this.Tag("crate escaped");
 			this.Sync("crate escaped", true);
-			this.server_PutOutInventory(sneaky_player);
+            
+            // Waffle: Use attachments since they're less buggy
+            sneaky_player.server_DetachFrom(this);
+			// this.server_PutOutInventory(sneaky_player);
+            sneaky_player.server_Pickup(this);  // Waffle: Automatically pick crates back up when getting out
 		}
 		// Waffle: Don't destroy crates when getting out, make them reusable
 		// Attack self to pop out items
@@ -654,13 +681,7 @@ void onAddToInventory(CBlob@ this, CBlob@ blob)
 	}
 
 	// Waffle: Add inventory indicator
-	CSprite@ sprite = this.getSprite();
-	if (sprite !is null)
-	{
-		u16 frame = sprite.getFrameIndex();
-		sprite.SetAnimation("inventory");
-		sprite.SetFrameIndex(frame);	
-	}
+	AddInventoryIndicator(this, true);
 }
 
 void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
@@ -732,14 +753,7 @@ void onRemoveFromInventory(CBlob@ this, CBlob@ blob)
 	// }
 
 	// Waffle: Add inventory indicator
-	CInventory@ inventory = this.getInventory();
-	CSprite@ sprite = this.getSprite();
-	if (sprite !is null && inventory !is null && inventory.getItemsCount() == 0)
-	{
-		u16 frame = sprite.getFrameIndex();
-		sprite.SetAnimation("destruction");
-		sprite.SetFrameIndex(frame);	
-	}
+    AddInventoryIndicator(this, false);
 }
 
 f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
@@ -880,6 +894,20 @@ Vec2f crate_getOffsetPos(CBlob@ blob, CMap@ map)
 
 CBlob@ getPlayerInside(CBlob@ this)
 {
+    // Waffle: Use attachments since they're less buggy
+    CAttachment@ attachment = this.getAttachments();
+    if (attachment is null)
+    {
+        return null;
+    }
+    
+    AttachmentPoint@ sneaky = attachment.getAttachmentPointByName("SNEAKY");
+    if (sneaky is null)
+    {
+        return null;
+    }
+    return sneaky.getOccupied();
+    /*
 	CInventory@ inv = this.getInventory();
 	for (int i = 0; i < inv.getItemsCount(); i++)
 	{
@@ -888,6 +916,7 @@ CBlob@ getPlayerInside(CBlob@ this)
 			return item;
 	}
 	return null;
+    */
 }
 
 bool DumpOutItems(CBlob@ this, f32 pop_out_speed = 5.0f, Vec2f init_velocity = Vec2f_zero, bool dump_special = true)
@@ -1038,15 +1067,71 @@ bool hasNoBuildBlobs(Vec2f pos)
 	return false;
 }
 
-// Waffle: Convert on pickup
+
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
-	if (this is null || attached is null)
+	if (this is null || attached is null || attachedPoint is null)
 	{
 		return;
 	}
 
-	this.server_setTeamNum(attached.getTeamNum());
+    if (attachedPoint.name == "SNEAKY")
+    {
+        // Waffle: Use attachments since they're less buggy/Add inventory indicator
+        AddInventoryIndicator(this, true);
+        attached.Tag("vehicle protection");
+        attached.SetVisible(false);
+        this.setVelocity(attached.getVelocity());
+    }
+    else if (attachedPoint.name == "PICKUP")
+    {
+        // Waffle: Convert on pickup
+        this.server_setTeamNum(attached.getTeamNum());
+    }
+}
+
+void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
+{
+    if (this is null || detached is null || attachedPoint is null)
+	{
+		return;
+	}
+
+    if (attachedPoint.name == "SNEAKY")
+    {
+        // Waffle: Use attachments since they're less buggy/Add inventory indicator
+        AddInventoryIndicator(this, false);
+        detached.Untag("vehicle protection");
+        detached.SetVisible(true);
+        detached.setVelocity(this.getVelocity());
+    }
+}
+
+// Waffle: Add inventory indicator
+void AddInventoryIndicator(CBlob@ this, bool add)
+{
+    if (add)
+    {
+        CSprite@ sprite = this.getSprite();
+        if (sprite !is null)
+        {
+            u16 frame = sprite.getFrameIndex();
+            sprite.SetAnimation("inventory");
+            sprite.SetFrameIndex(frame);	
+        }
+    }
+    else
+    {
+        CInventory@ inventory = this.getInventory();
+        CBlob@ sneaky_player = getPlayerInside(this);
+        CSprite@ sprite = this.getSprite();
+        if (sprite !is null && inventory !is null && inventory.getItemsCount() == 0 && sneaky_player is null)
+        {
+            u16 frame = sprite.getFrameIndex();
+            sprite.SetAnimation("destruction");
+            sprite.SetFrameIndex(frame);	
+        }
+    }
 }
 
 // Waffle: Allow out of bounds
