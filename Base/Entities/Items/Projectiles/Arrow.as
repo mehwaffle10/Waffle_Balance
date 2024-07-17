@@ -225,6 +225,7 @@ void onTick(CBlob@ this)
 		angle = Maths::get360DegreesFrom256(this.get_u8("angle"));
 		this.setVelocity(Vec2f(0, 0));
 		this.setPosition(this.get_Vec2f("lock"));
+		this.setAngleDegrees(-angle);  // Waffle: Fix arrows locking to 0 degrees
 		shape.SetStatic(true);
 	}
 
