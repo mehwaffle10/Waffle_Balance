@@ -635,7 +635,7 @@ bool Vehicle_doesCollideWithBlob_ground(CBlob@ this, CBlob@ blob)
 		return false;
 	if (blob.getRadius() > this.getRadius() ||
 	        // (blob.getTeamNum() != this.getTeamNum() && blob.hasTag("player") && this.getShape().vellen > 1.0f) ||  // Waffle: No more crushing players
-	        (blob.getShape().isStatic()) || blob.hasTag("projectile"))
+	        (blob.getShape().isStatic()) || blob.hasTag("projectile") || blob.getName() == "waterbomb" && blob.getTeamNum() != this.getTeamNum())  // Waffle: Water bombs collide with enemy vehicles
 	{
 		return true;
 	}

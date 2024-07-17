@@ -207,6 +207,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Vehicles
 - Drivers are protected from damage besides drowning
 - Drivers take burn damage if their vehicle is on fire
+- Drivers can be knocked out using water
+    - Water bombs now collide with enemy vehicles
 - Take full damage from arrows
 - Take 1.5x damage from swords
 - Can collide when attached (can be shot)
@@ -468,6 +470,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Mines
 - Deploy after timer like they used to 
 - Can still be picked up
+
+### Water Bombs
+- Now collide with enemy vehicles
 
 ## QUARTERS
 
