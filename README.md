@@ -122,7 +122,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Added visible bounding box around saplings and trees when holding a sapling
 - Removed RNG
     - Pine and Bushy trees now have the same stats
-    - Always grow to 7 segments
+    - Always grow to 7 segments / 12 blocks tall
     - Grows a segment every 350 ticks
     - Saplings turn into trees in 500 ticks
 - Can be automatically harvested using saws
@@ -134,6 +134,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can no longer grow inside of static blobs or on other trees
 - Can no longer build blocks on top of saplings placed with left click
 - Fixed misalignment from seeds (no build would float half a block off the ground)
+- Fixed top log clipping into ceilings
 
 ### Holidays
 - Disabled
