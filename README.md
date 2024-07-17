@@ -19,7 +19,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer decay
 
 ### Build Phase
-- 20 seconds
+- 15 seconds
 - Bases are prebuilt
 - No fast building since it's just to get to the front lines
 
