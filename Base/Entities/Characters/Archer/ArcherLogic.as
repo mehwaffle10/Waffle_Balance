@@ -1345,6 +1345,10 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	if (this.isAttached() && (canSend(this) || isServer()))
 	{
 		archer.grappling = false;
+		archer.charge_state = 0;                    // Waffle: Reset charge on attach
+		archer.charge_time = 0;                     // Waffle: --
+		this.getSprite().SetEmitSoundPaused(true);  // Waffle: --
+		getHUD().SetCursorFrame(0);                 // Waffle: --
 		SyncGrapple(this);
 	}
 }
