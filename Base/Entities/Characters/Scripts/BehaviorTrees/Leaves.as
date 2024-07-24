@@ -64,12 +64,36 @@ class ReleaseSlash : BehaviorTreeNode {
         {
             return BehaviorTreeStatus::failure;
         }
-
+        
+        this.setKeyPressed(key_up, true);
         if (isSwordState(knight.state))
         {
             return BehaviorTreeStatus::running;
         }
 
+        return BehaviorTreeStatus::success;
+    }
+}
+
+class MoveLeft : BehaviorTreeNode {
+    f32 utility(CBlob@ this) {
+        return 1.0f;
+    }
+
+    u8 execute(CBlob@ this) {
+        this.setKeyPressed(key_left, true);
+        return BehaviorTreeStatus::success;
+    }
+}
+
+
+class MoveRight : BehaviorTreeNode {
+    f32 utility(CBlob@ this) {
+        return 1.0f;
+    }
+
+    u8 execute(CBlob@ this) {
+        this.setKeyPressed(key_right, true);
         return BehaviorTreeStatus::success;
     }
 }
