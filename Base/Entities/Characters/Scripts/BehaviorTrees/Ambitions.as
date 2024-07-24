@@ -27,7 +27,7 @@ class AttackTarget : Parallel {
     }
 }
 
-class SlashTarget : Selector {
+class SlashTarget : Parallel {
     SlashTarget() {
         children.push_back(TryChargeSlash());
         children.push_back(TryReleaseSlash());
@@ -52,7 +52,7 @@ class TryChargeSlash : Sequence {
 
 class TryReleaseSlash : Sequence {
     TryReleaseSlash() {
-        children.push_back(HasSlashCharged());
+        children.push_back(IsSlashing());
         children.push_back(ReleaseSlash());
     }
 
