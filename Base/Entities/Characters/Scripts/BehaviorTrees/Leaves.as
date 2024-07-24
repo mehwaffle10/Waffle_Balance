@@ -3,30 +3,32 @@
 
 #include "BehaviorTree.as"
 #include "BehaviorTreeCommon.as"
+#include "KnightCommon.as";
 
-shared class LookAtPlayer : BehaviorTreeNode {
+class LookAtTarget : BehaviorTreeNode {
     f32 utility(CBlob@ this) {
         return 0.5f;
     }
 
-    void execute(CBlob@ this) {
+    u8 execute(CBlob@ this) {
         CPlayer@ player = getPlayerByUsername("mehwaffle10");
         if (player is null)
         {
-            return;
+            return BehaviorTreeStatus::failure;
         }
 
         CBlob@ target = player.getBlob();
         if (target is null)
         {
-            return;
+            return BehaviorTreeStatus::failure;
         }
 
         this.setAimPos(target.getPosition());
+        return BehaviorTreeStatus::success;
     }
 }
 
-shared class JumpInPlace : BehaviorTreeNode {
+class JumpInPlace : BehaviorTreeNode {
     f32 utility(CBlob@ this) {
         CBlob@[] enemies;
         getNearbyEnemies(this, enemies, 32.0f);
@@ -34,7 +36,40 @@ shared class JumpInPlace : BehaviorTreeNode {
         return enemies.length > 0 ? 1.0f : 0.0f;
     }
 
-    void execute(CBlob@ this) {
+    u8 execute(CBlob@ this) {
         this.setKeyPressed(key_up, true);
+        return BehaviorTreeStatus::success;
+    }
+}
+
+class HoldLeftMouse : BehaviorTreeNode {
+    f32 utility(CBlob@ this) {
+        return 1.0f;
+    }
+
+    u8 execute(CBlob@ this) {
+        this.setKeyPressed(key_action1, true);
+        return BehaviorTreeStatus::success;
+    }
+}
+
+class ReleaseSlash : BehaviorTreeNode {
+    f32 utility(CBlob@ this) {
+        return 1.0f;
+    }
+
+    u8 execute(CBlob@ this) {
+        KnightInfo@ knight;
+        if (!this.get("knightInfo", @knight))
+        {
+            return BehaviorTreeStatus::failure;
+        }
+
+        if (isSwordState(knight.state))
+        {
+            return BehaviorTreeStatus::running;
+        }
+
+        return BehaviorTreeStatus::success;
     }
 }

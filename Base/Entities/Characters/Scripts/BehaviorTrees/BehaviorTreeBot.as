@@ -8,7 +8,7 @@ const string ROOT_PROP = "root node";
 
 void onInit(CBlob@ this)
 {
-    BehaviorTreeNode@ root = JumpOrStare();
+    BehaviorTreeNode@ root = AttackTarget();
     this.set(ROOT_PROP, @root);
 }
 
