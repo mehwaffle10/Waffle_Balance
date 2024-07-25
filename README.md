@@ -303,6 +303,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Cost 180 coins
 - No longer stuns players when launching them
 - Anything launched has an unmodified vertical launch force (normally .75 for players and 1.1 for anything else)
+- Moved load item button to top of catapult instead of based off of the magazine position
 - Fixed arm angle not being correct when deployed from a crate
 
 ### Ballistas

@@ -259,7 +259,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 				iconName = "$" + carried.getInventoryName() + "$";
 			}
 
-			caller.CreateGenericButton(iconName, mag.offset, this, this.getCommandID("putin_mag"), msg, callerParams);
+			caller.CreateGenericButton(iconName, Vec2f(0, -2), this, this.getCommandID("putin_mag"), msg, callerParams);
 			return;
 		}
 
