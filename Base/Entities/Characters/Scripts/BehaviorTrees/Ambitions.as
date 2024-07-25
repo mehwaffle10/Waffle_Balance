@@ -4,17 +4,6 @@
 #include "Leaves.as"
 #include "Conditions.as"
 
-class JumpOrStare : Selector {
-    JumpOrStare() {
-        children.push_back(LookAtTarget());
-        children.push_back(JumpInPlace());
-    }
-
-    f32 utility(CBlob@ this) {
-        return 1.0f;
-    }
-}
-
 class AttackTarget : Parallel {
     AttackTarget() {
         children.push_back(LookAtTarget());
