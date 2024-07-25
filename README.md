@@ -378,6 +378,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Fixed radius and full 360 degree arc for block and blob detection
 	- Breaks backwall underneath in a plus constantly
 	- Leads to much more consistency and wider holes
+    - Hits friendly static blobs in line with other siege
 
 ### Crates
 - Won't break when exiting
