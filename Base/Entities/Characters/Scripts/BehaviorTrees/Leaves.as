@@ -6,10 +6,6 @@
 #include "KnightCommon.as";
 
 class LookAtTarget : BehaviorTreeNode {
-    f32 utility(CBlob@ this) {
-        return 0.5f;
-    }
-
     u8 execute(CBlob@ this) {
         CPlayer@ player = getPlayerByUsername("mehwaffle10");
         if (player is null)
@@ -43,10 +39,6 @@ class JumpInPlace : BehaviorTreeNode {
 }
 
 class HoldLeftMouse : BehaviorTreeNode {
-    f32 utility(CBlob@ this) {
-        return 1.0f;
-    }
-
     u8 execute(CBlob@ this) {
         this.setKeyPressed(key_action1, true);
         return BehaviorTreeStatus::success;
@@ -54,10 +46,6 @@ class HoldLeftMouse : BehaviorTreeNode {
 }
 
 class ReleaseSlash : BehaviorTreeNode {
-    f32 utility(CBlob@ this) {
-        return 1.0f;
-    }
-
     u8 execute(CBlob@ this) {
         KnightInfo@ knight;
         if (!this.get("knightInfo", @knight))
@@ -76,10 +64,6 @@ class ReleaseSlash : BehaviorTreeNode {
 }
 
 class MoveLeft : BehaviorTreeNode {
-    f32 utility(CBlob@ this) {
-        return 1.0f;
-    }
-
     u8 execute(CBlob@ this) {
         this.setKeyPressed(key_left, true);
         return BehaviorTreeStatus::success;
@@ -88,10 +72,6 @@ class MoveLeft : BehaviorTreeNode {
 
 
 class MoveRight : BehaviorTreeNode {
-    f32 utility(CBlob@ this) {
-        return 1.0f;
-    }
-
     u8 execute(CBlob@ this) {
         this.setKeyPressed(key_right, true);
         return BehaviorTreeStatus::success;

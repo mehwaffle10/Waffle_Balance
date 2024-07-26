@@ -9,17 +9,18 @@ namespace BehaviorTreeStatus {
     }
 }
 
-interface BehaviorTreeNode {
-    f32 utility(CBlob@ this);
-    u8 execute(CBlob@ this);
+class BehaviorTreeNode {
+    f32 utility(CBlob@ this) {
+        return 0.0f;
+    };
+
+    u8 execute(CBlob@ this) {
+        return BehaviorTreeStatus::failure;
+    }
 }
 
 class Selector : BehaviorTreeNode {
     BehaviorTreeNode@[] children;
-
-    f32 utility(CBlob@ this) {
-        return 1.0f;
-    }
 
     u8 execute(CBlob@ this) {
         f32 max_utility = -1.0f;
@@ -43,10 +44,6 @@ class Selector : BehaviorTreeNode {
 class Sequence : BehaviorTreeNode {
     BehaviorTreeNode@[] children;
 
-    f32 utility(CBlob@ this) {
-        return 0.0f;
-    }
-
     u8 execute(CBlob@ this) {
         for (u8 i = 0; i < children.length; i++) {
             u8 status = children[i].execute(this);
@@ -61,10 +58,6 @@ class Sequence : BehaviorTreeNode {
 
 class Parallel : BehaviorTreeNode {
     BehaviorTreeNode@[] children;
-
-    f32 utility(CBlob@ this) {
-        return 0.0f;
-    }
 
     u8 execute(CBlob@ this) {
         u8 node_status = BehaviorTreeStatus::failure;
