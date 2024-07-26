@@ -1,14 +1,34 @@
 
 #include "BehaviorTree.as"
 #include "BehaviorTreeCommon.as"
-#include "Leaves.as"
-#include "Conditions.as"
+#include "CommonLeaves.as"
+#include "CommonAmbitions.as"
+#include "KnightConditions.as"
+#include "KnightLeaves.as"
+
+class AttackKnight : Sequence {
+    AttackKnight() {
+        children.push_back(AttackTarget(16));
+    }
+}
+
+class AttackArcher : Sequence {
+    AttackArcher() {
+        children.push_back(AttackTarget(0));
+    }
+}
+
+class AttackBuilder : Sequence {
+    AttackBuilder() {
+        children.push_back(AttackTarget(0));
+    }
+}
 
 class AttackTarget : Parallel {
-    AttackTarget() {
+    AttackTarget(u16 distance) {
         children.push_back(LookAtTarget());
         children.push_back(SlashTarget());
-        children.push_back(MoveToTarget());
+        children.push_back(MoveToTarget(distance));
     }
 }
 
@@ -31,26 +51,5 @@ class TryReleaseSlash : Sequence {
     TryReleaseSlash() {
         children.push_back(IsSlashing());
         children.push_back(ReleaseSlash());
-    }
-}
-
-class MoveToTarget : Parallel {
-    MoveToTarget() {
-        children.push_back(TryMoveLeft());
-        children.push_back(TryMoveRight());
-    }
-}
-
-class TryMoveLeft : Sequence {
-    TryMoveLeft() {
-        children.push_back(RightOfTarget());
-        children.push_back(MoveLeft());
-    }
-}
-
-class TryMoveRight : Sequence {
-    TryMoveRight() {
-        children.push_back(LeftOfTarget());
-        children.push_back(MoveRight());
     }
 }
