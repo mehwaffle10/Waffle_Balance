@@ -386,6 +386,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - Has the side effect that players do not take up space in the inventory
 - Uses the same protection logic as vehicles
 - Swapped keys for get in/get out and empty contents. By default pressing space gets in and out without a button popup, e now gives a button for emptying contents
+    - Players will be stunned for any command if there is an enemy inside
 - Exiting a crate no longer gives the player a jump
 - Fixed players getting in crates while not holding them
 - Opening a crate with an enemy player only stun for half a second instead of a full second

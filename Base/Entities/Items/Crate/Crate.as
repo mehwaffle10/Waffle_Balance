@@ -396,7 +396,15 @@ void onActivate(CBitStream@ params)
 
     // Waffle: Swap empty and get in
 	// DumpOutItems(this, 5.0f, caller.getVelocity(), false);
-    GetIn(this, caller);
+    CBlob@ sneaky_player = getPlayerInside(this);
+    if (sneaky_player !is null && sneaky_player !is caller)
+    {
+        GetOut(this, caller);
+    }
+    else
+    {
+        GetIn(this, caller);
+    }
 }
 
 void GetIn(CBlob@ this, CBlob@ caller)
