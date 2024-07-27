@@ -46,7 +46,8 @@ void onInit(CBlob@ this)
 
 	this.addCommandID("unpack");
 	this.addCommandID("unpack_client"); // just sets the drag...
-	this.addCommandID("getin");
+	this.addCommandID("empty");  // Waffle: Swap empty and get in
+    this.addCommandID("getin");
 	this.addCommandID("getout");
 	this.addCommandID("stop unpack");
 	this.addCommandID("boobytrap");
@@ -147,9 +148,24 @@ bool UseCratePreset(CBlob@ this, const string &in packed, Crate@[] presets)
 
 void onTick(CBlob@ this)
 {
+    // Waffle: Swap empty and get in
+    if (isServer())
+    {
+        CAttachment@ attachment = this.getAttachments();
+        if (attachment !is null)
+        {
+            CBlob@ sneaky_player = getPlayerInside(this);
+            AttachmentPoint@ sneaky = attachment.getAttachmentPointByName("SNEAKY");
+            if (sneaky !is null && sneaky_player !is null && sneaky.isKeyJustPressed(key_action3))
+            {
+                GetOut(this, sneaky_player);
+            }
+        }
+    }
+
 	// parachute
 
-	if (this.hasTag("parachute"))		// wont work with the tick frequency
+	else if (this.hasTag("parachute"))		// wont work with the tick frequency
 	{
 		if (this.getSprite().getSpriteLayer("parachute") is null)
 		{
@@ -167,19 +183,20 @@ void onTick(CBlob@ this)
 	}
 	else
 	{
-		if (hasSomethingPacked(this))
-			this.getCurrentScript().tickFrequency = 15;
-		else
-		{
-			this.getCurrentScript().tickFrequency = 0;
-			return;
-		}
+        // Waffle: Always tick
+		// if (hasSomethingPacked(this))
+		// 	this.getCurrentScript().tickFrequency = 15;
+		// else
+		// {
+		// 	this.getCurrentScript().tickFrequency = 0;
+		// 	return;
+		// }
 
 		// can't unpack in no build sector or blocked in with walls!
 		if (!canUnpackHere(this))
 		{
 			this.set_u32("unpack time", 0);
-			this.getCurrentScript().tickFrequency = 15;
+			// this.getCurrentScript().tickFrequency = 15;  // Waffle: Always tick
 			this.getShape().setDrag(2.0);
 			return;
 		}
@@ -303,10 +320,9 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 			params.write_netid(caller.getNetworkID());
 			if (carried is this)
 			{
-                // Waffle: Less buttons
-                this.SendCommand(this.getCommandID("getout"), params);
+                // Waffle: Swap empty and get in
 				// Fake get in button
-				// caller.CreateGenericButton(4, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Get inside"), params);
+				caller.CreateGenericButton(20, buttonpos, this, this.getCommandID("getout"), getTranslatedString("Empty contents"), params);
 			}
 			else
 			{
@@ -347,9 +363,8 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	{
 		CBitStream params;
 		params.write_netid(caller.getNetworkID());
-        // Waffle: Less buttons
-        this.SendCommand(this.getCommandID("getin"), params);
-		// caller.CreateGenericButton(4, buttonpos, this, this.getCommandID("getin"), getTranslatedString("Get inside"), params);
+        // Waffle: Swap empty and get in
+		caller.CreateGenericButton(20, buttonpos, this, this.getCommandID("empty"), getTranslatedString("Empty contents"), params);
 	}
 	else if (this.getTeamNum() != caller.getTeamNum() && !this.isOverlapping(caller))
 	{
@@ -379,7 +394,85 @@ void onActivate(CBitStream@ params)
 	CBlob@ caller = getBlobByNetworkID(caller_id);
 	if (caller is null) return;
 
-	DumpOutItems(this, 5.0f, caller.getVelocity(), false);
+    // Waffle: Swap empty and get in
+	// DumpOutItems(this, 5.0f, caller.getVelocity(), false);
+    GetIn(this, caller);
+}
+
+void GetIn(CBlob@ this, CBlob@ caller)
+{
+    // i don't know why this check is here so not touching it...
+    if (this.getHealth() <= 0) return;
+
+    // only getin if caller is holding this crate
+    CBlob@ helditem = caller.getCarriedBlob();
+    if (helditem is null) return;
+    if (helditem !is this) return;
+
+    // Waffle: Use attachments since they're less buggy
+    if (getPlayerInside(this) !is null) return;
+    this.server_DetachFromAll();
+    this.server_AttachTo(caller, "SNEAKY");
+    /*
+    CInventory@ inv = this.getInventory();
+    if (caller !is null && inv !is null) 
+    {
+        u8 itemcount = inv.getItemsCount();
+        // Boobytrap if crate has enemy mine
+        for (int i = 0; i < inv.getItemsCount(); i++)
+        {
+            CBlob@ item = inv.getItem(i);
+            if (item.getName() == "mine" && item.getTeamNum() != caller.getTeamNum())
+            {
+                BoobyTrap(this, caller, item);
+                return;
+            }
+        }
+        while (!inv.canPutItem(caller) && itemcount > 0)
+        {
+            // pop out last items until we can put in player or there's nothing left
+            CBlob@ item = inv.getItem(itemcount - 1);
+            this.server_PutOutInventory(item);
+            const f32 magnitude = (1 - XORRandom(3) * 0.25) * 5.0f;
+            item.setVelocity(caller.getVelocity() + getRandomVelocity(90, magnitude, 45));
+            itemcount--;
+        }
+
+        Vec2f velocity = caller.getVelocity();
+        this.server_PutInInventory(caller);
+        this.setVelocity(velocity);
+    }
+    */
+}
+
+void GetOut(CBlob@ this, CBlob@ caller)
+{
+    // range check
+    f32 distance = this.getDistanceTo(caller);
+    if (distance > 32.0f) return;
+
+    CBlob@ sneaky_player = getPlayerInside(this);
+    if (caller !is null && sneaky_player !is null)
+    {
+        if (caller.getTeamNum() != sneaky_player.getTeamNum())
+        {
+            if (isKnockable(caller))
+            {
+                setKnocked(caller, 30);
+            }
+        }
+        this.Tag("crate escaped");
+        this.Sync("crate escaped", true);
+        
+        // Waffle: Use attachments since they're less buggy
+        sneaky_player.server_DetachFrom(this);
+        // this.server_PutOutInventory(sneaky_player);
+        sneaky_player.server_Pickup(this);  // Waffle: Automatically pick crates back up when getting out
+    }
+    // Waffle: Don't destroy crates when getting out, make them reusable
+    // Attack self to pop out items
+    // this.server_Hit(this, this.getPosition(), Vec2f(), 100.0f, Hitters::crush, true);
+    // this.server_Die();
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -434,57 +527,30 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		this.set_u32("unpack time", 0);
 		this.Sync("unpack time", true);
 	}
-	else if (cmd == this.getCommandID("getin") && isServer())
+	else if (cmd == this.getCommandID("empty") && isServer())
 	{
-		// i don't know why this check is here so not touching it...
-		if (this.getHealth() <= 0) return;
+		// Waffle: Swap empty and get in
+        u16 caller_id;
+        if (!params.saferead_u16(caller_id)) return;
 
-		CPlayer@ p = getNet().getActiveCommandPlayer();
-		if (p is null) return;
-
-		CBlob@ caller = p.getBlob();
-		if (caller is null) return;
-
-		// only getin if caller is holding this crate
-		CBlob@ helditem = caller.getCarriedBlob();
-		if (helditem is null) return;
-		if (helditem !is this) return;
-
-        // Waffle: Use attachments since they're less buggy
-        if (getPlayerInside(this) !is null) return;
-        this.server_DetachFromAll();
-        this.server_AttachTo(caller, "SNEAKY");
-        /*
-		CInventory@ inv = this.getInventory();
-		if (caller !is null && inv !is null) 
-		{
-			u8 itemcount = inv.getItemsCount();
-			// Boobytrap if crate has enemy mine
-			for (int i = 0; i < inv.getItemsCount(); i++)
-			{
-				CBlob@ item = inv.getItem(i);
-				if (item.getName() == "mine" && item.getTeamNum() != caller.getTeamNum())
-				{
-					BoobyTrap(this, caller, item);
-					return;
-				}
-			}
-			while (!inv.canPutItem(caller) && itemcount > 0)
-			{
-				// pop out last items until we can put in player or there's nothing left
-				CBlob@ item = inv.getItem(itemcount - 1);
-				this.server_PutOutInventory(item);
-				const f32 magnitude = (1 - XORRandom(3) * 0.25) * 5.0f;
-				item.setVelocity(caller.getVelocity() + getRandomVelocity(90, magnitude, 45));
-				itemcount--;
-			}
-
-			Vec2f velocity = caller.getVelocity();
-			this.server_PutInInventory(caller);
-			this.setVelocity(velocity);
-		}
-        */
+        CBlob@ caller = getBlobByNetworkID(caller_id);
+        if (caller is null) return;
+        
+        CBlob@ helditem = caller.getCarriedBlob();
+        if (helditem is null) return;
+        if (helditem !is this) return;
+        DumpOutItems(this, 5.0f, caller.getVelocity(), false);
 	}
+    else if (cmd == this.getCommandID("getin") && isServer())
+    {
+        CPlayer@ p = getNet().getActiveCommandPlayer();
+        if (p is null) return;
+
+        CBlob@ caller = p.getBlob();
+        if (caller is null) return;
+
+        GetIn(this, caller);
+    }
 	else if (cmd == this.getCommandID("getout") && isServer())
 	{
 		CPlayer@ p = getNet().getActiveCommandPlayer();
@@ -493,32 +559,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		CBlob@ caller = p.getBlob();
 		if (caller is null) return;
 
-		// range check
-		f32 distance = this.getDistanceTo(caller);
-		if (distance > 32.0f) return;
-
-		CBlob@ sneaky_player = getPlayerInside(this);
-		if (caller !is null && sneaky_player !is null)
-		{
-			if (caller.getTeamNum() != sneaky_player.getTeamNum())
-			{
-				if (isKnockable(caller))
-				{
-					setKnocked(caller, 30);
-				}
-			}
-			this.Tag("crate escaped");
-			this.Sync("crate escaped", true);
-            
-            // Waffle: Use attachments since they're less buggy
-            sneaky_player.server_DetachFrom(this);
-			// this.server_PutOutInventory(sneaky_player);
-            sneaky_player.server_Pickup(this);  // Waffle: Automatically pick crates back up when getting out
-		}
-		// Waffle: Don't destroy crates when getting out, make them reusable
-		// Attack self to pop out items
-		// this.server_Hit(this, this.getPosition(), Vec2f(), 100.0f, Hitters::crush, true);
-		// this.server_Die();
+		GetOut(this, caller);
 	}
 	else if (cmd == this.getCommandID("boobytrap") && isServer())
 	{
