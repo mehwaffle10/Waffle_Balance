@@ -165,7 +165,7 @@ void onTick(CBlob@ this)
 
 	// parachute
 
-	else if (this.hasTag("parachute"))		// wont work with the tick frequency
+	if (this.hasTag("parachute"))		// wont work with the tick frequency
 	{
 		if (this.getSprite().getSpriteLayer("parachute") is null)
 		{
