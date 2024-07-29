@@ -11,7 +11,7 @@ const string BLACKBOARD_PROP = "blackboard";
 
 void onInit(CBlob@ this)
 {
-    BehaviorTreeNode@ root = AttackTarget(16);
+    BehaviorTreeNode@ root = AttackTarget(64);
     this.set(ROOT_PROP, @root);
 
     Blackboard@ blackboard = Blackboard();

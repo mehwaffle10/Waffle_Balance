@@ -11,12 +11,17 @@ class LeftOfTarget : BehaviorTreeNode {
     }
 
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        if (blackboard.target is null || this.getPosition().x > blackboard.target.getPosition().x - offset)
+        if (blackboard.target is null)
         {
             return BehaviorTreeStatus::failure;
         }
+        bool left_of_target = this.getPosition().x < blackboard.target.getPosition().x;
+        if (offset > 0)
+        {
+            left_of_target = this.getPosition().x < blackboard.target.getPosition().x + offset * (left_of_target ? -1 : 1);
+        }
 
-        return BehaviorTreeStatus::success;
+        return left_of_target ? BehaviorTreeStatus::success : BehaviorTreeStatus::failure;
     }
 }
 
@@ -28,12 +33,29 @@ class RightOfTarget : BehaviorTreeNode {
     }
 
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        if (blackboard.target is null || this.getPosition().x < blackboard.target.getPosition().x + offset)
+        if (blackboard.target is null)
         {
             return BehaviorTreeStatus::failure;
         }
+        bool right_of_target = this.getPosition().x > blackboard.target.getPosition().x;
+        if (offset > 0)
+        {
+            right_of_target = this.getPosition().x > blackboard.target.getPosition().x + offset * (right_of_target ? 1 : -1);
+        }
 
-        return BehaviorTreeStatus::success;
+        return right_of_target ? BehaviorTreeStatus::success : BehaviorTreeStatus::failure;
+    }
+}
+
+class TargetIsName : BehaviorTreeNode {
+    string name;
+
+    TargetIsName(string _name) {
+        name = _name;
+    }
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        return blackboard.target is null || blackboard.target.getName() != name ? BehaviorTreeStatus::failure : BehaviorTreeStatus::success;
     }
 }
 
