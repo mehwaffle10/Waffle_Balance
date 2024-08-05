@@ -100,11 +100,18 @@ class CommitToSlash : Parallel
         
         if (target_type == "knight")
         {
-
+            
         }
         else if (target_type == "archer")
         {
-
+            if (health <= 0.25f)
+            {
+                score *= 0.25f;
+            }
+            else if (health <= 0.5f)
+            {
+                score *= 0.5f;
+            }
         }
         else if (target_type == "builder")
         {
