@@ -14,7 +14,7 @@ class Blackboard {
 }
 
 class BehaviorTreeNode {
-    f32 utility(CBlob@ this) {
+    f32 utility(CBlob@ this, Blackboard@ blackboard) {
         return 0.0f;
     };
 
@@ -30,7 +30,7 @@ class Selector : BehaviorTreeNode {
         f32 max_utility = -1.0f;
         BehaviorTreeNode@ best = null;
         for (u8 i = 0; i < children.length; i++) {
-            f32 utility = children[i].utility(this);
+            f32 utility = children[i].utility(this, blackboard);
             if (utility > max_utility)
             {
                 max_utility = utility;
@@ -87,8 +87,8 @@ class Inverse : BehaviorTreeNode {
         @child = @_child;
     }
 
-    f32 utility(CBlob@ this) {
-        return child.utility(this);
+    f32 utility(CBlob@ this, Blackboard@ blackboard) {
+        return child.utility(this, blackboard);
     }
 
     u8 execute(CBlob@ this, Blackboard@ blackboard) {

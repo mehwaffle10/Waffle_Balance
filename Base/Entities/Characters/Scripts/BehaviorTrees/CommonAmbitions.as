@@ -25,6 +25,27 @@ class TryMoveRight : Sequence {
     }
 }
 
+class LookAwayFromTarget : Parallel {
+    LookAwayFromTarget() {
+        children.push_back(TryLookLeft());
+        children.push_back(TryLookRight());
+    }
+}
+
+class TryLookLeft : Sequence {
+    TryLookLeft() {
+        children.push_back(LeftOfTarget(0));
+        children.push_back(LookLeft());
+    }
+}
+
+class TryLookRight : Sequence {
+    TryLookRight() {
+        children.push_back(Inverse(LeftOfTarget(0)));
+        children.push_back(LookRight());
+    }
+}
+
 /*
 To add:
 - Collect items

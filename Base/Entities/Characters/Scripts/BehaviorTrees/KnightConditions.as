@@ -46,6 +46,11 @@ class KnightHasAdvantageOnKnight : Sequence {
             return BehaviorTreeStatus::success;
         }
 
+        // Do I have a timing advantage
+        if (knight.swordTimer > enemy.swordTimer + 2) {
+            return BehaviorTreeStatus::success;
+        }
+
         return BehaviorTreeStatus::failure;
     }
 }

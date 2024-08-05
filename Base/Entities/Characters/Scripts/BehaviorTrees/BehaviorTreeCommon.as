@@ -1,5 +1,5 @@
 
-shared void getNearbyEnemies(CBlob@ this, CBlob@[]&out enemies, f32 distance) {
+void getNearbyEnemies(CBlob@ this, CBlob@[]&out enemies, f32 distance) {
     CBlob@[] players;
 	getBlobsByTag("player", @players);
 	Vec2f pos = this.getPosition();

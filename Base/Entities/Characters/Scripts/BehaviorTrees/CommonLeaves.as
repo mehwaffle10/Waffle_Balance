@@ -16,6 +16,20 @@ class LookAtTarget : BehaviorTreeNode {
     }
 }
 
+class LookLeft : BehaviorTreeNode {
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        this.setAimPos(this.getPosition() + Vec2f(-10, -4));
+        return BehaviorTreeStatus::success;
+    }
+}
+
+class LookRight : BehaviorTreeNode {
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        this.setAimPos(this.getPosition() + Vec2f(10, -4));
+        return BehaviorTreeStatus::success;
+    }
+}
+
 class HoldLeftMouse : BehaviorTreeNode {
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
         this.setKeyPressed(key_action1, true);
