@@ -11,6 +11,11 @@ namespace BehaviorTreeStatus {
 
 class Blackboard {
     CBlob@ target;
+    CBlob@[] nearby_enemies;
+    CBlob@[] nearby_allies;
+    // CBlob@[] nearby_projectiles;
+    // CBlob@[] nearby_bombs;
+    // CBlob@[] nearby_
 }
 
 class BehaviorTreeNode {

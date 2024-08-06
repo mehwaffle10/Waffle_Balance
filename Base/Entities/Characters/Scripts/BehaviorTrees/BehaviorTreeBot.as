@@ -37,11 +37,43 @@ void onTick(CBlob@ this)
     {
         return;
     }
+    blackboard.nearby_enemies.clear();
+    blackboard.nearby_allies.clear();
+    // blackboard.nearby_threats.clear();
 
-    CPlayer@ player = getPlayerByUsername('mehwaffle10');
-    if (player !is null)
+    CMap@ map = getMap();
+    if (map is null)
     {
-        @blackboard.target = @player.getBlob();
+        return;
+    }
+    CBlob@[] nearby_blobs;
+    f32 target_distance = -1.0f;
+    map.getBlobsInRadius(this.getPosition(), 15 * map.tilesize, nearby_blobs);
+    for (u16 i = 0; i < nearby_blobs.length; i++)
+    {
+        CBlob@ blob = nearby_blobs[i];
+        if (blob is null)
+        {
+            continue;
+        }
+
+        f32 distance = this.getDistanceTo(blob);
+        if (blob !is this && blob.hasTag("player"))
+        {
+            if (blob.getTeamNum() != this.getTeamNum())
+            {
+                blackboard.nearby_enemies.push_back(blob);
+                if (distance < target_distance || target_distance < 0.0f)
+                {
+                    @blackboard.target = @blob;
+                    target_distance = distance;
+                }
+            }
+            else
+            {
+                blackboard.nearby_allies.push_back(blob);
+            }
+        }
     }
 
     this.setKeyPressed(key_up,      false);

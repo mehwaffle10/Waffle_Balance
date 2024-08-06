@@ -97,10 +97,33 @@ class CommitToSlash : Parallel
         f32 distance = this.getDistanceTo(blackboard.target);
         f32 health = this.getHealth();
         string target_type = blackboard.target.getName();
-        
+
+        for (u16 i = 0; i < blackboard.nearby_enemies.length)
+        {
+            score *= 0.9f;
+        }
+
+        for (u16 i = 0; i < blackboard.nearby_allies.length)
+        {
+            score *= 1.2f;
+        }
+
         if (target_type == "knight")
         {
-            
+            KnightInfo@ knight, enemy;
+            if (!this.get("knightInfo", @knight) || !blackboard.target.get("knightInfo", @enemy))
+            {
+                return 0.0f;
+            }
+
+            if (health <= 0.5f)
+            {
+                score *= 0.25f;
+            }
+            else if (health <= 1.0f)
+            {
+                score *= 0.5f;
+            }
         }
         else if (target_type == "archer")
         {
@@ -129,11 +152,6 @@ class CommitToSlash : Parallel
             print("UNHANDLED TARGET TYPE");
         }
 
-        KnightInfo@ knight, enemy;
-        if (!this.get("knightInfo", @knight) || blackboard.target is null || !blackboard.target.get("knightInfo", @enemy))
-        {
-            return BehaviorTreeStatus::failure;
-        }
         return 0.0f;
     };
 }
