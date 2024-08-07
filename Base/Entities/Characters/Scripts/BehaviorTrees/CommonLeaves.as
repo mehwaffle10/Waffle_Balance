@@ -6,12 +6,13 @@
 
 class LookAtTarget : BehaviorTreeNode {
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        if (blackboard.target is null)
+        CBlob@ target = blackboard.attack_target is null ? @blackboard.target : @blackboard.attack_target;
+        if (target is null)
         {
             return BehaviorTreeStatus::failure;
         }
 
-        this.setAimPos(blackboard.target.getPosition());
+        this.setAimPos(target.getPosition());
         return BehaviorTreeStatus::success;
     }
 }
@@ -30,23 +31,50 @@ class LookRight : BehaviorTreeNode {
     }
 }
 
-class HoldLeftMouse : BehaviorTreeNode {
+class SetKeyPressed : BehaviorTreeNode {
+    keys key;
+
+    SetKeyPressed(keys _key)
+    {
+        key = _key;
+    }
+
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        this.setKeyPressed(key_action1, true);
+        this.setKeyPressed(key, true);
         return BehaviorTreeStatus::success;
     }
 }
 
-class MoveLeft : BehaviorTreeNode {
+class SetAttackTarget : BehaviorTreeNode {
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        this.setKeyPressed(key_left, true);
+        if (blackboard.target is null)
+        {
+            return BehaviorTreeStatus::failure;
+        }
+
+        @blackboard.attack_target = @blackboard.target;
         return BehaviorTreeStatus::success;
     }
 }
 
-class MoveRight : BehaviorTreeNode {
+class ClearAttackTarget : BehaviorTreeNode {
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        this.setKeyPressed(key_right, true);
+        @blackboard.attack_target = null;
         return BehaviorTreeStatus::success;
     }
 }
+
+class SetJump : BehaviorTreeNode {
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        blackboard.jump = true;
+        return BehaviorTreeStatus::success;
+    }
+}
+
+class ClearJump : BehaviorTreeNode {
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        blackboard.jump = false;
+        return BehaviorTreeStatus::success;
+    }
+}
+

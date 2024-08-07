@@ -1,6 +1,5 @@
 
 #include "BehaviorTree.as"
-#include "BehaviorTreeCommon.as"
 #include "CommonLeaves.as"
 #include "CommonConditions.as"
 
@@ -14,14 +13,14 @@ class MoveToTarget : Parallel {
 class TryMoveLeft : Sequence {
     TryMoveLeft(u16 offset) {
         children.push_back(RightOfTarget(offset));
-        children.push_back(MoveLeft());
+        children.push_back(SetKeyPressed(key_left));
     }
 }
 
 class TryMoveRight : Sequence {
     TryMoveRight(u16 offset) {
         children.push_back(LeftOfTarget(offset));
-        children.push_back(MoveRight());
+        children.push_back(SetKeyPressed(key_right));
     }
 }
 
@@ -43,6 +42,15 @@ class TryLookRight : Sequence {
     TryLookRight() {
         children.push_back(Inverse(LeftOfTarget(0)));
         children.push_back(LookRight());
+    }
+}
+
+class CheckJump : Sequence
+{
+    CheckJump()
+    {
+        children.push_back(IsJump());
+        children.push_back(SetKeyPressed(key_up));
     }
 }
 

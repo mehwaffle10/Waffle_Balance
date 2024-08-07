@@ -1,6 +1,5 @@
 
 #include "BehaviorTree.as"
-#include "BehaviorTreeCommon.as"
 #include "CommonConditions.as"
 #include "KnightCommon.as"
 
@@ -52,5 +51,25 @@ class KnightHasAdvantageOnKnight : Sequence {
         }
 
         return BehaviorTreeStatus::failure;
+    }
+}
+
+class IsAttackFinished : BehaviorTreeNode {
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        if (blackboard.attack_target is null)
+        {
+            return BehaviorTreeStatus::success;
+        }
+        
+        KnightInfo@ knight;
+        if (this.get("knightInfo", @knight))
+        {
+            if (knight.state >= KnightStates::sword_drawn && knight.state <= KnightStates::sword_power_super)
+            {
+                return BehaviorTreeStatus::failure;
+            }
+        }
+        
+        return BehaviorTreeStatus::success;
     }
 }

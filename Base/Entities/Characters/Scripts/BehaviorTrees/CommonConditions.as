@@ -1,12 +1,11 @@
 
 #include "BehaviorTree.as"
-#include "BehaviorTreeCommon.as"
 #include "CommonLeaves.as"
 
 class LeftOfTarget : BehaviorTreeNode {
-    u16 offset;
+    s16 offset;
 
-    LeftOfTarget(u16 _offset) {
+    LeftOfTarget(s16 _offset) {
         offset = _offset;
     }
 
@@ -26,9 +25,9 @@ class LeftOfTarget : BehaviorTreeNode {
 }
 
 class RightOfTarget : BehaviorTreeNode {
-    u16 offset;
+    s16 offset;
 
-    RightOfTarget(u16 _offset) {
+    RightOfTarget(s16 _offset) {
         offset = _offset;
     }
 
@@ -47,15 +46,39 @@ class RightOfTarget : BehaviorTreeNode {
     }
 }
 
-class TargetIsName : BehaviorTreeNode {
-    string name;
+class BelowTarget : BehaviorTreeNode {
+    s16 offset;
 
-    TargetIsName(string _name) {
-        name = _name;
+    BelowTarget(s16 _offset) {
+        offset = _offset;
     }
 
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        return blackboard.target is null || blackboard.target.getName() != name ? BehaviorTreeStatus::failure : BehaviorTreeStatus::success;
+        CBlob@ target = blackboard.attack_target is null ? @blackboard.target : @blackboard.attack_target;
+        if (target is null)
+        {
+            return BehaviorTreeStatus::failure;
+        }
+
+        return this.getPosition().y > target.getPosition().y + offset ? BehaviorTreeStatus::success : BehaviorTreeStatus::failure;
+    }
+}
+
+class HasAttackTarget : BehaviorTreeNode {
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        return blackboard.attack_target is null ? BehaviorTreeStatus::failure : BehaviorTreeStatus::success;
+    }
+}
+
+class IsJump : BehaviorTreeNode {
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        return blackboard.jump ? BehaviorTreeStatus::success : BehaviorTreeStatus::failure;
+    }
+}
+
+class isOnGround : BehaviorTreeNode {
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        return this.isOnGround() ? BehaviorTreeStatus::success : BehaviorTreeStatus::failure;
     }
 }
 

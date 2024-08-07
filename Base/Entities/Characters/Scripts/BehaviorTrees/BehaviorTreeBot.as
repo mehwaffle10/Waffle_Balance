@@ -11,7 +11,7 @@ const string BLACKBOARD_PROP = "blackboard";
 
 void onInit(CBlob@ this)
 {
-    BehaviorTreeNode@ root = AttackTarget(64);
+    BehaviorTreeNode@ root = KnightRoot();
     this.set(ROOT_PROP, @root);
 
     Blackboard@ blackboard = Blackboard();
@@ -58,7 +58,7 @@ void onTick(CBlob@ this)
         }
 
         f32 distance = this.getDistanceTo(blob);
-        if (blob !is this && blob.hasTag("player"))
+        if (blob !is this && blob.hasTag("player") && !blob.hasTag("dead") && blob.getHealth() > 0.0f)
         {
             if (blob.getTeamNum() != this.getTeamNum())
             {

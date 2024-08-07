@@ -1,6 +1,5 @@
 
 #include "BehaviorTree.as"
-#include "BehaviorTreeCommon.as"
 #include "KnightCommon.as";
 
 class ReleaseSlash : BehaviorTreeNode {

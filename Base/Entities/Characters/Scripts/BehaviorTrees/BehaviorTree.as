@@ -9,8 +9,12 @@ namespace BehaviorTreeStatus {
     }
 }
 
+const string ATTACK_TARGET = "bt attack target";
+
 class Blackboard {
     CBlob@ target;
+    CBlob@ attack_target;
+    bool jump;
     CBlob@[] nearby_enemies;
     CBlob@[] nearby_allies;
     // CBlob@[] nearby_projectiles;
@@ -62,6 +66,21 @@ class Sequence : BehaviorTreeNode {
             }
         }
         return BehaviorTreeStatus::success;
+    }
+}
+
+class Fallback : BehaviorTreeNode {
+    BehaviorTreeNode@[] children;
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+        for (u8 i = 0; i < children.length; i++) {
+            u8 status = children[i].execute(this, blackboard);
+            if (status != BehaviorTreeStatus::failure)
+            {
+                return status;
+            }
+        }
+        return BehaviorTreeStatus::failure;
     }
 }
 
