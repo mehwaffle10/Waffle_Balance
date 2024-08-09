@@ -45,15 +45,6 @@ class TryLookRight : Sequence {
     }
 }
 
-class CheckJump : Sequence
-{
-    CheckJump()
-    {
-        children.push_back(IsJump());
-        children.push_back(SetKeyPressed(key_up));
-    }
-}
-
 /*
 To add:
 - Collect items

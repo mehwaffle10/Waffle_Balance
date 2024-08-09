@@ -63,18 +63,3 @@ class ClearAttackTarget : BehaviorTreeNode {
         return BehaviorTreeStatus::success;
     }
 }
-
-class SetJump : BehaviorTreeNode {
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        blackboard.jump = true;
-        return BehaviorTreeStatus::success;
-    }
-}
-
-class ClearJump : BehaviorTreeNode {
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        blackboard.jump = false;
-        return BehaviorTreeStatus::success;
-    }
-}
-

@@ -14,9 +14,9 @@ const string ATTACK_TARGET = "bt attack target";
 class Blackboard {
     CBlob@ target;
     CBlob@ attack_target;
-    bool jump;
     CBlob@[] nearby_enemies;
     CBlob@[] nearby_allies;
+
     // CBlob@[] nearby_projectiles;
     // CBlob@[] nearby_bombs;
     // CBlob@[] nearby_
@@ -37,15 +37,18 @@ class Selector : BehaviorTreeNode {
 
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
         f32 max_utility = -1.0f;
+        string scores = "";
         BehaviorTreeNode@ best = null;
         for (u8 i = 0; i < children.length; i++) {
             f32 utility = children[i].utility(this, blackboard);
+            scores += utility + " ";
             if (utility > max_utility)
             {
                 max_utility = utility;
                 @best = @children[i];
             }
         }
+        print(scores);
         if (best !is null)
         {
             return best.execute(this, blackboard);

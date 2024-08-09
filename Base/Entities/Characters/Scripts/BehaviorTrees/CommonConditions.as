@@ -70,12 +70,6 @@ class HasAttackTarget : BehaviorTreeNode {
     }
 }
 
-class IsJump : BehaviorTreeNode {
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        return blackboard.jump ? BehaviorTreeStatus::success : BehaviorTreeStatus::failure;
-    }
-}
-
 class isOnGround : BehaviorTreeNode {
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
         return this.isOnGround() ? BehaviorTreeStatus::success : BehaviorTreeStatus::failure;
