@@ -5,143 +5,137 @@
 
 #define CLIENT_ONLY
 
-const string link = "https://github.com/mehwaffle10/Waffle_Balance";
+const string github_link = "https://github.com/mehwaffle10/Waffle_Balance";
 const string discord_link = "https://discord.gg/3g5jTDF";
-const Vec2f text_offset = Vec2f(10, 10);
 bool hide = true;
+f32 scale = getScreenWidth() / 1920.0f;
+Vec2f guidebook_size = Vec2f(599.0f, 418.0f);
+Vec2f bookmark_size = Vec2f(52, 52);
+u8 current_page = 1;
 
-class PopupGUI
+class Guidebook
 {
-	string text = "Welcome to Waffle Balance!\n\nThis server is hosted and modded by mehwaffle10. Feel free to say hi!\n\nCheck out the GitHub repo for a full list of balance changes\n\nWe play organized matches every Sunday at 9PM EST\n\nJoin the DWI discord if you're interested!\n\nThis menu can be reopened from the main menu under \"Balance Changes\"";
-	ClickButton@ website_button;
-    ClickButton@ discord_button;
-	string website_text = "GitHub Repo";
-    string discord_text = "DWI Discord";
-	Vec2f website_text_dim;
-	ClickButton@ close_button;
-	string close_text = "x"; // nobody will give a fuck
-	Vec2f text_dim;
-	Vec2f button_dim;
+	ClickButton@[] buttons;
+    Vec2f top_left;
 
-	Vec2f center;
-	Vec2f tl;
-	Vec2f tr;
-	Vec2f bl;
-	Vec2f br;
-
-	PopupGUI()
+	Guidebook()
 	{
-		GUI::SetFont("menu");
-		GUI::GetTextDimensions(text, text_dim);
-		text_dim += Vec2f(text_offset.x * 2, text_offset.y);
+        top_left = Vec2f(getScreenWidth(), getScreenHeight()) / 2.0f - guidebook_size * scale;
+        for (u8 i = 1; i <= 7; i++)
+        {
+            u8 y_offset = i >= 6 ? 0 : i >= 4 ? 4 : 8;
+            buttons.push_back(ClickButton(
+                top_left + Vec2f((20.0f + bookmark_size.x) * i - 12.0f, y_offset) * scale,
+                bookmark_size * scale,
+                "GuidebookBookmarkHighlight.png",
+                "",
+                i,
+                true)
+            );
+        }
 
-		GUI::SetFont("slightly bigger text 2");
-		GUI::GetTextDimensions(website_text, website_text_dim);
+        buttons.push_back(ClickButton(
+            top_left + Vec2f(68.0f, 344.0f) * scale,
+            Vec2f(130, 130) * scale,
+            "GuidebookDWIHighlight.png",
+            discord_link,
+            1,
+            false)
+        );
 
-		this.Update(null);
-		@website_button = ClickButton(0, SColor(255, 0, 170, 0), website_text, "slightly bigger text 2");
-        @discord_button = ClickButton(2, SColor(255, 0, 170, 0), discord_text, "slightly bigger text 2");
-		@close_button = ClickButton(1, SColor(255, 200, 0, 0), "X");
+        buttons.push_back(ClickButton(
+            top_left + Vec2f(370.0f, 530.0f) * scale,
+            Vec2f(178.0f, 186.0f) * scale,
+            "GuidebookGitHubHighlight.png",
+            github_link,
+            1,
+            false)
+        );
 	}
 
-	void RenderGUI()
+	void Render()
 	{
-		GUI::SetFont("menu");
-		GUI::DrawPane(tl, br, SColor(255, 200, 200, 200));
-
-		GUI::DrawText(text, tl + text_offset, color_white);
-
-		Vec2f button_tl = bl;
-
-		website_button.RenderGUI(button_tl, Vec2f(text_dim.x, website_text_dim.y * 2));
-        discord_button.RenderGUI(button_tl + Vec2f(0, website_text_dim.y * 2), Vec2f(text_dim.x, website_text_dim.y * 2));
-		close_button.RenderGUI(tr - Vec2f(24, 0), Vec2f(24, 24));
+		GUI::DrawIcon("Guidebook" + current_page + ".png", top_left, scale);
+        for (u8 i = 0; i < buttons.length; i++)
+        {
+            buttons[i].Render();
+        }
 	}
 
 	void Update(CControls@ controls)
 	{
-		center = Vec2f(getScreenWidth() - 8 - text_dim.x / 2, 8 + text_dim.y / 2);
-		tl = center - Vec2f(text_dim.x / 2, text_dim.y / 2);
-		tr = center + Vec2f(text_dim.x / 2, -text_dim.y / 2);
-		bl = center - Vec2f(text_dim.x / 2, -text_dim.y / 2 - 20);
-		br = center + Vec2f(text_dim.x / 2, text_dim.y / 2 + 20);
-
-		Vec2f button_tl = bl;
-
-		if (controls is null) return;
-
-		website_button.Update(button_tl, Vec2f(text_dim.x, website_text_dim.y * 2), controls);
-        discord_button.Update(button_tl + Vec2f(0, website_text_dim.y * 2), Vec2f(text_dim.x, website_text_dim.y * 2), controls);
-		close_button.Update(tr - Vec2f(24, 0), Vec2f(24, 24), controls);
+        for (u8 i = 0; i < buttons.length; i++)
+        {
+            buttons[i].Update(controls);
+        }
 	}
 }
 
 class ClickButton
 {
-	u8 id;
 	bool hovered;
-	SColor color;
-	string text;
-	string font;
+    Vec2f top_left;
+    Vec2f size;
+	string hover_icon;
+    string open_link;
+    u8 page;
+    bool bookmark;
 
-	ClickButton(int _id, SColor _color, string _text, string _font="menu")
+	ClickButton(Vec2f _top_left, Vec2f _size, string _hover_icon, string _open_link, u8 _page, bool _bookmark)
 	{
-		id = _id;
-		color = _color;
-		text = _text;
-		font = _font;
-		hovered = false;
+        hovered = false;
+        top_left = _top_left;
+        size = _size;
+	    hover_icon = _hover_icon;
+        open_link = _open_link;
+        page = _page;
+        bookmark = _bookmark;
 	}
 
-	bool isHovered(Vec2f origin, Vec2f size, Vec2f mousepos)
+	bool isHovered(Vec2f mouse_pos)
 	{
-		Vec2f tl = origin;
-		Vec2f br = origin + size;
-
-		return (mousepos.x > tl.x && mousepos.y > tl.y &&
-		        mousepos.x < br.x && mousepos.y < br.y);
+		Vec2f bottom_right = top_left + size;
+		return (mouse_pos.x > top_left.x     && mouse_pos.y > top_left.y &&
+		        mouse_pos.x < bottom_right.x && mouse_pos.y < bottom_right.y);
 	}
 
-	void RenderGUI(Vec2f origin, Vec2f size)
-	{
-		SColor new_color = color;
+    bool isCorrectPage()
+    {
+        return bookmark ? page != current_page : page == current_page;
+    }
 
-		if (hovered)
+	void Render()
+	{
+		if (hovered && isCorrectPage())
 		{
-			f32 tint_factor = 0.80;
-			new_color = color.getInterpolated(color_white, tint_factor);
+			GUI::DrawIcon(hover_icon, top_left, scale);
 		}
-
-		GUI::DrawPane(origin, origin+size, new_color);
-
-		Vec2f text_pos = Vec2f(origin.x + size.x / 2, origin.y + size.y / 2);
-
-		if (id == 1) text_pos -= Vec2f(2, 0); // as i said, nobody will give a fuck
-
-		GUI::SetFont(font);
-		GUI::DrawTextCentered(text, text_pos, color_white);
 	}
 
-	void Update(Vec2f origin, Vec2f size, CControls@ controls)
+	void Update(CControls@ controls)
 	{
-		if (controls is null) return;
+        bool correct_page = isCorrectPage();
+		Vec2f mouse_pos = controls.getMouseScreenPos();
+		const bool mouse_just_released = controls.isKeyJustReleased(KEY_LBUTTON);
 
-		Vec2f mousepos = controls.getMouseScreenPos();
-		const bool mousePressed = controls.isKeyPressed(KEY_LBUTTON);
-		const bool mouseJustReleased = controls.isKeyJustReleased(KEY_LBUTTON);
-
-		if (hovered == false && this.isHovered(origin, size, mousepos) == true)
+        bool now_hovered = this.isHovered(mouse_pos);
+		if (!hovered && now_hovered && correct_page)
 		{
 			Sound::Play("select.ogg");
 		}
 
-		hovered = this.isHovered(origin, size, mousepos);
+		hovered = now_hovered;
 
-		if (hovered && mouseJustReleased)
+		if (hovered && mouse_just_released && correct_page)
 		{
-			hide = true;
-			if (id == 0) OpenWebsite(link);
-            if (id == 2) OpenWebsite(discord_link);
+			if (open_link != "")
+            {
+                OpenWebsite(open_link);
+            }
+            else if (bookmark)
+            {
+                current_page = page;
+            }
 			Sound::Play("buttonclick.ogg");
 		}
 	}
@@ -150,50 +144,38 @@ class ClickButton
 void onInit(CRules@ this)
 {
 	hide = false;
-	if (!GUI::isFontLoaded("slightly bigger text 2"))
-	{
-		string font = CFileMatcher("AveriaSerif-Bold.ttf").getFirst();
-		GUI::LoadFont("slightly bigger text 2", font, 36, true);
-	}
-
-	PopupGUI@ GUI = PopupGUI();
-	this.set("popupgui", @GUI);
+	Guidebook@ guidebook = Guidebook();
+	this.set("guide book", @guidebook);
 }
 
 void onTick(CRules@ this)
 {
-	if (getLocalPlayer() !is null)
+	if (getLocalPlayer() !is null && !hide)
 	{
 		CControls@ controls = getControls();
-
-		if (!hide)
-		{
-			PopupGUI@ GUI;
-			this.get("popupgui", @GUI);
-			if (GUI is null) 
-			{
-				return;
-			}
-
-			GUI.Update(controls);
-		}
+        Guidebook@ guidebook;
+        this.get("guide book", @guidebook);
+        if (guidebook !is null && controls !is null) 
+        {
+            guidebook.Update(controls);
+        }
 	}
 }
 
 void onRender(CRules@ this)
 {
-	PopupGUI@ GUI;
-	this.get("popupgui", @GUI);
-	if (GUI is null) 
+	Guidebook@ guidebook;
+	this.get("guide book", @guidebook);
+	if (guidebook is null) 
 	{
-		PopupGUI@ GUI = PopupGUI();
-		this.set("popupgui", @GUI);
+		Guidebook@ guidebook = Guidebook();
+		this.set("guide book", @guidebook);
 		return;
 	}
 
 	if (!hide)
 	{
-		GUI.RenderGUI();
+		guidebook.Render();
 	}
 }
 
