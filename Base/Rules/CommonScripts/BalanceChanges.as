@@ -21,7 +21,7 @@ class Guidebook
 	Guidebook()
 	{
         top_left = Vec2f(getScreenWidth(), getScreenHeight()) / 2.0f - guidebook_size * scale;
-        for (u8 i = 1; i <= 7; i++)
+        for (u8 i = 1; i <= 6; i++)
         {
             u8 y_offset = i >= 6 ? 0 : i >= 4 ? 4 : 8;
             buttons.push_back(ClickButton(
@@ -35,8 +35,8 @@ class Guidebook
         }
 
         buttons.push_back(ClickButton(
-            top_left + Vec2f(68.0f, 344.0f) * scale,
-            Vec2f(130, 130) * scale,
+            top_left + Vec2f(68.0f, 506.0f) * scale,
+            Vec2f(130, 230) * scale,
             "GuidebookDWIHighlight.png",
             discord_link,
             1,
@@ -44,12 +44,21 @@ class Guidebook
         );
 
         buttons.push_back(ClickButton(
-            top_left + Vec2f(370.0f, 530.0f) * scale,
-            Vec2f(178.0f, 186.0f) * scale,
+            top_left + Vec2f(460.0f, 676.0f) * scale,
+            Vec2f(74.0f, 78.0f) * scale,
             "GuidebookGitHubHighlight.png",
             github_link,
             1,
             false)
+        );
+
+        buttons.push_back(ClickButton(
+            top_left + Vec2f(guidebook_size.x * 2 - 52.0f, 32.0f) * scale,
+            bookmark_size * scale,
+            "GuidebookExitHighlight.png",
+            "",
+            0,
+            true)
         );
 	}
 
@@ -134,7 +143,15 @@ class ClickButton
             }
             else if (bookmark)
             {
-                current_page = page;
+                if (page == 0)
+                {
+                    hide = true;
+                    hovered = false;
+                }
+                else
+                {
+                    current_page = page;
+                }
             }
 			Sound::Play("buttonclick.ogg");
 		}
