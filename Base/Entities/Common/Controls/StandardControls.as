@@ -76,6 +76,13 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if (pickedup.isAttached()) return;
 
+        // Waffle: Add line of sight and distance check
+        CMap@ map = getMap();
+        if (map is null || map.rayCastSolid(pickedup.getPosition(), caller.getPosition()) || (caller.getPosition() - pickedup.getPosition()).Length() > caller.getRadius() + 60.0f)
+        {
+            return;
+        }
+
 		caller.server_Pickup(pickedup);
 	}
 	else if (cmd == this.getCommandID("detach"))
