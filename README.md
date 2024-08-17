@@ -62,6 +62,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Double damage for digging wood or stone (3 hits for wood block, 4 for stone block)
 - Moss backwall is now treated like stone backwall
 - Repairing blobs will no longer replace healthy stone backwall behind
+- Can now put spikes behind bushes
 
 ### Knight
 - Block Breaking
@@ -122,7 +123,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Added visible bounding box around saplings and trees when holding a sapling
 - Removed RNG
     - Pine and Bushy trees now have the same stats
-    - Always grow to 7 segments / 12 blocks tall
+    - Always grow to 7 segments / 13 blocks tall
     - Grows a segment every 350 ticks
     - Saplings turn into trees in 500 ticks
 - Can be automatically harvested using saws
@@ -134,7 +135,14 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can no longer grow inside of static blobs or on other trees
 - Can no longer build blocks on top of saplings placed with left click
 - Fixed misalignment from seeds (no build would float half a block off the ground)
-- Fixed top log clipping into ceilings
+- Fixed logs clipping into the ceiling or floor when spawned
+- Redid collapse code
+    - Checks on the falling edge for solid blocks, doors, or platforms
+    - Fixed a bug where could drop logs incorrectly
+- Redid growth code
+    - Can now break Wood and stone blocks, doors, and platforms
+    - Can no longer grow in one tall holes if the block above isn't breakable
+- Nobuild/tree sectors are now tile aligned
 
 ### Holidays
 - Disabled

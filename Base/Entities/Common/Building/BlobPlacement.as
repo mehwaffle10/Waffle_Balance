@@ -82,7 +82,10 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 			}
 		}
 
-		DestroyScenary(cursorPos, cursorPos);
+        if (blob.getName() != "spikes")
+        {
+		    DestroyScenary(cursorPos, cursorPos);
+        }
 
 		return true;
 	}
