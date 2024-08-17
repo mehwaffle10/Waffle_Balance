@@ -49,7 +49,7 @@ Vec2f getTreeUpperLeft(CMap@ map, CBlob@ tree)
 
 Vec2f getTreeUpperLeft(CMap@ map, Vec2f pos)
 {
-    return getCenter(map, pos) + Vec2f(0, -11) * map.tilesize;
+    return getCenter(map, pos) + Vec2f(0, -12) * map.tilesize;
 }
 
 Vec2f getTreeBottomRight(CMap@ map, CBlob@ tree)

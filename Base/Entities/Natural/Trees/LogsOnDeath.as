@@ -23,8 +23,26 @@ void onDie(CBlob@ this)
 
 		if (getNet().isServer())
 		{
-			pos = this.getPosition() + segment.start_pos;  // (segment.start_pos + segment.end_pos) / 2.0f;  // Waffle: Fix logs clipping into the ceiling
-			// pos.y -= 4.0f; // TODO: fix logs spawning in ground                                           // Waffle: --
+            // Waffle: Fix logs clipping into the ceiling and ground
+			pos = this.getPosition() + segment.start_pos;  // (segment.start_pos + segment.end_pos) / 2.0f;
+			// pos.y -= 4.0f; // TODO: fix logs spawning in ground                                           
+            CMap@ map = getMap();
+            if (map !is null)
+            {
+                Vec2f offset = Vec2f(this.getWidth() / 2.1f * (this.get_bool("cut_down_fall_side") ? -1 : 1), this.getHeight() / 2.0f);
+                offset = offset.RotateByDegrees(fall_angle);
+                Vec2f end_pos = segment.end_pos - segment.start_pos;
+                end_pos.Normalize();
+                end_pos *= segment.length;
+                end_pos += pos + offset;
+                HitInfo@[] hitInfos;
+                while (map.rayCastSolid(pos + offset, end_pos))
+                {
+                    pos.y -= 1;
+                    end_pos.y -= 1;
+                }
+                
+            }
 			CBlob@ log = server_CreateBlob("log", this.getTeamNum(), pos);
 			if (log !is null)
 			{
@@ -41,3 +59,4 @@ void onDie(CBlob@ this)
 	// effects
 	Sound::Play("Sounds/branches" + (XORRandom(2) + 1) + ".ogg", this.getPosition());
 }
+

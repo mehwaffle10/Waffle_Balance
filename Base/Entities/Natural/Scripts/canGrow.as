@@ -20,8 +20,18 @@ bool canGrowAt(CBlob@ this, Vec2f pos, bool prospective=false)
 {
     CMap@ map = getMap();
     // Waffle: Add prospective checking for another position
+    string seed_grow_blobname = this.get_string("seed_grow_blobname");
+    bool is_tree = seed_grow_blobname == "tree_pine" || seed_grow_blobname == "tree_bushy";
+    u8 above_type = map.getTile(pos - Vec2f(0, map.tilesize)).type;
+    bool space_above = !map.isTileSolid(above_type) || map.isTileWood(above_type) || map.isTileCastle(above_type);
+    if (is_tree && !space_above)
+    {
+        return false;
+    }
+
     if (prospective)
     {
+        
         if (!map.isTileSolid(pos + Vec2f(0, map.tilesize)) || map.isInWater(pos) || !isNotTouchingOthers(this, map, pos))
         {
             return false;

@@ -40,6 +40,8 @@ void InitTree(CBlob@ this, TreeVars@ vars)
 		this.set_s32("last_grew_time", vars.last_grew_time);
 		this.Sync("last_grew_time", true);
 
+        // Waffle: Break things in the way
+        BreakSolids(map, this, pos - Vec2f(0, map.tilesize));
 	}
 
 	if (this.hasTag("startbig"))
@@ -98,59 +100,51 @@ bool treeBreakableTile(CMap@ map, TileType t)
 
 void DoGrow(CBlob@ this, TreeVars@ vars)
 {
+    bool start = this.hasTag("startbig");
 	if (vars.height < vars.max_height)
 	{
-		bool raycast = false;
-		bool unbreakable = false;
-		bool killtwo = false;
-
-		Vec2f pos = this.getPosition();
-		Vec2f partpos = pos + Vec2f(0, -segment_length * (f32(vars.height)));
-		Vec2f endpos = partpos;
-
 		CMap@ map = this.getMap();
 		if (map !is null)
 		{
-			raycast = map.rayCastSolid(pos, partpos, endpos);
-			if (raycast)
-			{
-				unbreakable = !treeBreakableTile(map, map.getTile(endpos).type);
-				if (!unbreakable && (partpos - endpos).Length() > 4.0f)
-				{
-					unbreakable = !treeBreakableTile(map, map.getTile(endpos + Vec2f(0, -8)).type);
-					killtwo = true;
-				}
-			}
-		}
+            // Waffle: Break blocks and blobs smarter
+            Vec2f pos = this.getPosition();
+            u8 tile_count = Maths::Ceil(segment_length * (vars.height + 1) / map.tilesize);
+            bool blocked = false;
+            u8 offset = start ? 0 : map.tilesize / 2;
+            for (u8 i = 0; i < tile_count; i++)
+            {
+                print("pos: " + pos + " tile_count: " + tile_count + " offset: " + offset + " start: " + start + " i: " + i + " pos - Vec2f(0, map.tilesize * i - offset): " + (pos - Vec2f(0, map.tilesize * i - offset)));
+                if (isBlockedAtPos(map, pos - Vec2f(0, map.tilesize * i - offset)))
+                {
+                    blocked = true;
+                    break;
+                }
+            }
 
-		if (unbreakable)
-		{
-			if (vars.height > 2)
-			{
-				//truncate growth and continue
-				vars.max_height = vars.height;
-			}
-			else
-			{
-				//stop growth for now, if it becomes clear we can continue
-				return;
-			}
-		}
-		else
-		{
-			if (raycast && map !is null)
-			{
-				map.server_DestroyTile(endpos, 100.0f, this);
-				if (killtwo)
-				{
-					map.server_DestroyTile(endpos + Vec2f(0, -8), 100.0f, this);
-				}
-			}
+            if (blocked)
+            {
+                if (vars.height > 2)
+                {
+                    //truncate growth and continue
+                    vars.max_height = vars.height;
+                }
+                else
+                {
+                    //stop growth for now, if it becomes clear we can continue
+                    return;
+                }
+            }
+            else
+            {
+                for (u8 i = 0; i < tile_count; i++)
+                {
+                    BreakSolids(map, this, pos - Vec2f(0, map.tilesize * i - offset));
+                }
 
-			vars.height++;
-			addSegment(this, vars);
-
-		}
+                vars.height++;
+                addSegment(this, vars);
+            }
+        }
 	}
 
 	CMap@ map = getMap();
@@ -185,7 +179,7 @@ void DoGrow(CBlob@ this, TreeVars@ vars)
 			}
 		}
 
-        u8 shift = getGameTime() > 3 ? 2 : 1;  // Waffle: Fix misalignment caused by seeds
+        u8 shift = start ? 1 : 2;  // Waffle: Fix misalignment caused by seeds
 		if (sector_nobuild is null)
 		{
 			@sector_nobuild = map.server_AddSector(Vec2f(pos.x - radius, pos.y - radius), Vec2f(pos.x + radius, pos.y + radius * shift), "no build", "", this.getNetworkID());  // Waffle: Fix misalignment caused by seeds
@@ -198,7 +192,7 @@ void DoGrow(CBlob@ this, TreeVars@ vars)
 
 		if (sector_nobuild !is null && sector_tree !is null)
 		{
-			sector_nobuild.upperleft.y = sector_nobuild.lowerright.y - (vars.height * segment_length);
+			sector_nobuild.upperleft.y = sector_nobuild.lowerright.y - Maths::Ceil(segment_length * vars.height / map.tilesize) * map.tilesize;  // Waffle: Align sectors to tiles
 			sector_tree.upperleft.y = sector_nobuild.upperleft.y;
 		}
 	}
@@ -253,4 +247,28 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	}
 
 	return 0.0f;
+}
+
+void BreakSolids(CMap@ map, CBlob@ this, Vec2f pos)
+{
+    if (treeBreakableTile(map, map.getTile(pos).type))
+    {
+        map.server_DestroyTile(pos, 100.0f, this);
+    }
+
+    CBlob@[] blobs;
+    map.getBlobsAtPosition(pos, blobs);
+    for (u8 i = 0; i < blobs.length; i++)
+    {
+        CBlob@ blob = blobs[i];
+        if (blob !is null && blob.getShape().isStatic() && (blob.hasTag("door") || blob.isPlatform()))
+        {
+            this.server_Hit(blob, blob.getPosition(), Vec2f(0, -1.0f), 100.0f, Hitters::crush, true);
+        }
+    }
+}
+
+bool isBlockedAtPos(CMap@ map, Vec2f pos)
+{
+    return map.isTileSolid(pos) && !treeBreakableTile(map, map.getTile(pos).type);
 }
