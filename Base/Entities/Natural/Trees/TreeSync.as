@@ -113,7 +113,6 @@ void DoGrow(CBlob@ this, TreeVars@ vars)
             u8 offset = start ? 0 : map.tilesize / 2;
             for (u8 i = 0; i < tile_count; i++)
             {
-                print("pos: " + pos + " tile_count: " + tile_count + " offset: " + offset + " start: " + start + " i: " + i + " pos - Vec2f(0, map.tilesize * i - offset): " + (pos - Vec2f(0, map.tilesize * i - offset)));
                 if (isBlockedAtPos(map, pos - Vec2f(0, map.tilesize * i - offset)))
                 {
                     blocked = true;
