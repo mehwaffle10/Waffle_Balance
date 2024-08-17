@@ -166,6 +166,16 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - bush, grain, flower - 40
 - saplings            - 45
 
+### Buttons
+- Added line of sight check
+
+### Pickup
+- Added line of sight check
+- Added distance check
+
+### Throw
+- Added distance check
+
 ### Bison
 - Hit vehicles instead of their drivers
 
