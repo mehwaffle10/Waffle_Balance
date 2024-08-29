@@ -58,7 +58,7 @@ void onTick(CBlob@ this)
 				CBlob@ occupiedBlob = point.getOccupied();
 				if (occupiedBlob !is null && 
 					occupiedBlob.isKeyJustPressed(key_action1) && 
-					!this.isInWater() &&
+					// !this.isInWater() &&  // Waffle: Allow splashing in water
 					!occupiedBlob.isKeyPressed(key_inventory)) // prevent splash when doing stuff with inventory
 				{
 					DoSplash(this);

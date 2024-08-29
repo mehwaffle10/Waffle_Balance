@@ -416,6 +416,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer decay if spammed
 - Can be picked up by enemy players without having to overlap the crate
 - Changes team when picked up
+- Now gives the "medium weight" tag instead of "heavy weight" tag when carrying a lit keg
 - Can automatically pick up materials again
 	- No longer automatically picks up normal arrows
     - Automatically pickup ballista bolts and bomb bolts
@@ -444,6 +445,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Buckets
 - Can only splash once before needing a refill
 - Slightly bigger splash area
+- Can be used in water
 - Cost 15 coins
 
 ### Sponges
