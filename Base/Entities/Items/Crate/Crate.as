@@ -719,6 +719,9 @@ void onAddToInventory(CBlob@ this, CBlob@ blob)
 	this.getSprite().PlaySound("thud.ogg");
 	if (blob.getName() == "keg")
 	{
+        // Waffle: Always make kegs medium weight
+        this.Tag("medium weight");
+        /*
 		if (blob.hasTag("exploding"))
 		{
 			this.Tag("heavy weight");
@@ -727,6 +730,7 @@ void onAddToInventory(CBlob@ this, CBlob@ blob)
 		{
 			this.Tag("medium weight");
 		}
+        */
 	}
 
 	// Waffle: Add inventory indicator
@@ -817,8 +821,6 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	{
 		DumpOutItems(this, 0);
 	}
-    // Waffle: Use normal vehicle protection rules
-    /*
 	if (isExplosionHitter(customData) || customData == Hitters::keg)
 	{
 		if (dmg > 50.0f) // inventory explosion
@@ -826,12 +828,15 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			this.Tag("crate exploded");
 			DumpOutItems(this, 10);
 			// Nearly kill the player
+            // Waffle: Use normal vehicle protection rules
+            /*
             CBlob@ sneaky_player = getPlayerInside(this);
 			if (sneaky_player !is null)
 			{
 				hitterBlob.server_Hit(sneaky_player, this.getPosition(), Vec2f(),
 									  sneaky_player.getInitialHealth() * 2 - 0.25f, Hitters::explosion, true);
 			}
+            */
 		}
 		else
 		{
@@ -839,6 +844,8 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			{
 				dmg = Maths::Max(dmg, this.getInitialHealth() * 2); // Keg always kills crate
 			}
+            // Waffle: Use normal vehicle protection rules
+            /*
 			CBlob@ sneaky_player = getPlayerInside(this);
 			if (sneaky_player !is null)
 			{
@@ -847,9 +854,9 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 				hitterBlob.server_Hit(sneaky_player, this.getPosition(), Vec2f_zero,
 									  dmg / 2, customData, should_teamkill);
 			}
+            */
 		}
 	}
-    */
 	if (this.getHealth() - (dmg / 2.0f) <= 0.0f)
 	{
 		DumpOutItems(this);
