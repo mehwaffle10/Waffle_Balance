@@ -817,6 +817,8 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	{
 		DumpOutItems(this, 0);
 	}
+    // Waffle: Use normal vehicle protection rules
+    /*
 	if (isExplosionHitter(customData) || customData == Hitters::keg)
 	{
 		if (dmg > 50.0f) // inventory explosion
@@ -847,6 +849,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			}
 		}
 	}
+    */
 	if (this.getHealth() - (dmg / 2.0f) <= 0.0f)
 	{
 		DumpOutItems(this);
