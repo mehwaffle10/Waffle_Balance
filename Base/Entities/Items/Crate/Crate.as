@@ -181,7 +181,7 @@ void onTick(CBlob@ this)
 			Land(this);
 		}
 	}
-	else
+	else if (hasSomethingPacked(this))
 	{
         // Waffle: Always tick
 		// if (hasSomethingPacked(this))
