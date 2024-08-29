@@ -29,7 +29,7 @@ void onTick(CBlob@ this)
 	if (isServer())
 	{
 
-		if (inwater && !this.hasTag("invincible"))
+		if (inwater && !this.hasTag("invincible") && !this.hasTag("can breathe"))
 		{
 			if (aircount >= FREQ)
 			{

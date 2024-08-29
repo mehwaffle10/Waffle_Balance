@@ -1139,6 +1139,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
         // Waffle: Use attachments since they're less buggy/Add inventory indicator
         AddInventoryIndicator(this, true);
         attached.Tag("vehicle protection");
+        attached.Tag("can breathe");  // Waffle: Can breathe in crates
         attached.SetVisible(false);
         this.setVelocity(attached.getVelocity());
     }
@@ -1161,6 +1162,7 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
         // Waffle: Use attachments since they're less buggy/Add inventory indicator
         AddInventoryIndicator(this, false);
         detached.Untag("vehicle protection");
+        detached.Untag("can breathe");  // Waffle: Can breathe in crates
         detached.SetVisible(true);
         detached.setVelocity(this.getVelocity());
     }
