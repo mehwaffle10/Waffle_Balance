@@ -3,6 +3,7 @@
 
 #include "AnimalConsts.as";
 #include "KnockedCommon.as";  // Waffle: Fix issue with HitHeld + shieldbashing
+#include "RunnerCommon.as";  // Waffle: Add chicken jump
 
 const u8 DEFAULT_PERSONALITY = SCARED_BIT;
 const int MAX_EGGS = 4; //maximum symultaneous eggs  // 2  // Waffle: Increase chicken spawning
@@ -215,9 +216,18 @@ void onTick(CBlob@ this)
                 AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
                 if (point !is null && this.get_bool(CAN_JUMP) && point.isKeyJustPressed(key_action3))
                 {
-                    b.setVelocity(Vec2f(0, -6));
                     this.set_bool(CAN_JUMP, false);
                     this.set_u32(LAST_JUMP_TIME, getGameTime());
+                    b.setVelocity(Vec2f(0, -6));
+                    RunnerMoveVars@ moveVars;
+                    if (b.get("moveVars", @moveVars))
+                    {
+                        moveVars.walljumped = false;
+                        moveVars.walljumped_side = Walljump::NONE;
+                        moveVars.wallclimbing = false;
+                        moveVars.wallsliding = false;
+                    }
+                    
                     if (g_lastSoundPlayedTime + 30 < getGameTime())
                     {
                         g_lastSoundPlayedTime = getGameTime();
