@@ -12,6 +12,9 @@ const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
 int g_lastSoundPlayedTime = 0;
 int g_layEggInterval = 0;
 
+const string CAN_JUMP = "can chicken jump";              // Waffle: Add chicken jump
+const string LAST_JUMP_TIME = "last chicken jump time";  // Waffle: --
+
 //sprite
 
 // Waffle: Not always blue
@@ -79,6 +82,15 @@ void onInit(CBlob@ this)
 	InitKnockable(this);  // Waffle: Fix issue with HitHeld + shieldbashing
 	this.set_f32("bite damage", 0.25f);
 
+    // Waffle: Add chicken jump
+    AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+    if (point !is null)
+    {
+        point.SetKeysToTake(key_action3);
+    }
+    this.set_bool(CAN_JUMP, true);
+    this.set_u32(LAST_JUMP_TIME, getGameTime());
+
 	//brain
 	this.set_u8(personality_property, DEFAULT_PERSONALITY);
 	this.getBrain().server_SetActive(true);
@@ -94,7 +106,7 @@ void onInit(CBlob@ this)
 	this.Tag("flesh");
 
 	this.getShape().SetOffset(Vec2f(0, 6));
-
+    
 	this.getCurrentScript().runFlags |= Script::tick_blob_in_proximity;
 	this.getCurrentScript().runProximityTag = "player";
 	this.getCurrentScript().runProximityRadius = 320.0f;
@@ -131,21 +143,6 @@ void onAttach( CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint )
 {
 	// Waffle: Prevent friendly players from killing your chicken
 	this.server_setTeamNum(attached.getTeamNum());
-
-	// Waffle: Damage taken also hits chickens
-	if (!attached.hasScript("HitHeld.as"))
-	{
-		attached.AddScript("HitHeld.as");
-	}
-}
-
-void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
-{
-	// Waffle: Only hit held chickens
-	if (detached.hasScript("HitHeld.as"))
-	{
-		detached.RemoveScript("HitHeld.as");
-	}
 }
 
 void onTick(CBlob@ this)
@@ -181,6 +178,14 @@ void onTick(CBlob@ this)
 		}
 	}
 
+    // Waffle: Add chicken jump
+    bool can_reset_jump = getGameTime() > this.get_u32(LAST_JUMP_TIME) + 5;
+    CBlob@ inventory_blob = this.getInventoryBlob();
+    if (inventory_blob !is null && can_reset_jump && inventory_blob.isOnGround())
+    {
+        this.set_bool(CAN_JUMP, true);
+    }
+
 	if (this.isAttached())
 	{
 		AttachmentPoint@ att = this.getAttachmentPoint(0);   //only have one
@@ -189,6 +194,11 @@ void onTick(CBlob@ this)
 			CBlob@ b = att.getOccupied();
 			if (b !is null)
 			{
+                if (can_reset_jump && b.isOnGround())
+                {
+                    this.set_bool(CAN_JUMP, true);
+                }
+
 				// too annoying
 
 				//if (g_lastSoundPlayedTime+20+XORRandom(10) < getGameTime())
@@ -201,8 +211,22 @@ void onTick(CBlob@ this)
 				//	g_lastSoundPlayedTime = getGameTime();
 				//}
 
+                // Waffle: Add chicken jump
+                AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+                if (point !is null && this.get_bool(CAN_JUMP) && point.isKeyJustPressed(key_action3))
+                {
+                    b.setVelocity(Vec2f(0, -6));
+                    this.set_bool(CAN_JUMP, false);
+                    this.set_u32(LAST_JUMP_TIME, getGameTime());
+                    if (g_lastSoundPlayedTime + 30 < getGameTime())
+                    {
+                        g_lastSoundPlayedTime = getGameTime();
+                        this.getSprite().PlaySound("/ScaredChicken0" + (XORRandom(3) + 1));
+                    }
+                }
+
 				Vec2f vel = b.getVelocity();
-				if (vel.y > 0.5f)
+				if (!b.isKeyPressed(key_down) && vel.y > 0.5f)  // Waffle: Allow holding down to not hover
 				{
 					// Waffle: Increase chicken hover strength
 					b.AddForce(Vec2f(0, -35));
@@ -227,7 +251,7 @@ void onTick(CBlob@ this)
 	else if (XORRandom(128) == 0 && g_lastSoundPlayedTime + 30 < getGameTime())
 	{
 		this.getSprite().PlaySound("/Pluck");
-		g_lastSoundPlayedTime =  getGameTime();
+		g_lastSoundPlayedTime = getGameTime();
 
 		// lay eggs
 		if (getNet().isServer())
@@ -284,3 +308,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	}
 }
 
+// Waffle: Add chicken jump
+void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
+{
+	this.doTickScripts = true;
+}

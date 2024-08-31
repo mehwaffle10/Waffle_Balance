@@ -518,8 +518,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Chickens
 - Are bought directly from the quarters for 50 coins
 - Hover no longer decays
+- Can now jump once midair using space
 - Dies if player holding it takes damage from an enemy
-- Max horizontal speed decreased with strong decay of speeds above threshold while in the air
+- Max horizontal speed decreased with strong decay for speeds above threshold while in the air
 - Can now be burned
 - Can have up to 4 simultaneous eggs instead of 2
 - Can have up to 10 chickens in close proximity instead of 6
