@@ -433,6 +433,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer deals overheat damage
 - Blocked completely by shield
 - Give 100% of tile resources dug
+- Can no longer right click when holding a drill as builder
 - Drills do 2x damage to wood and stone structures
 - Only hits dirt and stone/thickstone once per hit instead of twice
 - Digging stone heats up the drill at the same rate as constructed block

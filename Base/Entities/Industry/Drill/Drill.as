@@ -56,13 +56,6 @@ void onInit(CSprite@ this)
 
 void onInit(CBlob@ this)
 {
-	//todo: some tag-based keys to take interference (doesn't work on net atm)
-	/*AttachmentPoint@ ap = this.getAttachments().getAttachmentPointByName("PICKUP");
-	if (ap !is null)
-	{
-		ap.SetKeysToTake(key_action1 | key_action2 | key_action3);
-	}*/
-
 	this.set_u32("hittime", 0);
 	this.Tag("place norotate"); // required to prevent drill from locking in place (blame builder code :kag_angry:)
 
@@ -209,7 +202,7 @@ void onTick(CBlob@ this)
 
 		if (holder.getName() == required_class || sv_gamemode == "TDM")
 		{
-			if (!holder.isKeyPressed(key_action1) || isKnocked(holder))
+			if (!point.isKeyPressed(key_action1) || isKnocked(holder))
 			{
 				this.set_bool(buzz_prop, false);
 				return;
@@ -434,7 +427,7 @@ void onTick(CBlob@ this)
 			if (isClient() &&
 			        holder.isMyPlayer())
 			{
-				if (holder.isKeyJustPressed(key_action1))
+				if (point.isKeyJustPressed(key_action1))
 				{
 					holder.getSprite().PlaySound("NoAmmo.ogg", 0.5);
 				}
@@ -481,7 +474,16 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 	this.getCurrentScript().runFlags &= ~Script::tick_not_sleeping;
 	CPlayer@ player = attached.getPlayer();
 	if (player !is null)
+    {
 		this.set_u16("showHeatTo", player.getNetworkID());
+    }
+
+    // Waffle: Can no longer right click with drill
+    AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+    if (point !is null && attached.getName() == "builder")
+    {
+        point.SetKeysToTake(key_action1 | key_action2);
+    }
 
 	CShape@ shape = this.getShape();
 	if (shape !is null)
@@ -501,6 +503,13 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint @attachedPoint)
 	{
 		shape.SetGravityScale(1);
 	}
+
+    // Waffle: Can no longer right click with drill
+    AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
+    if (point !is null)
+    {
+        point.SetKeysToTake(0);
+    }
 }
 
 void onThisAddToInventory(CBlob@ this, CBlob@ blob)
