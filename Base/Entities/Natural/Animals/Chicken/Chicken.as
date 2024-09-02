@@ -180,11 +180,10 @@ void onTick(CBlob@ this)
 	}
 
     // Waffle: Add chicken jump
-    bool can_reset_jump = getGameTime() > this.get_u32(LAST_JUMP_TIME) + 5;
     CBlob@ inventory_blob = this.getInventoryBlob();
-    if (inventory_blob !is null && can_reset_jump && inventory_blob.isOnGround())
+    if (canResetJump(inventory_blob))
     {
-        this.set_bool(CAN_JUMP, true);
+        inventory_blob.set_bool(CAN_JUMP, true);
     }
 
 	if (this.isAttached())
@@ -195,9 +194,9 @@ void onTick(CBlob@ this)
 			CBlob@ b = att.getOccupied();
 			if (b !is null)
 			{
-                if (can_reset_jump && b.isOnGround())
+                if (canResetJump(b))
                 {
-                    this.set_bool(CAN_JUMP, true);
+                    b.set_bool(CAN_JUMP, true);
                 }
 
 				// too annoying
@@ -214,10 +213,10 @@ void onTick(CBlob@ this)
 
                 // Waffle: Add chicken jump
                 AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-                if (point !is null && this.get_bool(CAN_JUMP) && point.isKeyJustPressed(key_action3))
+                if (point !is null && b.get_bool(CAN_JUMP) && point.isKeyJustPressed(key_action3))
                 {
-                    this.set_bool(CAN_JUMP, false);
-                    this.set_u32(LAST_JUMP_TIME, getGameTime());
+                    b.set_bool(CAN_JUMP, false);
+                    b.set_u32(LAST_JUMP_TIME, getGameTime());
                     b.setVelocity(Vec2f(0, -6));
                     RunnerMoveVars@ moveVars;
                     if (b.get("moveVars", @moveVars))
@@ -322,4 +321,9 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 {
 	this.doTickScripts = true;
+}
+
+bool canResetJump(CBlob@ blob)
+{
+    return blob !is null && getGameTime() > blob.get_u32(LAST_JUMP_TIME) + 5 && blob.isOnGround();
 }
