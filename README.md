@@ -518,6 +518,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Chickens
 - Are bought directly from the quarters for 50 coins
 - Hover no longer decays
+    - You can press `s` to drop while holding a chicken
 - Can now jump once midair using space
     - Jump resets wall climb as well
 - Dies if player holding it takes damage from an enemy
