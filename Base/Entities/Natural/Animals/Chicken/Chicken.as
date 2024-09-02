@@ -15,6 +15,10 @@ int g_layEggInterval = 0;
 
 const string CAN_JUMP = "can chicken jump";              // Waffle: Add chicken jump
 const string LAST_JUMP_TIME = "last chicken jump time";  // Waffle: --
+const u8 RESET_TIME = 5;                                 // Waffle: --
+
+const string HOVER_COUNTER = "chicken hover counter";
+const u8 MAX_HOVER_COUNTER = 4 * getTicksASecond();
 
 //sprite
 
@@ -181,10 +185,7 @@ void onTick(CBlob@ this)
 
     // Waffle: Add chicken jump
     CBlob@ inventory_blob = this.getInventoryBlob();
-    if (canResetJump(inventory_blob))
-    {
-        inventory_blob.set_bool(CAN_JUMP, true);
-    }
+    TryResetJump(inventory_blob);
 
 	if (this.isAttached())
 	{
@@ -194,10 +195,7 @@ void onTick(CBlob@ this)
 			CBlob@ b = att.getOccupied();
 			if (b !is null)
 			{
-                if (canResetJump(b))
-                {
-                    b.set_bool(CAN_JUMP, true);
-                }
+                TryResetJump(b);  // Waffle: Add chicken jump
 
 				// too annoying
 
@@ -234,11 +232,14 @@ void onTick(CBlob@ this)
                     }
                 }
 
+                // Waffle: Add hover limit
 				Vec2f vel = b.getVelocity();
-				if (!b.isKeyPressed(key_down) && vel.y > 0.5f)  // Waffle: Allow holding down to not hover
+                u8 hover_counter = b.get_u8(HOVER_COUNTER);
+				if (!b.isKeyPressed(key_down) && vel.y > 0.5f && hover_counter > 0)  // Waffle: Allow holding down to not hover
 				{
-					// Waffle: Increase chicken hover strength
-					b.AddForce(Vec2f(0, -35));
+
+					b.AddForce(Vec2f(0, Maths::Min(-35, hover_counter)));  // Waffle: Increase chicken hover strength
+                    b.set_u8(HOVER_COUNTER, hover_counter - 1);
 				}
 
 				// Waffle: Strong horizontal movement decay
@@ -323,7 +324,11 @@ void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 	this.doTickScripts = true;
 }
 
-bool canResetJump(CBlob@ blob)
+void TryResetJump(CBlob@ blob)
 {
-    return blob !is null && getGameTime() > blob.get_u32(LAST_JUMP_TIME) + 5 && blob.isOnGround();
+    if (blob !is null && getGameTime() > blob.get_u32(LAST_JUMP_TIME) + RESET_TIME && blob.isOnGround())
+    {
+        blob.set_bool(CAN_JUMP, true);
+        blob.set_u8(HOVER_COUNTER, MAX_HOVER_COUNTER);
+    }
 }
