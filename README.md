@@ -62,7 +62,6 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Double damage for digging wood or stone (3 hits for wood block, 4 for stone block)
 - Moss backwall is now treated like stone backwall
 - Repairing blobs will no longer replace healthy stone backwall behind
-- Can now put spikes behind bushes
 
 ### Knight
 - Block Breaking
@@ -178,6 +177,11 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Bison
 - Hit vehicles instead of their drivers
+
+### Spikes
+- Can now placed behind bushes
+- Will not hit players in vehicles
+- Collides with vehicles and crates
 
 ### Server Features
 - Seclevs are properly synced to clients
