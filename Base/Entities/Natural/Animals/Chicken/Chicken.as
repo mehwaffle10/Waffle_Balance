@@ -308,7 +308,7 @@ void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 void TryResetJump(CBlob@ blob)
 {
-    if (blob !is null && getGameTime() > blob.get_u32(LAST_JUMP_TIME) + RESET_TIME && blob.isOnGround())
+    if (blob !is null && getGameTime() > blob.get_u32(LAST_JUMP_TIME) + RESET_TIME && (blob.isOnGround() || blob.isOnLadder()))
     {
         blob.set_bool(CAN_JUMP, true);
         blob.set_u8(HOVER_COUNTER, MAX_HOVER_COUNTER);
