@@ -396,7 +396,7 @@ void Pickaxe(CBlob@ this)
             {
                 CBitStream params;
                 params.write_u16(hitdata.blobID);
-                params.write_Vec2f(hitdata.tilepos);
+                params.write_Vec2f(b.getPosition());  // Waffle: Fix pickaxe particles spawning at 0,0 when hitting a blob
                 this.SendCommand(this.getCommandID("pickaxe"), params);
             }
 
