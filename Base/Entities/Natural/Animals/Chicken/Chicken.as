@@ -332,15 +332,6 @@ void onActivate(CBitStream@ params)
     {
         caller.set_bool(CAN_JUMP, false);
         caller.set_u32(LAST_JUMP_TIME, getGameTime());
-        RunnerMoveVars@ moveVars;
-        if (caller.get("moveVars", @moveVars))
-        {
-            moveVars.walljumped = false;
-            moveVars.walljumped_side = Walljump::NONE;
-            moveVars.wallclimbing = false;
-            moveVars.wallsliding = false;
-        }
-
         CBitStream params;
         params.write_netid(caller.getNetworkID());
         this.SendCommand(this.getCommandID("activate client"), params);
@@ -358,6 +349,14 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
         if (caller is null) return;
 
         caller.setVelocity(Vec2f(0, -6));
+        RunnerMoveVars@ moveVars;
+        if (caller.get("moveVars", @moveVars))
+        {
+            moveVars.walljumped = false;
+            moveVars.walljumped_side = Walljump::NONE;
+            moveVars.wallclimbing = false;
+            moveVars.wallsliding = false;
+        }
         if (g_lastSoundPlayedTime + 30 < getGameTime())
         {
             g_lastSoundPlayedTime = getGameTime();
