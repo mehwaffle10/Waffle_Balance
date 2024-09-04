@@ -128,7 +128,28 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
     map.getSectorsAtPosition(pos, sectors);
     for (u8 i = 0; i < sectors.length; i++)
     {
-        if (sectors[i] !is null && (sectors[i].name == "no build" && blobToPlace.getName() != "ladder" || sectors[i].name == "no solids" || sectors[i].name == "no blobs"))  // Waffle: Prevent solids and blobs
+        if (sectors[i] is null)
+        {
+            continue;
+        }
+
+        const bool no_build = sectors[i].name == "no build";
+        const bool no_solids = sectors[i].name == "no solids";
+        const bool no_blobs = sectors[i].name == "no blobs";
+        if (blobToPlace.getName() == "spikes")  // Waffle: Allow spike dropping at the top of the map
+        {
+            const bool has_adjacent = (                                              // can put sticking next to something
+                map.isTileSolid(pos + Vec2f(0,             map.tilesize))  ||
+                map.isTileSolid(pos + Vec2f(0,             -map.tilesize)) ||
+                map.isTileSolid(pos + Vec2f(map.tilesize,  0))             ||
+                map.isTileSolid(pos + Vec2f(-map.tilesize, 0))
+            );
+            if (no_build || (no_solids || no_blobs) && has_adjacent)
+            {
+                return false;
+            }
+        }
+        else if (no_build && blobToPlace.getName() != "ladder" || no_solids || no_blobs)  // Waffle: Prevent solids and blobs
         {
             CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
             if (owner is null || !owner.hasTag("building") || !isTreeSeed(blobToPlace))

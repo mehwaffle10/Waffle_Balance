@@ -174,7 +174,8 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
         const bool no_build  = !isLadder && (buildSolid || isSpikes || isDoor || isPlatform) && map.getSectorAtPosition(middle, "no build") !is null;
         const bool no_solids = buildSolid && map.getSectorAtPosition(middle, "no solids") !is null;
         const bool no_blobs  = blob !is null && map.getSectorAtPosition(middle, "no blobs") !is null;
-		if (!isSeed && (no_build || no_solids || no_blobs))
+        const bool has_adjacent = map.isTileSolid(up) || map.isTileSolid(down) || map.isTileSolid(left) || map.isTileSolid(right);
+		if (!isSeed && (no_build || (!isSpikes || has_adjacent) && (no_solids || no_blobs)))  // Waffle: Allow spike dropping at the top of the map
 		{
 			return false;
 		}

@@ -48,7 +48,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Lightened the sky above the top of the map a bit to improve visibility
 - Maps tend to have significantly shorter sky boxes
 - Maps have extra sectors at the top of the map in addition to the normal 3-block tall no build sector:
-    - No blobs are allowed to be built in the top 7 blocks
+    - No blobs are allowed to be built in the top 7 blocks except unsupported spikes
     - No solid blocks are allowed to be built in the top 6 blocks
     - This allows doors to always be blocked and shops to always be built on top of bases
 
@@ -182,6 +182,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can now placed behind bushes
 - Will not hit players in vehicles
 - Collides with vehicles and crates
+- Can spike drop at the top of the map if not supported
 
 ### Server Features
 - Seclevs are properly synced to clients
