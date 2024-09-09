@@ -31,9 +31,12 @@ void onTick(CRules@ this)
 		return;
 
     // Waffle: Always move to spec unless seeding
+    if (getPlayerCount() <= 2)
+    {
+        return;
+    }
 	// const bool kickImmunity = getSecurity().checkAccess_Feature(p, "kick_immunity");
-	const bool seeding = getPlayerCount() <= 2;  // sv_maxplayers * seedingPercent && ignoredSeedingGamemodes.find(this.gamemode_name) == -1;
-	const bool kickToSpectator = true || seeding;  // kickImmunity;
+	const bool kickToSpectator = true;  // kickImmunity;
 
 	//not updated yet or numbers from last game?
 	if(controls.lastKeyPressTime == 0 || controls.lastKeyPressTime > getGameTime())
