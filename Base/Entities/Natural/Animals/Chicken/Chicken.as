@@ -11,12 +11,15 @@ const int MAX_EGGS = 4; //maximum symultaneous eggs  // 2  // Waffle: Increase c
 const int MAX_CHICKENS = 10;                         // 6  // Waffle: --
 const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
 
-int g_lastSoundPlayedTime = 0;
-int g_layEggInterval = 0;
+// Waffle: Refactor sound/eggs
+const string ALLOW_SOUND_TIME = "last sound time";
+const u8 SOUND_DELAY = getTicksASecond();
+const string EGG_INTERVAL = "egg interval";
 
-const string CAN_JUMP = "can chicken jump";              // Waffle: Add chicken jump
-const string LAST_JUMP_TIME = "last chicken jump time";  // Waffle: --
-const u8 RESET_TIME = 5;                                 // Waffle: --
+// Waffle: Add chicken jump
+const string CAN_JUMP = "can chicken jump";              
+const string LAST_JUMP_TIME = "last chicken jump time";
+const u8 RESET_TIME = 5;
 
 const string HOVER_COUNTER = "chicken hover counter";
 const u8 MAX_HOVER_COUNTER = 4 * getTicksASecond();
@@ -113,9 +116,12 @@ void onInit(CBlob@ this)
 
 	this.getShape().SetOffset(Vec2f(0, 6));
     
-	this.getCurrentScript().runFlags |= Script::tick_blob_in_proximity;
-	this.getCurrentScript().runProximityTag = "player";
-	this.getCurrentScript().runProximityRadius = 320.0f;
+    // Waffle: Refactor sound/eggs
+    this.set_u32(ALLOW_SOUND_TIME, 0);
+    this.set_u8(EGG_INTERVAL, 0);
+	// this.getCurrentScript().runFlags |= Script::tick_blob_in_proximity;
+	// this.getCurrentScript().runProximityTag = "player";
+	// this.getCurrentScript().runProximityRadius = 320.0f;
 
 	// attachment
 
@@ -153,20 +159,6 @@ void onAttach( CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint )
 
 void onTick(CBlob@ this)
 {
-	// Waffle: Prevent chickens dying during build phase by setting them to their respective teams
-	if (isServer())
-	{
-		CMap@ map = getMap();
-		uint gametime = getGameTime();
-		if (map !is null && gametime > 30 && gametime < 35 && !this.get_bool("team swap init"))
-		{
-			Vec2f pos = this.getPosition();
-			this.set_bool("team swap init", true);
-			this.server_setTeamNum(map.getSectorAtPosition(pos, "barrier") !is null ? -1
-								: pos.x < map.tilemapwidth * map.tilesize / 2 ? 0 : 1);
-		}
-	}
-
 	f32 x = this.getVelocity().x;
 	if (Maths::Abs(x) > 1.0f)
 	{
@@ -184,6 +176,9 @@ void onTick(CBlob@ this)
 		}
 	}
 
+    // Waffle: Refactor sound/eggs
+    u32 allow_sound_time = this.get_u32(ALLOW_SOUND_TIME);
+
     // Waffle: Add chicken jump
     CBlob@ inventory_blob = this.getInventoryBlob();
     TryResetJump(inventory_blob);
@@ -198,21 +193,8 @@ void onTick(CBlob@ this)
 			{
                 TryResetJump(b);  // Waffle: Add chicken jump
 
-				// too annoying
-
-				//if (g_lastSoundPlayedTime+20+XORRandom(10) < getGameTime())
-				//{
-				//	if (XORRandom(2) == 1)
-				//		this.getSprite().PlaySound("/ScaredChicken");
-				//	else
-				//		this.getSprite().PlaySound("/Pluck");
-				//
-				//	g_lastSoundPlayedTime = getGameTime();
-				//}
-
                 // Waffle: Add chicken jump
                 AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-                
 
                 // Waffle: Add hover limit
 				Vec2f vel = b.getVelocity();
@@ -240,16 +222,17 @@ void onTick(CBlob@ this)
 			this.AddForce(Vec2f(0, -10));
 		}
 	}
-	else if (XORRandom(128) == 0 && g_lastSoundPlayedTime + 30 < getGameTime())
+	else if (XORRandom(128) == 0 && allow_sound_time < getGameTime())
 	{
 		this.getSprite().PlaySound("/Pluck");
-		g_lastSoundPlayedTime = getGameTime();
+		this.set_u32(ALLOW_SOUND_TIME, getGameTime() + SOUND_DELAY);
 
 		// lay eggs
 		if (getNet().isServer())
 		{
-			g_layEggInterval++;
-			if (g_layEggInterval % 13 == 0)
+			u8 egg_interval = this.get_u8(EGG_INTERVAL) + 1;
+            this.set_u8(EGG_INTERVAL, egg_interval);
+			if (egg_interval % 13 == 0)
 			{
 				Vec2f pos = this.getPosition();
 				bool otherChicken = false;
@@ -293,10 +276,10 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	if (blob is null)
 		return;
 
-	if (blob.getRadius() > this.getRadius() && g_lastSoundPlayedTime + 25 < getGameTime() && blob.hasTag("flesh"))
+	if (blob.getRadius() > this.getRadius() && this.get_u32(ALLOW_SOUND_TIME) < getGameTime() && blob.hasTag("flesh"))
 	{
 		this.getSprite().PlaySound("/ScaredChicken");
-		g_lastSoundPlayedTime = getGameTime();
+		this.set_u32(ALLOW_SOUND_TIME, getGameTime() + SOUND_DELAY);
 	}
 }
 
@@ -357,9 +340,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
             moveVars.wallclimbing = false;
             moveVars.wallsliding = false;
         }
-        if (g_lastSoundPlayedTime + 30 < getGameTime())
+        if (this.get_u32(ALLOW_SOUND_TIME) < getGameTime())
         {
-            g_lastSoundPlayedTime = getGameTime();
+            this.set_u32(ALLOW_SOUND_TIME, getGameTime() + SOUND_DELAY);
             this.getSprite().PlaySound("/ScaredChicken0" + (XORRandom(3) + 1));
         }
 	}

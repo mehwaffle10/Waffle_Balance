@@ -15,6 +15,7 @@ enum WAROffset
 	grain_offset,
 	spike_offset,
 	ladder_offset,
+    chicken_offset,
 	offsets_count
 };
 
@@ -291,7 +292,7 @@ class PNGLoader
 			case map_colors::shark:   autotile(offset); spawnBlob(map, "shark",   offset); break;
 			case map_colors::fish:    autotile(offset); spawnBlob(map, "fishy",   offset).set_u8("age", (offset * 997) % 4); break;
 			case map_colors::bison:   autotile(offset); spawnBlob(map, "bison",   offset); break;
-			case map_colors::chicken: autotile(offset); spawnBlob(map, "chicken", offset, 255, false, Vec2f(0,-8)); break;
+			case map_colors::chicken: autotile(offset); offsets[chicken_offset].push_back(offset); break;
 
 			// Ladders
 			case map_colors::ladder:
@@ -458,6 +459,8 @@ class PNGLoader
 		break;
 		case ladder_offset:
 			spawnLadder(map, offset);
+        case chicken_offset:
+			spawnChicken(map, offset);
 		break;
 		};
 	}
@@ -521,6 +524,25 @@ class PNGLoader
 			}
 			blob.getShape().SetStatic( true );
 		}
+		return blob;
+	}
+
+    // Waffle: Spawn chickens on teams
+    CBlob@ spawnChicken(CMap@ map, int offset)
+	{
+        Vec2f[] barrierPositions;
+        Vec2f pos = getSpawnPosition(map, offset);
+        u16 x = pos.x;
+        u16 x1, x2;
+
+        u8 team = -1;
+        if (map.getMarkers("red barrier", barrierPositions) 
+            && barrierPositions.length() == 2)
+        {
+            const int left = barrierPositions[0].x < barrierPositions[1].x ? 0 : 1;
+            team = x < barrierPositions[left].x - map.tilesize ? 0 : x > barrierPositions[1 - left].x + map.tilesize ? 1 : -1;
+        }
+		CBlob@ blob = server_CreateBlob("chicken", team, pos);
 		return blob;
 	}
 }
