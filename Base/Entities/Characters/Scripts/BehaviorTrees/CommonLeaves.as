@@ -2,7 +2,6 @@
 #define SERVER_ONLY;
 
 #include "BehaviorTree.as"
-#include "BehaviorTreeCommon.as"
 
 class LookAtTarget : BehaviorTreeNode {
     u8 execute(CBlob@ this, Blackboard@ blackboard) {
