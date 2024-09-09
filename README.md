@@ -537,6 +537,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Converted to your team when picked up (no friendly fire)
 - Added team colors to sprite
 - Spawn on your team during build phase
+- No longer use a global variable for sounds and egg laying
 
 ### Saplings
 - Can now be bought for 100 coins
