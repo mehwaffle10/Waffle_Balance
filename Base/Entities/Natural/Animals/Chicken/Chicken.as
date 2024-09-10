@@ -5,6 +5,7 @@
 #include "KnockedCommon.as";  // Waffle: Fix issue with HitHeld + shieldbashing
 #include "RunnerCommon.as";           // Waffle: Add chicken jump
 #include "ActivationThrowCommon.as";  // Waffle: --
+#include "MaterialsPauseCommon.as";  // Waffle: Only generate materials with enough players
 
 const u8 DEFAULT_PERSONALITY = SCARED_BIT;
 const int MAX_EGGS = 4; //maximum symultaneous eggs  // 2  // Waffle: Increase chicken spawning
@@ -228,7 +229,7 @@ void onTick(CBlob@ this)
 		this.set_u32(ALLOW_SOUND_TIME, getGameTime() + SOUND_DELAY);
 
 		// lay eggs
-		if (getNet().isServer())
+		if (getNet().isServer() && !materialsPaused())
 		{
 			u8 egg_interval = this.get_u8(EGG_INTERVAL) + 1;
             this.set_u8(EGG_INTERVAL, egg_interval);
