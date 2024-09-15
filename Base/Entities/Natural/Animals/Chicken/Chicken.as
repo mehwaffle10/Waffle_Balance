@@ -196,7 +196,7 @@ void onTick(CBlob@ this)
 					// Waffle: Add hover limit
 					if (!b.isKeyPressed(key_down) && vel.y > 0.5f && moveVars.chicken_hover_counter > 0)  // Waffle: Allow holding down to not hover
 					{
-						b.AddForce(Vec2f(0, Maths::Min(-35, moveVars.chicken_hover_counter)));  // Waffle: Increase chicken hover strength
+						b.AddForce(Vec2f(0, Maths::Max(-35, -moveVars.chicken_hover_counter)));  // Waffle: Increase chicken hover strength
 						--moveVars.chicken_hover_counter;
 					}
 				}                
