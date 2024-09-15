@@ -391,6 +391,7 @@ void onTick(CMovement@ this)
 					{
 						vel.Set(0, -moveVars.jumpMaxVel * 1.4f);
 						blob.setVelocity(vel);
+						moveVars.chicken_hover_counter = MAX_CHICKEN_HOVER_COUNTER;  // Waffle: Wall climb/jump resets hover
 
 						// reduce sound spam, especially when climbing 2 air gap large towers
 						if (!set_contact) { blob.getSprite().PlayRandomSound("/StoneJump"); }
@@ -412,6 +413,7 @@ void onTick(CMovement@ this)
 					f32 walljumpforce = 4.0f;
 					vel.Set(surface_right ? -walljumpforce : walljumpforce, -2.0f);
 					blob.setVelocity(vel);
+					moveVars.chicken_hover_counter = MAX_CHICKEN_HOVER_COUNTER;  // Waffle: Wall climb/jump resets hover
 
 					dust = true;
 

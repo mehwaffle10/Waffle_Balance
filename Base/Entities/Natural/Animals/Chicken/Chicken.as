@@ -17,14 +17,6 @@ const string ALLOW_SOUND_TIME = "last sound time";
 const u8 SOUND_DELAY = getTicksASecond();
 const string EGG_INTERVAL = "egg interval";
 
-// Waffle: Add chicken jump
-const string CAN_JUMP = "can chicken jump";              
-const string LAST_JUMP_TIME = "last chicken jump time";
-const u8 RESET_TIME = 5;
-
-const string HOVER_COUNTER = "chicken hover counter";
-const u8 MAX_HOVER_COUNTER = 4 * getTicksASecond();
-
 //sprite
 
 // Waffle: Not always blue
@@ -98,8 +90,6 @@ void onInit(CBlob@ this)
     Activate@ func = @onActivate;
 	this.set("activate handle", @func);
 	this.addCommandID("activate client");
-    this.set_bool(CAN_JUMP, true);
-    this.set_u32(LAST_JUMP_TIME, getGameTime());
 
 	//brain
 	this.set_u8(personality_property, DEFAULT_PERSONALITY);
@@ -181,8 +171,12 @@ void onTick(CBlob@ this)
     u32 allow_sound_time = this.get_u32(ALLOW_SOUND_TIME);
 
     // Waffle: Add chicken jump
+	RunnerMoveVars@ moveVars;
     CBlob@ inventory_blob = this.getInventoryBlob();
-    TryResetJump(inventory_blob);
+	if (inventory_blob !is null && inventory_blob.get("moveVars", @moveVars))
+	{
+    	TryResetJump(inventory_blob, moveVars);
+	}
 
 	if (this.isAttached())
 	{
@@ -192,20 +186,20 @@ void onTick(CBlob@ this)
 			CBlob@ b = att.getOccupied();
 			if (b !is null)
 			{
-                TryResetJump(b);  // Waffle: Add chicken jump
-
-                // Waffle: Add chicken jump
-                AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
-
-                // Waffle: Add hover limit
 				Vec2f vel = b.getVelocity();
-                u8 hover_counter = b.get_u8(HOVER_COUNTER);
-				if (!b.isKeyPressed(key_down) && vel.y > 0.5f && hover_counter > 0)  // Waffle: Allow holding down to not hover
+				// Waffle: Add chicken jump
+				if (b.get("moveVars", @moveVars))
 				{
+					TryResetJump(b, moveVars);
+					AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 
-					b.AddForce(Vec2f(0, Maths::Min(-35, hover_counter)));  // Waffle: Increase chicken hover strength
-                    b.set_u8(HOVER_COUNTER, hover_counter - 1);
-				}
+					// Waffle: Add hover limit
+					if (!b.isKeyPressed(key_down) && vel.y > 0.5f && moveVars.chicken_hover_counter > 0)  // Waffle: Allow holding down to not hover
+					{
+						b.AddForce(Vec2f(0, Maths::Min(-35, moveVars.chicken_hover_counter)));  // Waffle: Increase chicken hover strength
+						--moveVars.chicken_hover_counter;
+					}
+				}                
 
 				// Waffle: Strong horizontal movement decay
 				if (!b.isOnGround() && Maths::Abs(vel.x) > 2.0f)
@@ -290,12 +284,12 @@ void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 	this.doTickScripts = true;
 }
 
-void TryResetJump(CBlob@ blob)
+void TryResetJump(CBlob@ blob, RunnerMoveVars@ moveVars)
 {
-    if (blob !is null && getGameTime() > blob.get_u32(LAST_JUMP_TIME) + RESET_TIME && (blob.isOnGround() || blob.isOnLadder()))
+    if (blob !is null && getGameTime() > moveVars.last_chicken_jump_time + CHICKEN_JUMP_RESET_TIME && (blob.isOnGround() || blob.isOnLadder() || blob.isInWater()))
     {
-        blob.set_bool(CAN_JUMP, true);
-        blob.set_u8(HOVER_COUNTER, MAX_HOVER_COUNTER);
+        moveVars.can_chicken_jump = true;
+        moveVars.chicken_hover_counter = MAX_CHICKEN_HOVER_COUNTER;
     }
 }
 
@@ -310,16 +304,17 @@ void onActivate(CBitStream@ params)
     CBlob@ caller = getBlobByNetworkID(caller_id);
 	if (this is null || caller is null) return;
 
-	this.SendCommand(this.getCommandID("activate client"));
+	RunnerMoveVars@ moveVars;
+	if (!caller.get("moveVars", @moveVars) || !moveVars.can_chicken_jump) return;
 
-    if (caller.get_bool(CAN_JUMP))
-    {
-        caller.set_bool(CAN_JUMP, false);
-        caller.set_u32(LAST_JUMP_TIME, getGameTime());
-        CBitStream params;
-        params.write_netid(caller.getNetworkID());
-        this.SendCommand(this.getCommandID("activate client"), params);
-    }
+	this.SendCommand(this.getCommandID("activate client"));
+	moveVars.can_chicken_jump = false;
+	moveVars.last_chicken_jump_time = getGameTime();
+
+	CBitStream client_params;
+	client_params.write_netid(caller.getNetworkID());
+	client_params.write_u32(moveVars.last_chicken_jump_time);
+	this.SendCommand(this.getCommandID("activate client"), client_params);
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -327,12 +322,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("activate client") && isClient())
 	{
 		u16 caller_id;
-        if (!params.saferead_u16(caller_id)) return;
+		u32 last_jump_time;
+        if (!params.saferead_u16(caller_id) || !params.saferead_u32(last_jump_time)) return;
 
         CBlob@ caller = getBlobByNetworkID(caller_id);
         if (caller is null) return;
 
-        caller.setVelocity(Vec2f(0, -6));
         RunnerMoveVars@ moveVars;
         if (caller.get("moveVars", @moveVars))
         {
@@ -340,6 +335,9 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
             moveVars.walljumped_side = Walljump::NONE;
             moveVars.wallclimbing = false;
             moveVars.wallsliding = false;
+			moveVars.can_chicken_jump = false;
+			moveVars.last_chicken_jump_time = last_jump_time;
+			caller.setVelocity(Vec2f(0, -6));
         }
         if (this.get_u32(ALLOW_SOUND_TIME) < getGameTime())
         {

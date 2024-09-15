@@ -523,11 +523,12 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Chickens
 - Are bought directly from the quarters for 50 coins
 - Hover is stronger
-- Hover decays after 4 seconds
+- Hover decays after 3 seconds
+	- Wall climbing/jumping resets hover counter
 - You can press `s` to not hover while holding a chicken
 - Can now jump once midair using space
     - Jump resets wall climb as well
-    - Recharges when on the ground or on a ladder
+    - Recharges when on the ground, on a ladder, or in water 20 ticks after the last jump
 - Dies if player holding it takes damage from an enemy
 - Max horizontal speed decreased with strong decay for speeds above threshold while in the air
 - Can now be burned
