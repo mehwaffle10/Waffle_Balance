@@ -169,7 +169,6 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Added line of sight check
 
 ### Pickup
-- Added line of sight check
 - Added distance check
 
 ### Throw
