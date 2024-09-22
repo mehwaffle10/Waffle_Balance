@@ -2,7 +2,7 @@
 
 // Waffle: Add chicken jump/hover
 const u8 MAX_CHICKEN_HOVER_COUNTER = 3 * getTicksASecond();
-const u8 CHICKEN_JUMP_RESET_TIME = 20;
+const u8 CHICKEN_JUMP_RESET_TIME = 2 * getTicksASecond();
 
 shared class RunnerMoveVars
 {
@@ -47,8 +47,7 @@ shared class RunnerMoveVars
 	bool wallsliding;
 
 	// Waffle: Add chicken jump/hover
-	bool can_chicken_jump;              
-	u32 last_chicken_jump_time;
+	u8 chicken_jump_timer;
 	u8 chicken_hover_counter;
 };
 
@@ -63,4 +62,16 @@ namespace Walljump
 		JUMPED_RIGHT,
 		BOTH
 	};
+}
+
+void ResetChickenJump(CBlob@ this, RunnerMoveVars@ moveVars)
+{
+	if (moveVars.chicken_jump_timer > 0) {
+		moveVars.chicken_jump_timer--;
+		if (moveVars.chicken_jump_timer == 0)
+		{
+			this.getSprite().PlaySound("/ScaredChicken0" + (XORRandom(3) + 1));
+		}
+	}
+	moveVars.chicken_hover_counter = MAX_CHICKEN_HOVER_COUNTER;
 }

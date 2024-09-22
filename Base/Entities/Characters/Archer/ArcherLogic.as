@@ -303,11 +303,15 @@ void ManageGrapple(CBlob@ this, ArcherInfo@ archer)
 				// Waffle: Grapple resets chicken vars if grapple pushes up
 				if (force.y <= 0)
 				{
-					RunnerMoveVars@ moveVars;
-					if (this.get("moveVars", @moveVars) && getGameTime() > moveVars.last_chicken_jump_time + CHICKEN_JUMP_RESET_TIME)
+					CAttachment@ attachments = this.getAttachments();
+					CBlob@ held = attachments.getAttachedBlob("PICKUP");
+					if (held !is null && held.getName() == "chicken")
 					{
-						moveVars.can_chicken_jump = true;
-						moveVars.chicken_hover_counter = MAX_CHICKEN_HOVER_COUNTER;
+						RunnerMoveVars@ moveVars;
+						if (this.get("moveVars", @moveVars))
+						{
+							ResetChickenJump(held, moveVars);
+						}
 					}
 				}
 							

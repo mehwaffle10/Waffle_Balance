@@ -529,8 +529,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - You can press `s` to not hover while holding a chicken
 - Can now jump once midair using space
     - Jump resets wall climb as well
-    - Recharges when on the ground, on a ladder, or in water 20 ticks after the last jump
-	- Grapple resets jump when pulling you upwards
+    - Recharges after 2 seconds when holding the chicken on the ground, on a ladder, in water, or grappling upwards
 - Dies if player holding it takes damage from an enemy
 - Max horizontal speed decreased with strong decay for speeds above threshold while in the air
 - Can now be burned

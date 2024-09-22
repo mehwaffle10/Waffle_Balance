@@ -169,12 +169,12 @@ void onTick(CBlob@ this)
     u32 allow_sound_time = this.get_u32(ALLOW_SOUND_TIME);
 
     // Waffle: Add chicken jump
-	RunnerMoveVars@ moveVars;
-    CBlob@ inventory_blob = this.getInventoryBlob();
-	if (inventory_blob !is null && inventory_blob.get("moveVars", @moveVars))
-	{
-    	TryResetJump(inventory_blob, moveVars);
-	}
+	// RunnerMoveVars@ moveVars;
+    // CBlob@ inventory_blob = this.getInventoryBlob();
+	// if (inventory_blob !is null && inventory_blob.get("moveVars", @moveVars))
+	// {
+    // 	TryResetJump(inventory_blob, moveVars);
+	// }
 
 	if (this.isAttached())
 	{
@@ -186,6 +186,7 @@ void onTick(CBlob@ this)
 			{
 				Vec2f vel = b.getVelocity();
 				// Waffle: Add chicken jump
+				RunnerMoveVars@ moveVars;
 				if (b.get("moveVars", @moveVars))
 				{
 					TryResetJump(b, moveVars);
@@ -284,10 +285,9 @@ void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 void TryResetJump(CBlob@ blob, RunnerMoveVars@ moveVars)
 {
-    if (blob !is null && getGameTime() > moveVars.last_chicken_jump_time + CHICKEN_JUMP_RESET_TIME && (blob.isOnGround() || blob.isOnLadder() || blob.isInWater()))
+    if (blob !is null && (blob.isOnGround() || blob.isOnLadder() || blob.isInWater()))
     {
-        moveVars.can_chicken_jump = true;
-        moveVars.chicken_hover_counter = MAX_CHICKEN_HOVER_COUNTER;
+        ResetChickenJump(blob, moveVars);
     }
 }
 
@@ -303,15 +303,13 @@ void onActivate(CBitStream@ params)
 	if (this is null || caller is null) return;
 
 	RunnerMoveVars@ moveVars;
-	if (!caller.get("moveVars", @moveVars) || !moveVars.can_chicken_jump) return;
+	if (!caller.get("moveVars", @moveVars) || moveVars.chicken_jump_timer > 0) return;
 
 	this.SendCommand(this.getCommandID("activate client"));
-	moveVars.can_chicken_jump = false;
-	moveVars.last_chicken_jump_time = getGameTime();
+	moveVars.chicken_jump_timer = CHICKEN_JUMP_RESET_TIME;
 
 	CBitStream client_params;
 	client_params.write_netid(caller.getNetworkID());
-	client_params.write_u32(moveVars.last_chicken_jump_time);
 	this.SendCommand(this.getCommandID("activate client"), client_params);
 }
 
@@ -320,8 +318,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	if (cmd == this.getCommandID("activate client") && isClient())
 	{
 		u16 caller_id;
-		u32 last_jump_time;
-        if (!params.saferead_u16(caller_id) || !params.saferead_u32(last_jump_time)) return;
+        if (!params.saferead_u16(caller_id)) return;
 
         CBlob@ caller = getBlobByNetworkID(caller_id);
         if (caller is null) return;
@@ -333,8 +330,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
             moveVars.walljumped_side = Walljump::NONE;
             moveVars.wallclimbing = false;
             moveVars.wallsliding = false;
-			moveVars.can_chicken_jump = false;
-			moveVars.last_chicken_jump_time = last_jump_time;
+			moveVars.chicken_jump_timer = CHICKEN_JUMP_RESET_TIME;
 			caller.setVelocity(Vec2f(0, -6));
         }
         if (this.get_u32(ALLOW_SOUND_TIME) < getGameTime())
