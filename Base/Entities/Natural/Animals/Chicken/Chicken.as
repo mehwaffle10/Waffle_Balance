@@ -6,11 +6,9 @@
 #include "RunnerCommon.as";           // Waffle: Add chicken jump
 #include "ActivationThrowCommon.as";  // Waffle: --
 #include "MaterialsPauseCommon.as";  // Waffle: Only generate materials with enough players
+#include "ChickenCommon.as";  // Waffle: Rework breeding
 
 const u8 DEFAULT_PERSONALITY = SCARED_BIT;
-const int MAX_EGGS = 4; //maximum symultaneous eggs  // 2  // Waffle: Increase chicken spawning
-const int MAX_CHICKENS = 10;                         // 6  // Waffle: --
-const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
 
 // Waffle: Refactor sound/eggs
 const string ALLOW_SOUND_TIME = "last sound time";
@@ -229,10 +227,10 @@ void onTick(CBlob@ this)
             this.set_u8(EGG_INTERVAL, egg_interval);
 			if (egg_interval % 13 == 0)
 			{
+				// Waffle: Rework breeding
 				Vec2f pos = this.getPosition();
 				bool otherChicken = false;
-				int eggsCount = 0;
-				int chickenCount = 0;
+				int count = 1;
 				string name = this.getName();
 				CBlob@[] blobs;
 				this.getMap().getBlobsInRadius(pos, CHICKEN_LIMIT_RADIUS, @blobs);
@@ -249,15 +247,15 @@ void onTick(CBlob@ this)
 						{
 							otherChicken = true;
 						}
-						chickenCount++;
+						count++;
 					}
-					if (otherName == "egg")
+					else if (otherName == "egg")
 					{
-						eggsCount++;
+						count++;
 					}
 				}
 
-				if (otherChicken && eggsCount < MAX_EGGS && chickenCount < MAX_CHICKENS)
+				if (otherChicken && count < MAX_CHICKENS)
 				{
 					server_CreateBlob("egg", this.getTeamNum(), this.getPosition() + Vec2f(0.0f, 5.0f));
 				}

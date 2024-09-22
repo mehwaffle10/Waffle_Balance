@@ -518,6 +518,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Are no longer buyable from the quarters
 - Hatch in 20 seconds instead of 50
 - Spawn chickens on the same team as the chicken that laid them
+- Will not spawn a chicken when hatching if there is already 4 chickens within 10 blocks
 
 ### Chickens
 - Are bought directly from the quarters for 50 coins
@@ -533,8 +534,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Dies if player holding it takes damage from an enemy
 - Max horizontal speed decreased with strong decay for speeds above threshold while in the air
 - Can now be burned
-- Can have up to 4 simultaneous eggs instead of 2
-- Can have up to 10 chickens in close proximity instead of 6
+- Will lay eggs if there are less than 3 other chickens and eggs within 10 blocks
 - Only have 0.1 health
 - Converted to your team when picked up (no friendly fire)
 - Added team colors to sprite

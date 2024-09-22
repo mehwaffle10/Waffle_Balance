@@ -1,8 +1,7 @@
 
-const int grow_time = 20 * getTicksASecond();  // 50 * getTicksASecond()  // Waffle: Decrease time to hatch
+#include "ChickenCommon.as";  // Waffle: Rework breeding
 
-const int MAX_CHICKENS_TO_HATCH = 10;  // 5  // Waffle: Increase number of chickens we can hatch nearby
-const f32 CHICKEN_LIMIT_RADIUS = 120.0f;
+const int grow_time = 20 * getTicksASecond();  // 50 * getTicksASecond()  // Waffle: Decrease time to hatch
 
 void onInit(CBlob@ this)
 {
@@ -19,7 +18,8 @@ void onTick(CBlob@ this)
 {
 	if (isServer() && this.getTickSinceCreated() > grow_time)
 	{
-		int chickenCount = 0;
+		// Waffle: Rework breeding
+		int count = 0;
 		CBlob@[] blobs;
 		this.getMap().getBlobsInRadius(this.getPosition(), CHICKEN_LIMIT_RADIUS, @blobs);
 		for (uint step = 0; step < blobs.length; ++step)
@@ -27,17 +27,16 @@ void onTick(CBlob@ this)
 			CBlob@ other = blobs[step];
 			if (other.getName() == "chicken")
 			{
-				chickenCount++;
+				count++;
 			}
 		}
 
-		if (chickenCount < MAX_CHICKENS_TO_HATCH)
+		this.server_SetHealth(-1);
+		this.server_Die();
+		this.SendCommand(this.getCommandID("hatch client"));
+		if (count < MAX_CHICKENS)
 		{
-			this.server_SetHealth(-1);
-			this.server_Die();
 			server_CreateBlob("chicken", this.getTeamNum(), this.getPosition() + Vec2f(0, -5.0f));  // Waffle: Make chickens hatch to the correct team
-
-			this.SendCommand(this.getCommandID("hatch client"));
 		}
 	}
 }
