@@ -147,7 +147,7 @@ void Explode(CBlob@ this, f32 radius, f32 damage)
 		Vec2f partpos = pos + Vec2f(XORRandom(r * 2) - r, XORRandom(r * 2) - r);
 		Vec2f endpos = partpos;
 
-		if (map !is null)
+		if (map !is null && !v_fastrender)
 		{
 			if (!map.rayCastSolid(pos, partpos, endpos))
 			{
