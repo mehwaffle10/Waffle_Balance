@@ -28,7 +28,7 @@ void onTick(CBlob@ this)
 		for (uint step = 0; step < blobs.length; ++step)
 		{
 			CBlob@ other = blobs[step];
-			if (other.getName() == "chicken")
+			if (other.getName() == "chicken" && !other.isAttached() && !other.isInInventory())
 			{
 				count++;
 			}

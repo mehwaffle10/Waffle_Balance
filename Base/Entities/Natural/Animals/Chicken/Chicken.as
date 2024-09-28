@@ -238,7 +238,7 @@ void onTick(CBlob@ this)
 				for (uint step = 0; step < blobs.length; ++step)
 				{
 					CBlob@ other = blobs[step];
-					if (other is this)
+					if (other is this || other.isAttached() || other.isInInventory())
 						continue;
 
 					const string otherName = other.getName();

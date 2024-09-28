@@ -521,6 +521,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Hatch time reset when detached
 - Spawn chickens on the same team as the chicken that laid them
 - Will not spawn a chicken when hatching if there is already 4 chickens within 10 blocks
+	- Ignores chickens that are attached or in inventory
 
 ### Chickens
 - Are bought directly from the quarters for 50 coins
@@ -536,6 +537,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Max horizontal speed decreased with strong decay for speeds above threshold while in the air
 - Can now be burned
 - Will lay eggs if there are less than 3 other chickens and eggs within 10 blocks
+	- - Ignores chickens and eggs that are attached or in inventory
 - Only have 0.1 health
 - Converted to your team when picked up (no friendly fire)
 - Added team colors to sprite
