@@ -148,6 +148,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Nature Spawning
 - Fish, grain, flowers, and chickens no longer spawn randomly
+- Disabled when there are not enough players on each team if the match has not started
 
 ### Z Indices
 - Adjusted Z index for the following items. A higher Z will render in front. Most things including players are at 0.

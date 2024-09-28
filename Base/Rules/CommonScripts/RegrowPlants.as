@@ -1,5 +1,7 @@
 #define SERVER_ONLY
 
+#include "MaterialsPauseCommon.as";  // Waffle: Only run with enough players
+
 // should stone turn into mossy stone
 const bool moss_stone = false;
 
@@ -227,7 +229,7 @@ u32 findTileByCoords(const TileInfo@[] &in tiles, Vec2f coords)
 
 void onTick(CRules@ this)
 {	
-	if (getGameTime() >= next_check_time)
+	if (getGameTime() >= next_check_time && !materialsPaused())
 	{
 		CMap@ map = getMap();
 		float tilesize = map.tilesize;
