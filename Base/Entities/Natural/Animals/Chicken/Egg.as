@@ -1,12 +1,15 @@
 
 #include "ChickenCommon.as";  // Waffle: Rework breeding
 
-const int grow_time = 20 * getTicksASecond();  // 50 * getTicksASecond()  // Waffle: Decrease time to hatch
+const int GROW_TIME = 20 * getTicksASecond();  // 50 * getTicksASecond()  // Waffle: Decrease time to hatch
+const string CAN_GROW_TIME = "can grow time";
 
 void onInit(CBlob@ this)
 {
 	this.getCurrentScript().tickFrequency = 120;
 	this.addCommandID("hatch client");
+	ResetGrowTime(this);  // Waffle: Reset grow time on pickup
+	this.getCurrentScript().runFlags |= Script::tick_not_attached;  // Waffle: Don't hatch while held
 }
 
 bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
@@ -16,7 +19,7 @@ bool canBePickedUp(CBlob@ this, CBlob@ byBlob)
 
 void onTick(CBlob@ this)
 {
-	if (isServer() && this.getTickSinceCreated() > grow_time)
+	if (isServer() && getGameTime() > this.get_u32(CAN_GROW_TIME))
 	{
 		// Waffle: Rework breeding
 		int count = 0;
@@ -52,4 +55,15 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			s.Gib();
 		}
 	}
+}
+
+// Waffle: Reset grow time on pickup
+void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
+{
+	ResetGrowTime(this);
+}
+
+void ResetGrowTime(CBlob@ this)
+{
+	this.set_u32(CAN_GROW_TIME, getGameTime() + GROW_TIME);
 }

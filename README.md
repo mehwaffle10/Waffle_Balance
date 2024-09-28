@@ -517,6 +517,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Eggs
 - Are no longer buyable from the quarters
 - Hatch in 20 seconds instead of 50
+- No longer hatch while attached
+- Hatch time reset when detached
 - Spawn chickens on the same team as the chicken that laid them
 - Will not spawn a chicken when hatching if there is already 4 chickens within 10 blocks
 
