@@ -92,6 +92,12 @@ void onTick(CBlob@ this)
 
 void MakeRockDustParticle(Vec2f pos, string file, Vec2f vel=Vec2f(0.0, 0.0), int animate_speed = 4)
 {
+	// Waffle: Add fast render
+	if (v_fastrender)
+	{
+		return;
+	}
+
 	CParticle@ temp = ParticleAnimated(CFileMatcher(file).getFirst(), pos, vel, 0.0f, 1.0f, animate_speed, 0.0f, false);
 
 	if (temp !is null)
@@ -191,7 +197,7 @@ float HitMap(CBlob@ this, CMap@ map, Vec2f tilepos, bool ricochet)
 
 	if (isClient())
 	{
-		if (XORRandom(3) == 0)
+		if (!v_fastrender && XORRandom(3) == 0)  // Waffle: Add fast render
 		{
 			MakeDustParticle(this.getPosition(), "/dust2");
 		}
