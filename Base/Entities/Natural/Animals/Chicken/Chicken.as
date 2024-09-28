@@ -278,10 +278,10 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 }
 
 // Waffle: Add chicken jump
-void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
-{
-	this.doTickScripts = true;
-}
+// void onThisAddToInventory(CBlob@ this, CBlob@ inventoryBlob)
+// {
+// 	this.doTickScripts = true;
+// }
 
 void TryResetJump(CBlob@ blob, RunnerMoveVars@ moveVars)
 {
