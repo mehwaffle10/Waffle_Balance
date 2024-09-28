@@ -86,8 +86,8 @@ void onTick(CBlob@ this)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-    // Waffle: Protect drivers
-    if (blob.hasTag("vehicle protection"))
+    // Waffle: Protect drivers and ignore invincible things
+    if (blob.hasTag("vehicle protection") || blob.hasTag("invincible"))
     {
         return false;
     }

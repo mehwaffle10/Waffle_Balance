@@ -338,6 +338,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Bomb bolts cost 150 coins instead of 100
 - Need a 5 x 5 area to deploy
 - Bolt drag multiplier in water decreased from 5 to 1.5
+- Bolts no longer collide with invincible blobs
 
 ### Mounted Bow
 - Health increased from 2 to 10
