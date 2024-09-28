@@ -522,6 +522,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Spawn chickens on the same team as the chicken that laid them
 - Will not spawn a chicken when hatching if there is already 4 chickens within 10 blocks
 	- Ignores chickens that are attached or in inventory
+- Will not spawn a chicken if there is not enough space
+- Will no longer clip chickens out of walls
 
 ### Chickens
 - Are bought directly from the quarters for 50 coins
