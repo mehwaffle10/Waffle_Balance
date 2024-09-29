@@ -259,12 +259,12 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 				iconName = "$" + carried.getInventoryName() + "$";
 			}
 
-			caller.CreateGenericButton(iconName, Vec2f(0, -2), this, this.getCommandID("putin_mag"), msg, callerParams);
+			caller.CreateGenericButton(iconName, Vec2f(0, -2), this, this.getCommandID("putin_mag"), msg, callerParams);  // Waffle: Adjust button locations
 			return;
 		}
 
 		//otherwise load in ammo
-		Vehicle_AddLoadAmmoButton(this, caller, mag.offset);
+		Vehicle_AddLoadAmmoButton(this, caller, Vec2f(0, -2));  // Waffle: Adjust button locations
 	}
 }
 

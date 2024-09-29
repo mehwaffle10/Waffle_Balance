@@ -226,7 +226,7 @@ bool Vehicle_AddFlipButton(CBlob@ this, CBlob@ caller, Vec2f &in offset = Vec2f(
 	return false;
 }
 
-bool Vehicle_AddLoadAmmoButton(CBlob@ this, CBlob@ caller, Vec2f &in offset = Vec2f(0, -4))
+bool Vehicle_AddLoadAmmoButton(CBlob@ this, CBlob@ caller, Vec2f &in offset = Vec2f(0, 0))  // Waffle: Adjust button locations
 {
 	VehicleInfo@ v;
 	if (!this.get("VehicleInfo", @v)) return false;

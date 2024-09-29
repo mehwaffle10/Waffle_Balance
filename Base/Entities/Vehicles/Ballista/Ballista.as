@@ -242,7 +242,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	    this.getDistanceTo(caller) < this.getRadius() &&
 	    !caller.isAttached())
 	{
-		Vehicle_AddLoadAmmoButton(this, caller);
+		Vehicle_AddLoadAmmoButton(this, caller, Vec2f(0, 0.5f));  // Waffle: Adjust button locations
 	}
 }
 

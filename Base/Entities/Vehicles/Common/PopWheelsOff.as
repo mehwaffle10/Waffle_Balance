@@ -25,13 +25,14 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	if (this.getTeamNum() == caller.getTeamNum() && isOverlapping(this, caller) && !caller.isAttached())  // Waffle: Use isOverlapping instead of distance
 	{
 		// Waffle: Add support for readding wheels
+		f32 offset = this.getName() == "ballista" ? 11.5f : 8.0f;  // Waffle: Adjust button locations
 		if (this.hasTag("immobile"))
 		{
-			caller.CreateGenericButton(3, Vec2f(0.0f, 8.0f), this, this.getCommandID("add_wheels"), getTranslatedString("Mobilise"));
+			caller.CreateGenericButton(3, Vec2f(0.0f, offset), this, this.getCommandID("add_wheels"), getTranslatedString("Mobilise"));  // Waffle: Adjust button locations
 		}
 		else
 		{
-			caller.CreateGenericButton(2, Vec2f(0.0f, 8.0f), this, this.getCommandID("pop_wheels"), getTranslatedString("Immobilise"));
+			caller.CreateGenericButton(2, Vec2f(0.0f, offset), this, this.getCommandID("pop_wheels"), getTranslatedString("Immobilise"));  // Waffle: Adjust button locations
 		}
 	}
 }
