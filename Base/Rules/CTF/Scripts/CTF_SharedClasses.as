@@ -86,11 +86,12 @@ shared class CTFSpawns : RespawnSystem
 				p_info.team = 0;
 			}
 
+			// Waffle: Don't force spawn as builder
 			// spawn as builder in warmup
-			if (getRules().isWarmup())
-			{
-				p_info.blob_name = "builder";
-			}
+			// if (getRules().isWarmup())
+			// {
+			// 	p_info.blob_name = "builder";
+			// }
 
 			CBlob@ spawnBlob = getSpawnBlob(p_info);
 

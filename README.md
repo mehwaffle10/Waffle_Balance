@@ -9,6 +9,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Respawn
 - Reduced from 10 to 8 seconds
+- No longer forced to builder on next map
 
 ### Resupplies
 - Removed for builders
