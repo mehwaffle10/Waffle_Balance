@@ -8,6 +8,7 @@
 const f32 MEDIUM_SPEED = 9.0f;
 const f32 FAST_SPEED = 16.0f;
 // Speed required to pierce Wooden tiles.
+const string KILLED_BY_SWORD = "killed by sword";
 
 void onInit(CBlob@ this)
 {
@@ -190,12 +191,8 @@ bool DoExplosion(CBlob@ this, Vec2f velocity)
 		if (this.hasTag("dead"))
 			return true;
 
-		Explode(this, 16.0f, 2.0f);
-		LinearExplosion(this, velocity, 32.0f, 16.0f, 4, 4.0f, Hitters::bomb);  // Waffle: Make bomb bolts more damaging
-
 		this.Tag("dead");
 		this.server_Die();
-		this.getSprite().Gib();
 
 		return true;
 
@@ -323,3 +320,28 @@ bool CollidesWithPlatform(CBlob@ this, CBlob@ blob, Vec2f velocity)
 	return !(velocity_angle > -90.0f && velocity_angle < 90.0f);
 }
 
+void onDie(CBlob@ this)
+{
+	// Waffle: Prevent explosion on sword hit and add feedback
+	if (this.hasTag(KILLED_BY_SWORD))
+	{
+		this.getSprite().PlaySound("destroy_wood.ogg");
+	}
+	else if (this.hasTag("bomb"))
+	{
+		// Waffle: Do explosion on death
+		Explode(this, 16.0f, 2.0f);
+		LinearExplosion(this, this.getVelocity(), 32.0f, 16.0f, 4, 4.0f, Hitters::bomb);  // Waffle: Make bomb bolts more damaging
+	}
+	this.getSprite().Gib();  // Waffle: Always gib
+}
+
+// Waffle: Prevent explosion on sword hit and add feedback
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	if (damage > 0 && !this.hasTag(KILLED_BY_SWORD) && customData == Hitters::sword)
+	{
+		this.Tag(KILLED_BY_SWORD);
+	}
+	return damage;
+}

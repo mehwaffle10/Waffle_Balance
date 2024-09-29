@@ -340,6 +340,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Need a 5 x 5 area to deploy
 - Bolt drag multiplier in water decreased from 5 to 1.5
 - Bolts no longer collide with invincible blobs
+- Fixed an issue where explosions would not happen client side
+- Added feedback upon successfully killing a bolt with your sword
 
 ### Mounted Bow
 - Health increased from 2 to 10
