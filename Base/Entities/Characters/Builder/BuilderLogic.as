@@ -355,7 +355,7 @@ void Pickaxe(CBlob@ this)
         }
 
 		TileType t = getMap().getTile(hitdata.tilepos).type;
-		if (t != CMap::tile_empty && t != CMap::tile_ground_back)
+		if (hitdata.tilepos != Vec2f_zero && t != CMap::tile_empty && t != CMap::tile_ground_back)  // Waffle: Fix pickaxe sparking in air on miss in cave maps
 		{
 			uint16 type = map.getTile(hitdata.tilepos).type;
 			if (!inNoBuildZone(map, hitdata.tilepos, type))
