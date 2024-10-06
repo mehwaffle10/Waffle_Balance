@@ -104,13 +104,14 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
 			{
                 // Waffle: Play sound when picking up arrows
                 CSprite@ sprite = b.getSprite();
+				SetCTFTimer(this, p, gametime + (isBuildPhase(this) ? materials_wait_warmup : materials_wait) * getTicksASecond(), "archer");
                 if (sprite !is null)
                 {
                     sprite.PlaySound("/PutInInventory.ogg");
                 }
-                if (isServer() && SetMaterials(b, "mat_arrows", 30))
+                if (isServer())
                 {
-				    SetCTFTimer(this, p, gametime + (isBuildPhase(this) ? materials_wait_warmup : materials_wait)*getTicksASecond(), "archer");
+				    SetMaterials(b, "mat_arrows", 30);
                 }
 			}
 		}
