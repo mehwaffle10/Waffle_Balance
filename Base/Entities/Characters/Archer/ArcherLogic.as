@@ -871,7 +871,7 @@ CBlob@ getPickupArrow(CBlob@ this)
 		for (uint i = 0; i < blobsInRadius.length; i++)
 		{
 			CBlob @b = blobsInRadius[i];
-			if (b.getName() == "arrow")
+			if (b.getName() == "arrow" && b.getShape().isStatic())  // Waffle: Can't harvest arrows midair
 			{
 				return b;
 			}

@@ -81,6 +81,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Grapple can collide with boats
 - Grapple no longer pulls objects
 - Fixed charge getting stuck when jabbed
+- Can no longer harvest arrows mid-air
 
 ### Stomp
 - Added bullet stomps (thanks bunnie!)
@@ -468,6 +469,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Collide with enemy arrows
 - Have 5x the amount of health (will last 5x longer when climbed on)
 - Decreased drag multiplier in water from 5 to 1.5
+- Can no longer be harvested mid-air
 
 ### Water Arrows
 - Cost 25 coins for 1 instead of 15
