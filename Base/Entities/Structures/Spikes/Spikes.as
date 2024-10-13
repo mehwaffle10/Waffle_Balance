@@ -236,7 +236,7 @@ void onTick(CBlob@ this)
 					for (uint i = 0; i < blobsInRadius.length; i++)
 					{
 						CBlob @b = blobsInRadius[i];
-						if (canStab(b)) //even hurts team when stabbing
+						if (b.hasTag("flesh") && !b.hasTag("vehicle protection") || b.hasTag("vehicle") || b.getName() == "crate") //even hurts team when stabbing  // Waffle: Hit vehicles, crates, and corpses
 						{
 							// hurt?
 							if (this.isOverlapping(b))
@@ -276,7 +276,7 @@ void onTick(CBlob@ this)
 
 bool canStab(CBlob@ b)
 {
-	return !b.hasTag("dead") && b.hasTag("flesh");
+	return !b.hasTag("dead") && b.hasTag("flesh") && !b.hasTag("vehicle protection");  // Waffle: Dont ignore vehicle protection
 }
 
 //physics logic
@@ -396,7 +396,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 		CSprite@ sprite = this.getSprite();
 		sprite.PlaySound("/SpikesCut.ogg");
 
-		if (!this.hasTag("bloody"))
+		if (!this.hasTag("bloody") && hitBlob.hasTag("flesh"))  // Waffle: Only bloody on flesh
 		{
 			if (!g_kidssafe)
 			{

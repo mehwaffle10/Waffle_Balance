@@ -184,8 +184,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can now placed behind bushes
 - Will not hit players in vehicles
 - Collides with vehicles and crates
+- Can hit vehicles, crates, and corpses when activating
 - Can spike drop at the top of the map if not supported
 - Now properly hit by kegs
+- Only bloody when hitting flesh
 
 ### Server Features
 - Seclevs are properly synced to clients
