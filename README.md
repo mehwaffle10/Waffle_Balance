@@ -185,6 +185,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Will not hit players in vehicles
 - Collides with vehicles and crates
 - Can spike drop at the top of the map if not supported
+- Now properly hit by kegs
 
 ### Server Features
 - Seclevs are properly synced to clients
