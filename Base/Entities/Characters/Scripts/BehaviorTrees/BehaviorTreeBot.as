@@ -16,6 +16,8 @@ void onInit(CBlob@ this)
 
     Blackboard@ blackboard = Blackboard();
     this.set(BLACKBOARD_PROP, @blackboard);
+
+	this.getCurrentScript().removeIfTag = "dead";
 }
 
 void onTick(CBlob@ this)
