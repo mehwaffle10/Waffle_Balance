@@ -173,6 +173,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Pickup
 - Added distance check
+- Merged Gingerbeard's crash fix (https://github.com/transhumandesign/kag-base/pull/2145)
 
 ### Throw
 - Added distance check
