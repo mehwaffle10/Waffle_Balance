@@ -171,7 +171,30 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		}
 
         // Waffle: Add no solids and no blobs
-        const bool no_build  = !isLadder && (buildSolid || isSpikes || isDoor || isPlatform) && map.getSectorAtPosition(middle, "no build") !is null;
+		CMap::Sector@[] sectors;
+		map.getSectorsAtPosition(middle, sectors);
+		bool no_build_sector = false;
+		for (u8 i = 0; i < sectors.length; i++)
+		{
+			if (sectors[i] !is null && sectors[i].name == "no build")
+			{
+				if (blob !is null && blob.isPlatform())
+				{
+					CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
+					if (owner is null || !(owner.hasTag("tree") || owner.hasTag("scenary")))
+					{
+						no_build_sector = true;
+						break;
+					}
+				}
+				else
+				{
+					no_build_sector = true;
+					break;
+				}
+			}
+		}
+        const bool no_build  = !isLadder && (buildSolid || isSpikes || isDoor || isPlatform) && no_build_sector;
         const bool no_solids = buildSolid && map.getSectorAtPosition(middle, "no solids") !is null;
         const bool no_blobs  = blob !is null && map.getSectorAtPosition(middle, "no blobs") !is null;
         const bool has_adjacent = map.isTileSolid(up) || map.isTileSolid(down) || map.isTileSolid(left) || map.isTileSolid(right);
@@ -210,7 +233,8 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
                                 !b.hasTag("dead") &&
                                 !b.hasTag("material") &&
                                 !b.hasTag("projectile") &&
-                                !(isSeed && (b.hasTag("building") || !b.getShape().isStatic())))  // Waffle: Allow placing seeds on building and non-static blobs
+                                !(isSeed && (b.hasTag("building") || !b.getShape().isStatic())) &&  // Waffle: Allow placing seeds on building and non-static blobs
+								!(blob !is null && blob.isPlatform() && b.hasTag("tree")))  // Waffle: Allow building platforms on trees 
                             {
                                 f32 angle_decomp = Maths::FMod(Maths::Abs(b.getAngleDegrees()), 180.0f);
                                 bool rotated = angle_decomp > 45.0f && angle_decomp < 135.0f;

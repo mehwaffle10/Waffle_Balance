@@ -133,9 +133,12 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
             continue;
         }
 
+		CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
+
         const bool no_build = sectors[i].name == "no build";
         const bool no_solids = sectors[i].name == "no solids";
         const bool no_blobs = sectors[i].name == "no blobs";
+		const bool tree_sector = no_build && owner !is null && (owner.hasTag("tree") || owner.hasTag("scenary"));  // Waffle: Allow building platforms on trees
         if (blobToPlace.getName() == "spikes")  // Waffle: Allow spike dropping at the top of the map
         {
             const bool has_adjacent = (                                              // can put sticking next to something
@@ -149,6 +152,10 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
                 return false;
             }
         }
+		else if (blobToPlace.isPlatform() && tree_sector)  // Waffle: Allow building platforms on trees
+		{
+			continue;
+		}
         else if (no_build && blobToPlace.getName() != "ladder" || no_solids || no_blobs)  // Waffle: Prevent solids and blobs
         {
             CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
@@ -399,7 +406,7 @@ void onTick(CBlob@ this)
 
 				bool overlapped;
 
-				if (isLadder)
+				if (isLadder || carryBlob.isPlatform())   // Waffle: Allow building platforms on trees
 				{
 					Vec2f ontilepos = halftileoffset + bc.tileAimPos;
 
@@ -415,7 +422,14 @@ void onTick(CBlob@ this)
 							CBlob@ blob = b[nearblob_step];
 
 							string bname = blob.getName();
-							if (blob is carryBlob || blob.hasTag("player") || !isBlocking(blob) || !blob.getShape().isStatic())
+							if (isLadder)
+							{
+								if (blob is carryBlob || blob.hasTag("player") || !isBlocking(blob) || !blob.getShape().isStatic())
+								{
+									continue;
+								}
+							}
+							else if (blob.hasTag("tree"))  // Waffle: Allow building platforms on trees
 							{
 								continue;
 							}
@@ -429,6 +443,7 @@ void onTick(CBlob@ this)
 					overlapped = carryBlob.isOverlappedAtPosition(bottomPos, carryBlob.getAngleDegrees());
 				}
 
+				print("isBuildableAtPos(this, bottomPos, buildtile, carryBlob, bc.sameTileOnBack): " + isBuildableAtPos(this, bottomPos, buildtile, carryBlob, bc.sameTileOnBack) + " overlapped: " + overlapped);
 				bc.buildableAtPos = isBuildableAtPos(this, bottomPos, buildtile, carryBlob, bc.sameTileOnBack) && !overlapped;
 				bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
 				bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
@@ -437,11 +452,13 @@ void onTick(CBlob@ this)
 			}
 		}
 
+
 		// place blob with action1 key
 		if (!getHUD().hasButtons() && !carryBlob.hasTag("custom drop"))
 		{
 			if (this.isKeyPressed(key_action1))
 			{
+				print("bc.buildableAtPos: " + bc.buildableAtPos + " snap: " + snap + " bc.cursorClose: " + bc.cursorClose + " bc.hasReqs: " + bc.hasReqs + " bc.buildable: " + bc.buildable + " bc.supported: " + bc.supported);
 				if (snap && bc.cursorClose && bc.hasReqs && bc.buildable && bc.supported)
 				{
 					CMap@ map = getMap();

@@ -37,7 +37,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	{
 		thrown = true;
 	}
-	return (blob.getShape().isStatic() || (blob.isInWater() && blob.hasTag("vehicle")) ||
+	return (blob.getShape().isStatic() && !blob.isPlatform() || (blob.isInWater() && blob.hasTag("vehicle")) ||  // Waffle: Logs don't collide with platforms
 	        (dangerous_logs && this.hasTag("thrown") && blob.hasTag("flesh") && thrown)); // boat
 }
 

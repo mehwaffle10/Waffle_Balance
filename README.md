@@ -133,13 +133,16 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Saplings can no longer be placed on each other
 - Can build buildings behind trees
 - Can be placed on non-static blobs
+- Can place platforms inside of trees
 - Can no longer grow inside of static blobs or on other trees
 - Can no longer build blocks on top of saplings placed with left click
 - Fixed misalignment from seeds (no build would float half a block off the ground)
 - Fixed logs clipping into the ceiling or floor when spawned
+- Logs no longer collide with bridges or platforms
 - Redid collapse code
-    - Checks on the falling edge for solid blocks, doors, or platforms
+    - Checks on the falling edge for solid blocks and doors
     - Fixed a bug where could drop logs incorrectly
+	- No longer collides with platforms and bridges when falling
 - Redid growth code
     - Can now break Wood and stone blocks, doors, and platforms
     - Can no longer grow in one tall holes if the block above isn't breakable

@@ -260,7 +260,7 @@ void BreakSolids(CMap@ map, CBlob@ this, Vec2f pos)
     for (u8 i = 0; i < blobs.length; i++)
     {
         CBlob@ blob = blobs[i];
-        if (blob !is null && blob.getShape().isStatic() && (blob.hasTag("door") || blob.isPlatform()))
+        if (blob !is null && blob.getShape().isStatic() && (blob.hasTag("door")))  //  || blob.isPlatform()
         {
             this.server_Hit(blob, blob.getPosition(), Vec2f(0, -1.0f), 100.0f, Hitters::crush, true);
         }

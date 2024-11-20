@@ -36,7 +36,7 @@ void onDie(CBlob@ this)
                 end_pos *= segment.length;
                 end_pos += pos + offset;
                 HitInfo@[] hitInfos;
-                while (map.rayCastSolid(pos + offset, end_pos))
+                while (map.rayCastSolidNoBlobs(pos + offset, end_pos))
                 {
                     pos.y -= 1;
                     end_pos.y -= 1;

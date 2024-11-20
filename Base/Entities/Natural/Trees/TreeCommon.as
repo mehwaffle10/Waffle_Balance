@@ -144,7 +144,7 @@ bool CollapseToGround(CBlob@ this, f32 angle)
 			{
 				HitInfo@ hi = hitInfos[i];
 
-				if (hi.blob !is null && hi.blob.getShape().isStatic() && (hi.blob.hasTag("door") || hi.blob.isPlatform())) // blob
+				if (hi.blob !is null && hi.blob.getShape().isStatic() && (hi.blob.hasTag("door"))) // blob  // || hi.blob.isPlatform()
 				{
                     // Waffle: Hit doors and platforms
                     hitsomething = true;
