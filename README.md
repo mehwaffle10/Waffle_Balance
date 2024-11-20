@@ -144,8 +144,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - Fixed a bug where could drop logs incorrectly
 	- No longer collides with platforms and bridges when falling
 - Redid growth code
-    - Can now break Wood and stone blocks, doors, and platforms
+    - Can now break Wood and stone blocks and doors
     - Can no longer grow in one tall holes if the block above isn't breakable
+	- No longer breaks bridges and platforms
 - Nobuild/tree sectors are now tile aligned
 
 ### Holidays
