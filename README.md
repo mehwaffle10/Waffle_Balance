@@ -174,10 +174,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Pickup
 - Added distance check
 - Merged Gingerbeard's crash fix (https://github.com/transhumandesign/kag-base/pull/2145)
-- Opening pickup menu no longer centers mouse
 
-### Taunt Menu
-- Opening taunt menu no longer centers mouse
+### Wheel Menu
+- Opening a wheel menu no longer centers mouse
 
 ### Throw
 - Added distance check
