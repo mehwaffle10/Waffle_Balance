@@ -443,7 +443,6 @@ void onTick(CBlob@ this)
 					overlapped = carryBlob.isOverlappedAtPosition(bottomPos, carryBlob.getAngleDegrees());
 				}
 
-				print("isBuildableAtPos(this, bottomPos, buildtile, carryBlob, bc.sameTileOnBack): " + isBuildableAtPos(this, bottomPos, buildtile, carryBlob, bc.sameTileOnBack) + " overlapped: " + overlapped);
 				bc.buildableAtPos = isBuildableAtPos(this, bottomPos, buildtile, carryBlob, bc.sameTileOnBack) && !overlapped;
 				bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
 				bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
@@ -458,7 +457,6 @@ void onTick(CBlob@ this)
 		{
 			if (this.isKeyPressed(key_action1))
 			{
-				print("bc.buildableAtPos: " + bc.buildableAtPos + " snap: " + snap + " bc.cursorClose: " + bc.cursorClose + " bc.hasReqs: " + bc.hasReqs + " bc.buildable: " + bc.buildable + " bc.supported: " + bc.supported);
 				if (snap && bc.cursorClose && bc.hasReqs && bc.buildable && bc.supported)
 				{
 					CMap@ map = getMap();
