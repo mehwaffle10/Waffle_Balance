@@ -328,7 +328,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			dmg = ArrowHitBlob(this, point1, initVelocity, dmg, blob, Hitters::arrow, arrowType);
 		}
 
-		if (dmg > 0.0f)
+		if (dmg > 0.0f || blob.getName() == "crate" && blob.hasTag("parachute"))
 		{
 			// determine the hit type
 			// fire arrows still act as normal arrows
@@ -375,6 +375,12 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 	// Waffle: Collide with other projectiles
 	if (blob.hasTag("projectile") && this.getTeamNum() != blob.getTeamNum())
+	{
+		return true;
+	}
+
+	// Waffle: Allow shooting down friendly parachute crates
+	if (blob.getName() == "crate" && blob.hasTag("parachute"))
 	{
 		return true;
 	}

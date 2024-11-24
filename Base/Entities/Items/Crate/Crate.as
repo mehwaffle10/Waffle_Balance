@@ -813,6 +813,11 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {
 	f32 dmg = damage;
 
+	// Waffle: Always detach parachute on hit
+	if (this.hasTag("parachute"))
+	{
+		Land(this);
+	}
 	if (customData == Hitters::builder)
 	{
 		dmg *= 6;  // Waffle: Builders break crates 50% faster
