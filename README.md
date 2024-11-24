@@ -241,6 +241,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ## VEHICLES
 
 ### Vehicles
+- All vehicle shapes have been tweaked/cleaned up
 - Drivers are protected from damage besides drowning
 - Drivers take burn damage if their vehicle is on fire
 - Drivers can be knocked out using water
@@ -266,7 +267,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Redone map destruction using raycasting
 - Much less drag
 - Slower acceleration
+- Each seat is faster
 - Rear water only shows when you have enough speed to break blocks
+- Can only turn around when rear water is showing
 - Reduced bobbing in water
 - Don't break on land (or if left alone???)
 - Doesn't sink on low health
@@ -301,6 +304,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Health decreased from 45 to 30
 - Removed front 3 seats
 - Moved vehicle attachment point to front
+- Has an extended roof
 
 ### Siege Weapons
 - Don't break in water
