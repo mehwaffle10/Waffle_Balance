@@ -114,6 +114,29 @@ void Blend(CBlob@ this, CBlob@ tobeblended)
 	const string blobname = tobeblended.getName();
 	if (blobname == "log" || blobname == "crate")
 	{
+		// Waffle: Kill players inside crates if sawed
+		if (blobname == "crate")
+		{
+			CAttachment@ attachment = tobeblended.getAttachments();
+			if (attachment !is null)
+			{
+				AttachmentPoint@ sneaky = attachment.getAttachmentPointByName("SNEAKY");
+				if (sneaky !is null)
+				{
+					CBlob@ sneaky_player = sneaky.getOccupied();
+					if (sneaky_player !is null)
+					{
+						Vec2f pos = this.getPosition();
+						Vec2f bpos = sneaky_player.getPosition();
+						sneaky_player.server_SetHealth(-1);
+						this.server_Hit(sneaky_player, bpos, bpos - pos, 0.0f, Hitters::saw);
+						this.Tag("bloody");
+						this.Sync("bloody", true);
+					}
+				}
+			}
+		}
+
 		if (isServer())
 		{
 			CBlob@ blob = server_CreateBlobNoInit('mat_wood');

@@ -378,6 +378,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can destroy enemy mines from all sides instead of just the top
 - Take double damage from explosives
 - No longer launch bombs vertically
+- Now kill players inside crates when sawing crates
 
 ### Trampoline
 - Increase bounce velocity from 10 to 11
@@ -434,6 +435,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Exiting a crate no longer gives the player a jump
 - Fixed players getting in crates while not holding them
 - Opening a crate with an enemy player only stun for half a second instead of a full second
+- Sawing a crate with a player inside saws the player as well
 - Inventory increased from 3x3 to 4x3
 - Displays label if anything is in inventory
 - Heavily reduced air friction
