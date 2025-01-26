@@ -45,6 +45,13 @@ void onInit(CBlob@ this)
 	this.SetMinimapRenderAlways(true);
 
     this.getSprite().SetZ(-9.99f);  // Waffle: Render trunk in front of saws
+
+	// Waffle: Allow placing seeds without minimap icons
+	CMap@ map = getMap();
+	if (map !is null && map.isTileSolid(map.getTile(this.getPosition() - Vec2f(0, map.tilesize))))
+	{
+		this.UnsetMinimapVars();
+	}
 }
 
 void GrowSprite(CSprite@ this, TreeVars@ vars)
