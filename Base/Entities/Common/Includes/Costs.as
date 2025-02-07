@@ -162,7 +162,7 @@ void InitCosts()
 	// CTFCosts::warboat_gold =             ReadCost(cfg, costs, "cost_warboat_gold"       , 50);
 
 	//VehicleShop.as
-	CTFCosts::catapult =                    ReadCost(cfg, costs, "cost_catapult"                   , 120);
+	CTFCosts::catapult =                    ReadCost(cfg, costs, "cost_catapult"                   , 225);  // Waffle: Increase catapult cost
 	CTFCosts::ballista =                    ReadCost(cfg, costs, "cost_ballista"                   , 200);  // Waffle: Increase ballista cost
 	// CTFCosts::ballista_gold =            ReadCost(cfg, costs, "cost_ballista_gold"              , 50);
 	CTFCosts::ballista_ammo =               ReadCost(cfg, costs, "cost_ballista_ammo"              , 80);
