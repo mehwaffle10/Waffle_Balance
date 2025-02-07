@@ -246,6 +246,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Drivers take burn damage if their vehicle is on fire
 - Drivers can be knocked out using water
     - Water bombs now collide with enemy vehicles
+	- Fixed an issue where stunned players can get into vehicles
 - Take full damage from arrows
 - Take 1.5x damage from swords
 - Can collide when attached (can be shot)

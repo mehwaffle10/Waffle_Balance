@@ -1,5 +1,7 @@
 // use this script if you want the blob to get in seats on down press
 
+#include "KnockedCommon.as";  // Waffle: Prevent getting into vehicles when stunned
+
 #define SERVER_ONLY
 
 void onInit(CBlob@ this)
@@ -20,7 +22,8 @@ void onTick(CBlob@ this)
 	        !this.isKeyPressed(key_action2) &&
 	        !this.isKeyPressed(key_action3) &&
 	        !this.isKeyPressed(key_left) &&
-	        !this.isKeyPressed(key_right))
+	        !this.isKeyPressed(key_right) &&
+			!isKnocked(this))
 	{
 		CBlob@[] blobsInRadius;
 		this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() * 1.5f + 25.0f, @blobsInRadius);
@@ -67,12 +70,11 @@ void onTick(CBlob@ this)
 
 				if (distance <= ap.radius + 4.0f)
 				{
-					// Waffle: Remove priority for attached vehicles
-					// // cheat - attached objects have closer seats (cata in boat)
-					// if (ap.getBlob().isAttached())
-					// {
-					// 	distance *= 0.3f;
-					// }
+					// cheat - attached objects have closer seats (cata in boat)
+					if (ap.getBlob().isAttached())
+					{
+						distance *= 0.3f;
+					}
 
 					if (distance < closestDist)
 					{
