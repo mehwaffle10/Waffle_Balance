@@ -268,6 +268,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Boats
 - Redone map destruction and player crushing using raycasting
 	- Only does damage in front of the boat
+	- Can crush enemy dinghies
 - Much less drag
 - Slower acceleration
 - Each seat is faster

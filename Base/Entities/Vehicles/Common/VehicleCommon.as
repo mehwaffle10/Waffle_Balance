@@ -750,7 +750,7 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
                     this.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
 				}
 
-				if (hit_blob.hasTag("player") && distance <= map.tilesize / 2) {
+				if ((hit_blob.hasTag("player") || hit_blob.getName() == "dinghy") && hit_blob.getTeamNum() != this.getTeamNum() && distance <= map.tilesize / 2) {
 					this.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
 				}
 			}
