@@ -26,6 +26,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Movement
 - TDM fall damage (takes 1.2x longer falls) but with less ramping (1.1 instead of 1.2)
+	- leads to a higher baseline but less extreme falls
 - Increased move speed in water (~33% faster)
 - Increased breath timer from 6 to 8 seconds 
 - Increased move speed on ladders
