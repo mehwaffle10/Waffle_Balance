@@ -14,21 +14,14 @@ f32 FallDamageAmount(float vely)
 {
 	const f32 base = BaseFallSpeed();
 	const f32 ramp = 1.1f;  // Waffle: Reduce fall damage ramping
-	bool doknockdown = false;
 
 	if (vely > base)
 	{
-
 		if (vely > base * ramp)
 		{
 			f32 damage = 0.0f;
-			doknockdown = true;
 
-			if (vely < base * Maths::Pow(ramp, 1))
-			{
-				damage = 0.5f;
-			}
-			else if (vely < base * Maths::Pow(ramp, 2))
+			if (vely < base * Maths::Pow(ramp, 2))
 			{
 				damage = 1.0f;
 			}
