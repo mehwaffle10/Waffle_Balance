@@ -294,7 +294,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer can be picked up
 
 ### Longboats
-- Cost 100 coins
+- Cost 200 coins
+- Health increased to 25
+- Spawns with a catapult
 - Need a 10 x 4 area to deploy
 - Removed front 3 seats, adjusted back 3 seats
 - Fixed bug where sail seat could drive on land
@@ -302,7 +304,9 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Slightly moved vehicle attachment point forward
 
 ### Warboats
-- Cost 200 coins
+- Cost 300 coins
+- Health increased to 50
+- Spawns with a ballista
 - Need a 12 x 6 area to deploy
 - Health decreased from 45 to 30
 - Removed front 3 seats
