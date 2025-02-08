@@ -106,6 +106,24 @@ void onInit(CBlob@ this)
 
 	//add minimap icon
 	this.SetMinimapVars("GUI/Minimap/MinimapIcons.png", 6, Vec2f(16, 8));
+
+	// Waffle: Always spawn with a catapult
+	if (isServer())
+	{
+		Vec2f pos = this.getPosition();
+		CAttachment@ attachments = this.getAttachments();
+		if (attachments !is null) {
+			AttachmentPoint@ vehicle = attachments.getAttachmentPoint("VEHICLE");
+			if (vehicle !is null) {
+				pos = vehicle.getPosition();
+			}
+		}
+		
+		CBlob@ catapult = server_CreateBlob("catapult", this.getTeamNum(), pos);
+		if (catapult !is null) {
+			catapult.server_AttachTo(this, "VEHICLE");
+		}
+	}
 }
 
 void onTick(CBlob@ this)

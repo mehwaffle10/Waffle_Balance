@@ -184,6 +184,24 @@ void onInit(CBlob@ this)
 			this.set_u16("bowid", bow.getNetworkID());
 		}
 	}
+
+	// Waffle: Always spawn with a ballista
+	if (isServer())
+	{
+		Vec2f pos = this.getPosition();
+		CAttachment@ attachments = this.getAttachments();
+		if (attachments !is null) {
+			AttachmentPoint@ vehicle = attachments.getAttachmentPoint("VEHICLE");
+			if (vehicle !is null) {
+				pos = vehicle.getPosition();
+			}
+		}
+		
+		CBlob@ ballista = server_CreateBlob("ballista", this.getTeamNum(), pos);
+		if (ballista !is null) {
+			ballista.server_AttachTo(this, "VEHICLE");
+		}
+	}
 }
 
 void onTick(CBlob@ this)

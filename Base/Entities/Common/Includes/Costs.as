@@ -156,9 +156,9 @@ void InitCosts()
 	//BoatShop.as
 	CTFCosts::dinghy =                      ReadCost(cfg, costs, "cost_dinghy"             , 40);
 	// CTFCosts::dinghy_wood =              ReadCost(cfg, costs, "cost_dinghy_wood"        , 100);  // Waffle: Remove wood cost on dinghies
-	CTFCosts::longboat =                    ReadCost(cfg, costs, "cost_longboat"           , 100);
+	CTFCosts::longboat =                    ReadCost(cfg, costs, "cost_longboat"           , 200);  // Waffle: Increase longboat cost
 	// CTFCosts::longboat_wood =            ReadCost(cfg, costs, "cost_longboat_wood"      , 200);  // Waffle: Remove wood cost on longboats
-	CTFCosts::warboat =                     ReadCost(cfg, costs, "cost_warboat"            , 200);
+	CTFCosts::warboat =                     ReadCost(cfg, costs, "cost_warboat"            , 300);  // Waffle: Increase warboat cost
 	// CTFCosts::warboat_gold =             ReadCost(cfg, costs, "cost_warboat_gold"       , 50);
 
 	//VehicleShop.as
