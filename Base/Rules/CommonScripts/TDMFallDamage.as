@@ -9,7 +9,7 @@ void Reset(CRules@ this)
 	ConfigFile cfg = ConfigFile();
 	cfg.loadFile(cost_config_file);
 
-	this.set_f32("fall vel modifier", cfg.read_f32("fall_dmg_nerf", 1.3f));
+	this.set_f32("fall vel modifier", cfg.read_f32("fall_dmg_nerf", 1.2f));
 }
 
 void onInit(CRules@ this)
