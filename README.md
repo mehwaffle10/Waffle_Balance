@@ -242,6 +242,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Vehicles
 - All vehicle shapes have been tweaked/cleaned up
+- All vehicles are slowed by 25% when hit by a sword
 - Drivers are protected from damage besides drowning
 - Drivers take burn damage if their vehicle is on fire
 - Drivers can be knocked out using water
@@ -265,7 +266,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Only attach to other vehicles on collision
 
 ### Boats
-- Redone map destruction using raycasting
+- Redone map destruction and player crushing using raycasting
+	- Only does damage in front of the boat
 - Much less drag
 - Slower acceleration
 - Each seat is faster

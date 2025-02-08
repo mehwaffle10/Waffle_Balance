@@ -688,6 +688,7 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
             bool hit = false;
             CBlob@ hit_blob = hit_infos[i].blob;
             Vec2f hit_pos = hit_infos[i].hitpos;
+			float distance = hit_infos[i].distance;
             Vec2f particle_velocity = getRandomVelocity((this.getPosition() - hit_pos).getAngle(), 1.0f + speed, 90.0f) + Vec2f(0.0f, -2.0f);
 
             if (hit_blob is null)
@@ -747,6 +748,10 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
                 {
                     hit = true;
                     this.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
+				}
+
+				if (hit_blob.hasTag("player") && distance <= map.tilesize / 2) {
+					this.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
 				}
 			}
 

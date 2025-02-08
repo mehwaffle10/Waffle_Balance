@@ -377,5 +377,12 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
             }
         }
     }
-    return damage;
+
+	// Waffle: Sword slow vehicles
+	if (customData == Hitters::sword)
+	{
+		this.setVelocity(this.getVelocity() * 0.75f);
+	}
+
+	return damage;
 }
