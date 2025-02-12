@@ -4,14 +4,14 @@
 #include "AssistCommon.as"
 #include "Hitters.as"
 
-const int coinsOnDamageAdd = 6;
-const int coinsOnAssistAdd = 8;
-const int coinsOnKillAdd = 12;
+const int coinsOnDamageAdd = 4;
+const int coinsOnAssistAdd = 6;
+const int coinsOnKillAdd = 10;
 
 // bonus for being an offensive builder
-const int coinsOnDamageAddBuilder = 8;
-const int coinsOnAssistAddBuilder = 10;
-const int coinsOnKillAddBuilder = 15;
+const int coinsOnDamageAddBuilder = 6;
+const int coinsOnAssistAddBuilder = 8;
+const int coinsOnKillAddBuilder = 12;
 
 const int coinsOnDeathLosePercent = 15;
 

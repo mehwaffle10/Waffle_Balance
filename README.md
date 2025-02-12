@@ -120,6 +120,11 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can no longer be drilled
 - Builders dig gold at the speed that they dig dirt
 
+### Coins
+- Decreased coins per heart of damage from 6 to 4 (8 to 6 for builders)
+- Decreased coins per kill from 12 to 10 (10 to 8 for builders)
+- Decreased coins per assist from 8 to 6 (15 to 12 for builders)
+
 ### Trees
 - Can only grow if there is no more than 1 other tree within 16 blocks
 	- Added visible bounding box around saplings and trees when holding a sapling
