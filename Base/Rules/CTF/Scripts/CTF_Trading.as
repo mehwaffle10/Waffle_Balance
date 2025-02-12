@@ -4,14 +4,14 @@
 #include "AssistCommon.as"
 #include "Hitters.as"
 
-const int coinsOnDamageAdd = 4;
-const int coinsOnAssistAdd = 6;
-const int coinsOnKillAdd = 10;
+const int coinsOnDamageAdd = 4;   // 6;   // Waffle: Decrease coins from kills
+const int coinsOnAssistAdd = 6;   // 8;   // Waffle: --
+const int coinsOnKillAdd   = 10;  // 12;  // Waffle: --
 
 // bonus for being an offensive builder
-const int coinsOnDamageAddBuilder = 6;
-const int coinsOnAssistAddBuilder = 8;
-const int coinsOnKillAddBuilder = 12;
+const int coinsOnDamageAddBuilder = 6;   // 8;   // Waffle: Decrease coins from kills
+const int coinsOnAssistAddBuilder = 8;   // 10;  // Waffle: --
+const int coinsOnKillAddBuilder   = 12;  // 15;  // Waffle: --
 
 const int coinsOnDeathLosePercent = 15;
 
