@@ -445,6 +445,13 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Uses the same protection logic as vehicles
 - Swapped keys for get in/get out and empty contents. By default pressing space gets in and out without a button popup, e now gives a button for emptying contents
     - Players will be stunned for any command if there is an enemy inside
+- Pressing e while inside of a crate will deploy it
+	- Creates a 3x3 of wood backwall with platforms facing up on top
+	- Will not replace any blocks, only building up until it runs into something
+	- Will not deploy if:
+		- None of the bottom backwalls are supported
+		- None of the platforms are able to be placed
+		- Too close to the edges of the map
 - Parachute crates no longer sway in the wind
 - Parachute crates can be shot down by arrows on any team
 - Exiting a crate no longer gives the player a jump

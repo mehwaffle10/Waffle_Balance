@@ -297,9 +297,27 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 		{
 			CBitStream params;
 			params.write_netid(caller.getNetworkID());
-            if (carried is this || caller is sneaky_player)  // Waffle: Less buttons
+			// Waffle: Add crate deploy
+            if (caller is sneaky_player)
             {
-                this.SendCommand(this.getCommandID("getout"), params);
+				CMap@ map = getMap();
+				if (map !is null)
+				{
+					u8[] heights(3);
+					Vec2f this_pos = map.getAlignedWorldPos(this.getPosition()) + Vec2f(map.tilesize, map.tilesize) * 0.5f;
+					if (canDeploy(map, this_pos, heights))
+					{
+						this.SendCommand(this.getCommandID("unpack"), params);  // Waffle: Less buttons
+					}
+					else
+					{
+						if (caller.isMyPlayer())
+						{
+							this.getSprite().PlaySound("/NoAmmo", 0.5);
+						}
+						this.set_u32("cant build time", getGameTime());
+					}
+				}
             }
             else
             {
@@ -512,13 +530,59 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		}
 		else
 		{
-			this.server_SetHealth(-1.0f);
-			this.server_Die();
+			// Waffle: Add crate deploy
+			CMap@ map = getMap();
+			if (map !is null && this.getHealth() > 0.0f) {
+				u8[] heights(3);
+				Vec2f this_pos = map.getAlignedWorldPos(this.getPosition()) + Vec2f(map.tilesize, map.tilesize) * 0.5f;
+				if (canDeploy(map, this_pos, heights))
+				{
+					for (s8 x = -1; x <= 1; x++)
+					{
+						for (u8 y = 0; y < heights[x + 1]; y++)
+						{
+							Vec2f pos = this_pos + Vec2f(x, -y) * map.tilesize;
+							if (y == 3)
+							{
+								CBlob@ platform = server_CreateBlob("wooden_platform", -1, pos);
+								if (platform !is null)
+								{
+									platform.getShape().SetStatic(true);
+								}
+							}
+							else
+							{
+								// Skip stone backwall
+								TileType type = map.getTile(pos).type;
+								if (
+									type != CMap::tile_castle_back 	    &&  // Stone Backwall
+									!(type >= 76 && type <= 79)	 	    &&  // Damaged Stone Backwall
+									type != CMap::tile_castle_back_moss     // Mossy Stone Backwall
+								)
+								{
+									map.server_SetTile(pos, CMap::tile_wood_back);
+								}
+							}
+						}
+					}
+					this.server_SetHealth(-1.0f);
+					this.server_Die();
+					this.SendCommand(this.getCommandID("unpack_client"));
+				}
+			}
 		}
 	}
 	else if (cmd == this.getCommandID("unpack_client") && isClient())
 	{
-		this.getShape().setDrag(10.0f);
+		// Waffle: Add crate deploy
+		if (hasSomethingPacked(this))
+		{
+			this.getShape().setDrag(10.0f);
+		}
+		else
+		{
+			this.getSprite().PlaySound("/ConstructShort");
+		}
 	}
 	else if (cmd == this.getCommandID("stop unpack") && isServer())
 	{
@@ -598,6 +662,110 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			}
 		}
 	}
+}
+
+// Waffle: Add crate deploy
+bool canDeploy(CMap@ map, Vec2f this_pos, u8[]@ heights)
+{
+	// Make sure we have at least some support
+	bool supported = false;
+	for (s8 x = -1; x <= 1; x++)
+	{
+		Vec2f pos = this_pos + Vec2f(x, 0) * map.tilesize;
+		// TileType type = map.getTile(pos).type;
+		if (map.hasSupportAtPos(pos))
+		{
+			supported = true;
+			break;
+		}
+	}
+
+	for (s8 x = -1; x <= 1; x++)
+	{
+		u8 y;
+		for (y = 0; y < 4; y++)
+		{
+			if (deployBlocking(map, this_pos + Vec2f(x, -y) * map.tilesize, y == 3))
+			{
+				break;
+			}
+		}
+		heights[x + 1] = y;
+	}
+
+	return this_pos.x > 3 * map.tilesize &&                          // Left boundary
+		   this_pos.x < (map.tilemapwidth - 3) * map.tilesize &&     // Right boundary
+		   this_pos.y > 10 * map.tilesize &&                         // Top of map
+		   supported &&                                              // Block support
+		   (heights[0] == 4 || heights[1] == 4 || heights[2] == 4);  // At least able to place one platform
+}
+
+// Waffle: Add crate deploy
+bool deployBlocking(CMap@ map, Vec2f pos, bool platforms = false)
+{
+	// Tile check
+	TileType type = map.getTile(pos).type;
+	if (type != CMap::tile_empty &&                   // Air
+		type != CMap::tile_ground_back &&             // Dirt backwall
+		!(type >= CMap::tile_grass && type <= 28) &&  // Grass blocks
+		type != CMap::tile_wood_back &&               // Wood Backwall
+		type != 207 &&                                // Damaged Wood Backwall
+		type != CMap::tile_castle_back 	    &&        // Stone Backwall
+		!(type >= 76 && type <= 79)	 	    &&        // Damaged Stone Backwall
+		type != CMap::tile_castle_back_moss           // Mossy Stone Backwall
+	)
+	{
+		return true;
+	}
+
+	// Sector check
+	CMap::Sector@[] sectors;
+	map.getSectorsAtPosition(pos, sectors);
+	for (u8 i = 0; i < sectors.length; i++)
+	{
+		if (sectors[i] !is null && sectors[i].name == "no build")
+		{
+			CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
+			if (owner is null || (platforms && !owner.hasTag("tree")))
+			{
+				return true;
+			}
+		}
+	}
+
+	// Blob check
+	CBlob@[] blobs;
+	map.getBlobsAtPosition(pos, blobs);
+	for (u8 i = 0; i < blobs.length; i++)
+	{
+		CBlob@ blob = blobs[i];
+		if (blob is null || blob.hasTag("scenary") || blob.hasTag("tree"))
+		{
+			continue;
+		}
+
+		CShape@ shape = blob.getShape();
+		if (shape !is null && shape.isStatic())
+		{
+			if (platforms)
+			{
+				if (blob.isLadder() && (blob.getPosition() - pos).Length() > map.tilesize / 2)
+				{
+					continue;
+				}
+				return true;
+			}
+			else
+			{
+				if (blob.isLadder() || blob.hasTag("building") || blob.getName() == "tent")
+				{
+					continue;
+				}
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void BoobyTrap(CBlob@ this, CBlob@ caller, CBlob@ mine)
@@ -1035,11 +1203,61 @@ bool DumpOutItems(CBlob@ this, f32 pop_out_speed = 5.0f, Vec2f init_velocity = V
 
 // SPRITE
 
+// Waffle: Add crate deploy
+Vec2f getBuildingOffsetPos(CBlob@ blob, CMap@ map, Vec2f required_tile_space)
+{
+	Vec2f halfSize = required_tile_space * 0.5f;
+
+	Vec2f pos = blob.getPosition();
+	pos.x = int(pos.x / map.tilesize);
+	pos.x *= map.tilesize;
+	pos.x += map.tilesize * 0.5f;
+
+	pos.y -= required_tile_space.y * map.tilesize * 0.5f - map.tilesize;
+	pos.y = int(pos.y / map.tilesize);
+	pos.y *= map.tilesize;
+	pos.y += map.tilesize * 0.5f;
+
+	Vec2f offsetPos = pos - Vec2f(halfSize.x , halfSize.y) * map.tilesize;
+	Vec2f alignedWorldPos = map.getAlignedWorldPos(offsetPos);
+	return alignedWorldPos;
+}
+
 // render unpacking time
 
 void onRender(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
+
+	// Waffle: Add crate deploy
+	if (blob.get_u32("cant build time") + 90 > getGameTime())
+	{
+		CMap@ map = getMap();
+		if (map is null) return;
+
+		Vec2f space = Vec2f(3, 4);
+		Vec2f offsetPos = getBuildingOffsetPos(blob, map, space);
+
+		const f32 scalex = getDriver().getResolutionScaleFactor();
+		const f32 zoom = getCamera().targetDistance * scalex;
+		Vec2f aligned = getDriver().getScreenPosFromWorldPos( offsetPos );
+
+		u8[] heights(3);
+		Vec2f this_pos = map.getAlignedWorldPos(blob.getPosition()) + Vec2f(map.tilesize, map.tilesize) * 0.5f;
+		bool can_deploy = canDeploy(map, this_pos, heights);
+
+		for (f32 step_x = 0.0f; step_x < space.x ; ++step_x)
+		{
+			for (f32 step_y = 0.0f; step_y < space.y ; ++step_y)
+			{
+				Vec2f temp = ( Vec2f( step_x + 0.5, step_y + 0.5 ) * map.tilesize );
+				Vec2f v = offsetPos + temp;
+				Vec2f pos = aligned + (temp - Vec2f(0.5f,0.5f)* map.tilesize) * 2 * zoom;
+				GUI::DrawIcon("CrateSlots.png", can_deploy ? 9 : 5, Vec2f(8,8), pos, zoom);
+			}
+		}
+	}
+
 	if (!blob.exists("packed") || blob.get_string("packed name").size() == 0) return;
 
 	Vec2f pos2d = blob.getScreenPos();
