@@ -60,7 +60,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Builder
 - Increased swing speed on man-made structures, wood, and plants
 - Decreased swing speed on dirt and gold
-- Increased backwall building speed
+- Increased backwall and ladder building speed
 - Double damage for digging wood or stone (3 hits for wood block, 4 for stone block)
 - Moss backwall is now treated like stone backwall
 - Repairing blobs will no longer replace healthy stone backwall behind

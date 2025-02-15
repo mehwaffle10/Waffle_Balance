@@ -46,7 +46,7 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 
 		// one day we will reach an ideal world without latency, dumb edge cases and bad netcode
 		// that day is not today
-		u32 delay = 2 * getCurrentBuildDelay(this) - 1;
+		u32 delay = (blob.isLadder() ? 1 : 2) * getCurrentBuildDelay(this) - 1;  // Waffle: Increase ladder build speed
 		SetBuildDelay(this, delay);
 
 		CShape@ shape = blob.getShape();
@@ -491,7 +491,7 @@ void onTick(CBlob@ this)
 						this.SendCommand(this.getCommandID("placeBlob"), params);
 					}
 
-					u32 delay = 2 * getCurrentBuildDelay(this);
+					u32 delay = (carryBlob.isLadder() ? 1 : 2) * getCurrentBuildDelay(this);  // Waffle: Increase ladder build speed
 					SetBuildDelay(this, delay);
 					bc.blobActive = false;
 				}
