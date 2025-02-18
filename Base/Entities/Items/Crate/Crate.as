@@ -739,7 +739,7 @@ bool deployBlocking(CMap@ map, Vec2f pos, bool platforms = false)
 	for (u8 i = 0; i < blobs.length; i++)
 	{
 		CBlob@ blob = blobs[i];
-		if (blob is null || blob.hasTag("scenary") || blob.hasTag("tree"))
+		if (blob is null || blob.hasTag("scenary") || blob.hasTag("tree") || blob.hasTag("projectile"))
 		{
 			continue;
 		}
