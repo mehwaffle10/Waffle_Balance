@@ -368,6 +368,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- explosion damage (vs blobs) limited from 8 to 4 blocks
 - Cost 200 coins instead of 150
 - Bomb bolts cost 150 coins instead of 100
+- Initial and purchased bolt count decreased from 12 to 6
 - Need a 5 x 5 area to deploy
 - Bolt drag multiplier in water decreased from 5 to 1.5
 - Bolts no longer collide with invincible blobs
