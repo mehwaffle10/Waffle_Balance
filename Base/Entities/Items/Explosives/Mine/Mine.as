@@ -180,7 +180,7 @@ void onThisRemoveFromInventory(CBlob@ this, CBlob@ inventoryBlob)
 
 bool explodeOnCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return this.getTeamNum() != blob.getTeamNum() &&
+	return this.getTeamNum() != blob.getTeamNum() && !blob.hasTag("vehicle protection") &&  // Waffle: Prevent mines from piercing vehicle protection
 	(blob.hasTag("flesh") || blob.hasTag("projectile") || blob.hasTag("vehicle"));
 }
 
