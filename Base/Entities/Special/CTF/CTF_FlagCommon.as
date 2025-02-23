@@ -18,8 +18,8 @@ bool canPickupFlag(CBlob@ blob)
 		}
 	}
 
-	// Waffle: Prevent pickup if travelling through a tunnel
-	return pick && blob.get_u32("TUNNEL_TRAVEL_PICKUP_DELAY") + 1 * getTicksASecond() < getGameTime();
+	// Waffle: Prevent pickup if travelling through a tunnel or while in a crate
+	return pick && blob.get_u32("TUNNEL_TRAVEL_PICKUP_DELAY") + 1 * getTicksASecond() < getGameTime() && !blob.isAttachedToPoint("SNEAKY");
 }
 
 bool shouldFastReturn(CBlob@ this)

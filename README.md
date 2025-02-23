@@ -38,6 +38,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Flag
 - Can no longer go through tunnels
+- Can no longer be picked up while in a crate
 - Returns in 10 seconds
 - Can not speed up return by standing on it
 - Tripled drag in water
@@ -467,6 +468,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer decay in water
 - No longer decay if spammed
 - Can be picked up by enemy players without having to overlap the crate
+- Can no longer pick up flags while in a crate
 - Changes team when picked up
 - Now gives the "medium weight" tag instead of "heavy weight" tag when carrying a lit keg
 - Can now breathe in crates
