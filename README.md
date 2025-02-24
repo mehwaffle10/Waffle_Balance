@@ -220,7 +220,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Costs 400 wood total
 
 ### Tunnel
-- Costs 500 wood total and 250 stone
+- Costs 500 wood total and 150 stone
 - Can no longer travel with flags
 
 ### Storage
