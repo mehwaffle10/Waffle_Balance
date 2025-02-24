@@ -470,7 +470,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer decay if spammed
 - Can be picked up by enemy players without having to overlap the crate
 - Can no longer pick up flags while in a crate
-- Changes team when picked up
+- Changes team when picked up unless there is a player inside
 - Now gives the "medium weight" tag instead of "heavy weight" tag when carrying a lit keg
 - Can now breathe in crates
 - Can automatically pick up materials again

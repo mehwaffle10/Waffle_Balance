@@ -1368,8 +1368,11 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
     }
     else if (attachedPoint.name == "PICKUP")
     {
-        // Waffle: Convert on pickup
-        this.server_setTeamNum(attached.getTeamNum());
+        // Waffle: Convert on pickup if empty
+		if (getPlayerInside(this) is null)
+		{
+        	this.server_setTeamNum(attached.getTeamNum());
+		}
     }
 }
 
