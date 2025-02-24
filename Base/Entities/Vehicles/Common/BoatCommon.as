@@ -153,7 +153,7 @@ void onTick(CBlob@ this)
 
 	// rear splash
 
-	if (this.isInWater() && Maths::Abs(this.getVelocity().x) > BLOCK_BREAKING_SPEED_THRESHOLD)  // this.getShape().vellen > 2.0f)  // Waffle: Only render rear splash when you can break blocks
+	if (this.isInWater() && Maths::Abs(this.getVelocity().x) > getBlobBreakingSpeedThreshold(this))  // this.getShape().vellen > 2.0f)  // Waffle: Only render rear splash when you can break blocks
 	{
 		Vec2f pos = this.getPosition();
 		f32 side = this.isFacingLeft() ? this.getWidth() : -this.getWidth();

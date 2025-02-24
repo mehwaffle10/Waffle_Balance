@@ -544,7 +544,7 @@ void Vehicle_FlyerControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, Vehicl
 void Vehicle_RowerControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, VehicleInfo@ v)
 {
 	const f32 moveForce = v.move_speed;
-	const f32 turnSpeed = BLOCK_BREAKING_SPEED_THRESHOLD;  // v.turn_speed;  // Waffle: Only allow turning when you can break blocks
+	const f32 turnSpeed = getBlobBreakingSpeedThreshold(this);  // v.turn_speed;  // Waffle: Only allow turning when you can break blocks
 	const Vec2f vel = this.getVelocity();
 	Vec2f force;
 
@@ -666,7 +666,7 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
     CMap@ map = getMap();
     Vec2f velocity = this.getVelocity();
     f32 speed = Maths::Abs(velocity.x);
-    if (map is null || speed < BLOCK_BREAKING_SPEED_THRESHOLD)
+    if (map is null || speed < getBlobBreakingSpeedThreshold(this))
     {
         return;
     }
@@ -765,7 +765,7 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
                     default: file = "SmallSmoke2.png"; break;
                 }
                 MakeDustParticle(hit_pos, file);
-                velocity *= 0.9f;
+                velocity *= 1.0f - (this.getMass() > 3000.0f ? 0.01f : 0.1f);
             }
         }
     }

@@ -7,12 +7,12 @@
 
 // Boat logic
 
-const s8[] destruction_offsets = {-20, -13, -12, 8, 8, -4, -14};  // Waffle: Add better map damage
+const s8[] destruction_offsets = {-18, -11, -8, 8, 8, 0, -10};  // Waffle: Add better map damage
 
 void onInit(CBlob@ this)
 {
 	Vehicle_Setup(this,
-	              100.0f, // move speed  // Waffle: Move 50% faster
+	              80.0f, // move speed  // Waffle: Move faster
 	              0.47f,  // turn speed
 	              Vec2f(0.0f, -5.0f), // jump out velocity
 	              true  // inventory access
