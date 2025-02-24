@@ -150,8 +150,8 @@ void InitCosts()
 	CTFCosts::saw_stone =                   ReadCost(cfg, costs, "cost_saw_stone"          , 100);
 	CTFCosts::drill_stone =                 ReadCost(cfg, costs, "cost_drill_stone"        , 100);
 	CTFCosts::drill =                       ReadCost(cfg, costs, "cost_drill"              , 25);
-	CTFCosts::crate_wood =                  ReadCost(cfg, costs, "cost_crate_wood"         , 150);
-	CTFCosts::crate =                       ReadCost(cfg, costs, "cost_crate"              , 20);
+	CTFCosts::crate_wood =                  ReadCost(cfg, costs, "cost_crate_wood"         , 200);  // Waffle: Adjust for crate buffs
+	CTFCosts::crate =                       ReadCost(cfg, costs, "cost_crate"              , 40);   // Waffle: --
 
 	//BoatShop.as
 	CTFCosts::dinghy =                      ReadCost(cfg, costs, "cost_dinghy"             , 40);

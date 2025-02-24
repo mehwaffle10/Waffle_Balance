@@ -464,7 +464,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Inventory increased from 3x3 to 4x3
 - Displays label if anything is in inventory
 - Heavily reduced air friction
-- Cost 100 wood instead of 150
+- Cost 200 wood instead of 150 when buying with wood
+- Cost 40 coins instead of 20 when buying with coins
 - Take 50% more damage from builders (takes 6 hits to break instead of 8)
 - No longer decay in water
 - No longer decay if spammed
