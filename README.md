@@ -384,6 +384,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Arrows no longer have 2x drag
 - Launch speed reduced from 25 to 21
 - Can be hit by enemy projectiles
+- Now spawn with 90 arrows
 
 ## BUILDER SHOP
 
