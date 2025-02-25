@@ -9,6 +9,7 @@
 #include "DoorCommon.as";
 #include "FireplaceCommon.as";
 #include "ActivationThrowCommon.as"
+#include "FireCommon.as"  // Waffle: Make igniting arrows more consistent
 
 const s32 bomb_fuse = 120;
 const f32 arrowMediumSpeed = 8.0f;
@@ -264,11 +265,9 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 		if (arrowType == ArrowType::normal)
 		{
-			if (
-				blob.getName() == "fireplace" &&
-				blob.getSprite().isAnimation("fire") &&
-				this.getTickSinceCreated() > 1 //forces player to shoot through fire
-			) {
+			if (blob.getName() == "fireplace" && blob.getSprite().isAnimation("fire") && this.getTickSinceCreated() > 1 || //forces player to shoot through fire
+				blob.getShape().isStatic() && blob.hasTag(burning_tag))  // Waffle: Make igniting arrows more consistent
+			{
 				turnOnFire(this);
 			}
 		}

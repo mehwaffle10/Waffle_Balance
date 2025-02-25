@@ -228,6 +228,6 @@ void InitCosts()
 	BuilderCosts::trap_block =          ReadCost(cfg, costs, "cost_trap_block"         , 25);
 	BuilderCosts::bridge =              ReadCost(cfg, costs, "cost_bridge"             , 30);
 	BuilderCosts::ladder =              ReadCost(cfg, costs, "cost_ladder"             , 10);
-	BuilderCosts::wooden_platform =     ReadCost(cfg, costs, "cost_wooden_platform"    , 15);
+	BuilderCosts::wooden_platform =     ReadCost(cfg, costs, "cost_wooden_platform"    , 50);  // Waffle: Buff platforms
 	BuilderCosts::spikes =              ReadCost(cfg, costs, "cost_spikes"             , 30);
 }

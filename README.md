@@ -92,10 +92,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Wood Structure Damage
 - Arrows do full damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
 	- wood doors = 7 hearts
-	- platforms  = 5 hearts
+	- platforms  = 15 hearts
 - Swords do 43.75% damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
     - wood doors = 11 jabs
-    - platforms  = 12 jabs
+    - platforms  = 35 jabs
     - ladders    = 5  jabs
 	- wood shops = 10 jabs
     - quarry     = 19 jabs
@@ -516,6 +516,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Have 5x the amount of health (will last 5x longer when climbed on)
 - Decreased drag multiplier in water from 5 to 1.5
 - Can no longer be harvested mid-air
+- Always ignite when hitting a static burning blob
 
 ### Water Arrows
 - Cost 25 coins for 1 instead of 15
