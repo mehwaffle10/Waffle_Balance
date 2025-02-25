@@ -140,7 +140,7 @@ void InitCosts()
 	//BuilderShop.as
 	CTFCosts::lantern_wood =                ReadCost(cfg, costs, "cost_lantern_wood"       , 10);
 	CTFCosts::bucket_wood =                 ReadCost(cfg, costs, "cost_bucket_wood"        , 10);
-	CTFCosts::filled_bucket =               ReadCost(cfg, costs, "cost_filled_bucket"      , 15);   // Waffle: Make buckets more expensive
+	CTFCosts::filled_bucket =               ReadCost(cfg, costs, "cost_filled_bucket"      , 20);   // Waffle: Make buckets more expensive
 	CTFCosts::sponge =                      ReadCost(cfg, costs, "cost_sponge"             , 10);   // Waffle: Make sponges cheaper
 	CTFCosts::boulder =                     ReadCost(cfg, costs, "cost_boulder"    		   , 40);   // Waffle: Boulders only cost coins
 	// CTFCosts::boulder_stone =            ReadCost(cfg, costs, "cost_boulder_stone"      , 30);   // Waffle: Boulders no longer cost materials

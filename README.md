@@ -504,7 +504,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can only splash once before needing a refill
 - Slightly bigger splash area
 - Can be used in water
-- Cost 15 coins
+- Cost 20 coins
 
 ### Sponges
 - Cost 10 instead of 15 coins to punish players less financially (a lost inventory slot is already a lot)
