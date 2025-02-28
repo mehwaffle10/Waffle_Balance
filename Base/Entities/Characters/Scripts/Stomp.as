@@ -80,7 +80,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	if (customData == Hitters::stomp && damage > 0.0f && velocity.y > 0.0f && worldPoint.y < this.getPosition().y)
 	{
 		this.getSprite().PlaySound("Entities/Characters/Sounds/Stomp.ogg");
-		setKnocked(this, 15, true);
+		setKnocked(this, 15, true, hitterBlob.getDamageOwnerPlayer());  // Waffle: Track stuns for assists
 	}
 
     if (isServer() && (customData == Hitters::sword || customData == Hitters::fall || customData == Hitters::crush || customData == Hitters::shield) && damage > 0.0f)

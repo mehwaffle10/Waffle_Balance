@@ -484,7 +484,7 @@ void GetOut(CBlob@ this, CBlob@ caller)
         {
             if (isKnockable(caller))
             {
-                setKnocked(caller, 30);
+                setKnocked(caller, 30, false, sneaky_player.getDamageOwnerPlayer());  // Waffle: Track stuns for assists
             }
         }
         this.Tag("crate escaped");

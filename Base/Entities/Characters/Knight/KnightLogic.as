@@ -1672,12 +1672,12 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 	        && blockAttack(hitBlob, velocity, 0.0f))
 	{
 		this.getSprite().PlaySound("/Stun", 1.0f, this.getSexNum() == 0 ? 1.0f : 1.5f);
-		setKnocked(this, 30, true);
+		setKnocked(this, 30, true, hitBlob.getDamageOwnerPlayer());
 	}
 
 	if (customData == Hitters::shield)
 	{
-		setKnocked(hitBlob, 20, true);
+		setKnocked(hitBlob, 20, true, this.getDamageOwnerPlayer());
 		this.getSprite().PlaySound("/Stun", 1.0f, this.getSexNum() == 0 ? 1.0f : 1.5f);
 	}
 }

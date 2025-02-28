@@ -941,7 +941,7 @@ void onHitBlob(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@
 				speed > ArcherParams::shoot_max_vel * 0.845f &&
 				hitBlob.hasTag("player")
 			) {
-				setKnocked(hitBlob, 20, true);
+				setKnocked(hitBlob, 20, true, this.getDamageOwnerPlayer());  // Waffle: Track stuns for assists
 				Sound::Play("/Stun", hitBlob.getPosition(), 1.0f, this.getSexNum() == 0 ? 1.0f : 1.5f);
 			}
 		}

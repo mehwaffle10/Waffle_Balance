@@ -1,6 +1,21 @@
 const string knockedProp = "knocked";
 const string knockedTag = "knockable";
 
+// Waffle: Track stuns for assists
+class KnockedHistory
+{
+	CPlayer@[] players;
+	u32[] times;
+
+	KnockedHistory()
+	{
+		CPlayer@[] _players;
+		players = _players;
+		u32[] _times;
+		times = _times;
+	}
+}
+
 void InitKnockable(CBlob@ this)
 {
 	this.set_u8(knockedProp, 0);
@@ -12,10 +27,13 @@ void InitKnockable(CBlob@ this)
 	this.addCommandID("knocked");
 
 	this.set_u32("justKnocked", 0);
+
+	// Waffle: Track stuns for assists
+	this.set("KnockedHistory", KnockedHistory());
 }
 
 // returns true if the new knocked time would be longer than the current.
-bool setKnocked(CBlob@ blob, int ticks, bool server_only = false)
+bool setKnocked(CBlob@ blob, int ticks, bool server_only = false, CPlayer@ stunnedByPlayer = null)  // Waffle: Track stuns for assists
 {
 	if (blob.hasTag("invincible"))
 		return false; //do nothing
@@ -28,11 +46,19 @@ bool setKnocked(CBlob@ blob, int ticks, bool server_only = false)
 		{
 			blob.set_u8(knockedProp, knockedTime);
 
+			// Waffle: Track stuns for assists
+			KnockedHistory@ knockedHistory;
+    		blob.get("KnockedHistory", @knockedHistory);
+			if (knockedHistory !is null && stunnedByPlayer !is null)
+			{
+				knockedHistory.players.push_back(stunnedByPlayer);
+				knockedHistory.times.push_back(getGameTime());
+			}
+
 			CBitStream params;
 			params.write_u8(knockedTime);
-
+			params.write_netid(stunnedByPlayer !is null ? stunnedByPlayer.getNetworkID() : 0);  // Waffle: Track stuns for assists
 			blob.SendCommand(blob.getCommandID("knocked"), params);
-            
 		}
 
 		if(!server_only && blob.isMyPlayer())
@@ -54,11 +80,25 @@ void KnockedCommands(CBlob@ this, u8 cmd, CBitStream@ params)
 		if (!params.saferead_u8(knockedTime))
 		{
 			return;
-
 		}
 
 		this.set_u32("justKnocked", getGameTime());
 		this.set_u8(knockedProp, knockedTime);
+
+		// Waffle: Track stuns for assists
+		u16 stunnedByPlayerNetID = 0;
+		if (!params.saferead_netid(stunnedByPlayerNetID) || stunnedByPlayerNetID == 0)
+		{
+			return;
+		}
+		CPlayer@ stunnedByPlayer = getPlayerByNetworkId(stunnedByPlayerNetID);
+		KnockedHistory@ knockedHistory;
+		this.get("KnockedHistory", @knockedHistory);
+		if (knockedHistory !is null && stunnedByPlayer !is null)
+		{
+			knockedHistory.players.push_back(stunnedByPlayer);
+			knockedHistory.times.push_back(getGameTime());
+		}
 	}
 }
 

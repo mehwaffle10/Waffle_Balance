@@ -127,6 +127,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Decreased coins per assist from 8 to 6 (15 to 12 for builders)
 
 ### Assists
+- Players now get assists if they stunned a player within 3 seconds of their death
 - Fixed an issue where assists were not counted after a zero damage hit
 - Fixed an issue where assists did not display properly on clients
 

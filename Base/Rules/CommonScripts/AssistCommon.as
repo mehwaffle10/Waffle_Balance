@@ -1,3 +1,6 @@
+
+#include "KnockedCommon"  // Waffle: Track stuns for assists
+
 //TODO: powerful items that insta-kill shouldnt have an assist (keg, mine)
 
 CPlayer@ getAssistPlayer(CPlayer@ victim, CPlayer@ killer)
@@ -13,6 +16,20 @@ CPlayer@ getAssistPlayer(CPlayer@ victim, CPlayer@ killer)
 	if (victimBlob is null)
 	{
 		return null;
+	}
+
+	// Waffle: Track stuns for assists
+	KnockedHistory@ knockedHistory;
+	victimBlob.get("KnockedHistory", @knockedHistory);
+	if (knockedHistory !is null)
+	{
+		for (int i = 0; i < knockedHistory.players.length; i++)
+		{
+			if (knockedHistory.players[i] !is killer && knockedHistory.times[i] + 3 * getTicksASecond() >= getGameTime())
+			{
+				return knockedHistory.players[i];
+			}
+		}
 	}
 
 	//damage criteria for assist

@@ -169,7 +169,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 	if (time > 0)
 	{
 		this.getSprite().PlaySound("/Stun", 1.0f, this.getSexNum() == 0 ? 1.0f : 1.5f);
-		setKnocked(this, Maths::Min(time, 60), true);
+		setKnocked(this, Maths::Min(time, 60), true, hitterBlob.getDamageOwnerPlayer());  // Waffle: Track stuns for assists
         this.server_DetachFromAll();  // Waffle: Make water detach you
 	}
 
