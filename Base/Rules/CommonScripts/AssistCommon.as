@@ -6,7 +6,7 @@
 CPlayer@ getAssistPlayer(CPlayer@ victim, CPlayer@ killer)
 {
 	//no assist if teamkill
-	if (victim is null || killer is null || victim.getTeamNum() == killer.getTeamNum())
+	if (victim is null || killer is null)  // || victim.getTeamNum() == killer.getTeamNum())  // Waffle: Allow teamkill assist in kill feed
 	{
 		return null;
 	}

@@ -128,6 +128,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Assists
 - Players now get assists if they stunned a player within 3 seconds of their death
+- Players can now get assists for team kills
+	- Only counts for kill message if assisting in the death of an ally
 - Fixed an issue where assists were not counted after a zero damage hit
 - Fixed an issue where assists did not display properly on clients
 

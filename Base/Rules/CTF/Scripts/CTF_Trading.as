@@ -126,7 +126,7 @@ void onPlayerDie(CRules@ this, CPlayer@ victim, CPlayer@ killer, u8 customData)
 			}
 			
 			CPlayer@ helper = getAssistPlayer (victim, killer);
-			if (helper !is null) 
+			if (helper !is null && helper.getTeamNum() != victim.getTeamNum())  // Waffle: Allow teamkill assist in kill feed
 			{ 
 				helper.server_setCoins(helper.getCoins() + (giveBuilderBonus ? coinsOnAssistAddBuilder : coinsOnAssistAdd));
 			}
