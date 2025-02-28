@@ -23,9 +23,14 @@ CPlayer@ getAssistPlayer(CPlayer@ victim, CPlayer@ killer)
 	victimBlob.get("KnockedHistory", @knockedHistory);
 	if (knockedHistory !is null)
 	{
-		for (int i = 0; i < knockedHistory.players.length; i++)
+		for (int i = knockedHistory.players.length - 1; i >= 0; i--)
 		{
-			if (knockedHistory.players[i] !is killer && knockedHistory.times[i] + 3 * getTicksASecond() >= getGameTime())
+			if (knockedHistory.times[i] + 3 * getTicksASecond() <= getGameTime())
+			{
+				break;
+			}
+
+			if (knockedHistory.players[i] !is killer)
 			{
 				return knockedHistory.players[i];
 			}
