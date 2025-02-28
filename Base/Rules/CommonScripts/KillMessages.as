@@ -10,6 +10,7 @@ int fade_time = 300;
 
 class KillMessage
 {
+	u16 victim_netid;  // Waffle: Add boat kills/assists
 	string victim;
 	string victim_tag;
 	string attacker;
@@ -26,6 +27,7 @@ class KillMessage
 
 	KillMessage(CPlayer@ _victim, CPlayer@ _attacker, u8 _hitter)
 	{
+		victim_netid = _victim.getNetworkID();  // Waffle: Add boat kills/assists
 		victim = _victim.getCharacterName();
 		victim_tag = _victim.getClantag();
 		victimteam = _victim.getTeamNum();
@@ -50,6 +52,19 @@ class KillMessage
 			helper = _helper.getCharacterName();
 			helper_tag = _helper.getClantag();
 			helperteam = _helper.getTeamNum();
+
+			// Waffle: Add boat kills/assists
+			if (isServer())
+			{
+				CBitStream params;
+				params.write_netid(victim_netid);
+				params.write_netid(_helper.getNetworkID());
+				CRules@ rules = getRules();
+				if (rules !is null)
+				{
+					rules.SendCommand(rules.getCommandID("assist sync"), params);
+				}
+			}
 		}
 		else
 		{
@@ -250,6 +265,7 @@ void onInit(CRules@ this)
 
 	this.addCommandID("killstreak message");
 	this.addCommandID("interrupt message");
+	this.addCommandID("assist sync");  // Waffle: Add boat kills/assists
 
 	AddIconToken("$killfeed_fall$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 1);
 	AddIconToken("$killfeed_water$", "GUI/KillfeedIcons.png", Vec2f(32, 16), 2);
@@ -498,6 +514,37 @@ void onCommand(CRules@ this, u8 cmd, CBitStream @params)
 			}
 
 			client_AddToChat(killer.getCharacterName() + " has interrupted " + victim.getCharacterName() + "'s " + multiKill + "!", SColor(255, 180, 24, 94));
+		}
+
+		// Waffle: Add boat kills/assists
+		if (cmd == this.getCommandID("assist sync"))
+		{
+			u16 victim_netid, helper_netid;
+			if (!params.saferead_netid(victim_netid) ||
+			    !params.saferead_netid(helper_netid))
+			{
+				return;
+			}
+
+			CPlayer@ helper = getPlayerByNetworkId(helper_netid);
+			if (helper is null)
+			{
+				return;
+			}
+
+			KillFeed@ feed;
+			if (this.get("KillFeed", @feed) && feed !is null)
+			{
+				for (u8 i = 0; i < feed.killMessages.length; i++)
+				{
+					if (feed.killMessages[i] !is null && feed.killMessages[i].victim_netid == victim_netid)
+					{
+						feed.killMessages[i].helper = helper.getCharacterName();
+						feed.killMessages[i].helper_tag = helper.getClantag();
+						feed.killMessages[i].helperteam = helper.getTeamNum();
+					}
+				}
+			}
 		}
 	}
 }

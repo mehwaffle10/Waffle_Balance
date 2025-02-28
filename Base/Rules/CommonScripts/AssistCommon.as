@@ -6,7 +6,8 @@
 CPlayer@ getAssistPlayer(CPlayer@ victim, CPlayer@ killer)
 {
 	//no assist if teamkill
-	if (victim is null || killer is null)  // || victim.getTeamNum() == killer.getTeamNum())  // Waffle: Allow teamkill assist in kill feed
+	
+	if (victim is null)  // || victim.getTeamNum() == killer.getTeamNum())  // Waffle: Allow teamkill assist in kill feed
 	{
 		return null;
 	}
@@ -14,6 +15,22 @@ CPlayer@ getAssistPlayer(CPlayer@ victim, CPlayer@ killer)
 	//get victim blob
 	CBlob@ victimBlob = victim.getBlob();
 	if (victimBlob is null)
+	{
+		return null;
+	}
+
+	// Waffle: Add boat kills/assists
+	string force_assist = victimBlob.get_string("ForceAssist");
+	if (force_assist != "")
+	{
+		CPlayer@ player = getPlayerByUsername(force_assist);
+		if (player !is null)
+		{
+			return player;
+		}
+	}
+
+	if (killer is null)
 	{
 		return null;
 	}

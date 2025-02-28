@@ -48,6 +48,10 @@ void onInit(CBlob@ this)
 
 	this.getSprite().SetZ(50.0f);
     // this.getCurrentScript().runFlags |= Script::tick_hasattached;  // Waffle: Prevent bobbing
+
+	// Waffle: Add boat kills/assists
+	dictionary riderHistory;
+	this.set("RiderHistory", riderHistory);
 }
 
 void Splash(Vec2f pos, Vec2f vel, int randomnum)
@@ -170,6 +174,16 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	if (attachedPoint.name == "ROWER")
 	{
+		// Waffle: Add boat kills/assists
+		dictionary riderHistory;
+		this.get("RiderHistory", riderHistory);
+		CPlayer@ rider = attached.getPlayer();
+		if (riderHistory !is null && rider !is null)
+		{
+			riderHistory.set(rider.getUsername(), getGameTime());
+			this.set("RiderHistory", riderHistory);
+		}
+
 		CSpriteLayer@ oar = this.getSprite().getSpriteLayer("oar " + attachedPoint.getID());
 
 		if (oar !is null)
@@ -207,6 +221,16 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
 	if (attachedPoint.name == "ROWER")
 	{
+		// Waffle: Add boat kills/assists
+		dictionary riderHistory;
+		this.get("RiderHistory", riderHistory);
+		CPlayer@ rider = detached.getPlayer();
+		if (riderHistory !is null && rider !is null)
+		{
+			riderHistory.set(rider.getUsername(), getGameTime());
+			this.set("RiderHistory", riderHistory);
+		}
+
 		CSpriteLayer@ oar = this.getSprite().getSpriteLayer("oar " + attachedPoint.getID());
 
 		if (oar !is null)

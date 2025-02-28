@@ -750,8 +750,94 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
                     this.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
 				}
 
-				if ((hit_blob.hasTag("player") || hit_blob.getName() == "dinghy") && hit_blob.getTeamNum() != this.getTeamNum() && distance <= map.tilesize / 2) {
-					this.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
+				if ((hit_blob.hasTag("player") || hit_blob.getName() == "dinghy") && hit_blob.getTeamNum() != this.getTeamNum() && distance <= map.tilesize / 2)
+				{
+					// Waffle: Add boat kills/assists
+					dictionary riderHistory;
+					this.get("RiderHistory", riderHistory);
+					string killer = "";
+					string assist = "";
+					if (riderHistory !is null)
+					{
+						string[] riderNames = riderHistory.getKeys();
+						string[] currentRiders;
+						string[] recentRiders;
+						for (u8 i = 0; i < riderNames.length; i++)
+						{
+							CPlayer@ player = getPlayerByUsername(riderNames[i]);
+							if (player is null)
+							{
+								continue;
+							}
+
+							u32 time;
+							riderHistory.get(riderNames[i], time);
+							CBlob@ blob = player.getBlob();
+							if (blob !is null && blob.isAttachedTo(this))
+							{
+								currentRiders.push_back(riderNames[i]);
+							}
+							else if (time + 3 * getTicksASecond() >= getGameTime())
+							{
+								recentRiders.push_back(riderNames[i]);
+							}
+						}
+
+						u32 killerTime = 0;
+						u32 assistTime = 0;
+						for (u8 i = 0; i < currentRiders.length; i++)
+						{
+							u32 time;
+							riderHistory.get(currentRiders[i], time);
+							if (killer == "" || time < killerTime)
+							{
+								assist = killer;
+								assistTime = killerTime;
+								killer = currentRiders[i];
+								killerTime = time;
+							}
+							else if (assist == "" || time < assistTime)
+							{
+								assist = currentRiders[i];
+								assistTime = time;
+							}
+						}
+
+						if (assist == "")
+						{
+							bool needKiller = killer == "";
+							for (u8 i = 0; i < recentRiders.length; i++)
+							{
+								u32 time;
+								riderHistory.get(recentRiders[i], time);
+								if (needKiller && (killer == "" || time < killerTime))
+								{
+									assist = killer;
+									assistTime = killerTime;
+									killer = recentRiders[i];
+									killerTime = time;
+								}
+								else if (assist == "" || time < assistTime)
+								{
+									assist = recentRiders[i];
+									assistTime = time;
+								}
+							}
+						}
+					}
+
+					hit_blob.set_string("ForceAssist", assist);
+					CPlayer@ killerPlayer = getPlayerByUsername(killer);
+					CBlob@ hitter = @this;
+					if (killerPlayer !is null)
+					{
+						CBlob@ killerBlob = killerPlayer.getBlob();
+						if (killerBlob !is null)
+						{
+							@hitter = @killerBlob;
+						}
+					}
+					hitter.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
 				}
 			}
 
