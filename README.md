@@ -126,6 +126,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Decreased coins per kill from 12 to 10 (10 to 8 for builders)
 - Decreased coins per assist from 8 to 6 (15 to 12 for builders)
 
+### Assists
+- Fixed an issue where assists were not counted after a zero damage hit
+- Fixed an issue where assists did not display properly on clients
+
 ### Trees
 - Can only grow if there is no more than 1 other tree within 16 blocks
 	- Added visible bounding box around saplings and trees when holding a sapling
