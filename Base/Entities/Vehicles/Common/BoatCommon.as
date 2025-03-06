@@ -58,7 +58,7 @@ void Splash(Vec2f pos, Vec2f vel, int randomnum)
 {
 	Vec2f randomVel = getRandomVelocity(90, 0.5f , 40);
 	CParticle@ p = ParticleAnimated("Splash.png", pos,
-	                                Vec2f(-vel.x, -0.4f) + randomVel, 0.0f, Maths::Max(1.0f, 0.5f * (1.0f + Maths::Abs(vel.x))),
+	                                Vec2f(-vel.x, -0.4f) + randomVel, 0.0f, Maths::Max(1.0f, 0.5f * (1.0f + Maths::Abs(vel.x / 2))),
 	                                2 + randomnum,
 	                                0.1f, false);
 	if (p !is null)

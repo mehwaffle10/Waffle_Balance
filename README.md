@@ -289,6 +289,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Slower acceleration
 - Each seat is faster
 - Rear water only shows when you have enough speed to break blocks
+- Water particle size scaling reduced
 - Can only turn around when rear water is showing
 - Reduced bobbing in water
 - Don't break on land (or if left alone???)

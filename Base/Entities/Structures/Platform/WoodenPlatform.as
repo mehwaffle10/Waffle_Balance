@@ -40,6 +40,16 @@ void onHealthChange(CBlob@ this, f32 oldHealth)
 	MakeDamageFrame(this, repaired);
 }
 
+// Waffle: Die to one hit of boat ramming
+f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
+{
+	if (customData == Hitters::ram)
+	{
+		damage *= 3;
+	}
+	return damage;
+}
+
 void MakeDamageFrame(CBlob@ this, bool repaired = false)
 {
 	f32 hp = this.getHealth();
