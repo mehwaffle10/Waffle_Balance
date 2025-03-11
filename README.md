@@ -92,10 +92,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Wood Structure Damage
 - Arrows do full damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
 	- wood doors = 7 hearts
-	- platforms  = 15 hearts
+	- platforms  = 10 hearts
 - Swords do 43.75% damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
     - wood doors = 11 jabs
-    - platforms  = 35 jabs
+    - platforms  = 23 jabs
     - ladders    = 5  jabs
 	- wood shops = 10 jabs
     - quarry     = 19 jabs
