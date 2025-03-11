@@ -45,7 +45,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 {
 	if (customData == Hitters::ram)
 	{
-		damage *= 3;
+		damage *= 2;
 	}
 	return damage;
 }
