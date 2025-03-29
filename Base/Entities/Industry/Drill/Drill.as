@@ -262,7 +262,7 @@ void onTick(CBlob@ this)
 				const f32 attack_distance = 6.0f;
 				Vec2f attackVel = direction * attack_distance;
 
-				const f32 distance = 20.0f;
+				const f32 distance = 22.0f;
 
 				bool hitsomething = false;
 				bool hitblob = false;
@@ -271,7 +271,7 @@ void onTick(CBlob@ this)
 				if (map !is null)
 				{
 					HitInfo@[] hitInfos;
-					if (map.getHitInfosFromArc((this.getPosition() - attackVel), -attackVel.Angle(), 30, distance, this, true, @hitInfos))
+					if (map.getHitInfosFromArc((holder.getPosition() - attackVel), -attackVel.Angle(), 35, distance, this, true, @hitInfos))
 					{
 						bool hit_ground = false;
 						bool hit_nondirt = false;
@@ -478,11 +478,11 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 		this.set_u16("showHeatTo", player.getNetworkID());
     }
 
-    // Waffle: Can no longer right click with drill
+    // Waffle: No longer build animate when drilling
     AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
     if (point !is null && attached.getName() == "builder")
     {
-        point.SetKeysToTake(key_action1 | key_action2);
+        point.SetKeysToTake(key_action1);
     }
 
 	CShape@ shape = this.getShape();
