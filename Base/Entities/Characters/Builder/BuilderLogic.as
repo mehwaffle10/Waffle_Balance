@@ -281,6 +281,7 @@ void Pickaxe(CBlob@ this)
 	bool noBuildZone = inNoBuildZone(map, tilepos, tile.type);
 	bool isgrass = false;
 
+	// Waffle: Prioritize players over blocks behind them
 	if ((bestinfo is null || bestinfo.blob is null || !bestinfo.blob.hasTag("player")) && (tilepos - aimPos).Length() < bestDistance - 4.0f && map.getBlobAtPosition(tilepos) is null)
 	{
 		Tile tile = map.getTile(surfacepos);
