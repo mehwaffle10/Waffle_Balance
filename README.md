@@ -500,7 +500,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Blocked completely by shield
 - Give 100% of tile resources dug
 - Drill attacks adjusted slightly:
-	- Now centered on the player instead of the drill (helps with drilling up and down)
+	- Now centered on the player instead of the drill (generally more consistent especially when drilling vertically)
 	- Range increased from 20 to 22 to compensate
 	- Increased arc from 30 to 35 to make slightly more consistent
 - Drills do 2x damage to wood and stone structures
