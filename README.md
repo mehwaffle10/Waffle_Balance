@@ -421,12 +421,11 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Snap to angles by default
 	- Can hold down to get exact angles
 - Are now flammable
-	- Burn until destroyed
-	- Take 2x fire damage
-	- Takes 1 heart of damage immediately from fire arrow
 	- Ignite things that they bounce while on fire
 		- Ignite any held objects as well
-- No longer bounce enemy fire arrows
+- No longer bounce enemy arrows
+- Take half damage from normal arrows
+- Take increased damage in alignment with `Wood Structure Damage` section above
 - Can use action3 key (default space) to lock the angle the trampoline is facing
 	- Has small sound to indicate when the trampoline is locked
 - Can be folded using interact (e by default)
@@ -530,9 +529,11 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Decreased drag multiplier in water from 5 to 1.5
 - Can no longer be harvested mid-air
 - Always ignite when hitting a static burning blob
+- Collide with enemy trampolines for half damage
 
 ### Water Arrows
 - Cost 25 coins for 1 instead of 15
+- Collide with enemy trampolines
 
 ### Fire Arrows
 - Cost 50 coins for 2 instead of 30
@@ -540,12 +541,12 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Ignite instantly on contact
 - Added animation and sound for instant feedback
 - Collide with enemy trampolines
-	- Does an immediate heart of damage to the trampoline
 - Fire arrow flares don't do an extra half heart to things they ignite
 	- Direct arrow hits still do full damage plus burn damage
 
 ### Bomb Arrows
 - Cost 75 coins for 1 instead of 50
+- Collide with enemy trampolines
 
 ## KNIGHT SHOP
 

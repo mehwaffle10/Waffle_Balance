@@ -275,6 +275,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		if (
 			!solid && !blob.hasTag("flesh") &&
 			!specialArrowHit(blob) &&
+			(blob.getName() != "trampoline" || this.getTeamNum() == blob.getTeamNum()) &&  // Waffle: Hit enemy trampolines
 			(blob.getName() != "mounted_bow" || this.getTeamNum() != blob.getTeamNum())
 		) {
 			return;
