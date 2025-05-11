@@ -135,6 +135,7 @@ void onTick(CBlob@ this)
             if (sectors[i] !is null && (sectors[i].name == "no build" || sectors[i].name == "no solids" || sectors[i].name == "no blobs"))
             {
                 onSurface = false;
+				break;
             }
         }
 	}
