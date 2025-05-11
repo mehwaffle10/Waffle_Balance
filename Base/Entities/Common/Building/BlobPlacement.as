@@ -141,7 +141,7 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
 		const bool tree_sector = no_build && owner !is null && (owner.hasTag("tree") || owner.hasTag("scenary"));  // Waffle: Allow building platforms on trees
         if (blobToPlace.getName() == "spikes")  // Waffle: Allow spike dropping at the top of the map
         {
-            const bool has_adjacent = (                                              // can put sticking next to something
+            const bool has_adjacent = (// Can't place next to something it'd stick to
                 map.isTileSolid(pos + Vec2f(0,             map.tilesize))  ||
                 map.isTileSolid(pos + Vec2f(0,             -map.tilesize)) ||
                 map.isTileSolid(pos + Vec2f(map.tilesize,  0))             ||
