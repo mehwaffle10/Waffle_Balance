@@ -9,7 +9,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
         // Spread fire to adjacent blocks including diagonals
         // Realign to center of blob
         Vec2f offset = Vec2f(0, 0);
-        if (this.hasTag("door") || this.isPlatform() || this.getName() == "ladder")
+        if (this.hasTag("tree") || this.hasTag("door") || this.isPlatform() || this.getName() == "ladder")
         {
             offset = Vec2f(this.getWidth(), this.getHeight()) / 2;
         }
