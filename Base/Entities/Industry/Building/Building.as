@@ -65,9 +65,8 @@ void onInit(CBlob@ this)
 	// Waffle: Replace storage with quarries
 	{
 		ShopItem@ s = addShopItem(this, "Stone Quarry", "$stonequarry$", "quarry", Descriptions::quarry);
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::quarry_wood);
-		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", CTFCosts::quarry_stone);
-		// AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::quarry_gold);  // Waffle: Quarries no longer cost gold
+		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::quarry);            // Waffle: Quarries only cost coins
+		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::Quarry);  // Waffle: --
 		// AddRequirement(s.requirements, "no more", "quarry", "Stone Quarry", CTFCosts::quarry_count);  // Waffle: Remove quarry limit
 	}
 	// {

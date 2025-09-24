@@ -78,8 +78,9 @@ void onInit(CBlob@ this)
 		s.customButton = true;
 		s.buttonwidth = 2;
 		s.buttonheight = 1;
-		AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::saw_wood);
-		AddRequirement(s.requirements, "blob", "mat_stone", "Stone", CTFCosts::saw_stone);
+		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::saw);                    // Waffle: Saws only cost coins
+		// AddRequirement(s.requirements, "blob", "mat_wood", "Wood", CTFCosts::saw_wood);     // Waffle: --
+		// AddRequirement(s.requirements, "blob", "mat_stone", "Stone", CTFCosts::saw_stone);  // Waffle: --
 	}
 	{
 		ShopItem@ s = addShopItem(this, "Crate (wood)", getTeamIcon("crate", "Crate.png", team_num, Vec2f(32, 16), 5), "crate", Descriptions::crate, false);

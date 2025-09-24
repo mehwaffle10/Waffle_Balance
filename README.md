@@ -236,7 +236,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Removed (Makes room for quarry and redundant with crates)
 
 ### Quarry
-- Costs 250 wood total and 50 stone
+- Costs 150 wood for the shop and 200 coins to convert
 - Produces 20 stone for 100 wood every 15 seconds after starting
     - Consumes almost all of the wood from the trees in front of it
 - Can only produce with two trees or saplings that can grow overlapping
@@ -407,6 +407,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Take double damage from explosives
 - No longer launch bombs vertically
 - Now kill players inside crates when sawing crates
+- Now cost 100 coins instead of materials
 
 ### Trampoline
 - Increase bounce velocity from 10 to 11
