@@ -10,7 +10,7 @@ void onDie(CBlob@ this)
 	Vec2f pos = this.getPosition();
 
 	// Waffle: Don't drop saplings if on fire
-	if (!this.hasTag(burning_tag))
+	if (!this.hasTag(burning_tag) && !this.hasTag("no seed"))
 	{
 		server_MakeSeed(pos, this.getName());
 	}

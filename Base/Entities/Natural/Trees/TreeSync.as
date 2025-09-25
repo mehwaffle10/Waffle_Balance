@@ -2,6 +2,7 @@
 #include "TreeCommon.as"
 #include "FireCommon.as";
 #include "Help.as";
+#include "Hitters.as";
 
 f32 segment_length = 14.0f;
 
@@ -242,7 +243,19 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 
 	if (this.getHealth() <= 0.0f)
 	{
-		DoCollapseWhenBelow(this, 0.0f);
+		if (customData == Hitters::keg)
+		{
+			if (getNet().isServer())
+			{
+				this.Tag("no seed");
+				this.server_SetHealth(-1.0f);
+				this.server_Die();
+			}
+		}
+		else
+		{
+			DoCollapseWhenBelow(this, 0.0f);
+		}
 	}
 
 	return 0.0f;

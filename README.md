@@ -152,7 +152,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can place platforms inside of trees
 - Can no longer grow inside of static blobs or on other trees
 - Can no longer build blocks on top of saplings placed with left click
-- No longer drops saplings if burned down
+- No longer drops saplings if burned down or kegged
 - Saplings can be burned or blown up
 - Fixed misalignment from seeds (no build would float half a block off the ground)
 - Fixed logs clipping into the ceiling or floor when spawned
