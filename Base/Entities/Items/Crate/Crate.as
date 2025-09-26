@@ -19,6 +19,10 @@
 // "unpack_only_water"   : this can only unpack in water
 // "unpack_check_nobuild" : this can only unpack if block-type blobs arent in the way
 
+// Waffle: Prevent thrashing sneaky state
+const string LAST_SNEAKY_TIME = "last sneaky time";
+const u8 SNEAKY_DELAY_TICKS = 1;
+
 //proportion of distance allowed (1.0f == overlapping radius, 2.0f = within 1 extra radius)
 const f32 ally_allowed_distance = 2.0f;
 
@@ -427,6 +431,9 @@ void onActivate(CBitStream@ params)
 
 void GetIn(CBlob@ this, CBlob@ caller)
 {
+	// Waffle: Prevent thrashing sneaky state
+	if (!canSneaky(this)) return;
+
     // i don't know why this check is here so not touching it...
     if (this.getHealth() <= 0) return;
 
@@ -439,6 +446,7 @@ void GetIn(CBlob@ this, CBlob@ caller)
     if (getPlayerInside(this) !is null) return;
     this.server_DetachFromAll();
     this.server_AttachTo(caller, "SNEAKY");
+	this.set_u32(LAST_SNEAKY_TIME, getGameTime());
     /*
     CInventory@ inv = this.getInventory();
     if (caller !is null && inv !is null) 
@@ -473,6 +481,9 @@ void GetIn(CBlob@ this, CBlob@ caller)
 
 void GetOut(CBlob@ this, CBlob@ caller)
 {
+	// Waffle: Prevent thrashing sneaky state
+	if (!canSneaky(this)) return;
+
     // range check
     f32 distance = this.getDistanceTo(caller);
     if (distance > 32.0f) return;
@@ -494,11 +505,18 @@ void GetOut(CBlob@ this, CBlob@ caller)
         sneaky_player.server_DetachFrom(this);
         // this.server_PutOutInventory(sneaky_player);
         sneaky_player.server_Pickup(this);  // Waffle: Automatically pick crates back up when getting out
+		this.set_u32(LAST_SNEAKY_TIME, getGameTime());
     }
     // Waffle: Don't destroy crates when getting out, make them reusable
     // Attack self to pop out items
     // this.server_Hit(this, this.getPosition(), Vec2f(), 100.0f, Hitters::crush, true);
     // this.server_Die();
+}
+
+// Waffle: Prevent thrashing sneaky state
+bool canSneaky(CBlob@ this)
+{
+	return this.get_u32(LAST_SNEAKY_TIME) + SNEAKY_DELAY_TICKS < getGameTime();
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -620,7 +638,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
         CBlob@ caller = p.getBlob();
         if (caller is null) return;
-
+		
         GetIn(this, caller);
     }
 	else if (cmd == this.getCommandID("getout") && isServer())
@@ -630,7 +648,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		CBlob@ caller = p.getBlob();
 		if (caller is null) return;
-
+		
 		GetOut(this, caller);
 	}
 	else if (cmd == this.getCommandID("boobytrap") && isServer())
