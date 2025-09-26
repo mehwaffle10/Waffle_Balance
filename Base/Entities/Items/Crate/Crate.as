@@ -757,7 +757,7 @@ bool deployBlocking(CMap@ map, Vec2f pos, bool platforms = false)
 	for (u8 i = 0; i < blobs.length; i++)
 	{
 		CBlob@ blob = blobs[i];
-		if (blob is null || blob.hasTag("scenary") || blob.hasTag("tree") || blob.hasTag("projectile"))
+		if (blob is null || blob.hasTag("scenary") || blob.hasTag("tree") || blob.hasTag("projectile") || blob.getName() == "spikes" && !platforms)
 		{
 			continue;
 		}
