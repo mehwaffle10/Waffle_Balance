@@ -186,7 +186,7 @@ bool explodeOnCollideWithBlob(CBlob@ this, CBlob@ blob)
 
 bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 {
-	return blob.getShape().isStatic() && blob.isCollidable();
+	return blob.getShape().isStatic() && blob.isCollidable() || blob.getName() == "waterbomb";  // Waffle: You can now launch mines with waterbombs
 }
 
 void onCollision(CBlob@ this, CBlob@ blob, bool solid)

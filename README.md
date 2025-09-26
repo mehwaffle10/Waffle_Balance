@@ -568,7 +568,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Mines
 - Deploy after timer like they used to 
-- Can still be picked up
+	- Can still be picked up
+- Can be launched with waterbombs akin to kegs
 
 ### Water Bombs
 - Now collide with enemy vehicles
