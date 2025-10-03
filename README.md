@@ -423,14 +423,14 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Knights: Slash, jab, and shield as normal
 	- Builders: Can only dig, since selecting a block makes you drop what you are holding
 - Can bounce boulders into rock and roll mode if a player is holding the trampoline
-- Cost 120 coins so they can be bought with by all classes but are less spammable
+- Cost 100 coins so they can be bought with by all classes but are less spammable
+- Now take damage when bouncing players. Can bounce 25 times
 - Snap to angles by default
 	- Can hold down to get exact angles
 - Are now flammable
 	- Ignite things that they bounce while on fire
 		- Ignite any held objects as well
-- No longer bounce enemy arrows
-- Take half damage from normal arrows
+- No longer bounce enemy arrows. Die in 5 normal arrows
 - Take increased damage in alignment with `Wood Structure Damage` section above
 - Can use action3 key (default space) to lock the angle the trampoline is facing
 	- Has small sound to indicate when the trampoline is locked

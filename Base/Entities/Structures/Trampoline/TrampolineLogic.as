@@ -25,6 +25,11 @@ const string ANGLE_IS_LOCKED = "angle is locked";
 const string LOCKED_ANGLE = "locked angle";
 const string LOCK_TOGGLE = "locked angle toggle";
 
+// Waffle: Trampolines take damage when launching players. Delayed hit is to prevent last bounce not launching players
+const string DELAYED_HIT_TIME = "delayed hit time";
+const u8 DELAYED_HIT_DELAY = 2;
+const f32 BOUNCE_DAMAGE = 0.051f;
+
 namespace Trampoline
 {
 	const string TIMER = "trampoline_timer";
@@ -74,10 +79,17 @@ void onInit(CBlob@ this)
 	point.SetKeysToTake(key_action3);  // Waffle: Add angle lock toggle
 
 	this.getCurrentScript().runFlags |= Script::tick_attached;
+	this.set_u32(DELAYED_HIT_TIME, -1);  // Waffle: Trampolines take damage when launching players. Delayed hit is to prevent last bounce not launching players
 }
 
 void onTick(CBlob@ this)
 {
+	// Waffle: Trampolines take damage when launching players. Delayed hit is to prevent last bounce not launching players
+	if (this.get_u32(DELAYED_HIT_TIME) <= getGameTime())
+	{
+		this.server_Hit(this, this.getPosition(), Vec2f_zero, BOUNCE_DAMAGE, Hitters::crush);
+	}
+
 	AttachmentPoint@ point = this.getAttachments().getAttachmentPointByName("PICKUP");
 
 	CBlob@ holder = point.getOccupied();
@@ -227,6 +239,20 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			sprite.PlaySound("TrampolineJump.ogg");
 		}
 		//}
+
+		// Waffle: Trampolines take damage when launching players. Delayed hit is to prevent last bounce not launching players
+		if (blob.hasTag("player") && !blob.hasTag("dead"))
+		{
+			if (this.getHealth() - BOUNCE_DAMAGE <= 0.1f)  // Dies if 0.1f or less
+			{
+				this.set_u32(DELAYED_HIT_TIME, getGameTime() + DELAYED_HIT_DELAY);
+				this.getCurrentScript().runFlags = 0;
+			}
+			else
+			{
+				this.server_Hit(this, this.getPosition(), Vec2f_zero, BOUNCE_DAMAGE, Hitters::crush);
+			}
+		}
 	}
 }
 

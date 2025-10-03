@@ -143,7 +143,7 @@ void InitCosts()
 	CTFCosts::sponge =                      ReadCost(cfg, costs, "cost_sponge"             , 10);   // Waffle: Make sponges cheaper
 	CTFCosts::boulder =                     ReadCost(cfg, costs, "cost_boulder"    		   , 40);   // Waffle: Boulders only cost coins
 	// CTFCosts::boulder_stone =            ReadCost(cfg, costs, "cost_boulder_stone"      , 30);   // Waffle: Boulders no longer cost materials
-	CTFCosts::trampoline =             		ReadCost(cfg, costs, "cost_trampoline"    	   , 120);  // Waffle: Trampolines only cost coins
+	CTFCosts::trampoline =             		ReadCost(cfg, costs, "cost_trampoline"    	   , 100);  // Waffle: Trampolines only cost coins
 	// CTFCosts::trampoline_wood =          ReadCost(cfg, costs, "cost_trampoline_wood"    , 100);  // Waffle: Trampolines no longer cost materials
 	CTFCosts::saw =                         ReadCost(cfg, costs, "cost_saw"                , 100);  // Waffle: Saws only cost coins
 	// CTFCosts::saw_wood =                 ReadCost(cfg, costs, "cost_saw_wood"           , 150);  // Waffle: --
