@@ -299,8 +299,3 @@ void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 	this.set_bool(ANGLE_IS_LOCKED, false);
 	this.set_bool(LOCK_TOGGLE, false);
 }
-
-f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
-{
-	return customData == Hitters::arrow ? damage / 2.0f : damage;  // Waffle: Decrease arrow damage
-}

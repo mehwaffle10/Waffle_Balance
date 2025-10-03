@@ -532,7 +532,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Decreased drag multiplier in water from 5 to 1.5
 - Can no longer be harvested mid-air
 - Always ignite when hitting a static burning blob
-- Collide with enemy trampolines for half damage
+- Collide with enemy trampolines
 
 ### Water Arrows
 - Cost 25 coins for 1 instead of 15
