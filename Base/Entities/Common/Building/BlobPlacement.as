@@ -491,8 +491,8 @@ void onTick(CBlob@ this)
 						this.SendCommand(this.getCommandID("placeBlob"), params);
 					}
 
-					u32 delay = (carryBlob.isLadder() ? 1 : 2) * getCurrentBuildDelay(this);  // Waffle: Increase ladder build speed
-					SetBuildDelay(this, delay);
+					// u32 delay = 2 * getCurrentBuildDelay(this);    // Waffle: Don't decrease blob delay
+					SetBuildDelay(this, getCurrentBuildDelay(this));  // Waffle: --
 					bc.blobActive = false;
 				}
 				else if (snap && this.isKeyJustPressed(key_action1))
