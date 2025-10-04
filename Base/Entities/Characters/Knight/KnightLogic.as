@@ -1413,7 +1413,7 @@ void DoAttack(CBlob@ this, f32 damage, f32 aimangle, f32 arcdegrees, u8 type, in
         bool ground = map.isTileGround(tile.type);
         bool dirt_stone = map.isTileStone(tile.type);
         bool dirt_thick_stone = map.isTileThickStone(tile.type);
-        bool gold = map.isTileGold(tile.type);
+        bool gold = map.isTileGold(tile.type) && tile.type != 94;  // Waffle: Regen gold
         bool wood = map.isTileWood(tile.type);
         if (ground || wood || dirt_stone || gold)
         {

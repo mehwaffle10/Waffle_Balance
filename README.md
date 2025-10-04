@@ -121,6 +121,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Gold
 - Gives 10 coins per hit instead of gold
 - Gold is only present in middle of map
+- Gold regenerates one level every minute after the match starts
+- Gold can not be fully destroyed
 - No longer damaged by explosives
 - Can no longer be drilled
 - Builders dig gold at the speed that they dig dirt

@@ -372,16 +372,16 @@ void Pickaxe(CBlob@ this)
 					hitting_structure = true;
 				}
 
-                // Waffle: Add support for digging dirt and gold slower
-                if (type == CMap::tile_ground  ||  // Dirt Blocks
-                    type >= 29 && type <= 31   ||  // Damaged Dirt Blocks
-                    map.isTileGold(type))          // Gold Blocks
-                {
-                    hitting_dirt = true;
-                }
+                // Waffle: Add support for digging dirt and gold slower. Regen gold
+				if (type == CMap::tile_ground  ||        // Dirt Blocks
+					type >= 29 && type <= 31   ||        // Damaged Dirt Blocks
+					map.isTileGold(type) && type != 94)  // Gold Blocks
+				{
+					hitting_dirt = true;
+				}
 			}
 
-			if (map.isTileBedrock(type))
+			if (map.isTileBedrock(type) || type == 94)  // Waffle: Regen gold
 			{
 				this.getSprite().PlaySound("/metal_stone.ogg");
 				sparks(tilepos, attackVel.Angle(), 1.0f);
@@ -597,7 +597,7 @@ void HandlePickaxeCommand(CBlob@ this, u16 blobID, Vec2f tilepos)  // CBitStream
 	{
 		CMap@ map = getMap();
 		TileType t = map.getTile(tilepos).type;
-		if (t != CMap::tile_empty && t != CMap::tile_ground_back)
+		if (t != CMap::tile_empty && t != CMap::tile_ground_back && t != 94)  // Waffle: Regen gold
 		{
 			// 5 blocks range check
 			Vec2f tsp = map.getTileSpacePosition(tilepos);
@@ -631,10 +631,10 @@ void HandlePickaxeCommand(CBlob@ this, u16 blobID, Vec2f tilepos)  // CBitStream
                 hitting_structure = true;
             }
 
-            // Waffle: Add support for digging dirt and gold slower
-            if (type == CMap::tile_ground  ||  // Dirt Blocks
-                type >= 29 && type <= 31   ||  // Damaged Dirt Blocks
-                map.isTileGold(type))          // Gold Blocks
+            // Waffle: Add support for digging dirt and gold slower. Regen gold
+            if (type == CMap::tile_ground  ||        // Dirt Blocks
+                type >= 29 && type <= 31   ||        // Damaged Dirt Blocks
+                map.isTileGold(type) && type != 94)  // Gold Blocks
             {
                 hitting_dirt = true;
             }

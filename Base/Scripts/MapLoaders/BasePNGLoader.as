@@ -6,6 +6,7 @@
 #include "LoaderColors.as";
 #include "LoaderUtilities.as";
 #include "CustomBlocks.as";
+#include "RegenGoldCommon.as";
 
 enum WAROffset
 {
@@ -41,6 +42,10 @@ class PNGLoader
 		@map = _map;
 		@map_random = Random();
 
+		// Waffle: Regen gold
+		CRules@ rules = getRules();
+		MapLocations@ gold_locations = MapLocations(0);
+
 		if(!getNet().isServer())
 		{
 			SetupMap(0, 0);
@@ -65,7 +70,7 @@ class PNGLoader
 				// We do this before calling handlePixel because it is overriden, and to avoid a SColor copy
 				if (pixel.color != map_colors::sky)  // Waffle: Ignore transparent pixels
 				{
-					handlePixel(pixel, offset);
+					handlePixel(pixel, offset, gold_locations);  // Waffle: Regen gold
 				}
 
 				getNet().server_KeepConnectionsAlive();
@@ -82,8 +87,10 @@ class PNGLoader
 					getNet().server_KeepConnectionsAlive();
 				}
 			}
+			rules.set(GOLD_LOCATIONS, @gold_locations);  // Waffle: Regen gold
 			return true;
 		}
+		rules.set(GOLD_LOCATIONS, @gold_locations);  // Waffle: Regen gold
 		return false;
 	}
 
@@ -94,7 +101,7 @@ class PNGLoader
 		// offsets[autotile_offset].push_back(offset);
 	}
 
-	void handlePixel(const SColor &in pixel, int offset)
+	void handlePixel(const SColor &in pixel, int offset, MapLocations@ gold_locations)
 	{
 		u8 alpha = pixel.getAlpha();
 
@@ -208,7 +215,7 @@ class PNGLoader
 			case map_colors::tile_stone:            map.SetTile(offset, CMap::tile_stone);            break;
 			case map_colors::tile_thickstone:       map.SetTile(offset, CMap::tile_thickstone);       break;
 			case map_colors::tile_bedrock:          map.SetTile(offset, CMap::tile_bedrock);          break;
-			case map_colors::tile_gold:             map.SetTile(offset, CMap::tile_gold);             break;
+			case map_colors::tile_gold:             map.SetTile(offset, CMap::tile_gold);             gold_locations.locations.push_back(map.getTileWorldPosition(offset));  break;  // Waffle: Regen gold
 			case map_colors::tile_castle:           map.SetTile(offset, CMap::tile_castle);           break;
 			case map_colors::tile_castle_back:      map.SetTile(offset, CMap::tile_castle_back);      break;
 			case map_colors::tile_castle_moss:      map.SetTile(offset, CMap::tile_castle_moss);      break;
