@@ -27,7 +27,7 @@ void onTick(CRules@ this)
 				continue;
 			}
 
-			map.server_SetTile(gold_location, tile_type == 91 ? CMap::tile_gold : tile_type - 1);
+			map.server_SetTile(gold_location, tile_type == 91 ? u32(CMap::tile_gold) : tile_type - 1);
 		}
 
 		SetNextRegenTime(this);
