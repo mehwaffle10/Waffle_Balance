@@ -190,6 +190,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - fire arrows         - 20
 - bomb arrows         - 21
 - mine                - 25
+- spike               - 27
 - log                 - 30
 - crate               - 35
 - bush, grain, flower - 40

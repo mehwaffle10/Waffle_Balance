@@ -160,7 +160,7 @@ void onTick(CBlob@ this)
 	if (getNet().isClient() && !this.hasTag("_frontlayer"))
 	{
 		CSprite@ sprite = this.getSprite();
-		sprite.SetZ(500.0f);
+		sprite.SetZ(27.0f);  // Waffle: Adjust Z value
 
 		if (sprite !is null)
 		{
