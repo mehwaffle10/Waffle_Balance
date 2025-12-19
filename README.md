@@ -433,6 +433,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- Ignite things that they bounce while on fire
 		- Ignite any held objects as well
 - No longer bounce enemy arrows. Die in 5 normal arrows
+- No longer bounce boats
 - Take increased damage in alignment with `Wood Structure Damage` section above
 - Can use action3 key (default space) to lock the angle the trampoline is facing
 	- Has small sound to indicate when the trampoline is locked
