@@ -234,10 +234,12 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		//not teamkilling (except self)
 		if (damageowner is null || damageowner !is blob.getPlayer())
 		{
-			if (
-			    (blob.getName() != this.getName() &&
-			     (blob.getTeamNum() == this.getTeamNum() || blob.getTeamNum() == tteam))
-			)
+			// Waffle: Boulders don't hit friendly boulders
+			// if (
+			//     (blob.getName() != this.getName() &&
+			//      (blob.getTeamNum() == this.getTeamNum() || blob.getTeamNum() == tteam))
+			// )
+			if (blob.getTeamNum() == this.getTeamNum())
 			{
 				return;
 			}

@@ -455,6 +455,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can break static blobs (doors, platforms, etc) in rock and roll mode
 - Breaks up to 16 blocks in rock and roll mode
 - No longer slowed down when breaking blocks in rock and roll mode
+- No longer hit friendly boulders
 - Improved rock and roll tile damage code
 	- Fixed radius and full 360 degree arc for block and blob detection
 	- Breaks backwall underneath in a plus constantly
