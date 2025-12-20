@@ -650,6 +650,9 @@ bool Vehicle_doesCollideWithBlob_boat(CBlob@ this, CBlob@ blob)
 	if (blob.hasTag("material") || (blob.isInWater() && (blob.getName() == "heart" || blob.getName() == "log" || blob.hasTag("dead"))))
 		return false;
 
+	if (blob.hasTag("vehicle") && !blob.hasTag("boat") && this.getTeamNum() == blob.getTeamNum())
+		return false;
+
 	return true;
 	//return ((!blob.hasTag("vehicle") || this.getTeamNum() != blob.getTeamNum())); // don't collide with team boats (other vehicles will attach)
 }
@@ -750,7 +753,9 @@ void DestructiveRayCast(CBlob@ this, s8[] x_offsets)
                     this.server_Hit(hit_blob, hit_pos, particle_velocity, 5.0f, Hitters::ram, true);
 				}
 
-				if ((hit_blob.hasTag("player") && !hit_blob.hasTag("vehicle protection") || hit_blob.hasTag("vehicle")) && hit_blob.getTeamNum() != this.getTeamNum() && distance <= map.tilesize / 2)
+				if ((hit_blob.hasTag("player") && !hit_blob.hasTag("vehicle protection") || hit_blob.hasTag("vehicle")) &&
+					(hit_blob.getTeamNum() != this.getTeamNum() || hit_blob.getName() == "dinghy") &&
+					distance <= map.tilesize / 2)
 				{
 					// Waffle: Add boat kills/assists
 					dictionary riderHistory;

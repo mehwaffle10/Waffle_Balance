@@ -293,7 +293,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Boats
 - Redone map destruction and player crushing using raycasting
 	- Only does damage in front of the boat
-	- Can crush enemy dinghies
+	- Can crush dinghies
 - Much less drag
 - Slower acceleration
 - Each seat is faster
@@ -306,6 +306,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer have wood cost
 - No longer have an inventory
 - No longer can detach attached siege weapons
+- No longer collide with friendly siege weapons
 - Automatically deploy when packed crates are in water
 - Can not deploy on top of other boats
 - Collide with friendly boats
@@ -457,7 +458,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Breaks up to 16 blocks in rock and roll mode
 - No longer slowed down when breaking blocks in rock and roll mode
 - No longer hit friendly boulders
-- Automatically load into catapults on collision or when catapult comes off cooldown
+- Automatically load into friendly catapults on collision or when catapult comes off cooldown
 - Improved rock and roll tile damage code
 	- Fixed radius and full 360 degree arc for block and blob detection
 	- Breaks backwall underneath in a plus constantly
