@@ -52,7 +52,8 @@ void onInit(CBlob@ this)
 		AddRequirement(s.requirements, "coin", "", "Coins", CTFCosts::filled_bucket);
 	}
 	{
-		ShopItem@ s = addShopItem(this, "Boulder", "$boulder$", "boulder", Descriptions::boulder, false);
+		// Waffle: Team colored boulder in shop
+		ShopItem@ s = addShopItem(this, "Boulder", getTeamIcon("boulder", "Boulder.png", team_num, Vec2f(16, 16), 0), "boulder", Descriptions::boulder, false);
 		s.customButton = true;
 		s.buttonwidth = 2;
 		s.buttonheight = 1;
