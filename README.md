@@ -455,6 +455,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Cost 40 coins so they can be bought by all classes but are less spammable
 - Can still convert to your team by picking them up
 - Ignore no build zones when in rock and roll mode, allowing them to destroy backwall in the flag room and behind shops
+- Now smash static blobs for 3x damage
+	- Take 0.2x damage self damage when doing so
 - Can be bounced off a trampoline to activate rock and roll mode
 - Tick faster in rock and roll mode (damage happens faster so it will blow holes in walls rather than phase through and break blocks intermittently)
 - Can break static blobs (doors, platforms, etc) in rock and roll mode

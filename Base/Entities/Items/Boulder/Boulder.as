@@ -245,11 +245,13 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			}
 		}
 
-		//not hitting static stuff
-		if (blob.getShape() !is null && blob.getShape().isStatic())
-		{
-			return;
-		}
+		// Waffle: Hit static stuff
+		bool hitStatic = blob.getShape() !is null && blob.getShape().isStatic();
+		// //not hitting static stuff
+		// if (blob.getShape() !is null && blob.getShape().isStatic())
+		// {
+		// 	return;
+		// }
 
 		//hitting less or similar mass
 		if (this.getMass() < blob.getMass() - 1.0f)
@@ -262,9 +264,16 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 		f32 dmg = vellen > 8.0f ? 5.0f : (vellen > 4.0f ? 1.5f : 0.5f);
 
 		//bounce off if not gibbed
-		if (dmg < 4.0f)
+		if (!hitStatic && dmg < 4.0f)  // Waffle: Hit static stuff
 		{
 			this.setVelocity(blob.getOldVelocity() + hitvec * -Maths::Min(dmg * 0.33f, 1.0f));
+		}
+
+		// Waffle: Hit static stuff, hurt self
+		if (hitStatic)
+		{
+			this.server_Hit(this, point1, hitvel, dmg / 5.0f, Hitters::boulder, true);
+			dmg *= 3.0f;
 		}
 
 		//hurt
