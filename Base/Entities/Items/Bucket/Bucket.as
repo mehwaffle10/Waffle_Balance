@@ -131,6 +131,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("splash client") && isClient())
 	{
+		SetFrame(this, this.get_u8("filled") > 0);
 		DoSplash(this);
 	}
 }
@@ -150,12 +151,12 @@ void TakeWaterCount(CBlob@ this)
 	if (!isServer()) { return; }
 
 	u8 filled = this.get_u8("filled");
-	if (filled > 0)
+	if (filled > 0) {
 		filled--;
+	}
 
 	if (filled == 0)
 	{
-		filled = 0;
 		SetFrame(this, false);
 	}
 	this.set_u8("filled", filled);

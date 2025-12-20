@@ -527,6 +527,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Slightly bigger splash area
 - Can be used in water
 - Cost 20 coins
+- Fixed an issue where the sprite would not show as empty until picked up after throwing the bucket to splash it
 
 ### Sponges
 - Cost 10 instead of 15 coins to punish players less financially (a lost inventory slot is already a lot)
