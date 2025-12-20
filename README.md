@@ -277,7 +277,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can collide when attached (can be shot)
 - Take 3x damage from builders instead of 2x
 - Take 5x damage from bomb arrows instead of 8x
-- Take 4.5x damage from kegs
+- Take 4.5x damage from kegs and mines
 - Take .25x damage from catapult rocks
 - Always give 2 coins per hit instead of 2 * damage
 - Deploy instantly
