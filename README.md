@@ -10,6 +10,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Respawn
 - Reduced from 10 to 8 seconds
 - No longer forced to builder on next map
+- You lose spawn immunity if you click a mouse button or walk off tent
+	- You can still swap classes
 
 ### Resupplies
 - Removed for builders
