@@ -222,6 +222,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can spike drop at the top of the map if not supported
 - Now properly hit by kegs
 - Only bloody when hitting flesh
+- Can no longer be stacked with lag
 
 ### Server Features
 - Seclevs are properly synced to clients

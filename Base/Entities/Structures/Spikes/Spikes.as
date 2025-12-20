@@ -138,6 +138,25 @@ void onTick(CBlob@ this)
 				break;
             }
         }
+
+		// Waffle: Dont attach if overlapping another spike
+		CBlob@[] blobsInRadius;
+		if (state == normal && this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() * 0.5f, @blobsInRadius))
+		{
+			for (u16 i = 0; i < blobsInRadius.length; i++)
+			{
+				CBlob@ blob = blobsInRadius[i];
+				if (blob !is null && blob !is this && blob.getName() == "spikes")
+				{
+					spike_state state = spike_state(blob.get_u8(state_prop));
+					if (state != falling)
+					{
+						onSurface = false;
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	if (!onSurface && getNet().isServer())
