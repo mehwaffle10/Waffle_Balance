@@ -80,6 +80,7 @@ void onDie(CBlob@ this)
 	if (this.get_u8("filled") > 0)
 	{
 		DoSplash(this);
+		this.SendCommand(this.getCommandID("splash client"));
 	}
 }
 
