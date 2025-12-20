@@ -377,6 +377,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Cost 225 coins
 - No longer stuns players when launching them
 - Anything launched has an unmodified vertical launch force (normally .75 for players and 1.1 for anything else)
+- Automatically loads friendly boulders on collision or when coming off cooldown
 - Fixed arm angle not being correct when deployed from a crate
 
 ### Ballistas
@@ -456,6 +457,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Breaks up to 16 blocks in rock and roll mode
 - No longer slowed down when breaking blocks in rock and roll mode
 - No longer hit friendly boulders
+- Automatically load into catapults on collision or when catapult comes off cooldown
 - Improved rock and roll tile damage code
 	- Fixed radius and full 360 degree arc for block and blob detection
 	- Breaks backwall underneath in a plus constantly

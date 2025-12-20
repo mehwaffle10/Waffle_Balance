@@ -198,6 +198,23 @@ void onTick(CBlob@ this)
 		if (v.cooldown_time > 0)
 		{
 			v.cooldown_time--;
+			
+			// Waffle: Autopickup boulders from the ground
+			if (isServer() && v.cooldown_time == 0 && this.getAttachments().getAttachmentPoint("MAG").getOccupied() is null)
+			{
+				CBlob@[] blobsInRadius;
+				if (this.getMap().getBlobsInRadius(this.getPosition(), this.getRadius() * 1.1f, @blobsInRadius))
+				{
+					for (u16 i = 0; i < blobsInRadius.length; i++)
+					{
+						CBlob@ blob = blobsInRadius[i];
+						if (blob !is null && blob.getName() == "boulder" && blob.getTeamNum() == this.getTeamNum())
+						{
+							this.server_AttachTo(blob, "MAG");
+						}
+					}
+				}
+			}
 		}
 
 		if (isClient()) //only matters visually on client
@@ -341,6 +358,12 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid)
 	if (blob !is null)
 	{
 		TryToAttachVehicle(this, blob);
+
+		// Waffle: Autopickup boulders from the ground
+		if (blob.getName() == "boulder" && blob.getTeamNum() == this.getTeamNum() && this.getAttachments().getAttachmentPoint("MAG").getOccupied() is null)
+		{
+			this.server_AttachTo(blob, "MAG");
+		}
 	}
 }
 
