@@ -11,8 +11,8 @@ const f32 hit_amount_cata = 10.0f;
 
 void onInit(CBlob @ this)
 {
-	this.set_u8("launch team", 255);
-	this.server_setTeamNum(-1);
+	// this.set_u8("launch team", 255);  // Waffle: Team based boulders
+	// this.server_setTeamNum(-1);       // Waffle: --
 	this.Tag("medium weight");
 
 	LimitedAttack_setup(this);
@@ -37,10 +37,11 @@ void onTick(CBlob@ this)
 	}
 }
 
-void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
-{
-	this.set_u8("launch team", detached.getTeamNum());
-}
+// Waffle: Team based boulders
+// void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
+// {
+// 	this.set_u8("launch team", detached.getTeamNum());
+// }
 
 void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
@@ -54,7 +55,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 		this.getShape().getConsts().mapCollisions = true;
 		this.getShape().getConsts().collidable = true;
 	}
-	this.set_u8("launch team", attached.getTeamNum());
+	// this.set_u8("launch team", attached.getTeamNum());  // Waffle: Team based boulders
 }
 
 void Slam(CBlob @this, f32 angle, Vec2f vel, f32 vellen)
@@ -65,7 +66,7 @@ void Slam(CBlob @this, f32 angle, Vec2f vel, f32 vellen)
 	CMap@ map = this.getMap();
 	Vec2f pos = this.getPosition();
 	HitInfo@[] hitInfos;
-	u8 team = this.get_u8("launch team");
+	u8 team = this.getTeamNum();  // this.get_u8("launch team");  // Waffle: Team based boulders
 
 	if (map.getHitInfosFromArc(pos, -angle, 360, 8.0f, this, true, @hitInfos))  // Waffle: Rock and roll hits a full circle and a fixed distance
 	{
@@ -227,7 +228,7 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 			return;
 		}
 
-		u8 tteam = this.get_u8("launch team");
+		u8 tteam = this.getTeamNum();  // this.get_u8("launch team");  // Waffle: Team based boulders
 		CPlayer@ damageowner = this.getDamageOwnerPlayer();
 
 		//not teamkilling (except self)

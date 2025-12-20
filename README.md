@@ -446,6 +446,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - added team colors to sprite
     - does not collide with allied players
     - allows friendly archers to shoot through them but not enemy
+	- Always team colored when bought from shop
 - Cost 40 coins so they can be bought by all classes but are less spammable
 - Can still convert to your team by picking them up
 - Ignore no build zones when in rock and roll mode, allowing them to destroy backwall in the flag room and behind shops
