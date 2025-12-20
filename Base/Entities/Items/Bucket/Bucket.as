@@ -80,7 +80,7 @@ void onDie(CBlob@ this)
 	if (this.get_u8("filled") > 0)
 	{
 		DoSplash(this);
-		this.SendCommand(this.getCommandID("splash client"));
+		this.SendCommand(this.getCommandID("splash client"));  // Waffle: Fix death not animating splash
 	}
 }
 
@@ -94,6 +94,7 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			int id = this.getNetworkID();
 			this.setVelocity(this.getVelocity() + Vec2f(1,0).RotateBy((id * 933) % 360));
 			TakeWaterCount(this);
+			SetFrame(this, this.get_u8("filled") > 0);  // Waffle: Fix decay not updating sprite
 		}
 	}
 
@@ -132,7 +133,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("splash client") && isClient())
 	{
-		SetFrame(this, this.get_u8("filled") > 0);
+		SetFrame(this, this.get_u8("filled") > 0);  // Waffle: Fix thrown bucket not updating sprite
 		DoSplash(this);
 	}
 }
