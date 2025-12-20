@@ -59,6 +59,7 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 			{
 				@ownerBlob = damagePlayer.getBlob();
 			}
+			bool isBucket = this.getName() == "bucket";  // Waffle: Only apply bucket force if holding bucket
 
 			CBlob@[] blobs;
 			map.getBlobsInBox(tl, br, @blobs);
@@ -69,7 +70,8 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 				bool hitHard = blob.getTeamNum() != this.getTeamNum() || ownerBlob is blob;
 
 				Vec2f hit_blob_pos = blob.getPosition();
-				Vec2f bombforce = getBombForce(this, radius, hit_blob_pos, pos, blob.getMass());  // Waffle: Add Bunnie bomb buff
+				// Waffle: Add Bunnie bomb buff, only apply bucket force if holding bucket
+				Vec2f bombforce = isBucket && !this.isAttachedTo(blob) ? Vec2f_zero : getBombForce(this, radius, hit_blob_pos, pos, blob.getMass());
 
 				if (shouldStun && (ownerBlob is blob || (this.isOverlapping(blob) && hitHard)))
 				{

@@ -527,6 +527,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Slightly bigger splash area
 - Can be used in water
 - Cost 20 coins
+- Only apply forces to players that are holding the bucket when splashing
 - Fixed an issue where the sprite would not show as empty until picked up after throwing the bucket to splash it
 - Fixed an issue where buckets would not render splashes on death
 - Fixed an issue where buckets decaying would not update their sprites
