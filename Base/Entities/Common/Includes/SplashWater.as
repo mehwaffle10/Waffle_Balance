@@ -69,9 +69,8 @@ void Splash(CBlob@ this, const uint splash_halfwidth, const uint splash_halfheig
 
 				bool hitHard = blob.getTeamNum() != this.getTeamNum() || ownerBlob is blob;
 
-				Vec2f hit_blob_pos = blob.getPosition();
 				// Waffle: Add Bunnie bomb buff, only apply bucket force if holding bucket
-				Vec2f bombforce = isBucket && !this.isAttachedTo(blob) ? Vec2f_zero : getBombForce(this, radius, hit_blob_pos, pos, blob.getMass());
+				Vec2f bombforce = isBucket && !this.isAttachedTo(blob) ? Vec2f_zero : getBombForce(this, blob, pos);
 
 				if (shouldStun && (ownerBlob is blob || (this.isOverlapping(blob) && hitHard)))
 				{
@@ -100,9 +99,15 @@ f32 getBombDamageScale(CBlob@ this, f32 radius, Vec2f hit_blob_pos, Vec2f pos)
 	return scale;
 }
 
-Vec2f getBombForce(CBlob@ this, f32 radius, Vec2f hit_blob_pos, Vec2f pos, f32 hit_blob_mass)
+Vec2f getBombForce(CBlob@ this, CBlob@ hit_blob, Vec2f pos)
 {
-	Vec2f offset = hit_blob_pos - pos;
+	// Waffle: Don't push vehicles
+	if (hit_blob.hasTag("vehicle"))
+	{
+		return Vec2f_zero;
+	}
+
+	Vec2f offset = hit_blob.getPosition() - pos;
 	// f32 distance = offset.Length();  // Waffle: Add Bunnie bomb buff
 	//the force, copy across
 	Vec2f bombforce = offset;
@@ -110,6 +115,6 @@ Vec2f getBombForce(CBlob@ this, f32 radius, Vec2f hit_blob_pos, Vec2f pos, f32 h
 	bombforce *= 2.0f;
 	bombforce.y -= 0.2f;
 	bombforce /= 2.0f;
-	bombforce *= hit_blob_mass * (3.0f);
+	bombforce *= hit_blob.getMass() * (3.0f);
 	return bombforce;
 }

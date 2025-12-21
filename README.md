@@ -292,6 +292,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - All seats render floating arrows that no longer flicker
 - Removed priority for seats for vehicles that are attached to other vehicles
 - Only attach to other vehicles on collision
+- No longer pushed by normal bombs or water bombs
 
 ### Boats
 - Redone map destruction and player crushing using raycasting
