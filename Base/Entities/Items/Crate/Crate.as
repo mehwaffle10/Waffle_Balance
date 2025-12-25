@@ -127,6 +127,18 @@ void onInit(CBlob@ this)
     float base_z = 35.0f;
     this.set_f32("important-pickup", base_z);
 	this.getSprite().SetZ(base_z);
+
+	// Waffle: Use attachments since they're less buggy
+	CAttachment@ attachment = this.getAttachments();
+	if (attachment !is null)
+	{
+		AttachmentPoint@ sneaky = attachment.getAttachmentPointByName("SNEAKY");
+		if (sneaky !is null)
+		{
+			sneaky.SetKeysToTake(key_left | key_right | key_up | key_down | key_action1 | key_action2 | key_action3 | key_inventory);
+			sneaky.SetMouseTaken(true);
+		}
+	}
 }
 
 bool UseCratePreset(CBlob@ this, const string &in packed, Crate@[] presets)
