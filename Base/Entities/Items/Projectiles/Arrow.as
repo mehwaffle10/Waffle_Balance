@@ -175,7 +175,7 @@ void onTick(CBlob@ this)
 
 
 		// ignite arrow
-		if (arrowType == ArrowType::normal && this.isInFlames())
+		if (arrowType == ArrowType::normal && this.isInFlames() && !this.getShape().isStatic())  // Waffle: Prevent stuck arrows from igniting on client
 		{
 			turnOnFire(this);
 		}
