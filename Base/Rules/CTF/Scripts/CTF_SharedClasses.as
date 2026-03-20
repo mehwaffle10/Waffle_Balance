@@ -395,7 +395,7 @@ shared class CTFCore : RulesCore
 		{
 			team = player.getTeamNum();
 		}
-		CTFPlayerInfo p(player.getUsername(), team, (XORRandom(512) >= 256 ? "knight" : "archer"));
+		CTFPlayerInfo p(player.getUsername(), team, (XORRandom(512) >= 256 ? "knight" : "knight"));  // Waffle: Temporary override
 		players.push_back(p);
 		ChangeTeamPlayerCount(p.team, 1);
 	}

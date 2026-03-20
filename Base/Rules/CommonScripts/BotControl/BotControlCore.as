@@ -9,6 +9,26 @@ void onInit(CRules@ this)
 	this.set_s8(MINIMUM_TEAM_SIZE, -1);
 }
 
+void onNewPlayerJoin(CRules@ this, CPlayer@ player)
+{
+	RulesCore@ core;
+	this.get("core", @core);
+
+	if (core is null)
+	{
+		warn("onNewPlayerJoin: CORE NOT FOUND ");
+		return;
+	}
+
+	if (player.getTeamNum() != this.getSpectatorTeamNum())
+	{
+		u8 blue_team_size = this.get_u8(0 + TEAM_SIZE_SUFFIX);
+		u8 red_team_size = this.get_u8(1 + TEAM_SIZE_SUFFIX);
+		s32 team = blue_team_size == red_team_size ? XORRandom(512) % 2 : blue_team_size < red_team_size ? 0 : 1;
+		core.ChangePlayerTeam(player, team);
+	}
+}
+
 void onPlayerChangedTeam(CRules@ this, CPlayer@ player, u8 oldteam, u8 newteam)
 {
 	player.set_s32(TEAM_PROPERTY, newteam);
