@@ -19,7 +19,7 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 		warn("onNewPlayerJoin: CORE NOT FOUND ");
 		return;
 	}
-
+	updateTeamStats(this);
 	if (player.getTeamNum() != this.getSpectatorTeamNum())
 	{
 		u8 blue_team_size = this.get_u8(0 + TEAM_SIZE_SUFFIX);
