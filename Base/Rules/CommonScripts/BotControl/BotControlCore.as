@@ -22,10 +22,12 @@ void onNewPlayerJoin(CRules@ this, CPlayer@ player)
 	updateTeamStats(this);
 	if (player.getTeamNum() != this.getSpectatorTeamNum())
 	{
+		player.set_s32(TEAM_PROPERTY, this.getSpectatorTeamNum());
 		u8 blue_team_size = this.get_u8(0 + TEAM_SIZE_SUFFIX);
 		u8 red_team_size = this.get_u8(1 + TEAM_SIZE_SUFFIX);
 		s32 team = blue_team_size == red_team_size ? XORRandom(512) % 2 : blue_team_size < red_team_size ? 0 : 1;
 		core.ChangePlayerTeam(player, team);
+		player.set_s32(TEAM_PROPERTY, team);
 	}
 }
 
