@@ -4,6 +4,7 @@
 // const SColor FAILED = SColor(255, 150, 0, 0);
 const string PAST_STATE = "past_state";
 const string SPACES = "                                                                                                    ";
+const string WINDOW_HEIGHT_PROP = "bt_debug_window_height";
 
 class PastInfo {
     string[] message;
@@ -36,9 +37,11 @@ void RenderDebug(CSprite@ this)
 	PastInfo@ info = PastInfo();
     if(!blob.get(PAST_STATE, @info)) return;
 
+	u32 window_height = Maths::Max(blob.get_u32(WINDOW_HEIGHT_PROP), 18 * (info.message.size() + 1));
+	blob.set_u32(WINDOW_HEIGHT_PROP, window_height);
+	
     ImGui::SetNextWindowPos(Vec2f(100, 100), 1, Vec2f_zero);
-    ImGui::SetNextWindowSize(Vec2f(1000, 20 * (info.message.size() + 1)));
-    // ImGui::SetNextWindowBgAlpha(0.2);
+    ImGui::SetNextWindowSize(Vec2f(1000, window_height));
 
     if (!ImGui::Begin("AI Debug - " + blob.getNetworkID())) {
         ImGui::End();
