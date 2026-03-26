@@ -325,6 +325,7 @@ void onTick(CBrain@ this)
     }
 
 	ClearDebugMessages(blob);
+	PushDebugMessage(blob, "Gametime: " + getGameTime(), SColor(255, 255, 255, 255), 0);
 	string target_name = "None";
 	if (blackboard.target !is null)
 	{
