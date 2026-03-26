@@ -5,6 +5,7 @@
 
 class MoveToTarget : Parallel {
     MoveToTarget(u16 offset) {
+		name = "MoveToTarget " + offset;
         children.push_back(TryMoveLeft(offset));
         children.push_back(TryMoveRight(offset));
     }
@@ -12,6 +13,7 @@ class MoveToTarget : Parallel {
 
 class TryMoveLeft : Sequence {
     TryMoveLeft(u16 offset) {
+		name = "TryMoveLeft " + offset;
         children.push_back(RightOfTarget(offset));
         children.push_back(SetKeyPressed(key_left));
     }
@@ -19,6 +21,7 @@ class TryMoveLeft : Sequence {
 
 class TryMoveRight : Sequence {
     TryMoveRight(u16 offset) {
+		name = "TryMoveRight " + offset;
         children.push_back(LeftOfTarget(offset));
         children.push_back(SetKeyPressed(key_right));
     }
@@ -26,6 +29,7 @@ class TryMoveRight : Sequence {
 
 class LookAwayFromTarget : Parallel {
     LookAwayFromTarget() {
+		name = "LookAwayFromTarget";
         children.push_back(TryLookLeft());
         children.push_back(TryLookRight());
     }
@@ -33,6 +37,7 @@ class LookAwayFromTarget : Parallel {
 
 class TryLookLeft : Sequence {
     TryLookLeft() {
+		name = "TryLookLeft";
         children.push_back(LeftOfTarget(0));
         children.push_back(LookLeft());
     }
@@ -40,6 +45,7 @@ class TryLookLeft : Sequence {
 
 class TryLookRight : Sequence {
     TryLookRight() {
+		name = "TryLookRight";
         children.push_back(Inverse(LeftOfTarget(0)));
         children.push_back(LookRight());
     }

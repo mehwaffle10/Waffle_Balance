@@ -4,7 +4,12 @@
 #include "KnightCommon.as"
 
 class HasSlashCharged : BehaviorTreeNode {
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	HasSlashCharged() {
+		name = "HasSlashCharged";
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         KnightInfo@ knight;
         if (!this.get("knightInfo", @knight) || knight.swordTimer < KnightVars::slash_charge)
         {
@@ -15,7 +20,12 @@ class HasSlashCharged : BehaviorTreeNode {
 }
 
 class IsSlashing : BehaviorTreeNode {
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	IsSlashing() {
+		name = "IsSlashing";
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         KnightInfo@ knight;
         if (!this.get("knightInfo", @knight) || !inMiddleOfAttack(knight.state))
         {
@@ -27,12 +37,18 @@ class IsSlashing : BehaviorTreeNode {
 
 class KnightHasAdvantageOnTarget : Parallel {
     KnightHasAdvantageOnTarget() {
+		name = "KnightHasAdvantageOnTarget";
         children.push_back(KnightHasAdvantageOnKnight());
     }
 }
 
 class KnightHasAdvantageOnKnight : Sequence {
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	KnightHasAdvantageOnKnight() {
+		name = "KnightHasAdvantageOnKnight";
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         KnightInfo@ knight, enemy;
         if (!this.get("knightInfo", @knight) || blackboard.target is null || !blackboard.target.get("knightInfo", @enemy))
         {
@@ -55,7 +71,12 @@ class KnightHasAdvantageOnKnight : Sequence {
 }
 
 class IsAttackFinished : BehaviorTreeNode {
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	IsAttackFinished() {
+		name = "IsAttackFinished";
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         if (blackboard.attack_target is null)
         {
             return BehaviorTreeStatus::success;

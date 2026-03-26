@@ -10,6 +10,7 @@ class KnightRoot : Fallback
 {
     KnightRoot()
     {
+		name = "KnightRoot";
         children.push_back(CheckAttackTarget());
         children.push_back(ChargeAttack());
     }
@@ -19,6 +20,7 @@ class CheckAttackTarget : Sequence
 {
     CheckAttackTarget()
     {
+		name = "CheckAttackTarget";
         children.push_back(HasAttackTarget());
         children.push_back(HandleAttackTarget());
     }
@@ -28,6 +30,7 @@ class HandleAttackTarget : Parallel
 {
     HandleAttackTarget()
     {
+		name = "HandleAttackTarget";
         children.push_back(LookAtTarget());
         children.push_back(MoveToTarget(0));
         children.push_back(CheckSlashJump());
@@ -39,6 +42,7 @@ class CheckSlashJump : Sequence
 {
     CheckSlashJump()
     {
+		name = "CheckSlashJump";
         children.push_back(BelowTarget(-4));
         children.push_back(SetKeyPressed(key_up));
     }
@@ -48,6 +52,7 @@ class CheckAttack : Sequence
 {
     CheckAttack()
     {
+		name = "CheckAttack";
         children.push_back(IsAttackFinished());
         children.push_back(ClearAttackTarget());
     }
@@ -57,6 +62,7 @@ class ChargeAttack : Sequence
 {
     ChargeAttack()
     {
+		name = "ChargeAttack";
         children.push_back(SetKeyPressed(key_action1));
         children.push_back(DecideSlash());
     }
@@ -66,6 +72,7 @@ class DecideSlash : Selector
 {
     DecideSlash()
     {
+		name = "DecideSlash";
         children.push_back(CommitToAttack());
         children.push_back(SlashForDistance());
         children.push_back(KnightDance());
@@ -76,6 +83,7 @@ class CommitToAttack : Sequence
 {
     CommitToAttack()
     {
+		name = "CommitToAttack";
         children.push_back(SetAttackTarget());
     }
 
@@ -247,6 +255,7 @@ class SlashForDistance : Parallel
 {
     SlashForDistance()
     {
+		name = "SlashForDistance";
         children.push_back(LookAwayFromTarget());
         children.push_back(MoveToTarget(80));
         children.push_back(ReleaseSlash());
@@ -398,6 +407,7 @@ class KnightDance : Parallel
 {
     KnightDance()
     {
+		name = "KnightDance";
         children.push_back(LookAtTarget());
         children.push_back(MoveToTarget(40));
     }

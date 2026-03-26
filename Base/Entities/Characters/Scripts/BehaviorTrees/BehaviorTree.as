@@ -1,6 +1,8 @@
 
 #define SERVER_ONLY;
 
+#include "BehaviorTreeDebugCommon.as"
+
 namespace BehaviorTreeStatus {
     enum statuses {
         success = 0,
@@ -23,11 +25,18 @@ class Blackboard {
 }
 
 class BehaviorTreeNode {
+	string name;
+	SColor color;
+
+	BehaviorTreeNode() {
+		color = SColor(200, 255, 0, 0);
+	}
+
     f32 utility(CBlob@ this, Blackboard@ blackboard) {
         return 0.0f;
     };
 
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
         return BehaviorTreeStatus::failure;
     }
 }
@@ -35,23 +44,28 @@ class BehaviorTreeNode {
 class Selector : BehaviorTreeNode {
     BehaviorTreeNode@[] children;
 
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	Selector()
+	{
+		color = SColor(200, 0, 150, 0);
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
         f32 max_utility = -1.0f;
-        string scores = "";
+        string scores = name + ":: ";
         BehaviorTreeNode@ best = null;
         for (u8 i = 0; i < children.length; i++) {
             f32 utility = children[i].utility(this, blackboard);
-            scores += utility + " ";
+            scores += children[i].name + ": " + utility + " ";
             if (utility > max_utility)
             {
                 max_utility = utility;
                 @best = @children[i];
             }
         }
-        print(scores);
+		PushDebugMessage(this, scores, color, depth);
         if (best !is null)
         {
-            return best.execute(this, blackboard);
+            return best.execute(this, blackboard, depth + 1);
         }
         return BehaviorTreeStatus::failure;
     }
@@ -60,9 +74,15 @@ class Selector : BehaviorTreeNode {
 class Sequence : BehaviorTreeNode {
     BehaviorTreeNode@[] children;
 
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	Sequence()
+	{
+		color = SColor(200, 150, 150, 150);
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         for (u8 i = 0; i < children.length; i++) {
-            u8 status = children[i].execute(this, blackboard);
+            u8 status = children[i].execute(this, blackboard, depth + 1);
             if (status != BehaviorTreeStatus::success)
             {
                 return status;
@@ -75,9 +95,15 @@ class Sequence : BehaviorTreeNode {
 class Fallback : BehaviorTreeNode {
     BehaviorTreeNode@[] children;
 
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	Fallback()
+	{
+		color = SColor(200, 240, 0, 240);
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         for (u8 i = 0; i < children.length; i++) {
-            u8 status = children[i].execute(this, blackboard);
+            u8 status = children[i].execute(this, blackboard, depth + 1);
             if (status != BehaviorTreeStatus::failure)
             {
                 return status;
@@ -90,10 +116,16 @@ class Fallback : BehaviorTreeNode {
 class Parallel : BehaviorTreeNode {
     BehaviorTreeNode@[] children;
 
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	Parallel()
+	{
+		color = SColor(200, 0, 150, 150);
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         u8 node_status = BehaviorTreeStatus::failure;
         for (u8 i = 0; i < children.length; i++) {
-            u8 status = children[i].execute(this, blackboard);
+            u8 status = children[i].execute(this, blackboard, depth + 1);
             if (status == BehaviorTreeStatus::running)
             {
                 node_status = BehaviorTreeStatus::running;
@@ -111,6 +143,8 @@ class Inverse : BehaviorTreeNode {
     BehaviorTreeNode@ child;
 
     Inverse(BehaviorTreeNode@ _child) {
+		name = "Inverse " + _child.name;
+		color = SColor(200, 150, 0, 0);
         @child = @_child;
     }
 
@@ -118,8 +152,9 @@ class Inverse : BehaviorTreeNode {
         return child.utility(this, blackboard);
     }
 
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
-        u8 status = child.execute(this, blackboard);
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
+        u8 status = child.execute(this, blackboard, depth + 1);
         if (status == BehaviorTreeStatus::success)
         {
             return BehaviorTreeStatus::failure;

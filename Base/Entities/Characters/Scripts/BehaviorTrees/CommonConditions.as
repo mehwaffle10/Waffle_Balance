@@ -6,10 +6,12 @@ class LeftOfTarget : BehaviorTreeNode {
     s16 offset;
 
     LeftOfTarget(s16 _offset) {
+		name = "LeftOfTarget " + _offset;
         offset = _offset;
     }
 
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         if (blackboard.target is null)
         {
             return BehaviorTreeStatus::failure;
@@ -28,10 +30,12 @@ class RightOfTarget : BehaviorTreeNode {
     s16 offset;
 
     RightOfTarget(s16 _offset) {
+		name = "RightOfTarget " + _offset;
         offset = _offset;
     }
 
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         if (blackboard.target is null)
         {
             return BehaviorTreeStatus::failure;
@@ -50,10 +54,12 @@ class BelowTarget : BehaviorTreeNode {
     s16 offset;
 
     BelowTarget(s16 _offset) {
+		name = "BelowTarget " + _offset;
         offset = _offset;
     }
 
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         CBlob@ target = blackboard.attack_target is null ? @blackboard.target : @blackboard.attack_target;
         if (target is null)
         {
@@ -65,35 +71,23 @@ class BelowTarget : BehaviorTreeNode {
 }
 
 class HasAttackTarget : BehaviorTreeNode {
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	HasAttackTarget() {
+		name = "HasAttackTarget";
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         return blackboard.attack_target is null ? BehaviorTreeStatus::failure : BehaviorTreeStatus::success;
     }
 }
 
 class isOnGround : BehaviorTreeNode {
-    u8 execute(CBlob@ this, Blackboard@ blackboard) {
+	isOnGround() {
+		name = "isOnGround";
+	}
+
+    u8 execute(CBlob@ this, Blackboard@ blackboard, u16 depth) {
+		PushDebugMessage(this, name, color, depth);
         return this.isOnGround() ? BehaviorTreeStatus::success : BehaviorTreeStatus::failure;
     }
 }
-
-// class TooClose : BehaviorTreeNode {
-//     u8 execute(CBlob@ this, Blackboard@ blackboard) {
-//         if (blackboard.target is null || Maths::Abs(this.getPosition().x - blackboard.target.getPosition().x) < DEFAULT_ATTACK_DISTANCE)
-//         {
-//             return BehaviorTreeStatus::failure;
-//         }
-
-//         return BehaviorTreeStatus::success;
-//     }
-// }
-
-// class TooFar : BehaviorTreeNode {
-//     u8 execute(CBlob@ this, Blackboard@ blackboard) {
-//         if (blackboard.target is null || Maths::Abs(this.getPosition().x - blackboard.target.getPosition().x) > MAX_ATTACK_DISTANCE)
-//         {
-//             return BehaviorTreeStatus::failure;
-//         }
-
-//         return BehaviorTreeStatus::success;
-//     }
-// }
