@@ -4,6 +4,9 @@
 
 #include "BrainPathing.as"
 #include "BehaviorTreeDebugCommon.as"
+#include "KnightAmbitions.as"
+#include "BehaviorTree.as"
+
 
 // Gingerbeard @ March 6th, 2025
 
@@ -245,12 +248,6 @@ void onRender(CSprite@ this)
 
 	RenderDebug(this);
 }
-
-
-#define SERVER_ONLY;
-
-#include "KnightAmbitions.as"
-#include "BehaviorTree.as"
 
 // #include "KnightCommon.as";
 
