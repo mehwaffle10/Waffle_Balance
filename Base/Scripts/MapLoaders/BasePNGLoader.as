@@ -97,8 +97,7 @@ class PNGLoader
 	// Queue an offset to be autotiled
 	void autotile(int offset)
 	{
-        // Waffle: Set background based off
-		// offsets[autotile_offset].push_back(offset);
+		offsets[autotile_offset].push_back(offset);
 	}
 
 	void handlePixel(const SColor &in pixel, int offset, MapLocations@ gold_locations)
