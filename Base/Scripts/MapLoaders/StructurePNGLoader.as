@@ -51,7 +51,7 @@ class StructurePNGLoader
 
 				// Optimization: check if the pixel color is the sky color
 				// We do this before calling handlePixel because it is overriden, and to avoid a SColor copy
-				if (pixel.color != map_colors::sky && pixel.getAlpha() > 0)  // Waffle: Ignore transparent pixels
+				if (pixel.getAlpha() > 0)  // Waffle: Ignore transparent pixels, allow setting sky
 				{
 					handlePixel(pixel, offset);
 				}
@@ -190,6 +190,7 @@ class StructurePNGLoader
 			switch (pixel.color)
 			{
 			// Tiles
+			case map_colors::sky:                   map.server_SetTile(map.getTileWorldPosition(offset), CMap::tile_empty);            break;  // Waffle: Allow setting sky
 			case map_colors::tile_ground:           map.server_SetTile(map.getTileWorldPosition(offset), CMap::tile_ground);           break;
 			case map_colors::tile_ground_back:      map.server_SetTile(map.getTileWorldPosition(offset), CMap::tile_ground_back);      break;
 			case map_colors::tile_stone:            map.server_SetTile(map.getTileWorldPosition(offset), CMap::tile_stone);            break;
