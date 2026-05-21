@@ -76,6 +76,7 @@ void onInit(CInventory@ this)
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
+// Waffle: Client side block selection
 void SelectBuildBlock(CBitStream@ params)
 {
 	u8 i;
@@ -123,7 +124,7 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 			CBitStream params;
 			params.write_u8(i);
 			params.write_netid(blob.getNetworkID());
-			CGridButton@ button = menu.AddButton(b.icon, "\n" + block_desc, "BuilderInventory.as", "SelectBuildBlock", params);  // Waffle: Have client handle blocks immediately
+			CGridButton@ button = menu.AddButton(b.icon, "\n" + block_desc, "BuilderInventory.as", "SelectBuildBlock", params);  // Waffle: Client side block selection
 			
 			if (button is null) continue;
 
@@ -228,7 +229,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		CBitStream sparams;
 		sparams.write_u8(i);
-		sparams.write_netid(callerp.getNetworkID());
+		sparams.write_netid(callerp.getNetworkID());  // Waffle: Client side block selection
 		blob.SendCommand(blob.getCommandID("make block client"), sparams);
 
 		const u8 PAGE = blob.get_u8("build page");
@@ -281,6 +282,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 		u8 i;
 		if (!params.saferead_u8(i)) return;
 
+		// Waffle: Client side block selection
 		u16 netID;
 		if (!params.saferead_netid(netID)) return;
 
@@ -418,7 +420,7 @@ void onTick(CBlob@ this)
 				params.write_u8(blockBinds[i]);
 				this.SendCommand(this.getCommandID("make block"), params);
 
-				MakeBlockClient(this, blockBinds[i]);
+				MakeBlockClient(this, blockBinds[i]);  // Waffle: Client side block selection
 			}
 		}
 	}
