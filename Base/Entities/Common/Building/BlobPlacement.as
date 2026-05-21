@@ -49,36 +49,53 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 		u32 delay = (blob.isLadder() ? 1 : 2) * getCurrentBuildDelay(this) - 1;  // Waffle: Increase ladder build speed
 		SetBuildDelay(this, delay);
 
-		CShape@ shape = blob.getShape();
-		shape.server_SetActive(true);
-
-		blob.Tag("temp blob placed");
-		if (blob.hasTag("has damage owner"))
+		// Waffle: Client side building
+		BuildBlock[][]@ blocks;
+		if (!this.get("blocks", @blocks))
 		{
-			blob.SetDamageOwnerPlayer(this.getPlayer());
+			return false;
+		}
+		const u8 PAGE = this.get_u8("build page");
+		u8 i = this.get_u8("buildblob");
+		if (i >= 0 && i < blocks[PAGE].length)
+		{
+			BuildBlock@ b = blocks[PAGE][i];
+			if (b.name != blob.getName()) return false;
+			
+			CInventory@ inv = this.getInventory();
+			CBitStream missing;
+			if (!hasRequirements(inv, b.reqs, missing, not b.buildOnGround)) return false;
+
+			server_TakeRequirements(inv, b.reqs);
+
+			if (!hasRequirements(inv, b.reqs, missing, not b.buildOnGround))
+			{
+				blob.server_Die();
+				this.set_u8("buildblob", 255);
+			}
 		}
 
-		if (this.server_DetachFrom(blob))
+		if (repairing && repairBlob !is null)
 		{
-			if (repairing && repairBlob !is null)
+			repairBlob.server_SetHealth(repairBlob.getInitialHealth());
+			// Waffle: Don't replace stone or moss backwall
+			CMap@ map = getMap();
+			TileType type = map.getTile(cursorPos).type;
+			if (blob.exists("background tile") && type != CMap::tile_castle_back && !(type >= CMap::tile_castle_back_moss && type <= 231))
 			{
-				repairBlob.server_SetHealth(repairBlob.getInitialHealth());
-				// Waffle: Don't replace stone or moss backwall
-				CMap@ map = getMap();
-				TileType type = map.getTile(cursorPos).type;
-				if (blob.exists("background tile") && type != CMap::tile_castle_back && !(type >= CMap::tile_castle_back_moss && type <= 231))
-				{
-					map.server_SetTile(repairBlob.getPosition(), blob.get_TileType("background tile"));
-				}
-				blob.server_Die();
+				map.server_SetTile(repairBlob.getPosition(), blob.get_TileType("background tile"));
 			}
-			else
+		}
+		else
+		{
+			CBlob@ newBlob = server_CreateBlob(blob.getName(), blob.getTeamNum(), cursorPos);
+			if (newBlob.isSnapToGrid())
 			{
-				blob.setPosition(cursorPos);
-				if (blob.isSnapToGrid())
-				{
-					shape.SetStatic(true);
-				}
+				newBlob.getShape().SetStatic(true);
+			}
+			if (newBlob.hasTag("has damage owner"))
+			{
+				newBlob.SetDamageOwnerPlayer(this.getPlayer());
 			}
 		}
 
@@ -305,7 +322,8 @@ void onTick(CBlob@ this)
 		return;
 	}
 
-	CBlob @carryBlob = this.getCarriedBlob();
+	// Waffle: Client side building
+	CBlob@ carryBlob = getCarriedBuildBlock(this);
 	if (carryBlob !is null)
 	{
 		if (carryBlob.hasTag("place ignore facing"))
@@ -322,11 +340,11 @@ void onTick(CBlob@ this)
 		{
 			if (carryBlob.hasTag("place norotate"))
 			{
-				this.getCarriedBlob().setAngleDegrees(0.0f);
+				carryBlob.setAngleDegrees(0.0f);
 			}
 			else
 			{
-				this.getCarriedBlob().setAngleDegrees(this.get_u16("build_angle"));
+				carryBlob.setAngleDegrees(this.get_u16("build_angle"));
 			}
 		}
 	}
@@ -514,7 +532,7 @@ void onTick(CBlob@ this)
 			}
 		}
 	}
-
+	
 }
 
 void onInit(CSprite@ this)
@@ -543,7 +561,7 @@ void onRender(CSprite@ this)
 	}
 
 	// draw a map block or other blob that snaps to grid
-	CBlob@ carryBlob = blob.getCarriedBlob();
+	CBlob@ carryBlob = getCarriedBuildBlock(blob);
 
 	if (carryBlob !is null) // && carryBlob.isSnapToGrid()
 	{

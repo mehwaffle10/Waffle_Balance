@@ -192,7 +192,8 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 
 			if (!b.buildOnGround)
 			{
-				this.server_Pickup(blockBlob);
+				this.server_AttachTo(blockBlob, "BUILDBLOCK");  // Waffle: Can hold things while building
+				blockBlob.Tag("invincible");  // Waffle: Prevent destroying held blocks
 			}
 			else
 			{
@@ -239,7 +240,7 @@ void ClearCarriedBlock(CBlob@ this)
 	this.set_TileType("buildtile", 0);
 
 	// remove carried block, if any
-	CBlob@ carried = this.getCarriedBlob();
+	CBlob@ carried = getCarriedBuildBlock(this);  // Waffle: Client side building
 	if (carried !is null && carried.hasTag("temp blob"))
 	{
 		carried.Untag("temp blob");

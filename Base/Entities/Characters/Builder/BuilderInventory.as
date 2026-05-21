@@ -141,7 +141,7 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 				button.SetEnabled(false);
 			}
 
-			CBlob@ carryBlob = blob.getCarriedBlob();
+			CBlob@ carryBlob = getCarriedBuildBlock(blob);
 			if (carryBlob !is null && carryBlob.getName() == b.name)
 			{
 				button.SetSelected(1);
@@ -242,7 +242,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 				return;
 			}
 
-			CBlob@ carryBlob = blob.getCarriedBlob();
+			CBlob@ carryBlob = getCarriedBuildBlock(blob);
 			if (carryBlob !is null)
 			{
 				// check if this isn't what we wanted to create
@@ -505,6 +505,7 @@ void onRender(CSprite@ this)
 					Vec2f myPos =  blob.getInterpolatedScreenPos() + Vec2f(0.0f,(pos.y > blob.getAimPos().y) ? -blob.getRadius() : blob.getRadius());
 					Vec2f aimPos2D = getDriver().getScreenPosFromWorldPos( blob.getAimPos() + cam_offset );
 
+					CBlob@ carriedBlob = getCarriedBuildBlock(blob);
 					if (!bc.hasReqs)
 					{
 						const string missingText = getButtonRequirementsText( bc.missing, true );
@@ -572,7 +573,7 @@ void onRender(CSprite@ this)
 							}
 						}
 					}
-					else if (blob.getCarriedBlob() is null || blob.getCarriedBlob().hasTag("temp blob")) // only display the red arrow while we are building
+					else if (carriedBlob is null || carriedBlob.hasTag("temp blob")) // only display the red arrow while we are building
 					{
 						const f32 maxDist = getMaxBuildDistance(blob) + 8.0f;
 						Vec2f norm = aimPos2D - myPos;

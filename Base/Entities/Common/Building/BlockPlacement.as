@@ -132,7 +132,7 @@ void onTick(CBlob@ this)
 		return;
 	}
 
-	CBlob @carryBlob = this.getCarriedBlob();
+	CBlob@ carryBlob = getCarriedBuildBlock(this);  // Waffle: Client side building
 	if (carryBlob !is null)
 	{
 		return;
@@ -236,7 +236,7 @@ void onRender(CSprite@ this)
 		return;
 	}
 
-	CBlob @carryBlob = blob.getCarriedBlob();
+	CBlob@ carryBlob = getCarriedBuildBlock(blob);  // Waffle: Client side building
 	if (carryBlob !is null)
 	{
 		return;

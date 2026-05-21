@@ -115,19 +115,20 @@ void onTick(CBlob@ this)
 		hitdata.tilepos = bc.buildable ? bc.tileAimPos : Vec2f(-8, -8);
 	}
 
-	// get rid of the built item
-	if (this.isKeyJustPressed(key_inventory) || this.isKeyJustPressed(key_pickup))
-	{
-		this.set_u8("buildblob", 255);
-		this.set_TileType("buildtile", 0);
+	// Waffle: Client side building
+	// // get rid of the built item
+	// if (this.isKeyJustPressed(key_inventory) || this.isKeyJustPressed(key_pickup))
+	// {
+	// 	this.set_u8("buildblob", 255);
+	// 	this.set_TileType("buildtile", 0);
 
-		CBlob@ blob = this.getCarriedBlob();
-		if (blob !is null && blob.hasTag("temp blob"))
-		{
-			blob.Untag("temp blob");
-			blob.server_Die();
-		}
-	}
+	// 	CBlob@ blob = this.getCarriedBlob();
+	// 	if (blob !is null && blob.hasTag("temp blob"))
+	// 	{
+	// 		blob.Untag("temp blob");
+	// 		blob.server_Die();
+	// 	}
+	// }
 }
 
 //helper class to reduce function definition cancer
@@ -731,71 +732,72 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 }
 
-void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
-{
-	// ignore collision for built blob
-	BuildBlock[][]@ blocks;
-	if (!this.get("blocks", @blocks))
-	{
-		return;
-	}
+// Waffle: Client side building
+// void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
+// {
+// 	// ignore collision for built blob
+// 	BuildBlock[][]@ blocks;
+// 	if (!this.get("blocks", @blocks))
+// 	{
+// 		return;
+// 	}
 
-	const u8 PAGE = this.get_u8("build page");
-	for (u8 i = 0; i < blocks[PAGE].length; i++)
-	{
-		BuildBlock@ block = blocks[PAGE][i];
-		if (block !is null && block.name == detached.getName())
-		{
-			this.IgnoreCollisionWhileOverlapped(null);
-			detached.IgnoreCollisionWhileOverlapped(null);
-		}
-	}
+// 	const u8 PAGE = this.get_u8("build page");
+// 	for (u8 i = 0; i < blocks[PAGE].length; i++)
+// 	{
+// 		BuildBlock@ block = blocks[PAGE][i];
+// 		if (block !is null && block.name == detached.getName())
+// 		{
+// 			this.IgnoreCollisionWhileOverlapped(null);
+// 			detached.IgnoreCollisionWhileOverlapped(null);
+// 		}
+// 	}
 
-	// BUILD BLOB
-	// take requirements from blob that is built and play sound
-	// put out another one of the same
-	if (detached.hasTag("temp blob"))
-	{
-		detached.Untag("temp blob");
+// 	// BUILD BLOB
+// 	// take requirements from blob that is built and play sound
+// 	// put out another one of the same
+// 	if (detached.hasTag("temp blob"))
+// 	{
+// 		detached.Untag("temp blob");
 		
-		if (!detached.hasTag("temp blob placed"))
-		{
-			detached.server_Die();
-			return;
-		}
+// 		if (!detached.hasTag("temp blob placed"))
+// 		{
+// 			detached.server_Die();
+// 			return;
+// 		}
 
-		uint i = this.get_u8("buildblob");
-		if (i >= 0 && i < blocks[PAGE].length)
-		{
-			BuildBlock@ b = blocks[PAGE][i];
-			if (b.name == detached.getName())
-			{
-				this.set_u8("buildblob", 255);
-				this.set_TileType("buildtile", 0);
+// 		uint i = this.get_u8("buildblob");
+// 		if (i >= 0 && i < blocks[PAGE].length)
+// 		{
+// 			BuildBlock@ b = blocks[PAGE][i];
+// 			if (b.name == detached.getName())
+// 			{
+// 				this.set_u8("buildblob", 255);
+// 				this.set_TileType("buildtile", 0);
 
-				CInventory@ inv = this.getInventory();
+// 				CInventory@ inv = this.getInventory();
 
-				CBitStream missing;
-				if (hasRequirements(inv, b.reqs, missing, not b.buildOnGround))
-				{
-					server_TakeRequirements(inv, b.reqs);
-				}
-				// take out another one if in inventory
-				server_BuildBlob(this, blocks[PAGE], i);
-			}
-		}
-	}
-	else if (detached.getName() == "seed")
-	{
-		if (not detached.hasTag('temp blob placed')) return;
+// 				CBitStream missing;
+// 				if (hasRequirements(inv, b.reqs, missing, not b.buildOnGround))
+// 				{
+// 					server_TakeRequirements(inv, b.reqs);
+// 				}
+// 				// take out another one if in inventory
+// 				server_BuildBlob(this, blocks[PAGE], i);
+// 			}
+// 		}
+// 	}
+// 	else if (detached.getName() == "seed")
+// 	{
+// 		if (not detached.hasTag('temp blob placed')) return;
 
-		CBlob@ anotherBlob = this.getInventory().getItem(detached.getName());
-		if (anotherBlob !is null)
-		{
-			this.server_Pickup(anotherBlob);
-		}
-	}
-}
+// 		CBlob@ anotherBlob = this.getInventory().getItem(detached.getName());
+// 		if (anotherBlob !is null)
+// 		{
+// 			this.server_Pickup(anotherBlob);
+// 		}
+// 	}
+// }
 
 void onAddToInventory(CBlob@ this, CBlob@ blob)
 {

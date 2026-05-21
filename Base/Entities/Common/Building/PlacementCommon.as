@@ -421,3 +421,13 @@ bool isRepairable(CBlob@ blob)
 
 	return false;
 }
+
+// Waffle: Client side building
+CBlob@ getCarriedBuildBlock(CBlob@ this)
+{
+	CAttachment@ attachment = this.getAttachments();
+	if (attachment is null) return null;
+	AttachmentPoint@ buildBlock = attachment.getAttachmentPointByName("BUILDBLOCK");
+	if (buildBlock is null) return null;
+	return buildBlock.getOccupied();
+}
