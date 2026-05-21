@@ -76,6 +76,27 @@ void onInit(CInventory@ this)
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
+void SelectBuildBlock(CBitStream@ params)
+{
+	u8 i;
+	if (!params.saferead_u8(i)) return;
+
+	u16 netID;
+	if (!params.saferead_netid(netID)) return;
+
+	CBlob@ blob = getBlobByNetworkID(netID);
+	if (blob is null) return;
+
+	CInventory@ inventory = blob.getInventory();
+	if (inventory is null) return;
+
+	CBitStream serverParams;
+	serverParams.write_u8(i);
+
+	blob.SendCommand(blob.getCommandID("make block"), serverParams);
+	MakeBlockClient(blob, i);
+}
+
 void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 {
 	CBlob@ blob = this.getBlob();
@@ -101,7 +122,9 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 			string block_desc = getTranslatedString(b.description);
 			CBitStream params;
 			params.write_u8(i);
-			CGridButton@ button = menu.AddButton(b.icon, "\n" + block_desc, blob.getCommandID("make block"), params);
+			params.write_netid(blob.getNetworkID());
+			CGridButton@ button = menu.AddButton(b.icon, "\n" + block_desc, "BuilderInventory.as", "SelectBuildBlock", params);  // Waffle: Have client handle blocks immediately
+			
 			if (button is null) continue;
 
 			button.selectOneOnClick = true;
@@ -205,6 +228,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		CBitStream sparams;
 		sparams.write_u8(i);
+		sparams.write_netid(callerp.getNetworkID());
 		blob.SendCommand(blob.getCommandID("make block client"), sparams);
 
 		const u8 PAGE = blob.get_u8("build page");
@@ -254,40 +278,15 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 	}
 	else if (cmd == blob.getCommandID("make block client") && isClient())
 	{
-		BuildBlock[][]@ blocks;
-		if (!blob.get(blocks_property, @blocks)) return;
-
 		u8 i;
-		if (!params.saferead_u8(i)) return; 
+		if (!params.saferead_u8(i)) return;
 
-		const u8 PAGE = blob.get_u8("build page");
-		if (blocks !is null && i >= 0 && i < blocks[PAGE].length)
-		{
-			BuildBlock@ block = @blocks[PAGE][i];
-			bool canBuildBlock = canBuild(blob, @blocks[PAGE], i) && !isKnocked(blob);
-			if (!canBuildBlock)
-			{
-				if (blob.isMyPlayer())
-				{
-					blob.getSprite().PlaySound("/NoAmmo", 0.5);
-				}
-				return;
-			}
+		u16 netID;
+		if (!params.saferead_netid(netID)) return;
 
-			if (block.tile == 0)
-			{
-				server_BuildBlob(blob, @blocks[PAGE], i);
-			}
-			else
-			{
-				blob.set_TileType("buildtile", block.tile);
-			}
+		if (getPlayerByNetworkId(netID) is getLocalPlayer()) return;
 
-			if (blob.isMyPlayer())
-			{
-				SetHelp(blob, "help self action", "builder", getTranslatedString("$Build$Build/Place  $LMB$"), "", 3);
-			}
-		}
+		MakeBlockClient(blob, i);
 	}
 	else if (cmd == blob.getCommandID("tool clear") && isServer())
 	{
@@ -345,6 +344,41 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 	}
 }
 
+void MakeBlockClient(CBlob@ blob, u8 i)
+{
+	BuildBlock[][]@ blocks;
+	if (!blob.get(blocks_property, @blocks)) return;
+
+	const u8 PAGE = blob.get_u8("build page");
+	if (blocks !is null && i >= 0 && i < blocks[PAGE].length)
+	{
+		BuildBlock@ block = @blocks[PAGE][i];
+		bool canBuildBlock = canBuild(blob, @blocks[PAGE], i) && !isKnocked(blob);
+		if (!canBuildBlock)
+		{
+			if (blob.isMyPlayer())
+			{
+				blob.getSprite().PlaySound("/NoAmmo", 0.5);
+			}
+			return;
+		}
+
+		if (block.tile == 0)
+		{
+			server_BuildBlob(blob, @blocks[PAGE], i);
+		}
+		else
+		{
+			blob.set_TileType("buildtile", block.tile);
+		}
+
+		if (blob.isMyPlayer())
+		{
+			SetHelp(blob, "help self action", "builder", getTranslatedString("$Build$Build/Place  $LMB$"), "", 3);
+		}
+	}
+}
+
 u8[] blockBinds = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8
 };
@@ -383,6 +417,8 @@ void onTick(CBlob@ this)
 				CBitStream params;
 				params.write_u8(blockBinds[i]);
 				this.SendCommand(this.getCommandID("make block"), params);
+
+				MakeBlockClient(this, blockBinds[i]);
 			}
 		}
 	}
