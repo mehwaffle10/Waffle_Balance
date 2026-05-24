@@ -543,6 +543,8 @@ void onInit(CSprite@ this)
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
+Vertex[] v_raw;
+
 // render block placement
 void onRender(CSprite@ this)
 {
@@ -560,52 +562,67 @@ void onRender(CSprite@ this)
 		return;
 	}
 
+	// Waffle: Client side building
 	// draw a map block or other blob that snaps to grid
+	BuildBlock[][]@ blocks;
+	if (!blob.get("blocks", @blocks)) return;
+
+	const u8 PAGE = blob.get_u8("build page");
+	u8 i = blob.get_u8("buildblob");
+	if (i >= blocks[PAGE].length) return;
+
+	BuildBlock@ buildBlock = blocks[PAGE][i];
+
+	BlockCursor @bc;
+	blob.get("blockCursor", @bc);
+
 	CBlob@ carryBlob = getCarriedBuildBlock(blob);
+	if (carryBlob is null) return;
 
-	if (carryBlob !is null) // && carryBlob.isSnapToGrid()
+	if (bc !is null)
 	{
-		if (!carryBlob.isSnapToGrid())
+		CMap@ map = getMap();
+		Driver@ driver = getDriver();
+		SColor color;
+		Vec2f pos;
+		if (bc.cursorClose && bc.hasReqs && bc.buildable)
 		{
-			return;
-		}
-
-		BlockCursor @bc;
-		blob.get("blockCursor", @bc);
-
-		if (bc !is null)
-		{
-			if (bc.cursorClose && bc.hasReqs && bc.buildable)
+			if (bc.buildable && bc.supported)
 			{
-				SColor color;
-
-				if (bc.buildable && bc.supported)
-				{
-					color.set(255, 255, 255, 255);
-					carryBlob.RenderForHUD(getBottomOfCursor(bc.tileAimPos, carryBlob) - carryBlob.getPosition(), 0.0f, color, RenderStyle::normal);
-
-                    // Waffle: Render tree heights
-                    if (isTreeSeed(carryBlob))
-                    {
-                        DrawTreeHeight(getDriver(), getMap(), bc.tileAimPos);
-                    }
-				}
-				else
-				{
-					color.set(255, 255, 46, 50);
-					Vec2f offset(0.0f, -1.0f + 1.0f * ((getGameTime() * 0.8f) % 8));
-					carryBlob.RenderForHUD(getBottomOfCursor(bc.tileAimPos, carryBlob) + offset - carryBlob.getPosition(), 0.0f, color, RenderStyle::normal);
-				}
+				color.set(255, 255, 255, 255);
+				pos = getBottomOfCursor(bc.tileAimPos, carryBlob);
+				
+				// Waffle: Render tree heights
+				// if (isTreeSeed(carryBlob))
+				// {
+				// 	DrawTreeHeight(getDriver(), getMap(), bc.tileAimPos);
+				// }
 			}
 			else
 			{
-				f32 halfTile = getMap().tilesize / 2.0f;
-				Vec2f aimpos = blob.getMovement().getVars().aimpos;
-				carryBlob.RenderForHUD(Vec2f(aimpos.x - halfTile, aimpos.y - halfTile) - carryBlob.getPosition(), 0.0f,
-				                       SColor(255, 255, 46, 50) ,
-				                       RenderStyle::normal);
+				color.set(255, 255, 46, 50);
+				Vec2f offset(0.0f, -1.0f + 1.0f * ((getGameTime() * 0.8f) % 8));
+				pos = getBottomOfCursor(bc.tileAimPos, carryBlob) + offset;
 			}
 		}
+		else
+		{
+			color.set(255, 255, 46, 50);
+			f32 halfTile = map.tilesize / 2.0f;
+			Vec2f aimpos = blob.getMovement().getVars().aimpos;
+			pos = Vec2f(aimpos.x - halfTile, aimpos.y - halfTile);
+		}
+
+		f32 z = this.getZ() + 0.1;
+		Render::SetTransformWorldspace();
+		v_raw.clear();
+		f32 halfWidth = buildBlock.size.x / 2;
+		f32 halfHeight = buildBlock.size.y / 2;
+		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfHeight, z, 0, 0, color));
+		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfHeight, z, 1, 0, color));
+		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y + halfHeight, z, 1, 1, color));
+		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfHeight, z, 0, 1, color));
+		Render::RawQuads(buildBlock.icon, v_raw);
 	}
 }
 
