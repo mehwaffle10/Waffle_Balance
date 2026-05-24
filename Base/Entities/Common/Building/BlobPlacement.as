@@ -89,6 +89,7 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 		else
 		{
 			CBlob@ newBlob = server_CreateBlob(blob.getName(), blob.getTeamNum(), cursorPos);
+			newBlob.setAngleDegrees(this.get_u16("build_angle"));
 			if (newBlob.isSnapToGrid())
 			{
 				newBlob.getShape().SetStatic(true);
@@ -616,12 +617,41 @@ void onRender(CSprite@ this)
 		f32 z = this.getZ() + 0.1;
 		Render::SetTransformWorldspace();
 		v_raw.clear();
-		f32 halfWidth = buildBlock.size.x / 2;
-		f32 halfHeight = buildBlock.size.y / 2;
+		u16 buildAngle = blob.get_u16("build_angle");
+		f32 halfWidth = (buildAngle % 90 == 0 ? buildBlock.size.x : buildBlock.size.y) / 2;
+		f32 halfHeight = (buildAngle % 90 == 0 ? buildBlock.size.y : buildBlock.size.x) / 2;
+		// Normal
 		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfHeight, z, 0, 0, color));
 		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfHeight, z, 1, 0, color));
 		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y + halfHeight, z, 1, 1, color));
 		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfHeight, z, 0, 1, color));
+		Render::RawQuads(buildBlock.icon, v_raw);
+
+		// 90 stretched
+		v_raw.clear();
+		pos += Vec2f(16, 0);
+		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfHeight, z, 0, 1, color));
+		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfHeight, z, 0, 0, color));
+		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y + halfHeight, z, 1, 0, color));
+		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfHeight, z, 1, 1, color));
+		Render::RawQuads(buildBlock.icon, v_raw);
+
+		// Flipped
+		v_raw.clear();
+		pos += Vec2f(16, 0);
+		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfHeight, z, 0, 1, color));
+		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfHeight, z, 1, 1, color));
+		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y + halfHeight, z, 1, 0, color));
+		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfHeight, z, 0, 0, color));
+		Render::RawQuads(buildBlock.icon, v_raw);
+
+		// 270 stretched
+		v_raw.clear();
+		pos += Vec2f(16, 0);
+		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfHeight, z, 1, 0, color));
+		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfHeight, z, 1, 1, color));
+		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y + halfHeight, z, 0, 1, color));
+		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfHeight, z, 0, 0, color));
 		Render::RawQuads(buildBlock.icon, v_raw);
 	}
 }

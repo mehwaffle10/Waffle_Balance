@@ -41,17 +41,21 @@ shared class BuildBlock
 				print("data is null");
 				return;
 			}
-			if (!Texture::createBySize(icon, size.x, size.y))
+			f32 squareSize = Maths::Max(size.x, size.y);
+			if (!Texture::createBySize(icon, squareSize, squareSize))
 			{
 				print("failed to create texture");
 				return;
 			}
-			ImageData@ new = ImageData(size.x, size.y);
+			f32 difference = Maths::Abs(size.x - size.y);
+			ImageData@ new = ImageData(squareSize, squareSize);
+			u8 xOffset = size.x > size.y ? 0 : difference / 2;
+			u8 yOffset = size.y > size.x ? 0 : difference / 2;
 			for (u8 x = 0; x < Maths::Min(Texture::width(FILE_NAME), size.x); x++)
 			{
 				for (u8 y = 0; y < Maths::Min(Texture::height(FILE_NAME), size.y); y++)
 				{
-					new.put(x, y, data.get(x, y));
+					new.put(x + xOffset, y + yOffset, data.get(x, y));
 				}
 			}
 			if (teamNum > 0)
