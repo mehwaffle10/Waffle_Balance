@@ -98,6 +98,22 @@ void SelectBuildBlock(CBitStream@ params)
 	MakeBlockClient(blob, i);
 }
 
+// Waffle: Client side block selection
+void ClearSelection(CBitStream@ params)
+{
+	u16 netID;
+	if (!params.saferead_netid(netID)) return;
+
+	CBlob@ blob = getBlobByNetworkID(netID);
+	if (blob is null) return;
+
+	CInventory@ inventory = blob.getInventory();
+	if (inventory is null) return;
+
+	blob.SendCommand(blob.getCommandID("tool clear"));
+	ClearCarriedBlock(blob);;
+}
+
 void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 {
 	CBlob@ blob = this.getBlob();
@@ -159,7 +175,9 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 		{
 			tool.SetCaptionEnabled(false);
 
-			CGridButton@ clear = tool.AddButton("$BUILDER_CLEAR$", "", blob.getCommandID("tool clear"), Vec2f(1, 1));
+			CBitStream params;
+			params.write_netid(blob.getNetworkID());
+			CGridButton@ clear = tool.AddButton("$BUILDER_CLEAR$", "", "BuilderInventory.as", "ClearSelection", Vec2f(1, 1), params);
 			if (clear !is null)
 			{
 				clear.SetHoverText(getTranslatedString("Stop building\n"));
@@ -227,10 +245,10 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 		u8 i;
 		if (!params.saferead_u8(i)) return; 
 
-		CBitStream sparams;
-		sparams.write_u8(i);
-		sparams.write_netid(callerp.getNetworkID());  // Waffle: Client side block selection
-		blob.SendCommand(blob.getCommandID("make block client"), sparams);
+		CBitStream clientParams;
+		clientParams.write_u8(i);
+		clientParams.write_netid(callerp.getNetworkID());  // Waffle: Client side block selection
+		blob.SendCommand(blob.getCommandID("make block client"), clientParams);
 
 		const u8 PAGE = blob.get_u8("build page");
 		if (blocks !is null && i >= 0 && i < blocks[PAGE].length)
@@ -282,7 +300,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 		u8 i;
 		if (!params.saferead_u8(i)) return;
 
-		// Waffle: Client side block selection
+		// Waffle: Client side building
 		u16 netID;
 		if (!params.saferead_netid(netID)) return;
 
@@ -301,11 +319,18 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		ClearCarriedBlock(blob);
 
-		blob.server_SendCommandToPlayer(blob.getCommandID("tool clear client"), callerp);
+		// Waffle: Client side building
+		CBitStream clientParams;
+		clientParams.write_netid(callerp.getNetworkID());  // Waffle: Client side block selection
+		blob.SendCommand(blob.getCommandID("tool clear client"), clientParams);
 	}
 	else if (cmd == blob.getCommandID("tool clear client") && isClient())
 	{
-		blob.ClearGridMenus();
+		// Waffle: Client side building
+		u16 netID;
+		if (!params.saferead_netid(netID)) return;
+
+		if (getPlayerByNetworkId(netID) is getLocalPlayer()) return;
 
 		ClearCarriedBlock(blob);
 	}

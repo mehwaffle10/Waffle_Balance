@@ -235,13 +235,16 @@ bool canBuild(CBlob@ this, BuildBlock[]@ blocks, uint index)
 
 void ClearCarriedBlock(CBlob@ this)
 {
+	// Waffle: Client side building
+	this.ClearGridMenus();
+
 	// clear variables
 	this.set_u8("buildblob", 255);
 	this.set_TileType("buildtile", 0);
 
 	// remove carried block, if any
 	CBlob@ carried = getCarriedBuildBlock(this);  // Waffle: Client side building
-	if (carried !is null && carried.hasTag("temp blob"))
+	if (isServer() && carried !is null && carried.hasTag("temp blob"))
 	{
 		carried.Untag("temp blob");
 		carried.server_Die();
