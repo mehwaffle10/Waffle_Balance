@@ -57,22 +57,21 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 		}
 		const u8 PAGE = this.get_u8("build page");
 		u8 i = this.get_u8("buildblob");
-		if (i >= 0 && i < blocks[PAGE].length)
+		if (i >= blocks[PAGE].length) return false;
+
+		BuildBlock@ b = blocks[PAGE][i];
+		if (b.name != blob.getName()) return false;
+		
+		CInventory@ inv = this.getInventory();
+		CBitStream missing;
+		if (!hasRequirements(inv, b.reqs, missing, not b.buildOnGround)) return false;
+
+		server_TakeRequirements(inv, b.reqs);
+
+		if (!hasRequirements(inv, b.reqs, missing, not b.buildOnGround))
 		{
-			BuildBlock@ b = blocks[PAGE][i];
-			if (b.name != blob.getName()) return false;
-			
-			CInventory@ inv = this.getInventory();
-			CBitStream missing;
-			if (!hasRequirements(inv, b.reqs, missing, not b.buildOnGround)) return false;
-
-			server_TakeRequirements(inv, b.reqs);
-
-			if (!hasRequirements(inv, b.reqs, missing, not b.buildOnGround))
-			{
-				blob.server_Die();
-				this.set_u8("buildblob", 255);
-			}
+			blob.server_Die();
+			this.set_u8("buildblob", 255);
 		}
 
 		if (repairing && repairBlob !is null)
@@ -89,7 +88,7 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 		else
 		{
 			CBlob@ newBlob = server_CreateBlob(blob.getName(), blob.getTeamNum(), cursorPos);
-			newBlob.setAngleDegrees(this.get_u16("build_angle"));
+			newBlob.setAngleDegrees(b.noRotate ? 0 : this.get_u16("build_angle"));
 			if (newBlob.isSnapToGrid())
 			{
 				newBlob.getShape().SetStatic(true);
@@ -618,7 +617,7 @@ void onRender(CSprite@ this)
 		f32 z = this.getZ() + 0.1;
 		Render::SetTransformWorldspace();
 		v_raw.clear();
-		u16 buildAngle = blob.get_u16("build_angle");
+		u16 buildAngle = buildBlock.noRotate ? 0 : blob.get_u16("build_angle");
 		f32 halfWidth = Texture::width(buildBlock.icon) / 2;
 		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfWidth, z, buildAngle == 270 ? 1 : 0, buildAngle > 0 && buildAngle < 270 ? 1 : 0, color));
 		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfWidth, z, buildAngle == 90 ? 0 : 1, buildAngle > 90 ? 1 : 0, color));
