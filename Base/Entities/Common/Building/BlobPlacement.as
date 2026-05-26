@@ -577,9 +577,6 @@ void onRender(CSprite@ this)
 	BlockCursor @bc;
 	blob.get("blockCursor", @bc);
 
-	CBlob@ carryBlob = getCarriedBuildBlock(blob);
-	if (carryBlob is null) return;
-
 	if (bc !is null)
 	{
 		CMap@ map = getMap();
@@ -591,19 +588,19 @@ void onRender(CSprite@ this)
 			if (bc.buildable && bc.supported)
 			{
 				color.set(255, 255, 255, 255);
-				pos = getBottomOfCursor(bc.tileAimPos, carryBlob);
+				pos = getBottomOfCursor(bc.tileAimPos, null);
 				
 				// Waffle: Render tree heights
-				// if (isTreeSeed(carryBlob))
-				// {
-				// 	DrawTreeHeight(getDriver(), getMap(), bc.tileAimPos);
-				// }
+				if (isTreeSeed(blob.getCarriedBlob()))
+				{
+					DrawTreeHeight(getDriver(), getMap(), bc.tileAimPos);
+				}
 			}
 			else
 			{
 				color.set(255, 255, 46, 50);
 				Vec2f offset(0.0f, -1.0f + 1.0f * ((getGameTime() * 0.8f) % 8));
-				pos = getBottomOfCursor(bc.tileAimPos, carryBlob) + offset;
+				pos = getBottomOfCursor(bc.tileAimPos, null) + offset;
 			}
 		}
 		else
