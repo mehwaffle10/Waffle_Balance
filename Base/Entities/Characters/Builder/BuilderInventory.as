@@ -76,7 +76,7 @@ void onInit(CInventory@ this)
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
-// Waffle: Client side block selection
+// Waffle: Client side building
 void SelectBuildBlock(CBitStream@ params)
 {
 	u8 i;
@@ -98,7 +98,7 @@ void SelectBuildBlock(CBitStream@ params)
 	MakeBlockClient(blob, i);
 }
 
-// Waffle: Client side block selection
+// Waffle: Client side building
 void ClearSelection(CBitStream@ params)
 {
 	u16 netID;
@@ -140,7 +140,7 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 			CBitStream params;
 			params.write_u8(i);
 			params.write_netid(blob.getNetworkID());
-			CGridButton@ button = menu.AddButton(b.icon, "\n" + block_desc, "BuilderInventory.as", "SelectBuildBlock", params);  // Waffle: Client side block selection
+			CGridButton@ button = menu.AddButton(b.icon, "\n" + block_desc, "BuilderInventory.as", "SelectBuildBlock", params);  // Waffle: Client side building
 			
 			if (button is null) continue;
 
@@ -247,7 +247,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		CBitStream clientParams;
 		clientParams.write_u8(i);
-		clientParams.write_netid(callerp.getNetworkID());  // Waffle: Client side block selection
+		clientParams.write_netid(callerp.getNetworkID());  // Waffle: Client side building
 		blob.SendCommand(blob.getCommandID("make block client"), clientParams);
 
 		const u8 PAGE = blob.get_u8("build page");
@@ -287,10 +287,12 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 			if (block.tile == 0)
 			{
+				blob.set_TileType("buildtile", block.tile);  // Waffle: Client side building
 				server_BuildBlob(blob, @blocks[PAGE], i);
 			}
 			else
 			{
+				blob.set_u8("buildblob", 255);  // Waffle: Client side building
 				blob.set_TileType("buildtile", block.tile);
 			}
 		}
@@ -321,7 +323,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		// Waffle: Client side building
 		CBitStream clientParams;
-		clientParams.write_netid(callerp.getNetworkID());  // Waffle: Client side block selection
+		clientParams.write_netid(callerp.getNetworkID());  // Waffle: Client side building
 		blob.SendCommand(blob.getCommandID("tool clear client"), clientParams);
 	}
 	else if (cmd == blob.getCommandID("tool clear client") && isClient())
@@ -371,6 +373,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 	}
 }
 
+// Waffle: Client side building
 void MakeBlockClient(CBlob@ blob, u8 i)
 {
 	BuildBlock[][]@ blocks;
@@ -390,12 +393,18 @@ void MakeBlockClient(CBlob@ blob, u8 i)
 			return;
 		}
 
+		if (!block.buildOnGround)
+		{
+			blob.getSprite().PlaySound("/Pickup.ogg");
+		}
 		if (block.tile == 0)
 		{
+			blob.set_TileType("buildtile", block.tile);
 			server_BuildBlob(blob, @blocks[PAGE], i);
 		}
 		else
 		{
+			blob.set_u8("buildblob", 255);
 			blob.set_TileType("buildtile", block.tile);
 		}
 
@@ -445,7 +454,7 @@ void onTick(CBlob@ this)
 				params.write_u8(blockBinds[i]);
 				this.SendCommand(this.getCommandID("make block"), params);
 
-				MakeBlockClient(this, blockBinds[i]);  // Waffle: Client side block selection
+				MakeBlockClient(this, blockBinds[i]);  // Waffle: Client side building
 			}
 		}
 	}

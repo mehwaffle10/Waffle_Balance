@@ -132,8 +132,8 @@ void onTick(CBlob@ this)
 		return;
 	}
 
-	CBlob@ carryBlob = getCarriedBuildBlock(this);  // Waffle: Client side building
-	if (carryBlob !is null)
+	// Waffle: Client side building
+	if (this.get_u8("buildblob") != 255)
 	{
 		return;
 	}
@@ -236,8 +236,8 @@ void onRender(CSprite@ this)
 		return;
 	}
 
-	CBlob@ carryBlob = getCarriedBuildBlock(blob);  // Waffle: Client side building
-	if (carryBlob !is null)
+	// Waffle: Client side building
+	if (blob.get_u8("buildblob") != 255)
 	{
 		return;
 	}
