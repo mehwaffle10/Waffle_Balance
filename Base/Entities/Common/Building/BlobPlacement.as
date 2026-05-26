@@ -252,7 +252,7 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 	}
 	else
 	{
-		if (!carryBlob.hasTag("place norotate"))
+		if (carryBlob.hasTag("place norotate"))  // Waffle: Client side building
 		{
 			carryBlob.setAngleDegrees(0.0f);
 		}
@@ -301,6 +301,7 @@ void onInit(CBlob@ this)
 	this.addCommandID("placeBlob");
 	this.addCommandID("repairBlob");
 	this.addCommandID("rotateBlob");
+	this.addCommandID("rotateBlobClient");  // Waffle: Client side building
 
 	this.set_u16("build_angle", 0);
 
@@ -629,6 +630,22 @@ void onRender(CSprite@ this)
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
+	// Waffle: Client side building
+	if (isClient() && cmd == this.getCommandID("rotateBlobClient"))
+	{
+		u16 angle;
+		if (!params.saferead_u16(angle)) return;
+
+		// Waffle: Client side block selection
+		u16 netID;
+		if (!params.saferead_netid(netID)) return;
+
+		if (getPlayerByNetworkId(netID) is getLocalPlayer()) return;
+
+		this.set_u16("build_angle", angle);
+		return;
+	}
+
 	if (!isServer()) return;
 
 	if (cmd == this.getCommandID("rotateBlob"))
@@ -645,6 +662,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (!params.saferead_u16(angle)) return;
 
 		this.set_u16("build_angle", angle);
+
+		// Waffle: Client side block selection
+		CBitStream clientParams;
+		clientParams.write_u16(angle);
+		clientParams.write_netid(callerp.getNetworkID());
+		this.SendCommand(this.getCommandID("rotateBlobClient"), clientParams);
 		return;
 	}
 	else if (cmd == this.getCommandID("placeBlob"))
