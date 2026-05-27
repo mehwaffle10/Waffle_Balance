@@ -178,6 +178,7 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 	}
 
 	this.set_u8("buildblob", index);
+	this.Tag("HoldingBuildBlock");  // Waffle: Client side building
 
 	if (getNet().isServer())
 	{

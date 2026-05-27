@@ -17,14 +17,19 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 		Vec2f pos = this.getPosition();
 		Vec2f mouseNorm = cursorPos - pos;
 		f32 mouseLen = mouseNorm.Length();
-		const f32 maxLen = MAX_BUILD_LENGTH;
 		mouseNorm /= mouseLen;
+
+		// out of range
+		if (mouseLen >= getMaxBuildDistance(this))
+		{
+			return false;
+		} 
 
 		Vec2f tileaimpos;
 
-		if (mouseLen > maxLen * getMap().tilesize)
+		if (mouseLen > MAX_BUILD_LENGTH * getMap().tilesize)
 		{
-			f32 d = maxLen * getMap().tilesize;
+			f32 d = MAX_BUILD_LENGTH * getMap().tilesize;
 			Vec2f p = pos + Vec2f(d * mouseNorm.x, d * mouseNorm.y);
 			tileaimpos = getMap().getTileWorldPosition(getMap().getTileSpacePosition(p));
 		}
@@ -33,13 +38,7 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 			tileaimpos = getMap().getTileWorldPosition(getMap().getTileSpacePosition(cursorPos));
 		}
 
-		// out of range
-		if (mouseLen >= getMaxBuildDistance(this))
-		{
-			return false;
-		} 
-
-		cursorPos = getBottomOfCursor(tileaimpos, blob);
+		cursorPos = getBottomOfCursor(tileaimpos);
 
 		if (!serverBlobCheck(this, blob, cursorPos, repairing, repairBlob))
 			return false;
@@ -59,20 +58,18 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 		u8 i = this.get_u8("buildblob");
 		if (i >= blocks[PAGE].length) return false;
 
-		BuildBlock@ b = blocks[PAGE][i];
-		if (b.name != blob.getName()) return false;
+		BuildBlock@ buildBlock = blocks[PAGE][i];
+		if (buildBlock.name != blob.getName()) return false;
 		
 		CInventory@ inv = this.getInventory();
 		CBitStream missing;
-		if (!hasRequirements(inv, b.reqs, missing, not b.buildOnGround)) return false;
-
-		server_TakeRequirements(inv, b.reqs);
-
-		if (!hasRequirements(inv, b.reqs, missing, not b.buildOnGround))
+		if (!hasRequirements(inv, buildBlock.reqs, missing, not buildBlock.buildOnGround))
 		{
 			blob.server_Die();
 			this.set_u8("buildblob", 255);
 		}
+
+		server_TakeRequirements(inv, buildBlock.reqs);
 
 		if (repairing && repairBlob !is null)
 		{
@@ -88,7 +85,7 @@ bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false
 		else
 		{
 			CBlob@ newBlob = server_CreateBlob(blob.getName(), blob.getTeamNum(), cursorPos);
-			newBlob.setAngleDegrees(b.noRotate ? 0 : this.get_u16("build_angle"));
+			newBlob.setAngleDegrees(buildBlock.noRotate ? 0 : this.get_u16("build_angle"));
 			if (newBlob.isSnapToGrid())
 			{
 				newBlob.getShape().SetStatic(true);
@@ -208,7 +205,7 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
 	return true;
 } 
 
-Vec2f getBottomOfCursor(Vec2f cursorPos, CBlob@ carryBlob)
+Vec2f getBottomOfCursor(Vec2f cursorPos)
 {
 	// check at bottom of cursor
 	CMap@ map = getMap();
@@ -412,8 +409,6 @@ void onTick(CBlob@ this)
 		bc.blockActive = false;
 	}
 
-	if (carryBlob is null) return;
-
 	if (bc.cursorClose)
 	{
 		if (snap) // if snaps to grid make cursor
@@ -422,19 +417,19 @@ void onTick(CBlob@ this)
 			f32 tsqr = halftileoffset.LengthSquared() - 1.0f;
 			CMap@ map = this.getMap();
 			TileType buildtile = 256;   // something else than a tile
-			Vec2f bottomPos = getBottomOfCursor(bc.tileAimPos, null);
+			Vec2f bottomPos = getBottomOfCursor(bc.tileAimPos);
 			bool overlapped;
 
 			if (isLadder || block.name == "wooden_platform" || block.name == "bridge")   // Waffle: Allow building platforms on trees
 			{
 				overlapped = false;
-				CBlob@[] b;
+				CBlob@[] buildBlock;
 
-				if (map.getBlobsInRadius(bottomPos, 0.5f, @b))
+				if (map.getBlobsInRadius(bottomPos, 0.5f, @buildBlock))
 				{
-					for (uint nearblob_step = 0; nearblob_step < b.length && !overlapped; ++nearblob_step)
+					for (uint nearblob_step = 0; nearblob_step < buildBlock.length && !overlapped; ++nearblob_step)
 					{
-						CBlob@ blob = b[nearblob_step];
+						CBlob@ blob = buildBlock[nearblob_step];
 
 						string bname = blob.getName();
 						if (isLadder)
@@ -476,9 +471,8 @@ void onTick(CBlob@ this)
 		}
 	}
 
-
 	// place blob with action1 key
-	if (!getHUD().hasButtons() && !carryBlob.hasTag("custom drop"))
+	if (!getHUD().hasButtons())
 	{
 		if (this.isKeyPressed(key_action1))
 		{
@@ -489,7 +483,7 @@ void onTick(CBlob@ this)
 				CBlob@ currentBlobAtPos = null;
 
 				CBlob@[] blobsAtPos;
-				map.getBlobsAtPosition(getBottomOfCursor(bc.tileAimPos, carryBlob), blobsAtPos);
+				map.getBlobsAtPosition(getBottomOfCursor(bc.tileAimPos), blobsAtPos);
 
 				for (int i = 0; i < blobsAtPos.size(); i++)
 				{
@@ -502,9 +496,8 @@ void onTick(CBlob@ this)
 				}
 
 				CBitStream params;
-				params.write_u16(carryBlob.getNetworkID());
 				params.write_Vec2f(this.getAimPos()); // we're gonna send the aimpos and double-check range on server for safety
-				//params.write_Vec2f(getBottomOfCursor(bc.tileAimPos, carryBlob));
+				//params.write_Vec2f(getBottomOfCursor(bc.tileAimPos));
 
 				// Waffle: Client side building
 				if (currentBlobAtPos !is null && block.name == currentBlobAtPos.getName() && currentBlobAtPos.getHealth() < currentBlobAtPos.getInitialHealth() && currentBlobAtPos.getName() != "ladder")
@@ -543,9 +536,11 @@ void onTick(CBlob@ this)
 
 void onInit(CSprite@ this)
 {
-	this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	this.getCurrentScript().runFlags |= Script::tick_hasattached;
+	// Waffle: Client side building
+	// this.getCurrentScript().runFlags |= Script::tick_not_attached;
+	// this.getCurrentScript().runFlags |= Script::tick_hasattached;
 	this.getCurrentScript().runFlags |= Script::tick_myplayer;
+	this.getCurrentScript().tickIfTag = "HoldingBuildBlock";
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
@@ -593,7 +588,7 @@ void onRender(CSprite@ this)
 			if (bc.buildable && bc.supported)
 			{
 				color.set(255, 255, 255, 255);
-				pos = getBottomOfCursor(bc.tileAimPos, null);
+				pos = getBottomOfCursor(bc.tileAimPos);
 				
 				// Waffle: Render tree heights
 				if (isTreeSeed(blob.getCarriedBlob()))
@@ -605,7 +600,7 @@ void onRender(CSprite@ this)
 			{
 				color.set(255, 255, 46, 50);
 				Vec2f offset(0.0f, -1.0f + 1.0f * ((getGameTime() * 0.8f) % 8));
-				pos = getBottomOfCursor(bc.tileAimPos, null) + offset;
+				pos = getBottomOfCursor(bc.tileAimPos) + offset;
 			}
 		}
 		else
@@ -673,14 +668,12 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if (cmd == this.getCommandID("placeBlob"))
 	{
-		u16 block_id;
-		if (!params.saferead_u16(block_id)) return;
-		CBlob @carryBlob = getBlobByNetworkID(block_id);
+		CBlob @carryBlob = getCarriedBuildBlock(this);
 		if (carryBlob is null) return;
 
 		Vec2f aimpos;
 		if (!params.saferead_Vec2f(aimpos)) return;
-			
+		
 		if (PlaceBlob(this, carryBlob, aimpos))
 		{
 			CPlayer@ p = this.getPlayer();
@@ -693,9 +686,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if (cmd == this.getCommandID("repairBlob"))
 	{
-		u16 block_id;
-		if (!params.saferead_u16(block_id)) return;
-		CBlob @carryBlob = getBlobByNetworkID(block_id);
+		CBlob @carryBlob = getCarriedBuildBlock(this);
 		if (carryBlob is null) return;
 
 		Vec2f aimpos;
