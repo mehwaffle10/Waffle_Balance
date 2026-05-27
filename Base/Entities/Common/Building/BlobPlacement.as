@@ -419,23 +419,18 @@ void onTick(CBlob@ this)
 		if (snap) // if snaps to grid make cursor
 		{
 			Vec2f halftileoffset(map.tilesize * 0.5f, map.tilesize * 0.5f);
-
+			f32 tsqr = halftileoffset.LengthSquared() - 1.0f;
 			CMap@ map = this.getMap();
 			TileType buildtile = 256;   // something else than a tile
 			Vec2f bottomPos = getBottomOfCursor(bc.tileAimPos, null);
-
 			bool overlapped;
 
 			if (isLadder || block.name == "wooden_platform" || block.name == "bridge")   // Waffle: Allow building platforms on trees
 			{
-				Vec2f ontilepos = halftileoffset + bc.tileAimPos;
-
 				overlapped = false;
 				CBlob@[] b;
 
-				f32 tsqr = halftileoffset.LengthSquared() - 1.0f;
-
-				if (map.getBlobsInRadius(ontilepos, 0.5f, @b))
+				if (map.getBlobsInRadius(bottomPos, 0.5f, @b))
 				{
 					for (uint nearblob_step = 0; nearblob_step < b.length && !overlapped; ++nearblob_step)
 					{
@@ -454,7 +449,7 @@ void onTick(CBlob@ this)
 							continue;
 						}
 
-						overlapped = (blob.getPosition() - ontilepos).LengthSquared() < tsqr;
+						overlapped = (blob.getPosition() - bottomPos).LengthSquared() < tsqr;
 					}
 				}
 			}
@@ -462,21 +457,19 @@ void onTick(CBlob@ this)
 			{
 				// Waffle: Client side building
 				CBlob@[] overlapping;
-				Vec2f offset = block.size.RotateBy(block.noRotate ? 0 : this.get_u16("build_angle"));
-				map.getBlobsInBox(bottomPos - offset, bottomPos + offset, @overlapping);
-				overlapped = overlapping.length > 0;
-				print("AAAAA");
-				for (u16 i = 0; i < overlapping.length; i++)
+				map.getBlobsInRadius(bottomPos, 0.5f, @overlapping);
+				for (u16 i = 0; i < overlapping.length && !overlapped; i++)
 				{
-					CBlob@ bTest = overlapping[i];
-					if (bTest !is null)
+					CBlob@ blob = overlapping[i];
+					if (blob !is null)
 					{
-						print("i: " + bTest.getName());
+						print("" + i + ": " + overlapping[i].getName());
+						overlapped = (blob.getPosition() - bottomPos).LengthSquared() < tsqr;
 					}
 				}
 			}
 
-			bc.buildableAtPos = isBuildableAtPos(this, bottomPos, buildtile, carryBlob, bc.sameTileOnBack) && !overlapped;
+			bc.buildableAtPos = isBuildableAtPos(this, bottomPos, block, bc.sameTileOnBack) && !overlapped;
 			bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
 			bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
 			bc.supported = carryBlob.getShape().getConsts().support > 0 ? map.hasSupportAtPos(bc.tileAimPos) : true;

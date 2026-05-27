@@ -10,11 +10,12 @@ shared class BuildBlock
 	Vec2f size; // used by buildOnGround blobs
 	bool temporaryBlob;
 	bool noRotate;    // Waffle: Client side building
+	bool collidable;  // Waffle: --
 	bool snapToGrid;  // Waffle: --
 
 	BuildBlock() {} // required for handles to work
 
-	BuildBlock(TileType _tile, string _name, string _icon, string _desc, u8 teamNum, Vec2f _size = Vec2f(8, 8), bool _noRotate = false, bool snapToGrid = true)  // Waffle: Client side building
+	BuildBlock(TileType _tile, string _name, string _icon, string _desc, u8 teamNum, Vec2f _size = Vec2f(8, 8), bool _noRotate = false, bool _collidable = true, bool _snapToGrid = true)  // Waffle: Client side building
 	{
 		tile = _tile;
 		name = _name;
@@ -23,8 +24,9 @@ shared class BuildBlock
 		temporaryBlob = true;
 		buildOnGround = false;
 		size = _size;
-		noRotate = _noRotate;     // Waffle: Client side building
-		snapToGrid = snapToGrid;  // Waffle: --
+		noRotate = _noRotate;      // Waffle: Client side building
+		collidable = _collidable;  // Waffle: --
+		snapToGrid = _snapToGrid;  // Waffle: --
 
 		// Waffle: Client side building
 		if (isClient() && tile == 0 && !Texture::exists(icon))

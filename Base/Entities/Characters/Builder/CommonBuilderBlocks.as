@@ -53,7 +53,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 	const bool TTH = gamemode == "TTH";
 	const bool SBX = gamemode == "Sandbox";
 
-	// Waffle: Add team num and size for client side building
+	// Waffle: Add team num, size, no rotate, and collidable for client side building
 	BuildBlock[] page_0;
 	blocks.push_back(page_0);
 	{
@@ -92,12 +92,12 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 		blocks[0].push_back(b);
 	}*/
 	{
-		BuildBlock b(0, "bridge", getTeamIcon("bridge", "Bridge.png", team_num), "Trap Bridge\nOnly your team can stand on it", team_num, Vec2f(8, 8), true);
+		BuildBlock b(0, "bridge", getTeamIcon("bridge", "Bridge.png", team_num), "Trap Bridge\nOnly your team can stand on it", team_num, Vec2f(8, 8), true, false);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", BuilderCosts::bridge);
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "ladder", "$ladder$", "Ladder\nAnyone can climb it", team_num, Vec2f(16, 24));
+		BuildBlock b(0, "ladder", "$ladder$", "Ladder\nAnyone can climb it", team_num, Vec2f(16, 24), false, false);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", BuilderCosts::ladder);
 		blocks[0].push_back(b);
 	}
@@ -107,7 +107,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "spikes", "$spikes$", "Spikes\nPlace on Stone Block\nfor Retracting Trap", team_num, Vec2f(8, 8), true);
+		BuildBlock b(0, "spikes", "$spikes$", "Spikes\nPlace on Stone Block\nfor Retracting Trap", team_num, Vec2f(8, 8), true, false);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", BuilderCosts::spikes);
 		blocks[0].push_back(b);
 	}

@@ -1,5 +1,6 @@
 
-#include "canGrow.as"  // Waffle: Use the proper function instead of copy pasting it
+#include "canGrow.as"     // Waffle: Use the proper function instead of copy pasting it
+#include "BuildBlock.as"  // Waffle: Client side building
 
 const f32 MAX_BUILD_LENGTH = 4.0f;
 
@@ -43,20 +44,10 @@ bool canPlaceNextTo(CMap@ map, const Tile &in tile)
 	return tile.support > 0;
 }
 
-bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, bool &out sameTile)
+bool isBuildableAtPos(CBlob@ this, Vec2f p, BuildBlock@ block, bool &out sameTile)  // Waffle: Client side building
 {
-	f32 radius = 0.0f;
 	CMap@ map = this.getMap();
 	sameTile = false;
-
-	if (blob is null) // BLOCKS
-	{
-		radius = map.tilesize;
-	}
-	else // BLOB
-	{
-		radius = blob.getRadius();
-	}
 
 	//check height + edge proximity
 	if (p.y < 2 * map.tilesize ||
@@ -67,7 +58,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 	}
 
 	// tilemap check
-	const bool buildSolid = (map.isTileSolid(buildTile) || (blob !is null && blob.isCollidable()));
+	const bool buildSolid = (map.isTileSolid(block.tile) || (block.tile == 0 && block.collidable));
 	Vec2f tilespace = map.getTileSpacePosition(p);
 	const int offset = map.getTileOffsetFromTileSpace(tilespace);
 	Tile backtile = map.getTile(offset);
@@ -76,7 +67,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 	Tile up = map.getTile(offset - map.tilemapwidth);
 	Tile down = map.getTile(offset + map.tilemapwidth);
 
-	if (buildTile > 0 && buildTile < 255 && blob is null && buildTile == map.getTile(offset).type)
+	if (block.tile > 0 && block.tile < 255 && block.tile == map.getTile(offset).type)
 	{
 		sameTile = true;
 		return false;
@@ -87,16 +78,16 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		return false;
 	}
 
-	if ((buildTile == CMap::tile_wood && backtile.type >= CMap::tile_wood_d1 && backtile.type <= CMap::tile_wood_d0) ||
-			(buildTile == CMap::tile_castle && backtile.type >= CMap::tile_castle_d1 && backtile.type <= CMap::tile_castle_d0))
+	if ((block.tile == CMap::tile_wood && backtile.type >= CMap::tile_wood_d1 && backtile.type <= CMap::tile_wood_d0) ||
+			(block.tile == CMap::tile_castle && backtile.type >= CMap::tile_castle_d1 && backtile.type <= CMap::tile_castle_d0))
 	{
 		//repair like tiles
 	}
-	else if (buildTile == CMap::tile_castle && backtile.type >= CMap::tile_wood && backtile.type <= CMap::tile_wood_d0 && !map.isInFire(p))
+	else if (block.tile == CMap::tile_castle && backtile.type >= CMap::tile_wood && backtile.type <= CMap::tile_wood_d0 && !map.isInFire(p))
 	{
 		// can build stone on wood when not on fire, do nothing
 	}
-	else if ((buildTile == CMap::tile_wood_back || buildTile == CMap::tile_castle_back) && 
+	else if ((block.tile == CMap::tile_wood_back || block.tile == CMap::tile_castle_back) && 
 			 (backtile.type == CMap::tile_castle_back || backtile.type >= CMap::tile_castle_back_moss && backtile.type <= 231))  // Waffle: Also protect moss backwall
 	{
 		//cant build wood on stone background
@@ -128,24 +119,14 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 	}
 
 	// no blocking actors?
-	if (blob is null || !blob.hasTag("ignore blocking actors"))
+	if (block.tile == 0 || block.name == "ladder")
 	{
-		bool isLadder = false;
-		bool isSpikes = false;
-		bool isDoor = false;
-		bool isPlatform = false;
-		bool isSeed = false;
-
-		if (blob !is null)
-		{
-			const string bname = blob.getName();
-			isLadder = bname == "ladder";
-			isSpikes = bname == "spikes";
-			isDoor = bname == "wooden_door" || bname == "stone_door" || bname == "bridge";
-			isPlatform = bname == "wooden_platform";
-			isSeed = bname == "seed";
-		}
-
+		CBlob@ carried = this.getCarriedBlob();
+		bool isLadder = block.name == "ladder";
+		bool isSpikes = block.name == "spikes";
+		bool isDoor = block.name == "wooden_door" || block.name == "stone_door" || block.name == "bridge";
+		bool isPlatform = block.name == "wooden_platform" || block.name == "bridge";
+		bool isSeed = carried !is null && carried.getName() == "seed";
 		Vec2f middle = p;
 
 		s32 x = Maths::Floor(p.x);
@@ -156,13 +137,13 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		CBlob@[] blobsAtPos;
 
 		// repairing blobs
-		if (map.getBlobsAtPosition(Vec2f(p.x, p.y), @blobsAtPos) && blob !is null && (isDoor || isPlatform))
+		if (map.getBlobsAtPosition(Vec2f(p.x, p.y), @blobsAtPos) && (isDoor || isPlatform))
 		{
 			for (uint i = 0; i < blobsAtPos.length; i++)
 			{
 				CBlob@ blobAtPos = blobsAtPos[i];
-				if (blobAtPos.getName() == blob.getName() && 
-					blobAtPos.getTeamNum() == blob.getTeamNum() && 
+				if (blobAtPos.getName() == block.name && 
+					blobAtPos.getTeamNum() == this.getTeamNum() && 
 					blobAtPos.getHealth() != blobAtPos.getInitialHealth()) 
 				{	
 					return true;
@@ -178,7 +159,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		{
 			if (sectors[i] !is null && sectors[i].name == "no build")
 			{
-				if (blob !is null && blob.isPlatform())
+				if (isPlatform)
 				{
 					CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
 					if (owner is null || !(owner.hasTag("tree") || owner.hasTag("scenary")))
@@ -196,7 +177,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		}
         const bool no_build  = !isLadder && (buildSolid || isSpikes || isDoor || isPlatform) && no_build_sector;
         const bool no_solids = buildSolid && map.getSectorAtPosition(middle, "no solids") !is null;
-        const bool no_blobs  = blob !is null && map.getSectorAtPosition(middle, "no blobs") !is null;
+        const bool no_blobs  = block.tile == 0 && map.getSectorAtPosition(middle, "no blobs") !is null;
         const bool has_adjacent = map.isTileSolid(up) || map.isTileSolid(down) || map.isTileSolid(left) || map.isTileSolid(right);
 		if (!isSeed && (no_build || (!isSpikes || has_adjacent) && (no_solids || no_blobs)))  // Waffle: Allow spike dropping at the top of the map
 		{
@@ -207,16 +188,16 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		//middle += Vec2f(map.tilesize*0.5f, map.tilesize*0.5f);
         if (!isLadder)
         {
-            const string name = blob !is null ? blob.getName() : "";
+            const string name = block.name;
             CBlob@[] blobsInRadius;
             if (map.getBlobsInRadius(middle, buildSolid ? map.tilesize : 0.0f, @blobsInRadius))
             {
                 for (uint i = 0; i < blobsInRadius.length; i++)
                 {
                     CBlob @b = blobsInRadius[i];
-                    if (!b.isAttached() && b !is blob)
+                    if (!b.isAttached() && b !is getCarriedBuildBlock(this))
                     {
-                        if (blob !is null || buildSolid)
+                        if (block.tile > 0 || buildSolid)
                         {
                             if (b is this && b.getName() == "spikes") continue;
 
@@ -234,7 +215,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
                                 !b.hasTag("material") &&
                                 !b.hasTag("projectile") &&
                                 !(isSeed && (b.hasTag("building") || !b.getShape().isStatic())) &&  // Waffle: Allow placing seeds on building and non-static blobs
-								!(blob !is null && blob.isPlatform() && b.hasTag("tree")))  // Waffle: Allow building platforms on trees 
+								!(isPlatform && b.hasTag("tree")))  // Waffle: Allow building platforms on trees 
                             {
                                 f32 angle_decomp = Maths::FMod(Maths::Abs(b.getAngleDegrees()), 180.0f);
                                 bool rotated = angle_decomp > 45.0f && angle_decomp < 135.0f;
@@ -255,7 +236,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, TileType buildTile, CBlob @blob, boo
 		if (isSeed)
 		{
 			// from canGrow.as
-			return canGrowAt(blob, p, true);  // Waffle: Use the proper function instead of copy pasting it
+			return canGrowAt(carried, p, true);  // Waffle: Use the proper function instead of copy pasting it
 			// return (map.isTileGround(map.getTile(p + Vec2f(0, 8)).type));
 
 		}

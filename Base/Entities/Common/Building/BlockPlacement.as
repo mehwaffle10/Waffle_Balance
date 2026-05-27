@@ -174,7 +174,7 @@ void onTick(CBlob@ this)
 		if (bc.cursorClose)
 		{
 			Vec2f halftileoffset(map.tilesize * 0.5f, map.tilesize * 0.5f);
-			bc.buildableAtPos = isBuildableAtPos(this, bc.tileAimPos + halftileoffset, buildtile, null, bc.sameTileOnBack);
+			bc.buildableAtPos = isBuildableAtPos(this, bc.tileAimPos + halftileoffset, block, bc.sameTileOnBack);
 			//printf("bc.buildableAtPos " + bc.buildableAtPos );
 			bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
 			bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
