@@ -732,72 +732,24 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 }
 
-// Waffle: Client side building
-// void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
-// {
-// 	// ignore collision for built blob
-// 	BuildBlock[][]@ blocks;
-// 	if (!this.get("blocks", @blocks))
-// 	{
-// 		return;
-// 	}
+void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
+{
+	// Waffle: Client side building
+	if (attachedPoint.name == "BUILDBLOCK")
+	{	
+		detached.server_Die();
+	}
+	else if (detached.getName() == "seed")
+	{
+		if (not detached.hasTag('temp blob placed')) return;
 
-// 	const u8 PAGE = this.get_u8("build page");
-// 	for (u8 i = 0; i < blocks[PAGE].length; i++)
-// 	{
-// 		BuildBlock@ block = blocks[PAGE][i];
-// 		if (block !is null && block.name == detached.getName())
-// 		{
-// 			this.IgnoreCollisionWhileOverlapped(null);
-// 			detached.IgnoreCollisionWhileOverlapped(null);
-// 		}
-// 	}
-
-// 	// BUILD BLOB
-// 	// take requirements from blob that is built and play sound
-// 	// put out another one of the same
-// 	if (detached.hasTag("temp blob"))
-// 	{
-// 		detached.Untag("temp blob");
-		
-// 		if (!detached.hasTag("temp blob placed"))
-// 		{
-// 			detached.server_Die();
-// 			return;
-// 		}
-
-// 		uint i = this.get_u8("buildblob");
-// 		if (i >= 0 && i < blocks[PAGE].length)
-// 		{
-// 			BuildBlock@ b = blocks[PAGE][i];
-// 			if (b.name == detached.getName())
-// 			{
-// 				this.set_u8("buildblob", 255);
-// 				this.set_TileType("buildtile", 0);
-
-// 				CInventory@ inv = this.getInventory();
-
-// 				CBitStream missing;
-// 				if (hasRequirements(inv, b.reqs, missing, not b.buildOnGround))
-// 				{
-// 					server_TakeRequirements(inv, b.reqs);
-// 				}
-// 				// take out another one if in inventory
-// 				server_BuildBlob(this, blocks[PAGE], i);
-// 			}
-// 		}
-// 	}
-// 	else if (detached.getName() == "seed")
-// 	{
-// 		if (not detached.hasTag('temp blob placed')) return;
-
-// 		CBlob@ anotherBlob = this.getInventory().getItem(detached.getName());
-// 		if (anotherBlob !is null)
-// 		{
-// 			this.server_Pickup(anotherBlob);
-// 		}
-// 	}
-// }
+		CBlob@ anotherBlob = this.getInventory().getItem(detached.getName());
+		if (anotherBlob !is null)
+		{
+			this.server_Pickup(anotherBlob);
+		}
+	}
+}
 
 void onAddToInventory(CBlob@ this, CBlob@ blob)
 {
