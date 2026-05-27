@@ -463,7 +463,6 @@ void onTick(CBlob@ this)
 					CBlob@ blob = overlapping[i];
 					if (blob !is null)
 					{
-						print("" + i + ": " + overlapping[i].getName());
 						overlapped = (blob.getPosition() - bottomPos).LengthSquared() < tsqr;
 					}
 				}
@@ -472,7 +471,7 @@ void onTick(CBlob@ this)
 			bc.buildableAtPos = isBuildableAtPos(this, bottomPos, block, bc.sameTileOnBack) && !overlapped;
 			bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
 			bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
-			bc.supported = carryBlob.getShape().getConsts().support > 0 ? map.hasSupportAtPos(bc.tileAimPos) : true;
+			bc.supported = getRules().get_u8(block.name + "_support") > 0 ? map.hasSupportAtPos(bc.tileAimPos) : true;
 			//printf("bc.buildableAtPos " + bc.buildableAtPos + " bc.supported " + bc.supported );
 		}
 	}

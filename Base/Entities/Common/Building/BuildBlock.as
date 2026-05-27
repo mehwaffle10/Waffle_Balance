@@ -15,7 +15,7 @@ shared class BuildBlock
 
 	BuildBlock() {} // required for handles to work
 
-	BuildBlock(TileType _tile, string _name, string _icon, string _desc, u8 teamNum, Vec2f _size = Vec2f(8, 8), bool _noRotate = false, bool _collidable = true, bool _snapToGrid = true)  // Waffle: Client side building
+	BuildBlock(TileType _tile, string _name, string _icon, string _desc, u8 teamNum, Vec2f _size = Vec2f(8, 8), bool _noRotate = false, bool _snapToGrid = true)  // Waffle: Client side building
 	{
 		tile = _tile;
 		name = _name;
@@ -25,18 +25,44 @@ shared class BuildBlock
 		buildOnGround = false;
 		size = _size;
 		noRotate = _noRotate;      // Waffle: Client side building
-		collidable = _collidable;  // Waffle: --
 		snapToGrid = _snapToGrid;  // Waffle: --
 
 		// Waffle: Client side building
-		if (isClient() && tile == 0 && !Texture::exists(icon))
+		if (tile == 0 && !buildOnGround)
 		{
+			if (isServer())
+			{
+				CRules@ rules = getRules();
+				string support_property = _name + "_support";
+				string collides_property = _name + "_collides";
+				if (rules.exists(support_property) && rules.exists(collides_property)) return;
+				string[]@ parts = _name.split("_");
+				string filename = "";
+				for (u8 i = 0; i < parts.length; i++)
+				{
+					filename += parts[i].substr(0, 1).toUpper() + parts[i].substr(1);
+				}
+				ConfigFile config = ConfigFile();
+				if (!config.loadFile(CFileMatcher(filename + ".cfg").getFirst()) || !config.exists("block_support"))
+				{
+					warn("Failed to load block_support from config");
+					return;
+				}
+				rules.set_u8(support_property, config.read_u8("block_support"));
+				rules.Sync(support_property, true);
+				rules.set_u8(collides_property, config.read_u8("shape_collides"));
+				rules.Sync(collides_property, true);
+
+			}
+			
+			if (!isClient() || Texture::exists(icon)) return;
+
 			const string FILE_NAME = getIconTokenFilename(icon);
 			if (!Texture::exists(FILE_NAME))
 			{
 				if (!Texture::createFromFile(FILE_NAME, FILE_NAME))
 				{
-					print("Failed to create texture from file");
+					warn("Failed to create texture from file");
 					return;
 				}
 			}
@@ -44,13 +70,13 @@ shared class BuildBlock
 			ImageData@ data = Texture::data(FILE_NAME);
 			if (data is null)
 			{
-				print("data is null");
+				warn("data is null");
 				return;
 			}
 			f32 squareSize = Maths::Max(size.x, size.y);
 			if (!Texture::createBySize(icon, squareSize, squareSize))
 			{
-				print("failed to create texture");
+				warn("failed to create texture");
 				return;
 			}
 			f32 difference = Maths::Abs(size.x - size.y);
@@ -83,7 +109,7 @@ shared class BuildBlock
 			}
 			if (!Texture::update(icon, new))
 			{
-				print("failed to update texture");
+				warn("failed to update texture");
 			}
 		}
 
