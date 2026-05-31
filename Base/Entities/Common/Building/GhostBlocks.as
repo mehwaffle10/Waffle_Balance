@@ -1,7 +1,7 @@
 
 #define CLIENT_ONLY
 
-#include "GhostBlocks.as"
+#include "GhostBlocksCommon.as"
 
 void onInit(CMap@ this)
 {
