@@ -1,18 +1,32 @@
 
 
 const string GHOST_BLOCKS = "client_ghost_blocks";
-const u8 GHOST_TRANSPARENCY = 120;
+const u16 GHOST_LIFESPAN = 500;
 
 Vertex[] v_raw;
 
 class GhostBlock
 {
+	TileType tile;
 	string name;
 	string icon;
-	Vec2f pos;
+	Vec2f tilePos;
 	f32 halfWidth;
 	f32 angle;
 	f32 z;
+	u32 expires;
+
+	GhostBlock(TileType _tile, string _name, string _icon, Vec2f _tilePos, f32 _halfWidth, f32 _angle, f32 _z, u32 _expires)
+	{
+		tile = _tile;
+		name = _name;
+		icon = _icon;
+		tilePos = _tilePos;
+		halfWidth = _halfWidth;
+		angle = _angle;
+		z = _z;
+		expires = _expires;
+	}
 }
 
 class GhostBlocks
@@ -24,19 +38,44 @@ class GhostBlocks
         blocks = GhostBlock[]();
     }
 
-	void onRender()
+	void onRender(CMap@ map)
 	{
-		for (u8 i = 0; i < blocks.length; i++)
+		u8 i = 0;
+		while (i < blocks.length)
 		{
 			GhostBlock@ block = blocks[i];
 			if (block is null) return;
 
-			DrawGhostBlock(block.icon, block.pos, block.halfWidth, block.angle, block.z, SColor(GHOST_TRANSPARENCY, 255, 255, 255));
+			if (getGameTime() >= block.expires)
+			{
+				blocks.removeAt(i);
+				continue;
+			}
+
+			DrawGhostBlock(map, block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, block.z, SColor(120, 255, 255, 255));
+			i++;
+		}
+	}
+
+	void addGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u32 expires)
+	{
+		blocks.push_back(GhostBlock(tile, name, icon, tilePos, halfWidth, angle, z, expires));
+	}
+
+	void deleteTilePos(Vec2f tilePos, TileType tile, CBlob@ blob)
+	{
+		for (u8 i = 0; i < blocks.length; i++)
+		{
+			GhostBlock@ block = blocks[i];
+			if (block is null || block.tilePos != tilePos) continue;
+			if (tile != block.tile && (blob is null || blob.getName() != block.name)) continue;
+			blocks.removeAt(i);
+			break;
 		}
 	}
 }
 
-void DrawGhostBlock(string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, f32 z, SColor color)
+void DrawGhostBlock(CMap@ map, string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, f32 z, SColor color)
 {
 	Render::SetTransformWorldspace();
 	v_raw.clear();

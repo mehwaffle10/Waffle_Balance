@@ -509,6 +509,12 @@ void onTick(CBlob@ this)
 				else
 				{
 					this.SendCommand(this.getCommandID("placeBlob"), params);
+					GhostBlocks@ ghostBlocks;
+					getRules().get(GHOST_BLOCKS, @ghostBlocks);
+					if (ghostBlocks !is null)
+					{
+						ghostBlocks.addGhostBlock(0, block.name, block.icon, map.getTileSpacePosition(bc.tileAimPos), Texture::width(block.icon) / 2,  block.noRotate ? 0 : this.get_u16("build_angle"), this.getSprite().getZ() + 0.1, getGameTime() + GHOST_LIFESPAN);
+					}
 				}
 
 				// u32 delay = 2 * getCurrentBuildDelay(this);    // Waffle: Don't decrease blob delay
@@ -609,7 +615,7 @@ void onRender(CSprite@ this)
 			Vec2f aimpos = blob.getMovement().getVars().aimpos;
 			pos = Vec2f(aimpos.x - halfTile, aimpos.y - halfTile);
 		}
-		DrawGhostBlock(buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2,  buildBlock.noRotate ? 0 : blob.get_u16("build_angle"), this.getZ() + 0.1,color);
+		DrawGhostBlock(map, buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2,  buildBlock.noRotate ? 0 : blob.get_u16("build_angle"), this.getZ() + 0.1, color);
 	}
 }
 
