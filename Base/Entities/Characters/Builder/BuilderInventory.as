@@ -74,6 +74,13 @@ void onInit(CInventory@ this)
 	blob.set_u32("show build time", 0);
 
 	this.getCurrentScript().removeIfTag = "dead";
+
+	// Waffle: Client side building
+	CMap@ map = getMap();
+	if (map !is null && !map.hasScript("GhostBlocks.as"))
+	{
+		map.AddScript("GhostBlocks.as");
+	}
 }
 
 // Waffle: Client side building

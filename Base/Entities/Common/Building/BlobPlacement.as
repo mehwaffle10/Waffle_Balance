@@ -7,7 +7,8 @@
 #include "GameplayEventsCommon.as";
 #include "Requirements.as"
 #include "RunnerTextures.as"
-#include "TreeLimitCommon.as"  // Waffle: Trees can be placed on buildings
+#include "TreeLimitCommon.as"    // Waffle: Trees can be placed on buildings
+#include "GhostBlocksCommon.as"  // Waffle: Client side building
 
 bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false, CBlob@ repairBlob = null)
 {
@@ -544,8 +545,6 @@ void onInit(CSprite@ this)
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
-Vertex[] v_raw;
-
 // render block placement
 void onRender(CSprite@ this)
 {
@@ -610,17 +609,7 @@ void onRender(CSprite@ this)
 			Vec2f aimpos = blob.getMovement().getVars().aimpos;
 			pos = Vec2f(aimpos.x - halfTile, aimpos.y - halfTile);
 		}
-
-		f32 z = this.getZ() + 0.1;
-		Render::SetTransformWorldspace();
-		v_raw.clear();
-		u16 buildAngle = buildBlock.noRotate ? 0 : blob.get_u16("build_angle");
-		f32 halfWidth = Texture::width(buildBlock.icon) / 2;
-		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfWidth, z, buildAngle == 270 ? 1 : 0, buildAngle > 0 && buildAngle < 270 ? 1 : 0, color));
-		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfWidth, z, buildAngle == 90 ? 0 : 1, buildAngle > 90 ? 1 : 0, color));
-		v_raw.push_back(Vertex(pos.x + halfWidth, pos.y + halfWidth, z, buildAngle == 270 ? 0 : 1, buildAngle > 0 && buildAngle < 270 ? 0 : 1, color));
-		v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfWidth, z, buildAngle == 90 ? 1 : 0, buildAngle > 90 ? 0 : 1, color));
-		Render::RawQuads(buildBlock.icon, v_raw);
+		DrawGhostBlock(buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2,  buildBlock.noRotate ? 0 : blob.get_u16("build_angle"), this.getZ() + 0.1,color);
 	}
 }
 
