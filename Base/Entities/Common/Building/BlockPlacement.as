@@ -2,6 +2,7 @@
 #include "BuildBlock.as"
 #include "Requirements.as"
 #include "GameplayEventsCommon.as";
+#include "GhostBlocksCommon.as"  // Waffle: Client side building
 
 // Called server side
 void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
@@ -201,6 +202,14 @@ void onTick(CBlob@ this)
                 }
 				SetBuildDelay(this, block.tile < 255 ? delay : delay / 3);
 				bc.blockActive = false;
+
+				// Waffle: Client side building
+				GhostBlocks@ ghostBlocks;
+				getRules().get(GHOST_BLOCKS, @ghostBlocks);
+				if (ghostBlocks !is null)
+				{
+					ghostBlocks.addGhostBlock(block.tile, block.name, block.icon, map.getTileSpacePosition(bc.tileAimPos), Texture::width(block.icon) / 2, 0, this.getSprite().getZ() + 0.1, getGameTime() + GHOST_LIFESPAN);
+				}
 			}
 			else if (this.isKeyJustPressed(key_action1) && !bc.sameTileOnBack)
 			{

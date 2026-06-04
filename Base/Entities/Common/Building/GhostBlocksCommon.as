@@ -2,6 +2,7 @@
 
 const string GHOST_BLOCKS = "client_ghost_blocks";
 const u16 GHOST_LIFESPAN = 500;
+const SColor GHOST_COLOR = SColor(120, 255, 255, 255);
 
 Vertex[] v_raw;
 
@@ -52,7 +53,14 @@ class GhostBlocks
 				continue;
 			}
 
-			DrawGhostBlock(map, block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, block.z, SColor(120, 255, 255, 255));
+			if (block.tile == 0)
+			{
+				DrawGhostBlock(map, block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, block.z, GHOST_COLOR);
+			}
+			else
+			{
+				map.DrawTile(block.tilePos * map.tilesize, block.tile, GHOST_COLOR, getCamera().targetDistance, false);
+			}
 			i++;
 		}
 	}
