@@ -97,7 +97,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "ladder", "$ladder$", "Ladder\nAnyone can climb it", team_num, Vec2f(16, 24));
+		BuildBlock b(0, "ladder", getTeamIcon("ladder", "Ladder.png", team_num, Vec2f(16, 8)), "Ladder\nAnyone can climb it", team_num, Vec2f(16, 24));
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", BuilderCosts::ladder);
 		blocks[0].push_back(b);
 	}
