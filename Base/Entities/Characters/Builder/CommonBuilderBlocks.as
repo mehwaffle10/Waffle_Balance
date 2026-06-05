@@ -53,7 +53,7 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 	const bool TTH = gamemode == "TTH";
 	const bool SBX = gamemode == "Sandbox";
 
-	// Waffle: Add team num, size, and no rotate for client side building
+	// Waffle: Add team num, size, buildOnGround, and no rotate for client side building
 	BuildBlock[] page_0;
 	blocks.push_back(page_0);
 	{
@@ -107,43 +107,35 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 		blocks[0].push_back(b);
 	}
 	{
-		BuildBlock b(0, "spikes", "$spikes$", "Spikes\nPlace on Stone Block\nfor Retracting Trap", team_num, Vec2f(8, 8), true);
+		BuildBlock b(0, "spikes", "$spikes$", "Spikes\nPlace on Stone Block\nfor Retracting Trap", team_num, Vec2f(8, 8), true, true);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", BuilderCosts::spikes);
 		blocks[0].push_back(b);
 	}
 
 	if (CTF || SCTF)
 	{
-		BuildBlock b(0, "building", "$building$", "Workshop\nStand in an open space\nand tap this button.", team_num);
+		BuildBlock b(0, "building", "$building$", "Workshop\nStand in an open space\nand tap this button.", team_num, Vec2f(40, 24), true, true);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", CTFCosts::workshop_wood);
-		b.buildOnGround = true;
-		b.size.Set(40, 24);
 		blocks[0].insertAt(9, b);
 	}
 	else if (TTH)
 	{
 		{
-			BuildBlock b(0, "factory", "$building$", "Factory\nAn item-producing factory\nRequires migrant", team_num);
+			BuildBlock b(0, "factory", "$building$", "Factory\nAn item-producing factory\nRequires migrant", team_num, Vec2f(40, 24), true, true);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", WARCosts::factory_wood);
-			b.buildOnGround = true;
-			b.size.Set(40, 24);
 			blocks[0].insertAt(9, b);
 		}
 		{
-			BuildBlock b(0, "workbench", "$workbench$", "Workbench\nCreate trampolines, saws, and more", team_num);
+			BuildBlock b(0, "workbench", "$workbench$", "Workbench\nCreate trampolines, saws, and more", team_num, Vec2f(32, 16), true, true);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", WARCosts::workbench_wood);
-			b.buildOnGround = true;
-			b.size.Set(32, 16);
 			blocks[0].push_back(b);
 		}
 	}
 	else if (SBX)
 	{
 		{
-			BuildBlock b(0, "building", "$building$", "Workshop\nStand in an open space\nand tap this button.", team_num);
+			BuildBlock b(0, "building", "$building$", "Workshop\nStand in an open space\nand tap this button.", team_num, Vec2f(40, 24), true, true);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 150);
-			b.buildOnGround = true;
-			b.size.Set(40, 24);
 			blocks[0].insertAt(9, b);
 		}
 

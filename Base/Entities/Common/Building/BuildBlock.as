@@ -15,20 +15,20 @@ shared class BuildBlock
 
 	BuildBlock() {} // required for handles to work
 
-	BuildBlock(TileType _tile, string _name, string _icon, string _desc, u8 teamNum, Vec2f _size = Vec2f(8, 8), bool _noRotate = false, bool _snapToGrid = true)  // Waffle: Client side building
+	BuildBlock(TileType _tile, string _name, string _icon, string _desc, u8 teamNum, Vec2f _size = Vec2f(8, 8), bool _noRotate = false, bool _buildOnGround = false, bool _snapToGrid = true)  // Waffle: Client side building
 	{
 		tile = _tile;
 		name = _name;
 		icon = _icon;
 		description = _desc;
 		temporaryBlob = true;
-		buildOnGround = false;
+		buildOnGround = _buildOnGround;
 		size = _size;
 		noRotate = _noRotate;      // Waffle: Client side building
 		snapToGrid = _snapToGrid;  // Waffle: --
 
 		// Waffle: Client side building
-		if (tile == 0 && !buildOnGround)
+		if (tile == 0 && !_buildOnGround)
 		{
 			if (isServer())
 			{
@@ -36,23 +36,16 @@ shared class BuildBlock
 				string support_property = _name + "_support";
 				string collides_property = _name + "_collides";
 				if (rules.exists(support_property) && rules.exists(collides_property)) return;
-				string[]@ parts = _name.split("_");
-				string filename = "";
-				for (u8 i = 0; i < parts.length; i++)
+				
+				CBlob@ blob = server_CreateBlob(_name, -1, Vec2f_zero);
+				if (blob !is null)
 				{
-					filename += parts[i].substr(0, 1).toUpper() + parts[i].substr(1);
+					rules.set_u8(support_property, blob.getShape().getConsts().support);
+					rules.Sync(support_property, true);
+					rules.set_bool(collides_property, blob.isCollidable());
+					rules.Sync(collides_property, true);
+					blob.server_Die();
 				}
-				ConfigFile config = ConfigFile();
-				if (!config.loadFile(CFileMatcher(filename + ".cfg").getFirst()) || !config.exists("block_support"))
-				{
-					warn("Failed to load block_support from config");
-					return;
-				}
-				rules.set_u8(support_property, config.read_u8("block_support"));
-				rules.Sync(support_property, true);
-				rules.set_u8(collides_property, config.read_u8("shape_collides"));
-				rules.Sync(collides_property, true);
-
 			}
 			
 			if (!isClient() || Texture::exists(icon)) return;
