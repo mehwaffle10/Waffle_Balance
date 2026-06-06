@@ -28,8 +28,8 @@ void onRender(CMap@ this)
 	rules.get(GHOST_BLOCKS, @ghostBlocks);
 	if (ghostBlocks is null)
 	{
-		GhostBlocks@ ghostBlocks = GhostBlocks();
-		rules.set(GHOST_BLOCKS, ghostBlocks);
+		@ghostBlocks = GhostBlocks();
+		rules.set(GHOST_BLOCKS, @ghostBlocks);
 	}
 	ghostBlocks.onRender(this);
 }
