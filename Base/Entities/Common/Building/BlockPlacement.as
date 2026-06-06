@@ -208,7 +208,7 @@ void onTick(CBlob@ this)
 				getRules().get(GHOST_BLOCKS, @ghostBlocks);
 				if (ghostBlocks !is null)
 				{
-					ghostBlocks.addGhostBlock(block.tile, block.name, block.icon, map.getTileSpacePosition(bc.tileAimPos), Texture::width(block.icon) / 2, 0, this.getSprite().getZ() + 0.1, getGameTime() + GHOST_LIFESPAN);
+					ghostBlocks.addGhostBlock(block.tile, block.name, block.icon, map.getTileSpacePosition(bc.tileAimPos), 0, 0, this.getSprite().getZ() + 0.1, getGameTime() + GHOST_LIFESPAN);
 				}
 			}
 			else if (this.isKeyJustPressed(key_action1) && !bc.sameTileOnBack)
