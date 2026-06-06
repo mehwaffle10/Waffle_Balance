@@ -119,127 +119,124 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, BuildBlock@ block, bool &out sameTil
 	}
 
 	// no blocking actors?
-	if (block.tile == 0 || block.name == "ladder")
+	CBlob@ carried = this.getCarriedBlob();
+	bool isLadder = block.name == "ladder";
+	bool isSpikes = block.name == "spikes";
+	bool isDoor = block.name == "wooden_door" || block.name == "stone_door" || block.name == "bridge";
+	bool isPlatform = block.name == "wooden_platform" || block.name == "bridge";
+	bool isSeed = carried !is null && carried.getName() == "seed";
+	Vec2f middle = p;
+
+	s32 x = Maths::Floor(p.x);
+	x /= map.tilesize;
+	s32 y = Maths::Floor(p.y);
+	y /= map.tilesize;
+
+	CBlob@[] blobsAtPos;
+
+	// repairing blobs
+	if (map.getBlobsAtPosition(Vec2f(p.x, p.y), @blobsAtPos) && (isDoor || isPlatform))
 	{
-		CBlob@ carried = this.getCarriedBlob();
-		bool isLadder = block.name == "ladder";
-		bool isSpikes = block.name == "spikes";
-		bool isDoor = block.name == "wooden_door" || block.name == "stone_door" || block.name == "bridge";
-		bool isPlatform = block.name == "wooden_platform" || block.name == "bridge";
-		bool isSeed = carried !is null && carried.getName() == "seed";
-		Vec2f middle = p;
-
-		s32 x = Maths::Floor(p.x);
-		x /= map.tilesize;
-		s32 y = Maths::Floor(p.y);
-		y /= map.tilesize;
-
-		CBlob@[] blobsAtPos;
-
-		// repairing blobs
-		if (map.getBlobsAtPosition(Vec2f(p.x, p.y), @blobsAtPos) && (isDoor || isPlatform))
+		for (uint i = 0; i < blobsAtPos.length; i++)
 		{
-			for (uint i = 0; i < blobsAtPos.length; i++)
-			{
-				CBlob@ blobAtPos = blobsAtPos[i];
-				if (blobAtPos.getName() == block.name && 
-					blobAtPos.getTeamNum() == this.getTeamNum() && 
-					blobAtPos.getHealth() != blobAtPos.getInitialHealth()) 
-				{	
-					return true;
-				}
+			CBlob@ blobAtPos = blobsAtPos[i];
+			if (blobAtPos.getName() == block.name && 
+				blobAtPos.getTeamNum() == this.getTeamNum() && 
+				blobAtPos.getHealth() != blobAtPos.getInitialHealth()) 
+			{	
+				return true;
 			}
 		}
+	}
 
-        // Waffle: Add no solids and no blobs
-		CMap::Sector@[] sectors;
-		map.getSectorsAtPosition(middle, sectors);
-		bool no_build_sector = false;
-		for (u8 i = 0; i < sectors.length; i++)
+	// Waffle: Add no solids and no blobs
+	CMap::Sector@[] sectors;
+	map.getSectorsAtPosition(middle, sectors);
+	bool no_build_sector = false;
+	for (u8 i = 0; i < sectors.length; i++)
+	{
+		if (sectors[i] !is null && sectors[i].name == "no build")
 		{
-			if (sectors[i] !is null && sectors[i].name == "no build")
+			if (isPlatform)
 			{
-				if (isPlatform)
-				{
-					CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
-					if (owner is null || !(owner.hasTag("tree") || owner.hasTag("scenary")))
-					{
-						no_build_sector = true;
-						break;
-					}
-				}
-				else
+				CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
+				if (owner is null || !(owner.hasTag("tree") || owner.hasTag("scenary")))
 				{
 					no_build_sector = true;
 					break;
 				}
 			}
+			else
+			{
+				no_build_sector = true;
+				break;
+			}
 		}
-        const bool no_build  = !isLadder && (buildSolid || isSpikes || isDoor || isPlatform) && no_build_sector;
-        const bool no_solids = buildSolid && map.getSectorAtPosition(middle, "no solids") !is null;
-        const bool no_blobs  = block.tile == 0 && map.getSectorAtPosition(middle, "no blobs") !is null;
-        const bool has_adjacent = map.isTileSolid(up) || map.isTileSolid(down) || map.isTileSolid(left) || map.isTileSolid(right);
-		if (!isSeed && (no_build || (!isSpikes || has_adjacent) && (no_solids || no_blobs)))  // Waffle: Allow spike dropping at the top of the map
+	}
+	const bool no_build  = !isLadder && (buildSolid || isSpikes || isDoor || isPlatform) && no_build_sector;
+	const bool no_solids = buildSolid && map.getSectorAtPosition(middle, "no solids") !is null;
+	const bool no_blobs  = block.tile == 0 && map.getSectorAtPosition(middle, "no blobs") !is null;
+	const bool has_adjacent = map.isTileSolid(up) || map.isTileSolid(down) || map.isTileSolid(left) || map.isTileSolid(right);
+	if (!isSeed && (no_build || (!isSpikes || has_adjacent) && (no_solids || no_blobs)))  // Waffle: Allow spike dropping at the top of the map
+	{
+		return false;
+	}
+
+	//if (blob is null)
+	//middle += Vec2f(map.tilesize*0.5f, map.tilesize*0.5f);
+	if (!isLadder)
+	{
+		const string name = block.name;
+		CBlob@[] blobsInRadius;
+		if (map.getBlobsInRadius(middle, buildSolid ? map.tilesize : 0.0f, @blobsInRadius))
 		{
-			return false;
+			for (uint i = 0; i < blobsInRadius.length; i++)
+			{
+				CBlob @b = blobsInRadius[i];
+				if (!b.isAttached() && b !is getCarriedBuildBlock(this))
+				{
+					if (block.tile > 0 || buildSolid)
+					{
+						if (b is this && b.getName() == "spikes") continue;
+
+						Vec2f bpos = b.getPosition();
+
+						bool cantBuild = isBlocking(b) || isSeed && b.getName() == "seed";  // Waffle: Prevent seeds from being placed on each other
+						bool buildingOnTeam = isDoor && (b.getTeamNum() == this.getTeamNum() || b.getTeamNum() == 255) && !b.getShape().isStatic() && this !is b;
+						bool ladderBuild = isLadder && !b.getShape().isStatic();
+
+						// cant place on any other blob
+						if (!ladderBuild &&
+							!buildingOnTeam &&
+							cantBuild &&
+							!b.hasTag("dead") &&
+							!b.hasTag("material") &&
+							!b.hasTag("projectile") &&
+							!(isSeed && (b.hasTag("building") || !b.getShape().isStatic())) &&  // Waffle: Allow placing seeds on building and non-static blobs
+							!(isPlatform && b.hasTag("tree")))  // Waffle: Allow building platforms on trees 
+						{
+							f32 angle_decomp = Maths::FMod(Maths::Abs(b.getAngleDegrees()), 180.0f);
+							bool rotated = angle_decomp > 45.0f && angle_decomp < 135.0f;
+							f32 width = rotated ? b.getHeight() : b.getWidth();
+							f32 height = rotated ? b.getWidth() : b.getHeight();
+							if ((middle.x > bpos.x - width * 0.5f) && (middle.x < bpos.x + width * 0.5f)
+								&& (middle.y > bpos.y - height * 0.5f) && (middle.y < bpos.y + height * 0.5f))
+							{
+								return false;
+							}
+						}
+					}
+				}
+			}
 		}
+	}
 
-		//if (blob is null)
-		//middle += Vec2f(map.tilesize*0.5f, map.tilesize*0.5f);
-        if (!isLadder)
-        {
-            const string name = block.name;
-            CBlob@[] blobsInRadius;
-            if (map.getBlobsInRadius(middle, buildSolid ? map.tilesize : 0.0f, @blobsInRadius))
-            {
-                for (uint i = 0; i < blobsInRadius.length; i++)
-                {
-                    CBlob @b = blobsInRadius[i];
-                    if (!b.isAttached() && b !is getCarriedBuildBlock(this))
-                    {
-                        if (block.tile > 0 || buildSolid)
-                        {
-                            if (b is this && b.getName() == "spikes") continue;
+	if (isSeed)
+	{
+		// from canGrow.as
+		return canGrowAt(carried, p, true);  // Waffle: Use the proper function instead of copy pasting it
+		// return (map.isTileGround(map.getTile(p + Vec2f(0, 8)).type));
 
-                            Vec2f bpos = b.getPosition();
-
-                            bool cantBuild = isBlocking(b) || isSeed && b.getName() == "seed";  // Waffle: Prevent seeds from being placed on each other
-                            bool buildingOnTeam = isDoor && (b.getTeamNum() == this.getTeamNum() || b.getTeamNum() == 255) && !b.getShape().isStatic() && this !is b;
-                            bool ladderBuild = isLadder && !b.getShape().isStatic();
-
-                            // cant place on any other blob
-                            if (!ladderBuild &&
-                                !buildingOnTeam &&
-                                cantBuild &&
-                                !b.hasTag("dead") &&
-                                !b.hasTag("material") &&
-                                !b.hasTag("projectile") &&
-                                !(isSeed && (b.hasTag("building") || !b.getShape().isStatic())) &&  // Waffle: Allow placing seeds on building and non-static blobs
-								!(isPlatform && b.hasTag("tree")))  // Waffle: Allow building platforms on trees 
-                            {
-                                f32 angle_decomp = Maths::FMod(Maths::Abs(b.getAngleDegrees()), 180.0f);
-                                bool rotated = angle_decomp > 45.0f && angle_decomp < 135.0f;
-                                f32 width = rotated ? b.getHeight() : b.getWidth();
-                                f32 height = rotated ? b.getWidth() : b.getHeight();
-                                if ((middle.x > bpos.x - width * 0.5f) && (middle.x < bpos.x + width * 0.5f)
-                                    && (middle.y > bpos.y - height * 0.5f) && (middle.y < bpos.y + height * 0.5f))
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-		if (isSeed)
-		{
-			// from canGrow.as
-			return canGrowAt(carried, p, true);  // Waffle: Use the proper function instead of copy pasting it
-			// return (map.isTileGround(map.getTile(p + Vec2f(0, 8)).type));
-
-		}
 	}
 
 	return true;
