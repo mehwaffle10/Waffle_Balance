@@ -469,7 +469,6 @@ void onTick(CBlob@ this)
 			bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
 			bc.supported = getRules().get_u8(block.name + "_support") > 0 ? map.hasSupportAtPos(bc.tileAimPos) : true;
 			//printf("bc.buildableAtPos " + bc.buildableAtPos + " bc.supported " + bc.supported );
-			print("bc.buildableAtPos: " + bc.buildableAtPos + " bc.supported: " + bc.supported );
 		}
 	}
 
