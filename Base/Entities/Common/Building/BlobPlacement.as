@@ -249,9 +249,10 @@ void PositionCarried(CBlob@ this, CBlob@ carryBlob)
 	}
 	else
 	{
-		if (carryBlob.hasTag("place norotate"))  // Waffle: Client side building
+		if (!carryBlob.hasTag("place norotate"))  // Waffle: Client side building
 		{
 			carryBlob.setAngleDegrees(0.0f);
+			carryBlob.setAngularVelocity(0.0f);
 		}
 		AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
 		if (hands !is null)
@@ -323,34 +324,33 @@ void onTick(CBlob@ this)
 
 	// Waffle: Client side building
 	CBlob@ carryBlob = getCarriedBuildBlock(this);
-	if (carryBlob !is null)
+	for (u8 i = 0; i < 2; i++)
 	{
-		if (carryBlob.hasTag("place ignore facing"))
+		CBlob@ blob = i == 0 ? @carryBlob : this.getCarriedBlob();
+		if (blob !is null)
 		{
-			carryBlob.getSprite().SetFacingLeft(false);
-		}
-
-		// hide block in hands when placing close
-		if (!carryBlob.isSnapToGrid())
-		{
-			PositionCarried(this, carryBlob);
-		}
-		else
-		{
-			if (carryBlob.hasTag("place norotate"))
+			if (blob.hasTag("place ignore facing"))
 			{
-				carryBlob.setAngleDegrees(0.0f);
+				blob.getSprite().SetFacingLeft(false);
+			}
+
+			// hide block in hands when placing close
+			if (!blob.isSnapToGrid())
+			{
+				PositionCarried(this, blob);
 			}
 			else
 			{
-				carryBlob.setAngleDegrees(this.get_u16("build_angle"));
+				if (blob.hasTag("place norotate"))
+				{
+					blob.setAngleDegrees(0.0f);
+				}
+				else
+				{
+					blob.setAngleDegrees(this.get_u16("build_angle"));
+				}
 			}
 		}
-	}
-
-	if (!this.isMyPlayer())
-	{
-		return;
 	}
 
 ////                     ONLY MYPLAYER STUFF BEYOND THIS LINE                   ////
