@@ -174,13 +174,14 @@ void onTick(CBlob@ this)
 
 		if (bc.cursorClose)
 		{
+			Vec2f tilePos = bc.tileAimPos / map.tilesize;  // Waffle: Client side building
 			Vec2f halftileoffset(map.tilesize * 0.5f, map.tilesize * 0.5f);
-			bc.buildableAtPos = isBuildableAtPos(this, bc.tileAimPos + halftileoffset, block, bc.sameTileOnBack);
+			bc.buildableAtPos = isBuildableAtPos(this, bc.tileAimPos + halftileoffset, block, bc.sameTileOnBack) && !isGhostBlocked(tilePos);  // Waffle: Client side building
 			//printf("bc.buildableAtPos " + bc.buildableAtPos );
 			bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
 			bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
 
-			bc.supported = bc.buildable && map.hasSupportAtPos(bc.tileAimPos);
+			bc.supported = bc.buildable && (map.hasSupportAtPos(bc.tileAimPos) || hasGhostSupport(tilePos));  // Waffle: Client side building
 		}
 
 		// place block
@@ -204,12 +205,7 @@ void onTick(CBlob@ this)
 				bc.blockActive = false;
 
 				// Waffle: Client side building
-				GhostBlocks@ ghostBlocks;
-				getRules().get(GHOST_BLOCKS, @ghostBlocks);
-				if (ghostBlocks !is null)
-				{
-					ghostBlocks.addGhostBlock(block.tile, block.name, block.icon, map.getTileSpacePosition(bc.tileAimPos), 0, 0, this.getSprite().getZ() + 0.1, getGameTime() + GHOST_LIFESPAN);
-				}
+				AddGhostBlock(block.tile, block.name, block.icon, map.getTileSpacePosition(bc.tileAimPos), 0, 0, this.getSprite().getZ() + 0.1, getGameTime() + GHOST_LIFESPAN);
 			}
 			else if (this.isKeyJustPressed(key_action1) && !bc.sameTileOnBack)
 			{

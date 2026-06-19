@@ -464,10 +464,11 @@ void onTick(CBlob@ this)
 				}
 			}
 
-			bc.buildableAtPos = isBuildableAtPos(this, bottomPos, block, bc.sameTileOnBack) && !overlapped;
+			Vec2f tilePos = bc.tileAimPos / map.tilesize;  // Waffle: Client side building
+			bc.buildableAtPos = isBuildableAtPos(this, bottomPos, block, bc.sameTileOnBack) && !overlapped && !isGhostBlocked(tilePos);  // Waffle: Client side building
 			bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
 			bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
-			bc.supported = getRules().get_u8(block.name + "_support") > 0 ? map.hasSupportAtPos(bc.tileAimPos) : true;
+			bc.supported = getRules().get_u8(block.name + "_support") > 0 ? map.hasSupportAtPos(bc.tileAimPos) || hasGhostSupport(tilePos) : true;  // Waffle: Client side building
 			//printf("bc.buildableAtPos " + bc.buildableAtPos + " bc.supported " + bc.supported );
 		}
 	}
@@ -509,12 +510,7 @@ void onTick(CBlob@ this)
 				else
 				{
 					this.SendCommand(this.getCommandID("placeBlob"), params);
-					GhostBlocks@ ghostBlocks;
-					getRules().get(GHOST_BLOCKS, @ghostBlocks);
-					if (ghostBlocks !is null)
-					{
-						ghostBlocks.addGhostBlock(0, block.name, block.icon, map.getTileSpacePosition(bc.tileAimPos), Texture::width(block.icon) / 2,  block.noRotate ? 0 : this.get_u16("build_angle"), this.getSprite().getZ() + 0.1, getGameTime() + GHOST_LIFESPAN);
-					}
+					AddGhostBlock(0, block.name, block.icon, map.getTileSpacePosition(bc.tileAimPos), Texture::width(block.icon) / 2,  block.noRotate ? 0 : this.get_u16("build_angle"), this.getSprite().getZ() + 0.1, getGameTime() + GHOST_LIFESPAN);
 				}
 
 				// u32 delay = 2 * getCurrentBuildDelay(this);    // Waffle: Don't decrease blob delay

@@ -39,47 +39,49 @@ class GhostBlocks
         blocks = GhostBlock[]();
     }
 
-	void onRender(CMap@ map)
-	{
-		u8 i = 0;
-		while (i < blocks.length)
-		{
-			GhostBlock@ block = blocks[i];
-			if (block is null) return;
-
-			if (getGameTime() >= block.expires)
-			{
-				blocks.removeAt(i);
-				continue;
-			}
-
-			if (block.tile == 0)
-			{
-				DrawGhostBlock(map, block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, block.z, GHOST_COLOR);
-			}
-			else
-			{
-				map.DrawTile(block.tilePos * map.tilesize, block.tile, GHOST_COLOR, getCamera().targetDistance, false);
-			}
-			i++;
-		}
-	}
-
-	void addGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u32 expires)
+	void add(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u32 expires)
 	{
 		blocks.push_back(GhostBlock(tile, name, icon, tilePos, halfWidth, angle, z, expires));
 	}
+}
 
-	void deleteTilePos(Vec2f tilePos, TileType tile, CBlob@ blob)
+GhostBlocks@ getGhostBlocks()
+{
+	CRules@ rules = getRules();
+	GhostBlocks@ ghostBlocks;
+	rules.get(GHOST_BLOCKS, @ghostBlocks);
+	if (ghostBlocks is null)
 	{
-		for (u8 i = 0; i < blocks.length; i++)
+		@ghostBlocks = GhostBlocks();
+		rules.set(GHOST_BLOCKS, @ghostBlocks);
+	}
+	return ghostBlocks;
+}
+
+void RenderGhostBlocks(CMap@ map)
+{
+	GhostBlocks@ ghostBlocks = getGhostBlocks();
+	u8 i = 0;
+	while (i < ghostBlocks.blocks.length)
+	{
+		GhostBlock@ block = ghostBlocks.blocks[i];
+		if (block is null) return;
+
+		if (getGameTime() >= block.expires)
 		{
-			GhostBlock@ block = blocks[i];
-			if (block is null || block.tilePos != tilePos) continue;
-			if (tile != block.tile && (blob is null || blob.getName() != block.name)) continue;
-			blocks.removeAt(i);
-			break;
+			ghostBlocks.blocks.removeAt(i);
+			continue;
 		}
+
+		if (block.tile == 0)
+		{
+			DrawGhostBlock(map, block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, block.z, GHOST_COLOR);
+		}
+		else
+		{
+			map.DrawTile(block.tilePos * map.tilesize, block.tile, GHOST_COLOR, getCamera().targetDistance, false);
+		}
+		i++;
 	}
 }
 
@@ -92,4 +94,50 @@ void DrawGhostBlock(CMap@ map, string icon, Vec2f pos, f32 halfWidth, f32 buildA
 	v_raw.push_back(Vertex(pos.x + halfWidth, pos.y + halfWidth, z, buildAngle == 270 ? 0 : 1, buildAngle > 0 && buildAngle < 270 ? 0 : 1, color));
 	v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfWidth, z, buildAngle == 90 ? 1 : 0, buildAngle > 90 ? 0 : 1, color));
 	Render::RawQuads(icon, v_raw);
+}
+
+void AddGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u32 expires)
+{
+	GhostBlocks@ ghostBlocks = getGhostBlocks();
+	ghostBlocks.add(tile, name, icon, tilePos, halfWidth, angle, z, expires);
+}
+
+void DeleteGhostBlockTilePos(Vec2f tilePos, TileType tile, CBlob@ blob)
+{
+	GhostBlocks@ ghostBlocks = getGhostBlocks();
+	for (u8 i = 0; i < ghostBlocks.blocks.length; i++)
+	{
+		GhostBlock@ block = ghostBlocks.blocks[i];
+		if (block is null || block.tilePos != tilePos) continue;
+		if (tile != block.tile && (blob is null || blob.getName() != block.name)) continue;
+		block.expires = getGameTime();
+		// ghostBlocks.blocks.removeAt(i);
+		break;
+	}
+}
+
+bool isGhostBlocked(Vec2f tilePos)
+{
+	GhostBlocks@ ghostBlocks = getGhostBlocks();
+	for (u8 i = 0; i < ghostBlocks.blocks.length; i++)
+	{
+		GhostBlock@ block = ghostBlocks.blocks[i];
+		if (block is null) return false;
+		if (tilePos == block.tilePos) return true;
+	}
+	return false;
+}
+
+bool hasGhostSupport(Vec2f tilePos)
+{
+	GhostBlocks@ ghostBlocks = getGhostBlocks();
+	for (u8 i = 0; i < ghostBlocks.blocks.length; i++)
+	{
+		GhostBlock@ block = ghostBlocks.blocks[i];
+		if (block is null) return false;
+		Vec2f difference = tilePos - block.tilePos;
+		if (difference.getLength() != 1) continue;
+		if (difference.y <= 0) return true;
+	}
+	return false;
 }

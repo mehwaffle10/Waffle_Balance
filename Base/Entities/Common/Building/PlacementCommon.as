@@ -1,6 +1,7 @@
 
 #include "canGrow.as"     // Waffle: Use the proper function instead of copy pasting it
-#include "BuildBlock.as"  // Waffle: Client side building
+#include "BuildBlock.as"         // Waffle: Client side building
+#include "GhostBlocksCommon.as"  // Waffle: --
 
 const f32 MAX_BUILD_LENGTH = 4.0f;
 
@@ -106,6 +107,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, BuildBlock@ block, bool &out sameTil
 	}
 
 	if (
+		!hasGhostSupport(tilespace)             &&      // Waffle: Client side building
 		!map.isTileBackgroundNonEmpty(backtile) &&      // can put against background
 		!(                                              // can put sticking next to something
 			canPlaceNextTo(map, left) ||
