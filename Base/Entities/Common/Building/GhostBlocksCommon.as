@@ -16,8 +16,9 @@ class GhostBlock
 	f32 angle;
 	f32 z;
 	u32 expires;
+	u8 support;
 
-	GhostBlock(TileType _tile, string _name, string _icon, Vec2f _tilePos, f32 _halfWidth, f32 _angle, f32 _z, u32 _expires)
+	GhostBlock(TileType _tile, string _name, string _icon, Vec2f _tilePos, f32 _halfWidth, f32 _angle, f32 _z, u8 _support)
 	{
 		tile = _tile;
 		name = _name;
@@ -26,7 +27,8 @@ class GhostBlock
 		halfWidth = _halfWidth;
 		angle = _angle;
 		z = _z;
-		expires = _expires;
+		support = _support;
+		expires = getGameTime() + GHOST_LIFESPAN;
 	}
 }
 
@@ -39,9 +41,9 @@ class GhostBlocks
         blocks = GhostBlock[]();
     }
 
-	void add(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u32 expires)
+	void add(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u8 support)
 	{
-		blocks.push_back(GhostBlock(tile, name, icon, tilePos, halfWidth, angle, z, expires));
+		blocks.push_back(GhostBlock(tile, name, icon, tilePos, halfWidth, angle, z, support));
 	}
 }
 
@@ -96,10 +98,10 @@ void DrawGhostBlock(CMap@ map, string icon, Vec2f pos, f32 halfWidth, f32 buildA
 	Render::RawQuads(icon, v_raw);
 }
 
-void AddGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u32 expires)
+void AddGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u8 support)
 {
 	GhostBlocks@ ghostBlocks = getGhostBlocks();
-	ghostBlocks.add(tile, name, icon, tilePos, halfWidth, angle, z, expires);
+	ghostBlocks.add(tile, name, icon, tilePos, halfWidth, angle, z, support);
 }
 
 void DeleteGhostBlockTilePos(Vec2f tilePos, TileType tile, CBlob@ blob)
@@ -135,6 +137,7 @@ bool hasGhostSupport(Vec2f tilePos)
 	{
 		GhostBlock@ block = ghostBlocks.blocks[i];
 		if (block is null) return false;
+		if (block.support == 0) continue;
 		Vec2f difference = tilePos - block.tilePos;
 		if (difference.getLength() != 1) continue;
 		if (difference.y <= 0) return true;
