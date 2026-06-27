@@ -58,6 +58,8 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 
 	if (b.buildOnGround)
 	{
+		this.set_u8("buildblob", 255);    // Waffle: Client side buiding
+		this.Untag("HoldingBuildBlock");  // Waffle: --
         CMap@ map = getMap();
         bool fail = !fakeOnGround(map, this);  // Waffle: Make sure there's a supporting block or blob underneath
 
@@ -176,9 +178,11 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			}
 		}
 	}
-
-	this.set_u8("buildblob", index);
-	this.Tag("HoldingBuildBlock");  // Waffle: Client side building
+	else
+	{
+		this.set_u8("buildblob", index);
+		this.Tag("HoldingBuildBlock");  // Waffle: Client side building
+	}
 
 	if (getNet().isServer())
 	{
