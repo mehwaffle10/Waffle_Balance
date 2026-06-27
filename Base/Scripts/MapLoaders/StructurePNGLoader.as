@@ -647,9 +647,13 @@ CBlob@ spawnBlob(CMap@ map, const string& in name, int offset, u8 team = 255, bo
 
 CBlob@ spawnVehicle(CMap@ map, const string& in name, int offset, int team = -1)
 {
-	CBlob@ blob = server_CreateBlob(name, team, getSpawnPosition( map, offset));
+	// Waffle: Base team off of position
+	Vec2f position = getSpawnPosition(map, offset);
+	bool red = position.x > map.tilemapwidth * map.tilesize / 2;
+	CBlob@ blob = server_CreateBlob(name, red ? 1 : 0, position);
 	if(blob !is null)
 	{
+		blob.SetFacingLeft(red);
 		blob.RemoveScript("DecayIfLeftAlone.as");
 	}
 	return blob;
