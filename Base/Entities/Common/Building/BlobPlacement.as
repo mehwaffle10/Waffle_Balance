@@ -607,9 +607,9 @@ void onRender(CSprite@ this)
 		else
 		{
 			color.set(255, 255, 46, 50);
-			f32 halfTile = map.tilesize / 2.0f;
-			Vec2f aimpos = blob.getMovement().getVars().aimpos;
-			pos = Vec2f(aimpos.x - halfTile, aimpos.y - halfTile);
+			const u32 gametime = getGameTime();
+			Vec2f offset(-0.2f + 0.4f * (Maths::Sin(getGameTime() * 0.5f)), 0.0f);
+			pos = blob.getAimPos() + getCamera().getInterpolationOffset() + offset;
 		}
 		DrawGhostBlock(map, buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2,  buildBlock.noRotate ? 0 : blob.get_u16("build_angle"), this.getZ() + 0.1, color);
 	}
