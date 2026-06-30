@@ -187,7 +187,7 @@ void onTick(CBlob@ this)
 
 		if (!getHUD().hasButtons() && this.isKeyPressed(key_action1))
 		{
-			if (bc.cursorClose && bc.buildable && bc.supported)
+			if (bc.hasReqs && bc.cursorClose && bc.buildable && bc.supported)
 			{
 				CBitStream params;
 				params.write_u8(blockIndex);
