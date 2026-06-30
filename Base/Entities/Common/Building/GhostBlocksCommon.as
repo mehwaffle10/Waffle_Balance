@@ -148,3 +148,17 @@ bool hasGhostSupport(Vec2f tilePos)
 	}
 	return false;
 }
+
+u16 getTotalGhostBlockCost(string blobName)
+{
+	GhostBlocks@ ghostBlocks = getGhostBlocks();
+	u16 sum = 0;
+	for (u8 i = 0; i < ghostBlocks.blocks.length; i++)
+	{
+		GhostBlock@ block = ghostBlocks.blocks[i];
+		if (block is null) continue;
+		if (blobName == "mat_wood")  sum += block.woodCost;
+		if (blobName == "mat_stone") sum += block.stoneCost;
+	}
+	return sum;
+}
