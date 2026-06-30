@@ -510,7 +510,18 @@ void onTick(CBlob@ this)
 				else
 				{
 					this.SendCommand(this.getCommandID("placeBlob"), params);
-					AddGhostBlock(0, block.name, block.icon, map.getTileSpacePosition(bc.tileAimPos), Texture::width(block.icon) / 2,  block.noRotate ? 0 : this.get_u16("build_angle"), this.getSprite().getZ() + 0.1, 1);
+					AddGhostBlock(
+						0,
+						block.name,
+						block.icon,
+						map.getTileSpacePosition(bc.tileAimPos),
+						Texture::width(block.icon) / 2,
+						block.noRotate ? 0 : this.get_u16("build_angle"),
+						this.getSprite().getZ() + 0.1,
+						1,
+						getRequiredQuantity(block.reqs, "blob", "mat_wood"),
+						getRequiredQuantity(block.reqs, "blob", "mat_stone")
+					);
 				}
 
 				// u32 delay = 2 * getCurrentBuildDelay(this);    // Waffle: Don't decrease blob delay
