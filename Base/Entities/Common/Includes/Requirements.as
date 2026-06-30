@@ -297,14 +297,13 @@ u16 getRequiredQuantity(CBitStream &inout bs, const string &in lookupReq, const 
 	u16 quantity = 0;
 	bs.ResetBitIndex();
 
+	u8 i = 0;
 	while (!bs.isBufferEnd())
 	{
 		ReadRequirement(bs, req, blobName, friendlyName, quantity);
-		if (req == lookupReq && blobName == lookupBlobName)
-		{
-			break;
-		}
+		if (req == lookupReq && blobName == lookupBlobName) return quantity;
+		i++;
 	}
 	bs.ResetBitIndex();
-	return quantity;
+	return 0;
 }

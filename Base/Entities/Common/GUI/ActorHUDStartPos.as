@@ -1,6 +1,7 @@
 //for use with DefaultActorHUD.as based HUDs
 
 #include "CTF_Common.as";
+#include "GhostBlocksCommon.as";  // Waffle: Client side building
 
 bool shouldRenderResupplyIndicator(CBlob@ blob)
 {
@@ -119,7 +120,7 @@ void DrawInventoryOnHUD(CBlob@ this, Vec2f tl)
 		const string name = item.getName();
 		if (drawn.find(name) == -1)
 		{
-			const int quantity = inv.getCount(name);
+			const int quantity = inv.getCount(name) - getTotalGhostBlockCost(name);  // Waffle: Client side building
 			drawn.push_back(name);
 
 			Vec2f iconpos = tl + Vec2f((drawn.length - 1) * 40, -6);
