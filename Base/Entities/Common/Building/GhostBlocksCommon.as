@@ -14,13 +14,12 @@ class GhostBlock
 	Vec2f tilePos;
 	f32 halfWidth;
 	f32 angle;
-	f32 z;
 	u32 expires;
 	u8 support;
 	u16 woodCost;
 	u16 stoneCost;
 
-	GhostBlock(TileType _tile, string _name, string _icon, Vec2f _tilePos, f32 _halfWidth, f32 _angle, f32 _z, u8 _support, u16 _woodCost, u16 _stoneCost)
+	GhostBlock(TileType _tile, string _name, string _icon, Vec2f _tilePos, f32 _halfWidth, f32 _angle, u8 _support, u16 _woodCost, u16 _stoneCost)
 	{
 		tile = _tile;
 		name = _name;
@@ -28,7 +27,6 @@ class GhostBlock
 		tilePos = _tilePos;
 		halfWidth = _halfWidth;
 		angle = _angle;
-		z = _z;
 		support = _support;
 		woodCost = _woodCost;
 		stoneCost = _stoneCost;
@@ -45,9 +43,9 @@ class GhostBlocks
         blocks = GhostBlock[]();
     }
 
-	void add(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u8 support, u16 woodCost, u16 stoneCost)
+	void add(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, u8 support, u16 woodCost, u16 stoneCost)
 	{
-		blocks.push_back(GhostBlock(tile, name, icon, tilePos, halfWidth, angle, z, support, woodCost, stoneCost));
+		blocks.push_back(GhostBlock(tile, name, icon, tilePos, halfWidth, angle, support, woodCost, stoneCost));
 	}
 }
 
@@ -81,7 +79,7 @@ void RenderGhostBlocks(CMap@ map)
 
 		if (block.tile == 0)
 		{
-			DrawGhostBlock(map, block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, block.z, GHOST_COLOR);
+			DrawGhostBlock(map, block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, GHOST_COLOR);
 		}
 		else
 		{
@@ -91,9 +89,11 @@ void RenderGhostBlocks(CMap@ map)
 	}
 }
 
-void DrawGhostBlock(CMap@ map, string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, f32 z, SColor color)
+void DrawGhostBlock(CMap@ map, string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, SColor color, bool setZ = false, f32 z = 0.0f)
 {
 	Render::SetTransformWorldspace();
+	Render::SetZBuffer(setZ, setZ);
+	Render::ClearZ();
 	v_raw.clear();
 	v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfWidth, z, buildAngle == 270 ? 1 : 0, buildAngle > 0 && buildAngle < 270 ? 1 : 0, color));
 	v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfWidth, z, buildAngle == 90 ? 0 : 1, buildAngle > 90 ? 1 : 0, color));
@@ -102,10 +102,10 @@ void DrawGhostBlock(CMap@ map, string icon, Vec2f pos, f32 halfWidth, f32 buildA
 	Render::RawQuads(icon, v_raw);
 }
 
-void AddGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, f32 z, u8 support, u16 woodCost, u16 stoneCost)
+void AddGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, u8 support, u16 woodCost, u16 stoneCost)
 {
 	GhostBlocks@ ghostBlocks = getGhostBlocks();
-	ghostBlocks.add(tile, name, icon, tilePos, halfWidth, angle, z, support, woodCost, stoneCost);
+	ghostBlocks.add(tile, name, icon, tilePos, halfWidth, angle, support, woodCost, stoneCost);
 }
 
 void DeleteGhostBlockTilePos(Vec2f tilePos, TileType tile, CBlob@ blob)
@@ -117,7 +117,6 @@ void DeleteGhostBlockTilePos(Vec2f tilePos, TileType tile, CBlob@ blob)
 		if (block is null || block.tilePos != tilePos) continue;
 		if (tile != block.tile && (blob is null || blob.getName() != block.name)) continue;
 		block.expires = getGameTime();
-		// ghostBlocks.blocks.removeAt(i);
 		break;
 	}
 }

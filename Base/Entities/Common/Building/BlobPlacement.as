@@ -523,7 +523,6 @@ void onTick(CBlob@ this)
 						map.getTileSpacePosition(bc.tileAimPos),
 						Texture::width(block.icon) / 2,
 						block.noRotate ? 0 : this.get_u16("build_angle"),
-						this.getSprite().getZ() + 0.1,
 						1,
 						getRequiredQuantity(block.reqs, "blob", "mat_wood"),
 						getRequiredQuantity(block.reqs, "blob", "mat_stone")
@@ -628,7 +627,7 @@ void onRender(CSprite@ this)
 			Vec2f offset(-0.2f + 0.4f * (Maths::Sin(getGameTime() * 0.5f)), 0.0f);
 			pos = blob.getAimPos() + getCamera().getInterpolationOffset() + offset;
 		}
-		DrawGhostBlock(map, buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2,  buildBlock.noRotate ? 0 : blob.get_u16("build_angle"), this.getZ() + 0.1, color);
+		DrawGhostBlock(map, buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2,  buildBlock.noRotate ? 0 : blob.get_u16("build_angle"), color, true, this.getZ() + 0.1);
 	}
 }
 

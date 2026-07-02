@@ -211,7 +211,6 @@ void onTick(CBlob@ this)
 					map.getTileSpacePosition(bc.tileAimPos),
 					0,
 					0,
-					this.getSprite().getZ() + 0.1,
 					1,
 					getRequiredQuantity(block.reqs, "blob", "mat_wood"),
 					getRequiredQuantity(block.reqs, "blob", "mat_stone")
