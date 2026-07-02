@@ -358,7 +358,6 @@ void onTick(CBlob@ this)
 		return;
 	}
 
-
 ////                     ONLY MYPLAYER STUFF BEYOND THIS LINE                   ////
 	BlockCursor @bc;
 	this.get("blockCursor", @bc);
