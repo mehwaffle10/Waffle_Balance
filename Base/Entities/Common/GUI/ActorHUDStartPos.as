@@ -120,13 +120,21 @@ void DrawInventoryOnHUD(CBlob@ this, Vec2f tl)
 		const string name = item.getName();
 		if (drawn.find(name) == -1)
 		{
-			const int quantity = inv.getCount(name) - getTotalGhostBlockCost(name);  // Waffle: Client side building
+			// Waffle: Client side building
+			CSprite@ sprite = item.getSprite();
+			if (sprite is null) continue;
+			Animation@ animation = sprite.getAnimation('default');
+			if (animation is null) continue;
+			const int quantity = Maths::Max(inv.getCount(name) - getTotalGhostBlockCost(name), 0);
+			uint8 index = (animation.getFramesCount() - 1) * Maths::Min(quantity, item.maxQuantity) / item.maxQuantity;
+			uint8 frame = animation.getFrame(index);
+			
 			drawn.push_back(name);
 
 			Vec2f iconpos = tl + Vec2f((drawn.length - 1) * 40, -6);
 			iconpos.x += Maths::Clamp(16 - item.inventoryFrameDimension.x, -item.inventoryFrameDimension.x, item.inventoryFrameDimension.x);
 			iconpos.y += Maths::Max(16 - item.inventoryFrameDimension.y, 0);
-			GUI::DrawIcon(item.inventoryIconName, item.inventoryIconFrame, item.inventoryFrameDimension, iconpos, 1.0f, item.getTeamNum());
+			GUI::DrawIcon(item.inventoryIconName, frame, item.inventoryFrameDimension, iconpos, 1.0f, item.getTeamNum());  // Waffle: Client side building
 
 			f32 ratio = float(quantity) / float(item.maxQuantity);
 			col = ratio > 0.4f ? SColor(255, 255, 255, 255) :
