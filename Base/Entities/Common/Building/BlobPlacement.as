@@ -397,10 +397,11 @@ void onTick(CBlob@ this)
 	CMap@ map = this.getMap();
 	bool snap = block.snapToGrid;
 
-	if (carryBlob !is null)
-	{
-		carryBlob.SetVisible(!carryBlob.hasTag("temp blob"));
-	}
+	// Waffle: Client side building
+	// if (carryBlob !is null)
+	// {
+	// 	carryBlob.SetVisible(!carryBlob.hasTag("temp blob"));
+	// }
 
 	bool isLadder = false;
 	if (block.name == "ladder")

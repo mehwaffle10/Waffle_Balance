@@ -277,6 +277,35 @@ void onRender(CSprite@ this)
 		BlockCursor @bc;
 		blob.get("blockCursor", @bc);
 
+		// Waffle: Client side building
+		CAttachment@ attachment = blob.getAttachments();
+		if (attachment !is null)
+		{
+			AttachmentPoint@ buildBlock = attachment.getAttachmentPointByName("BUILDBLOCK");
+			if (buildBlock !is null)
+			{
+				Vec2f heldOffset = buildBlock.offset;
+				heldOffset.x *= blob.isFacingLeft() ? -1 : 1;
+
+				TileType heldtile = buildtile;
+				if (buildtile == CMap::tile_wood_back)
+				{
+					heldtile = 173;
+				}
+				else if (buildtile == CMap::tile_castle_back)
+				{
+					heldtile = 69;
+				}
+				map.DrawTile(
+					blob.getInterpolatedPosition() - Vec2f(map.tilesize, map.tilesize) / 2 + heldOffset,
+					heldtile,
+					SColor(255, 255, 255, 255),
+					getCamera().targetDistance,
+					false
+				);
+			}
+		}
+
 		if (bc !is null)
 		{
 			if (bc.cursorClose && bc.hasReqs && bc.buildable)
