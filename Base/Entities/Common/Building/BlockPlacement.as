@@ -122,12 +122,6 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	// Waffle: Client side building
-	if (!this.isMyPlayer())
-	{
-		return;
-	}
-
 	if (this.isInInventory())
 	{
 		return;
@@ -240,7 +234,7 @@ void onTick(CBlob@ this)
 void onInit(CSprite@ this)
 {
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	this.getCurrentScript().runFlags |= Script::tick_myplayer;
+	// this.getCurrentScript().runFlags |= Script::tick_myplayer;  // Waffle: Client side building
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
@@ -284,8 +278,8 @@ void onRender(CSprite@ this)
 			AttachmentPoint@ buildBlock = attachment.getAttachmentPointByName("BUILDBLOCK");
 			if (buildBlock !is null)
 			{
-				Vec2f heldOffset = buildBlock.offset;
-				heldOffset.x *= blob.isFacingLeft() ? -1 : 1;
+				Vec2f offset = buildBlock.offset;
+				offset.x *= blob.isFacingLeft() ? -1 : 1;
 
 				TileType heldtile = buildtile;
 				if (buildtile == CMap::tile_wood_back)
@@ -296,14 +290,20 @@ void onRender(CSprite@ this)
 				{
 					heldtile = 69;
 				}
+
 				map.DrawTile(
-					blob.getInterpolatedPosition() - Vec2f(map.tilesize, map.tilesize) / 2 + heldOffset,
+					blob.getInterpolatedPosition() - Vec2f(map.tilesize, map.tilesize) / 2 + offset,
 					heldtile,
 					SColor(255, 255, 255, 255),
 					getCamera().targetDistance,
 					false
 				);
 			}
+		}
+
+		if (!blob.isMyPlayer())
+		{
+			return;
 		}
 
 		if (bc !is null)
