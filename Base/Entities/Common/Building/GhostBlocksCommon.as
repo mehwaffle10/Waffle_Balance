@@ -77,14 +77,7 @@ void RenderGhostBlocks(CMap@ map)
 			continue;
 		}
 
-		if (block.tile == 0)
-		{
-			DrawGhostBlock(map, block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, GHOST_COLOR);
-		}
-		else
-		{
-			map.DrawTile(block.tilePos * map.tilesize, block.tile, GHOST_COLOR, getCamera().targetDistance, false);
-		}
+		DrawGhostBlock(map, block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, GHOST_COLOR);
 		i++;
 	}
 }

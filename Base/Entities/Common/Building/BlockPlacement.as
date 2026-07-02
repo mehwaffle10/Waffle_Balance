@@ -274,10 +274,12 @@ void onRender(CSprite@ this)
 		CAttachment@ attachment = blob.getAttachments();
 		if (attachment !is null)
 		{
-			AttachmentPoint@ buildBlock = attachment.getAttachmentPointByName("BUILDBLOCK");
-			if (buildBlock !is null)
+			u8 blockIndex = getBlockIndexByTile(blob, buildtile);
+			BuildBlock @buildBlock = getBlockByIndex(blob, blockIndex);
+			AttachmentPoint@ buildBlockAttachment = attachment.getAttachmentPointByName("BUILDBLOCK");
+			if (buildBlock !is null && buildBlockAttachment !is null)
 			{
-				Vec2f offset = buildBlock.offset;
+				Vec2f offset = buildBlockAttachment.offset;
 				offset.x *= blob.isFacingLeft() ? -1 : 1;
 
 				TileType heldtile = buildtile;
@@ -290,12 +292,15 @@ void onRender(CSprite@ this)
 					heldtile = 69;
 				}
 
-				map.DrawTile(
+				DrawGhostBlock(
+					map,
+					buildBlock.icon,
 					blob.getInterpolatedPosition() - Vec2f(map.tilesize, map.tilesize) / 2 + offset,
-					heldtile,
+					map.tilesize / 2,
+					0.0f,
 					SColor(255, 255, 255, 255),
-					getCamera().targetDistance,
-					false
+					true,
+					this.getZ() + 0.1f;
 				);
 			}
 		}

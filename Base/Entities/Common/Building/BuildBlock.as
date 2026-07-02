@@ -28,84 +28,83 @@ shared class BuildBlock
 		snapToGrid = _snapToGrid;  // Waffle: --
 
 		// Waffle: Client side building
-		if (tile == 0 && !_buildOnGround)
+		if (_buildOnGround) return;
+
+		if (isServer() && tile == 0)
 		{
-			if (isServer())
-			{
-				CRules@ rules = getRules();
-				string support_property = _name + "_support";
-				string collides_property = _name + "_collides";
-				if (rules.exists(support_property) && rules.exists(collides_property)) return;
-				
-				CBlob@ blob = server_CreateBlob(_name, -1, Vec2f_zero);
-				if (blob !is null)
-				{
-					rules.set_u8(support_property, blob.getShape().getConsts().support);
-					rules.Sync(support_property, true);
-					rules.set_bool(collides_property, blob.isCollidable());
-					rules.Sync(collides_property, true);
-					blob.server_Die();
-				}
-			}
+			CRules@ rules = getRules();
+			string support_property = _name + "_support";
+			string collides_property = _name + "_collides";
+			if (rules.exists(support_property) && rules.exists(collides_property)) return;
 			
-			if (!isClient() || Texture::exists(icon)) return;
+			CBlob@ blob = server_CreateBlob(_name, -1, Vec2f_zero);
+			if (blob !is null)
+			{
+				rules.set_u8(support_property, blob.getShape().getConsts().support);
+				rules.Sync(support_property, true);
+				rules.set_bool(collides_property, blob.isCollidable());
+				rules.Sync(collides_property, true);
+				blob.server_Die();
+			}
+		}
+		
+		if (!isClient() || Texture::exists(icon)) return;
 
-			const string FILE_NAME = getIconTokenFilename(icon);
-			if (!Texture::exists(FILE_NAME))
+		const string FILE_NAME = getIconTokenFilename(icon);
+		print("_icon: " + _icon + " FILE_NAME: " + FILE_NAME);
+		if (!Texture::exists(FILE_NAME))
+		{
+			if (!Texture::createFromFile(FILE_NAME, FILE_NAME))
 			{
-				if (!Texture::createFromFile(FILE_NAME, FILE_NAME))
-				{
-					warn("Failed to create texture from file");
-					return;
-				}
-			}
-
-			ImageData@ data = Texture::data(FILE_NAME);
-			if (data is null)
-			{
-				warn("data is null");
+				warn("Failed to create texture from file");
 				return;
-			}
-			f32 squareSize = Maths::Max(size.x, size.y);
-			if (!Texture::createBySize(icon, squareSize, squareSize))
-			{
-				warn("failed to create texture");
-				return;
-			}
-			f32 difference = Maths::Abs(size.x - size.y);
-			ImageData@ new = ImageData(squareSize, squareSize);
-			u8 xOffset = size.x > size.y ? 0 : difference / 2;
-			u8 yOffset = size.y > size.x ? 0 : difference / 2;
-			for (u8 x = 0; x < Maths::Min(Texture::width(FILE_NAME), size.x); x++)
-			{
-				for (u8 y = 0; y < Maths::Min(Texture::height(FILE_NAME), size.y); y++)
-				{
-					new.put(x + xOffset, y + yOffset, data.get(x, y));
-				}
-			}
-			if (teamNum > 0)
-			{
-				const string TEAM_PALETTE = "TeamPalette.png";
-				if (!Texture::exists(TEAM_PALETTE))
-				{
-					Texture::createFromFile(TEAM_PALETTE, TEAM_PALETTE);
-				}
-				ImageData@ teamPalette = Texture::data(TEAM_PALETTE);
-				array<SColor> inColors;
-				array<SColor> outColors;
-				for(int i = 0; i < teamPalette.height(); i++)
-				{
-					inColors.push_back(teamPalette.get(0, i));
-					outColors.push_back(teamPalette.get(teamNum, i));
-				}
-				new.remap(inColors, outColors, 1, false, true);
-			}
-			if (!Texture::update(icon, new))
-			{
-				warn("failed to update texture");
 			}
 		}
 
+		ImageData@ data = Texture::data(FILE_NAME);
+		if (data is null)
+		{
+			warn("data is null");
+			return;
+		}
+		f32 squareSize = Maths::Max(size.x, size.y);
+		if (!Texture::createBySize(icon, squareSize, squareSize))
+		{
+			warn("failed to create texture");
+			return;
+		}
+		f32 difference = Maths::Abs(size.x - size.y);
+		ImageData@ new = ImageData(squareSize, squareSize);
+		u8 xOffset = size.x > size.y ? 0 : difference / 2;
+		u8 yOffset = size.y > size.x ? 0 : difference / 2;
+		for (u8 x = 0; x < Maths::Min(Texture::width(FILE_NAME), size.x); x++)
+		{
+			for (u8 y = 0; y < Maths::Min(Texture::height(FILE_NAME), size.y); y++)
+			{
+				new.put(x + xOffset, y + yOffset, data.get(x, y));
+			}
+		}
+		if (teamNum > 0)
+		{
+			const string TEAM_PALETTE = "TeamPalette.png";
+			if (!Texture::exists(TEAM_PALETTE))
+			{
+				Texture::createFromFile(TEAM_PALETTE, TEAM_PALETTE);
+			}
+			ImageData@ teamPalette = Texture::data(TEAM_PALETTE);
+			array<SColor> inColors;
+			array<SColor> outColors;
+			for(int i = 0; i < teamPalette.height(); i++)
+			{
+				inColors.push_back(teamPalette.get(0, i));
+				outColors.push_back(teamPalette.get(teamNum, i));
+			}
+			new.remap(inColors, outColors, 1, false, true);
+		}
+		if (!Texture::update(icon, new))
+		{
+			warn("failed to update texture");
+		}
 	}
 };
 
