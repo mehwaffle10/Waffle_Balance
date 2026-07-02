@@ -122,6 +122,12 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	// Waffle: Client side building
+	if (!this.isMyPlayer())
+	{
+		return;
+	}
+
 	if (this.isInInventory())
 	{
 		return;
