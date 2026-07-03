@@ -89,9 +89,9 @@ void DrawGhostBlock(CMap@ map, string icon, Vec2f pos, f32 halfWidth, f32 buildA
 	Render::ClearZ();
 	v_raw.clear();
 	v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfWidth, z, buildAngle == 270 ? 1 : 0, buildAngle > 0 && buildAngle < 270 ? 1 : 0, color));
-	v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfWidth, z, buildAngle == 90 ? 0 : 1, buildAngle > 90 ? 1 : 0, color));
+	v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfWidth, z, buildAngle == 90 ? 0 : 1,  buildAngle > 90 ? 1 : 0,                    color));
 	v_raw.push_back(Vertex(pos.x + halfWidth, pos.y + halfWidth, z, buildAngle == 270 ? 0 : 1, buildAngle > 0 && buildAngle < 270 ? 0 : 1, color));
-	v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfWidth, z, buildAngle == 90 ? 1 : 0, buildAngle > 90 ? 0 : 1, color));
+	v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfWidth, z, buildAngle == 90 ? 1 : 0,  buildAngle > 90 ? 0 : 1,                    color));
 	Render::RawQuads(icon, v_raw);
 }
 
