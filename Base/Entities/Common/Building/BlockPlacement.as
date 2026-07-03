@@ -285,7 +285,7 @@ void onRender(CSprite@ this)
 				DrawGhostBlock(
 					map,
 					buildBlock.icon,
-					blob.getInterpolatedPosition() - Vec2f(map.tilesize, map.tilesize) / 2 + offset,
+					blob.getInterpolatedPosition() + offset,
 					map.tilesize / 2,
 					0.0f,
 					SColor(255, 255, 255, 255),
