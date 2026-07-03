@@ -30,28 +30,39 @@ shared class BuildBlock
 		// Waffle: Client side building
 		if (_buildOnGround) return;
 
-		if (isServer() && tile == 0)
+		if (isServer())
 		{
 			CRules@ rules = getRules();
 			string support_property = _name + "_support";
 			string collides_property = _name + "_collides";
 			if (rules.exists(support_property) && rules.exists(collides_property)) return;
 			
-			CBlob@ blob = server_CreateBlob(_name, -1, Vec2f_zero);
-			if (blob !is null)
+			u8 support = 0;
+			bool collides = false;
+			if (tile == 0)
 			{
-				rules.set_u8(support_property, blob.getShape().getConsts().support);
-				rules.Sync(support_property, true);
-				rules.set_bool(collides_property, blob.isCollidable());
-				rules.Sync(collides_property, true);
-				blob.server_Die();
+				CBlob@ blob = server_CreateBlob(_name, -1, Vec2f_zero);
+				if (blob !is null)
+				{
+					support = blob.getShape().getConsts().support;
+					collides = blob.isCollidable();
+					blob.server_Die();
+				}
 			}
+			else
+			{
+				support = 1;  // TODO: Find real way to read this
+				collides = name.findFirst("back_") < 0;
+			}
+			rules.set_u8(support_property, support);
+			rules.Sync(support_property, true);
+			rules.set_bool(collides_property, collides);
+			rules.Sync(collides_property, true);
 		}
 		
 		if (!isClient() || Texture::exists(icon)) return;
 
 		const string FILE_NAME = getIconTokenFilename(icon);
-		print("_icon: " + _icon + " FILE_NAME: " + FILE_NAME);
 		if (!Texture::exists(FILE_NAME))
 		{
 			if (!Texture::createFromFile(FILE_NAME, FILE_NAME))
@@ -75,13 +86,26 @@ shared class BuildBlock
 		}
 		f32 difference = Maths::Abs(size.x - size.y);
 		ImageData@ new = ImageData(squareSize, squareSize);
+		CMap@ map = getMap();
+		s32 textureTileWidth = Texture::width(FILE_NAME) / map.tilesize;
+		TileType textureTile = tile;
+		if (tile == CMap::tile_wood_back)
+		{
+			textureTile = 173;
+		}
+		else if (tile == CMap::tile_castle_back)
+		{
+			textureTile = 69;
+		}
+
+		Vec2f tileOffset = Vec2f(textureTile % textureTileWidth, textureTile / textureTileWidth) * map.tilesize;
 		u8 xOffset = size.x > size.y ? 0 : difference / 2;
 		u8 yOffset = size.y > size.x ? 0 : difference / 2;
 		for (u8 x = 0; x < Maths::Min(Texture::width(FILE_NAME), size.x); x++)
 		{
 			for (u8 y = 0; y < Maths::Min(Texture::height(FILE_NAME), size.y); y++)
 			{
-				new.put(x + xOffset, y + yOffset, data.get(x, y));
+				new.put(x + xOffset, y + yOffset, data.get(x + tileOffset.x, y + tileOffset.y));
 			}
 		}
 		if (teamNum > 0)

@@ -282,16 +282,6 @@ void onRender(CSprite@ this)
 				Vec2f offset = buildBlockAttachment.offset;
 				offset.x *= blob.isFacingLeft() ? -1 : 1;
 
-				TileType heldtile = buildtile;
-				if (buildtile == CMap::tile_wood_back)
-				{
-					heldtile = 173;
-				}
-				else if (buildtile == CMap::tile_castle_back)
-				{
-					heldtile = 69;
-				}
-
 				DrawGhostBlock(
 					map,
 					buildBlock.icon,
@@ -300,7 +290,7 @@ void onRender(CSprite@ this)
 					0.0f,
 					SColor(255, 255, 255, 255),
 					true,
-					this.getZ() + 0.1f;
+					this.getZ() + 0.1f
 				);
 			}
 		}
