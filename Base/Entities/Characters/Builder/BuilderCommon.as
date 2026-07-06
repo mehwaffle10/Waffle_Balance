@@ -176,41 +176,29 @@ CBlob@ server_BuildBlob(CBlob@ this, BuildBlock[]@ blocks, uint index)
 			{
 				GE_BuildBlob(p.getNetworkID(), b.name); // gameplay event for coins
 			}
+
+			// Waffle: Client side building
+			CBlob@ blockBlob = server_CreateBlob(b.name, this.getTeamNum(), Vec2f(0,0));
+			if (blockBlob !is null)
+			{
+				CShape@ shape = blockBlob.getShape();
+				shape.SetStatic(false);
+				shape.server_SetActive(false);
+				blockBlob.setPosition(pos);
+				shape.server_SetActive(true); // have it enable if its a shop
+
+				if (b.temporaryBlob)
+				{
+					blockBlob.Tag("temp blob");
+				}
+				return blockBlob;
+			}
 		}
 	}
 	else
 	{
 		this.set_u8("buildblob", index);
 		this.Tag("HoldingBuildBlock");  // Waffle: Client side building
-	}
-
-	if (getNet().isServer())
-	{
-		CBlob@ blockBlob = server_CreateBlob(b.name, this.getTeamNum(), Vec2f(0,0));
-		if (blockBlob !is null)
-		{
-			CShape@ shape = blockBlob.getShape();
-			shape.SetStatic(false);
-			shape.server_SetActive(false);
-			blockBlob.setPosition(pos);
-			//blockBlob.
-
-			if (!b.buildOnGround)
-			{
-				this.server_AttachTo(blockBlob, "BUILDBLOCK");  // Waffle: Can hold things while building
-				blockBlob.Tag("invincible");  // Waffle: Prevent destroying held blocks
-			}
-			else
-			{
-				shape.server_SetActive(true); // have it enable if its a shop
-			}
-
-			if (b.temporaryBlob)
-			{
-				blockBlob.Tag("temp blob");
-			}
-			return blockBlob;
-		}
 	}
 
 	return null;
@@ -246,14 +234,6 @@ void ClearCarriedBlock(CBlob@ this)
 	// clear variables
 	this.set_u8("buildblob", 255);
 	this.set_TileType("buildtile", 0);
-
-	// remove carried block, if any
-	CBlob@ carried = getCarriedBuildBlock(this);  // Waffle: Client side building
-	if (isServer() && carried !is null && carried.hasTag("temp blob"))
-	{
-		carried.Untag("temp blob");
-		carried.server_Die();
-	}
 }
 
 bool fakeOnGround(CMap@ map, CBlob@ this)

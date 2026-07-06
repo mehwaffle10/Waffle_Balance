@@ -4,6 +4,7 @@
 #include "GhostBlocksCommon.as"  // Waffle: --
 
 const f32 MAX_BUILD_LENGTH = 4.0f;
+const Vec2f HELD_BUILD_BLOCK_OFFSET = Vec2f(5, 1);
 
 shared class BlockCursor
 {

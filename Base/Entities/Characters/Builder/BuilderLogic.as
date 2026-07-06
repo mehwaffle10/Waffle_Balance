@@ -735,11 +735,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
 	// Waffle: Client side building
-	if (attachedPoint.name == "BUILDBLOCK")
-	{	
-		detached.server_Die();
-	}
-	else if (detached.getName() == "seed")
+	if (detached.getName() == "seed")
 	{
 		if (not detached.hasTag('temp blob placed')) return;
 

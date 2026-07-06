@@ -271,28 +271,23 @@ void onRender(CSprite@ this)
 		blob.get("blockCursor", @bc);
 
 		// Waffle: Client side building
-		CAttachment@ attachment = blob.getAttachments();
-		if (attachment !is null)
+		u8 blockIndex = getBlockIndexByTile(blob, buildtile);
+		BuildBlock @buildBlock = getBlockByIndex(blob, blockIndex);
+		if (buildBlock !is null)
 		{
-			u8 blockIndex = getBlockIndexByTile(blob, buildtile);
-			BuildBlock @buildBlock = getBlockByIndex(blob, blockIndex);
-			AttachmentPoint@ buildBlockAttachment = attachment.getAttachmentPointByName("BUILDBLOCK");
-			if (buildBlock !is null && buildBlockAttachment !is null)
-			{
-				Vec2f offset = buildBlockAttachment.offset;
-				offset.x *= blob.isFacingLeft() ? -1 : 1;
+			Vec2f offset = HELD_BUILD_BLOCK_OFFSET;
+			offset.x *= blob.isFacingLeft() ? -1 : 1;
 
-				DrawGhostBlock(
-					map,
-					buildBlock.icon,
-					blob.getInterpolatedPosition() + offset,
-					map.tilesize / 2,
-					0.0f,
-					SColor(255, 255, 255, 255),
-					true,
-					this.getZ() + 0.1f
-				);
-			}
+			DrawGhostBlock(
+				map,
+				buildBlock.icon,
+				blob.getInterpolatedPosition() + offset,
+				map.tilesize / 2,
+				0.0f,
+				SColor(255, 255, 255, 255),
+				true,
+				this.getZ() + 0.1f
+			);
 		}
 
 		if (!blob.isMyPlayer())
