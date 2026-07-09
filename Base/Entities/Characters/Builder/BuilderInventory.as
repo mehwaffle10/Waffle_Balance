@@ -294,8 +294,8 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 			}
 			else
 			{
-				blob.set_u8("buildblob", 255);    // Waffle: Client side building
-				blob.Untag("HoldingBuildBlock");  // Waffle: --
+				blob.Tag("HoldingBuildBlock");   // Waffle: Client side building
+				blob.set_u8("buildblob", 255);   // Waffle: --
 				blob.set_TileType("buildtile", block.tile);
 			}
 		}
@@ -407,8 +407,8 @@ void MakeBlockClient(CBlob@ blob, u8 i)
 		}
 		else
 		{
-			blob.set_u8("buildblob", 255);    // Waffle: Client side building
-			blob.Untag("HoldingBuildBlock");  // Waffle: --
+			blob.Tag("HoldingBuildBlock");   // Waffle: Client side building
+			blob.set_u8("buildblob", 255);   // Waffle: --
 			blob.set_TileType("buildtile", block.tile);
 		}
 

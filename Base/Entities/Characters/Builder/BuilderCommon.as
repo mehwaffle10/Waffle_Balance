@@ -232,6 +232,7 @@ void ClearCarriedBlock(CBlob@ this)
 	this.ClearGridMenus();
 
 	// clear variables
+	this.Untag("HoldingBuildBlock");  // Waffle: Client side building
 	this.set_u8("buildblob", 255);
 	this.set_TileType("buildtile", 0);
 }

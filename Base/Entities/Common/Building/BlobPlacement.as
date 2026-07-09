@@ -534,7 +534,7 @@ void onInit(CSprite@ this)
 	// Waffle: Client side building
 	// this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	// this.getCurrentScript().runFlags |= Script::tick_hasattached;
-	this.getCurrentScript().runFlags |= Script::tick_myplayer;
+	// this.getCurrentScript().runFlags |= Script::tick_myplayer;
 	this.getCurrentScript().tickIfTag = "HoldingBuildBlock";
 	this.getCurrentScript().removeIfTag = "dead";
 }
@@ -562,12 +562,26 @@ void onRender(CSprite@ this)
 	BuildBlock@ buildBlock = getBlockByIndex(blob, blockIndex);
 	if (buildBlock is null) return;
 
+	Vec2f offset = HELD_BUILD_BLOCK_OFFSET;
+	offset.x *= blob.isFacingLeft() ? -1 : 1;
+	CMap@ map = getMap();
+	
+	DrawGhostBlock(
+		map,
+		buildBlock.icon,
+		blob.getInterpolatedPosition() + offset,
+		Texture::width(buildBlock.icon) / 2,
+		0.0f,
+		SColor(255, 255, 255, 255),
+		true,
+		this.getZ() + 1.1f
+	);
+
 	BlockCursor @bc;
 	blob.get("blockCursor", @bc);
 
 	if (bc !is null)
 	{
-		CMap@ map = getMap();
 		Driver@ driver = getDriver();
 		SColor color;
 		Vec2f pos;

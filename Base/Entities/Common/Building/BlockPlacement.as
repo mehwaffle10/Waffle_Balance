@@ -232,8 +232,10 @@ void onTick(CBlob@ this)
 
 void onInit(CSprite@ this)
 {
-	this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	// this.getCurrentScript().runFlags |= Script::tick_myplayer;  // Waffle: Client side building
+	// Waffle: Client side building
+	// this.getCurrentScript().runFlags |= Script::tick_not_attached;
+	// this.getCurrentScript().runFlags |= Script::tick_myplayer;
+	this.getCurrentScript().tickIfTag = "HoldingBuildBlock";
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
@@ -290,57 +292,53 @@ void onRender(CSprite@ this)
 			);
 		}
 
-		if (!blob.isMyPlayer())
-		{
-			return;
-		}
+		if (!blob.isMyPlayer()) return;
 
-		if (bc !is null)
+		if (bc is null) return;
+		
+		if (bc.cursorClose && bc.hasReqs && bc.buildable)
 		{
-			if (bc.cursorClose && bc.hasReqs && bc.buildable)
+			SColor color;
+			Vec2f aimpos = bc.tileAimPos;
+
+			if (bc.buildable && bc.supported)
 			{
-				SColor color;
-				Vec2f aimpos = bc.tileAimPos;
+				color.set(255, 255, 255, 255);
+				map.DrawTile(aimpos, buildtile, color, getCamera().targetDistance, false);
+			}
+			else
+			{
+				// no support
+				color.set(255, 255, 46, 50);
+				const u32 gametime = getGameTime();
+				Vec2f offset(0.0f, -1.0f + 1.0f * ((gametime * 0.2f) % 8));
+				map.DrawTile(aimpos + offset, buildtile, color, getCamera().targetDistance, false);
 
-				if (bc.buildable && bc.supported)
+				if (gametime % 16 < 9)
 				{
-					color.set(255, 255, 255, 255);
-					map.DrawTile(aimpos, buildtile, color, getCamera().targetDistance, false);
-				}
-				else
-				{
-					// no support
-					color.set(255, 255, 46, 50);
-					const u32 gametime = getGameTime();
-					Vec2f offset(0.0f, -1.0f + 1.0f * ((gametime * 0.2f) % 8));
-					map.DrawTile(aimpos + offset, buildtile, color, getCamera().targetDistance, false);
-
-					if (gametime % 16 < 9)
+					Vec2f supportPos = aimpos + Vec2f(blob.isFacingLeft() ? map.tilesize : -map.tilesize, map.tilesize);
+					Vec2f point;
+					if (map.rayCastSolid(supportPos, supportPos + Vec2f(0.0f, map.tilesize * 32.0f), point))
 					{
-						Vec2f supportPos = aimpos + Vec2f(blob.isFacingLeft() ? map.tilesize : -map.tilesize, map.tilesize);
-						Vec2f point;
-						if (map.rayCastSolid(supportPos, supportPos + Vec2f(0.0f, map.tilesize * 32.0f), point))
+						const uint count = (point - supportPos).getLength() / map.tilesize;
+						for (uint i = 0; i < count; i++)
 						{
-							const uint count = (point - supportPos).getLength() / map.tilesize;
-							for (uint i = 0; i < count; i++)
-							{
-								map.DrawTile(supportPos + Vec2f(0.0f, map.tilesize * i), buildtile,
-								             SColor(255, 205, 16, 10),
-								             getCamera().targetDistance, false);
-							}
+							map.DrawTile(supportPos + Vec2f(0.0f, map.tilesize * i), buildtile,
+											SColor(255, 205, 16, 10),
+											getCamera().targetDistance, false);
 						}
 					}
 				}
 			}
-			else
-			{
-				f32 halfTile = map.tilesize / 2.0f;
-				Vec2f aimpos = blob.getAimPos() + getCamera().getInterpolationOffset();
-				Vec2f offset(-0.2f + 0.4f * (Maths::Sin(getGameTime() * 0.5f)), 0.0f);
-				map.DrawTile(Vec2f(aimpos.x - halfTile, aimpos.y - halfTile) + offset, buildtile,
-				             SColor(255, 255, 46, 50),
-				             getCamera().targetDistance, false);
-			}
+		}
+		else
+		{
+			f32 halfTile = map.tilesize / 2.0f;
+			Vec2f aimpos = blob.getAimPos() + getCamera().getInterpolationOffset();
+			Vec2f offset(-0.2f + 0.4f * (Maths::Sin(getGameTime() * 0.5f)), 0.0f);
+			map.DrawTile(Vec2f(aimpos.x - halfTile, aimpos.y - halfTile) + offset, buildtile,
+							SColor(255, 255, 46, 50),
+							getCamera().targetDistance, false);
 		}
 	}
 }
