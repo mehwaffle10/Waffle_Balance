@@ -551,10 +551,10 @@ void onRender(CSprite@ this)
 	{
 		return;
 	}
-	if (isBuildDelayed(blob))
-	{
-		return;
-	}
+	// if (isBuildDelayed(blob))  // Waffle: Client side building
+	// {
+	// 	return;
+	// }
 
 	// Waffle: Client side building
 	// draw a map block or other blob that snaps to grid

@@ -258,10 +258,10 @@ void onRender(CSprite@ this)
 		return;
 	}
 
-	if (isBuildDelayed(blob))
-	{
-		return;
-	}
+	// if (isBuildDelayed(blob))  // Waffle: Client side building
+	// {
+	// 	return;
+	// }
 
 	// draw a map block or other blob that snaps to grid
 	TileType buildtile = blob.get_TileType("buildtile");
