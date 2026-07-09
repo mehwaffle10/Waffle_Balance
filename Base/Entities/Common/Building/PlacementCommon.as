@@ -196,7 +196,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, BuildBlock@ block, bool &out sameTil
 			for (uint i = 0; i < blobsInRadius.length; i++)
 			{
 				CBlob @b = blobsInRadius[i];
-				if (!b.isAttached() && b !is getCarriedBuildBlock(this))
+				if (!b.isAttached())
 				{
 					if (block.tile > 0 || buildSolid)
 					{
@@ -401,14 +401,4 @@ bool isRepairable(CBlob@ blob)
 		}
 
 	return false;
-}
-
-// Waffle: Client side building
-CBlob@ getCarriedBuildBlock(CBlob@ this)
-{
-	CAttachment@ attachment = this.getAttachments();
-	if (attachment is null) return null;
-	AttachmentPoint@ buildBlock = attachment.getAttachmentPointByName("BUILDBLOCK");
-	if (buildBlock is null) return null;
-	return buildBlock.getOccupied();
 }

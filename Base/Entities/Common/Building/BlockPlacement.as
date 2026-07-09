@@ -7,7 +7,7 @@
 // Called server side
 void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
 {
-	BuildBlock @bc = getBlockByIndex(this, index);
+	BuildBlock@ bc = getBlockByIndex(this, index);
 
 	if (bc is null)
 	{
@@ -85,7 +85,7 @@ bool serverTileCheck(CBlob@ blob, u8 tileIndex, Vec2f cursorPos)
 
 	// Is our tile solid and are we trying to place it into a no build area
     // Waffle: Prevent blocks in no solids zone
-    BuildBlock @blockToPlace = getBlockByIndex(blob, tileIndex);   
+    BuildBlock@ blockToPlace = getBlockByIndex(blob, tileIndex);   
 	if (map.isTileSolid(blockToPlace.tile))
 	{
 		pos = cursorPos + Vec2f(map.tilesize * 0.5f, map.tilesize * 0.5f);
@@ -165,7 +165,7 @@ void onTick(CBlob@ this)
 		bc.blobActive = false;
 		CMap@ map = this.getMap();
 		u8 blockIndex = getBlockIndexByTile(this, buildtile);
-		BuildBlock @block = getBlockByIndex(this, blockIndex);
+		BuildBlock@ block = getBlockByIndex(this, blockIndex);
 		if (block !is null)
 		{
 			bc.missing.Clear();
@@ -272,7 +272,7 @@ void onRender(CSprite@ this)
 
 		// Waffle: Client side building
 		u8 blockIndex = getBlockIndexByTile(blob, buildtile);
-		BuildBlock @buildBlock = getBlockByIndex(blob, blockIndex);
+		BuildBlock@ buildBlock = getBlockByIndex(blob, blockIndex);
 		if (buildBlock !is null)
 		{
 			Vec2f offset = HELD_BUILD_BLOCK_OFFSET;
@@ -286,7 +286,7 @@ void onRender(CSprite@ this)
 				0.0f,
 				SColor(255, 255, 255, 255),
 				true,
-				this.getZ() + 0.1f
+				this.getZ() + 1.1f
 			);
 		}
 

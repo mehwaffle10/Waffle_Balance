@@ -33,12 +33,17 @@ shared class BuildBlock
 		if (isServer())
 		{
 			CRules@ rules = getRules();
-			string support_property = _name + "_support";
-			string collides_property = _name + "_collides";
-			if (rules.exists(support_property) && rules.exists(collides_property)) return;
+			string supportProperty = _name + "_support";
+			string collidesProperty = _name + "_collides";
+			string backgroundTileProperty = _name + "_background_tile";
+			if (rules.exists(supportProperty)  &&
+			    rules.exists(collidesProperty) &&
+				rules.exists(backgroundTileProperty)
+			) return;
 			
 			u8 support = 0;
 			bool collides = false;
+			TileType backgroundTile = 0;
 			if (tile == 0)
 			{
 				CBlob@ blob = server_CreateBlob(_name, -1, Vec2f_zero);
@@ -46,6 +51,7 @@ shared class BuildBlock
 				{
 					support = blob.getShape().getConsts().support;
 					collides = blob.isCollidable();
+					backgroundTile = blob.get_TileType("background tile");
 					blob.server_Die();
 				}
 			}
@@ -54,10 +60,12 @@ shared class BuildBlock
 				support = 1;  // TODO: Find real way to read this
 				collides = name.findFirst("back_") < 0;
 			}
-			rules.set_u8(support_property, support);
-			rules.Sync(support_property, true);
-			rules.set_bool(collides_property, collides);
-			rules.Sync(collides_property, true);
+			rules.set_u8(supportProperty, support);
+			rules.Sync(supportProperty, true);
+			rules.set_bool(collidesProperty, collides);
+			rules.Sync(collidesProperty, true);
+			rules.set_TileType(backgroundTileProperty, backgroundTile);
+			rules.Sync(backgroundTileProperty, true);
 		}
 		
 		if (!isClient() || Texture::exists(icon)) return;

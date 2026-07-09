@@ -10,106 +10,88 @@
 #include "TreeLimitCommon.as"    // Waffle: Trees can be placed on buildings
 #include "GhostBlocksCommon.as"  // Waffle: Client side building
 
-bool PlaceBlob(CBlob@ this, CBlob@ blob, Vec2f cursorPos, bool repairing = false, CBlob@ repairBlob = null)
+bool PlaceBlob(CBlob@ this, BuildBlock@ block, Vec2f cursorPos, bool repairing = false, CBlob@ repairBlob = null)
 {
-	if (blob !is null)
+	if (block is null) return false;
+
+	// convert aimpos to tileaimpos (on server this time);
+	Vec2f pos = this.getPosition();
+	Vec2f mouseNorm = cursorPos - pos;
+	f32 mouseLen = mouseNorm.Length();
+	mouseNorm /= mouseLen;
+
+	// out of range
+	if (mouseLen >= getMaxBuildDistance(this)) return false;
+
+	Vec2f tileaimpos;
+
+	if (mouseLen > MAX_BUILD_LENGTH * getMap().tilesize)
 	{
-		// convert aimpos to tileaimpos (on server this time);
-		Vec2f pos = this.getPosition();
-		Vec2f mouseNorm = cursorPos - pos;
-		f32 mouseLen = mouseNorm.Length();
-		mouseNorm /= mouseLen;
-
-		// out of range
-		if (mouseLen >= getMaxBuildDistance(this))
-		{
-			return false;
-		} 
-
-		Vec2f tileaimpos;
-
-		if (mouseLen > MAX_BUILD_LENGTH * getMap().tilesize)
-		{
-			f32 d = MAX_BUILD_LENGTH * getMap().tilesize;
-			Vec2f p = pos + Vec2f(d * mouseNorm.x, d * mouseNorm.y);
-			tileaimpos = getMap().getTileWorldPosition(getMap().getTileSpacePosition(p));
-		}
-		else
-		{
-			tileaimpos = getMap().getTileWorldPosition(getMap().getTileSpacePosition(cursorPos));
-		}
-
-		cursorPos = getBottomOfCursor(tileaimpos);
-
-		if (!serverBlobCheck(this, blob, cursorPos, repairing, repairBlob))
-			return false;
-
-		// one day we will reach an ideal world without latency, dumb edge cases and bad netcode
-		// that day is not today
-		u32 delay = (blob.isLadder() ? 1 : 2) * getCurrentBuildDelay(this) - 1;  // Waffle: Increase ladder build speed
-		SetBuildDelay(this, delay);
-
-		// Waffle: Client side building
-		BuildBlock[][]@ blocks;
-		if (!this.get("blocks", @blocks))
-		{
-			return false;
-		}
-		const u8 PAGE = this.get_u8("build page");
-		u8 i = this.get_u8("buildblob");
-		if (i >= blocks[PAGE].length) return false;
-
-		BuildBlock@ buildBlock = blocks[PAGE][i];
-		if (buildBlock.name != blob.getName()) return false;
-		
-		CInventory@ inv = this.getInventory();
-		CBitStream missing;
-		if (!hasRequirements(inv, buildBlock.reqs, missing, not buildBlock.buildOnGround))
-		{
-			blob.server_Die();
-			this.set_u8("buildblob", 255);
-		}
-
-		server_TakeRequirements(inv, buildBlock.reqs);
-
-		if (repairing && repairBlob !is null)
-		{
-			repairBlob.server_SetHealth(repairBlob.getInitialHealth());
-			// Waffle: Don't replace stone or moss backwall
-			CMap@ map = getMap();
-			TileType type = map.getTile(cursorPos).type;
-			if (blob.exists("background tile") && type != CMap::tile_castle_back && !(type >= CMap::tile_castle_back_moss && type <= 231))
-			{
-				map.server_SetTile(repairBlob.getPosition(), blob.get_TileType("background tile"));
-			}
-		}
-		else
-		{
-			CBlob@ newBlob = server_CreateBlob(blob.getName(), blob.getTeamNum(), cursorPos);
-			newBlob.setAngleDegrees(buildBlock.noRotate ? 0 : this.get_u16("build_angle"));
-			if (newBlob.isSnapToGrid())
-			{
-				newBlob.getShape().SetStatic(true);
-			}
-			if (newBlob.hasTag("has damage owner"))
-			{
-				newBlob.SetDamageOwnerPlayer(this.getPlayer());
-			}
-		}
-
-        if (blob.getName() != "spikes")
-        {
-		    DestroyScenary(cursorPos, cursorPos);
-        }
-
-		return true;
+		f32 d = MAX_BUILD_LENGTH * getMap().tilesize;
+		Vec2f p = pos + Vec2f(d * mouseNorm.x, d * mouseNorm.y);
+		tileaimpos = getMap().getTileWorldPosition(getMap().getTileSpacePosition(p));
+	}
+	else
+	{
+		tileaimpos = getMap().getTileWorldPosition(getMap().getTileSpacePosition(cursorPos));
 	}
 
-	return false;
+	cursorPos = getBottomOfCursor(tileaimpos);
+
+	if (!serverBlobCheck(this, block, cursorPos, repairing, repairBlob)) return false;
+
+	// one day we will reach an ideal world without latency, dumb edge cases and bad netcode
+	// that day is not today
+	u32 delay = (block.name == "ladder" ? 1 : 2) * getCurrentBuildDelay(this) - 1;  // Waffle: Increase ladder build speed
+	SetBuildDelay(this, delay);
+	
+	CInventory@ inv = this.getInventory();
+	CBitStream missing;
+	if (!hasRequirements(inv, block.reqs, missing, not block.buildOnGround))
+	{
+		// blob.server_Die();  // Waffle: Client side building
+		this.set_u8("buildblob", 255);
+	}
+
+	server_TakeRequirements(inv, block.reqs);
+
+	if (repairing && repairBlob !is null)
+	{
+		repairBlob.server_SetHealth(repairBlob.getInitialHealth());
+		// Waffle: Don't replace stone or moss backwall
+		CMap@ map = getMap();
+		TileType type = map.getTile(cursorPos).type;
+		CRules@ rules = getRules();
+		string backgroundTileProperty = block.name + "_background_tile";
+		if (rules.exists(backgroundTileProperty) && type != CMap::tile_castle_back && !(type >= CMap::tile_castle_back_moss && type <= 231))
+		{
+			map.server_SetTile(repairBlob.getPosition(), rules.get_TileType(backgroundTileProperty));
+		}
+	}
+	else
+	{
+		CBlob@ newBlob = server_CreateBlob(block.name, this.getTeamNum(), cursorPos);
+		newBlob.setAngleDegrees(block.noRotate ? 0 : this.get_u16("build_angle"));
+		if (newBlob.isSnapToGrid())
+		{
+			newBlob.getShape().SetStatic(true);
+		}
+		if (newBlob.hasTag("has damage owner"))
+		{
+			newBlob.SetDamageOwnerPlayer(this.getPlayer());
+		}
+	}
+
+	if (block.name != "spikes")
+	{
+		DestroyScenary(cursorPos, cursorPos);
+	}
+
+	return true;
 }
 
 // Returns true if pos is valid
-bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repairing = false, CBlob@ repairBlob = null)
+bool serverBlobCheck(CBlob@ blob, BuildBlock@ block, Vec2f cursorPos, bool repairing = false, CBlob@ repairBlob = null)
 {
 	// Pos check of about 8 tiles, accounts for people with lag
 	Vec2f pos = (blob.getPosition() - cursorPos) / 2;
@@ -129,7 +111,7 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
 		return false;
 
 	// Make sure we actually have support at our cursor pos
-	if (!(blobToPlace.getShape().getConsts().support > 0 ? map.hasSupportAtPos(cursorPos) : true)) 
+	if (!(getRules().get_u8(block.name + "_support") > 0 ? map.hasSupportAtPos(cursorPos) : true)) 
 		return false;
 
 	// Is the pos currently collapsing?
@@ -154,7 +136,7 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
         const bool no_solids = sectors[i].name == "no solids";
         const bool no_blobs = sectors[i].name == "no blobs";
 		const bool tree_sector = no_build && owner !is null && (owner.hasTag("tree") || owner.hasTag("scenary"));  // Waffle: Allow building platforms on trees
-        if (blobToPlace.getName() == "spikes")  // Waffle: Allow spike dropping at the top of the map
+        if (block.name == "spikes")  // Waffle: Allow spike dropping at the top of the map
         {
             const bool has_adjacent = (// Can't place next to something it'd stick to
                 map.isTileSolid(pos + Vec2f(0,             map.tilesize))  ||
@@ -167,14 +149,14 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
                 return false;
             }
         }
-		else if (blobToPlace.isPlatform() && tree_sector)  // Waffle: Allow building platforms on trees
+		else if ((block.name == "wooden_platform" || block.name == "bridge") && tree_sector)  // Waffle: Allow building platforms on trees
 		{
 			continue;
 		}
-        else if (no_build && blobToPlace.getName() != "ladder" || no_solids || no_blobs)  // Waffle: Prevent solids and blobs
+        else if (no_build && block.name != "ladder" || no_solids || no_blobs)  // Waffle: Prevent solids and blobs
         {
             CBlob@ owner = getBlobByNetworkID(sectors[i].ownerID);
-            if (owner is null || !owner.hasTag("building") || !isTreeSeed(blobToPlace))
+            if (owner is null || !owner.hasTag("building") || !isTreeSeed(blob.getCarriedBlob()))
             {
                 return false;
             }
@@ -191,13 +173,13 @@ bool serverBlobCheck(CBlob@ blob, CBlob@ blobToPlace, Vec2f cursorPos, bool repa
 	if (repairing && repairBlob !is null)
 	{
 		// Are we trying to repair a different blob?
-		if (repairBlob.getName() != blobToPlace.getName())
+		if (repairBlob.getName() != block.name)
 		{
 			return false;
 		}
 
 		// Are we trying to repair something at full health?
-		if (repairBlob.getHealth() == blobToPlace.getInitialHealth())
+		if (repairBlob.getHealth() == repairBlob.getInitialHealth())
 		{
 			return false;
 		}
@@ -323,32 +305,28 @@ void onTick(CBlob@ this)
 	}
 
 	// Waffle: Client side building
-	CBlob@ carryBlob = getCarriedBuildBlock(this);
-	for (u8 i = 0; i < 2; i++)
+	CBlob@ blob = this.getCarriedBlob();
+	if (blob !is null)
 	{
-		CBlob@ blob = i == 0 ? @carryBlob : this.getCarriedBlob();
-		if (blob !is null)
+		if (blob.hasTag("place ignore facing"))
 		{
-			if (blob.hasTag("place ignore facing"))
-			{
-				blob.getSprite().SetFacingLeft(false);
-			}
+			blob.getSprite().SetFacingLeft(false);
+		}
 
-			// hide block in hands when placing close
-			if (!blob.isSnapToGrid())
+		// hide block in hands when placing close
+		if (!blob.isSnapToGrid())
+		{
+			PositionCarried(this, blob);
+		}
+		else
+		{
+			if (blob.hasTag("place norotate"))
 			{
-				PositionCarried(this, blob);
+				blob.setAngleDegrees(0.0f);
 			}
 			else
 			{
-				if (blob.hasTag("place norotate"))
-				{
-					blob.setAngleDegrees(0.0f);
-				}
-				else
-				{
-					blob.setAngleDegrees(this.get_u16("build_angle"));
-				}
+				blob.setAngleDegrees(this.get_u16("build_angle"));
 			}
 		}
 	}
@@ -370,11 +348,12 @@ void onTick(CBlob@ this)
 
 	if (isBuildDelayed(this))
 	{
+		// Waffle: Client side building
 		// don't draw blob while waiting to build
-		if (carryBlob !is null)
-		{
-			carryBlob.SetVisible(false);
-		}
+		// if (carryBlob !is null)
+		// {
+		// 	carryBlob.SetVisible(false);
+		// }
 		return;
 	}
 
@@ -387,11 +366,8 @@ void onTick(CBlob@ this)
 
 	// Waffle: Client side building
 	u8 blockIndex = this.get_u8("buildblob");
-	BuildBlock @block = getBlockByIndex(this, blockIndex);
-	if (block is null)
-	{
-		return;
-	}
+	BuildBlock@ block = getBlockByIndex(this, blockIndex);
+	if (block is null) return;
 	bc.hasReqs = hasRequirements(this.getInventory(), block.reqs, bc.missing, not block.buildOnGround);
 
 	CMap@ map = this.getMap();
@@ -441,7 +417,7 @@ void onTick(CBlob@ this)
 						string bname = blob.getName();
 						if (isLadder)
 						{
-							if (blob is carryBlob || blob.hasTag("player") || !isBlocking(blob) || !blob.getShape().isStatic())
+							if (blob.hasTag("player") || !isBlocking(blob) || !blob.getShape().isStatic())
 							{
 								continue;
 							}
@@ -582,14 +558,9 @@ void onRender(CSprite@ this)
 
 	// Waffle: Client side building
 	// draw a map block or other blob that snaps to grid
-	BuildBlock[][]@ blocks;
-	if (!blob.get("blocks", @blocks)) return;
-
-	const u8 PAGE = blob.get_u8("build page");
-	u8 i = blob.get_u8("buildblob");
-	if (i >= blocks[PAGE].length) return;
-
-	BuildBlock@ buildBlock = blocks[PAGE][i];
+	u8 blockIndex = blob.get_u8("buildblob");
+	BuildBlock@ buildBlock = getBlockByIndex(blob, blockIndex);
+	if (buildBlock is null) return;
 
 	BlockCursor @bc;
 	blob.get("blockCursor", @bc);
@@ -627,7 +598,7 @@ void onRender(CSprite@ this)
 			Vec2f offset(-0.2f + 0.4f * (Maths::Sin(getGameTime() * 0.5f)), 0.0f);
 			pos = blob.getAimPos() + getCamera().getInterpolationOffset() + offset;
 		}
-		DrawGhostBlock(map, buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2,  buildBlock.noRotate ? 0 : blob.get_u16("build_angle"), color, true, this.getZ() + 0.1);
+		DrawGhostBlock(map, buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2,  buildBlock.noRotate ? 0 : blob.get_u16("build_angle"), color, true, this.getZ() + 1.1);
 	}
 }
 
@@ -675,26 +646,28 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if (cmd == this.getCommandID("placeBlob"))
 	{
-		CBlob @carryBlob = getCarriedBuildBlock(this);
-		if (carryBlob is null) return;
+		u8 blockIndex = this.get_u8("buildblob");
+		BuildBlock@ block = getBlockByIndex(this, blockIndex);
+		if (block is null) return;
 
 		Vec2f aimpos;
 		if (!params.saferead_Vec2f(aimpos)) return;
 		
-		if (PlaceBlob(this, carryBlob, aimpos))
+		if (PlaceBlob(this, block, aimpos))
 		{
 			CPlayer@ p = this.getPlayer();
             if (p !is null)
             {
-                GE_BuildBlob(p.getNetworkID(), carryBlob.getName()); // gameplay event for coins
+                GE_BuildBlob(p.getNetworkID(), block.name); // gameplay event for coins
             }
 		}
 
 	}
 	else if (cmd == this.getCommandID("repairBlob"))
 	{
-		CBlob @carryBlob = getCarriedBuildBlock(this);
-		if (carryBlob is null) return;
+		u8 blockIndex = this.get_u8("buildblob");
+		BuildBlock@ block = getBlockByIndex(this, blockIndex);
+		if (block is null) return;
 
 		Vec2f aimpos;
 		if (!params.saferead_Vec2f(aimpos)) return;
@@ -709,23 +682,23 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		if (repairing) // is there a blobtile here?
 		{
-			if (PlaceBlob(this, carryBlob, aimpos, true, repairBlob))
+			if (PlaceBlob(this, block, aimpos, true, repairBlob))
 			{
 				CPlayer@ p = this.getPlayer();
 				if (p !is null)
 				{
-					GE_BuildBlob(p.getNetworkID(), carryBlob.getName()); // gameplay event for coins
+					GE_BuildBlob(p.getNetworkID(), block.name); // gameplay event for coins
                 }
 			}
 		}
 		else // there's nothing here so we can place a new one
 		{
-			if (PlaceBlob(this, carryBlob, aimpos))
+			if (PlaceBlob(this, block, aimpos))
 			{
 				CPlayer@ p = this.getPlayer();
 				if (p !is null)
 				{
-					GE_BuildBlob(p.getNetworkID(), carryBlob.getName()); // gameplay event for coins
+					GE_BuildBlob(p.getNetworkID(), block.name); // gameplay event for coins
 				}
 			}
 		}
