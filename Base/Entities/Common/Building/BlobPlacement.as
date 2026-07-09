@@ -581,40 +581,40 @@ void onRender(CSprite@ this)
 	BlockCursor @bc;
 	blob.get("blockCursor", @bc);
 
-	if (bc !is null)
+	if (!blob.isMyPlayer()) return;
+	if (bc is null) return;
+
+	Driver@ driver = getDriver();
+	SColor color;
+	Vec2f pos;
+	if (bc.cursorClose && bc.hasReqs && bc.buildable)
 	{
-		Driver@ driver = getDriver();
-		SColor color;
-		Vec2f pos;
-		if (bc.cursorClose && bc.hasReqs && bc.buildable)
+		if (bc.buildable && bc.supported)
 		{
-			if (bc.buildable && bc.supported)
+			color.set(255, 255, 255, 255);
+			pos = getBottomOfCursor(bc.tileAimPos);
+			
+			// Waffle: Render tree heights
+			if (isTreeSeed(blob.getCarriedBlob()))
 			{
-				color.set(255, 255, 255, 255);
-				pos = getBottomOfCursor(bc.tileAimPos);
-				
-				// Waffle: Render tree heights
-				if (isTreeSeed(blob.getCarriedBlob()))
-				{
-					DrawTreeHeight(getDriver(), getMap(), bc.tileAimPos);
-				}
-			}
-			else
-			{
-				color.set(255, 255, 46, 50);
-				Vec2f offset(0.0f, -1.0f + 1.0f * ((getGameTime() * 0.8f) % 8));
-				pos = getBottomOfCursor(bc.tileAimPos) + offset;
+				DrawTreeHeight(getDriver(), getMap(), bc.tileAimPos);
 			}
 		}
 		else
 		{
 			color.set(255, 255, 46, 50);
-			const u32 gametime = getGameTime();
-			Vec2f offset(-0.2f + 0.4f * (Maths::Sin(getGameTime() * 0.5f)), 0.0f);
-			pos = blob.getAimPos() + getCamera().getInterpolationOffset() + offset;
+			Vec2f offset(0.0f, -1.0f + 1.0f * ((getGameTime() * 0.8f) % 8));
+			pos = getBottomOfCursor(bc.tileAimPos) + offset;
 		}
-		DrawGhostBlock(map, buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2, buildAngle, color, true, this.getZ() + 1.1);
 	}
+	else
+	{
+		color.set(255, 255, 46, 50);
+		const u32 gametime = getGameTime();
+		Vec2f offset(-0.2f + 0.4f * (Maths::Sin(getGameTime() * 0.5f)), 0.0f);
+		pos = blob.getAimPos() + getCamera().getInterpolationOffset() + offset;
+	}
+	DrawGhostBlock(map, buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2, buildAngle, color, true, this.getZ() + 1.1);
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
