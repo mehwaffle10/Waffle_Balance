@@ -209,7 +209,7 @@ void onTick(CBlob@ this)
 					block.name,
 					block.icon,
 					map.getTileSpacePosition(bc.tileAimPos),
-					0,
+					map.tilesize / 2,
 					0,
 					1,
 					getRequiredQuantity(block.reqs, "blob", "mat_wood"),
@@ -281,7 +281,6 @@ void onRender(CSprite@ this)
 			offset.x *= blob.isFacingLeft() ? -1 : 1;
 
 			DrawGhostBlock(
-				map,
 				buildBlock.icon,
 				blob.getInterpolatedPosition() + offset,
 				map.tilesize / 2,

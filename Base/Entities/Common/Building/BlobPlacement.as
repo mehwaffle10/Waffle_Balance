@@ -564,11 +564,9 @@ void onRender(CSprite@ this)
 
 	Vec2f offset = HELD_BUILD_BLOCK_OFFSET;
 	offset.x *= blob.isFacingLeft() ? -1 : 1;
-	CMap@ map = getMap();
 	u16 buildAngle = buildBlock.noRotate ? 0 : blob.get_u16("build_angle");
 	
 	DrawGhostBlock(
-		map,
 		buildBlock.icon,
 		blob.getInterpolatedPosition() + offset,
 		Texture::width(buildBlock.icon) / 2,
@@ -614,7 +612,7 @@ void onRender(CSprite@ this)
 		Vec2f offset(-0.2f + 0.4f * (Maths::Sin(getGameTime() * 0.5f)), 0.0f);
 		pos = blob.getAimPos() + getCamera().getInterpolationOffset() + offset;
 	}
-	DrawGhostBlock(map, buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2, buildAngle, color, true, this.getZ() + 1.1);
+	DrawGhostBlock(buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2, buildAngle, color, true, this.getZ() + 1.1);
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
