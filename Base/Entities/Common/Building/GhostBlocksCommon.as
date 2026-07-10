@@ -77,7 +77,6 @@ void RenderGhostBlocks(CMap@ map)
 			continue;
 		}
 
-		print("drawing " + block.name + " block.icon: " + block.icon + " block.halfWidth: " + block.halfWidth);
 		DrawGhostBlock(block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, GHOST_COLOR);
 		i++;
 	}
