@@ -198,7 +198,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, BuildBlock@ block, bool &out sameTil
 				CBlob @b = blobsInRadius[i];
 				if (!b.isAttached())
 				{
-					if (block.tile > 0 || buildSolid)
+					if (block.tile == 0 || buildSolid)
 					{
 						if (b is this && b.getName() == "spikes") continue;
 
