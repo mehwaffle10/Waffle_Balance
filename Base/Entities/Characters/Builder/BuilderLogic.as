@@ -732,21 +732,6 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 }
 
-void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
-{
-	// Waffle: Client side building
-	if (detached.getName() == "seed")
-	{
-		if (not detached.hasTag('temp blob placed')) return;
-
-		CBlob@ anotherBlob = this.getInventory().getItem(detached.getName());
-		if (anotherBlob !is null)
-		{
-			this.server_Pickup(anotherBlob);
-		}
-	}
-}
-
 void onAddToInventory(CBlob@ this, CBlob@ blob)
 {
 	// destroy built blob if somehow they got into inventory

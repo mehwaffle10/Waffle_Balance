@@ -9,6 +9,7 @@
 #include "RunnerTextures.as"
 #include "TreeLimitCommon.as"    // Waffle: Trees can be placed on buildings
 #include "GhostBlocksCommon.as"  // Waffle: Client side building
+#include "BuilderCommon.as"      // Waffle: All classes can place trees
 
 bool PlaceBlob(CBlob@ this, BuildBlock@ block, Vec2f cursorPos, bool repairing = false, CBlob@ repairBlob = null)
 {
@@ -535,7 +536,6 @@ void onInit(CSprite@ this)
 	// this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	// this.getCurrentScript().runFlags |= Script::tick_hasattached;
 	// this.getCurrentScript().runFlags |= Script::tick_myplayer;
-	this.getCurrentScript().tickIfTag = "HoldingBuildBlock";
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
@@ -560,21 +560,23 @@ void onRender(CSprite@ this)
 	// draw a map block or other blob that snaps to grid
 	u8 blockIndex = blob.get_u8("buildblob");
 	BuildBlock@ buildBlock = getBlockByIndex(blob, blockIndex);
-	if (buildBlock is null) return;
-
-	Vec2f offset = HELD_BUILD_BLOCK_OFFSET;
-	offset.x *= blob.isFacingLeft() ? -1 : 1;
-	u16 buildAngle = buildBlock.noRotate ? 0 : blob.get_u16("build_angle");
-	
-	DrawGhostBlock(
-		buildBlock.icon,
-		blob.getInterpolatedPosition() + offset,
-		Texture::width(buildBlock.icon) / 2,
-		buildAngle,
-		SColor(255, 255, 255, 255),
-		true,
-		this.getZ() + 1.1f
-	);
+	u16 buildAngle = 0;
+	if (buildBlock !is null)
+	{
+		Vec2f offset = HELD_BUILD_BLOCK_OFFSET;
+		offset.x *= blob.isFacingLeft() ? -1 : 1;
+		buildAngle = buildBlock.noRotate ? 0 : blob.get_u16("build_angle");
+		
+		DrawGhostBlock(
+			buildBlock.icon,
+			blob.getInterpolatedPosition() + offset,
+			Texture::width(buildBlock.icon) / 2,
+			buildAngle,
+			SColor(255, 255, 255, 255),
+			true,
+			this.getZ() + 1.1f
+		);
+	}
 
 	BlockCursor @bc;
 	blob.get("blockCursor", @bc);
@@ -585,6 +587,8 @@ void onRender(CSprite@ this)
 	Driver@ driver = getDriver();
 	SColor color;
 	Vec2f pos;
+	CBlob@ carried = blob.getCarriedBlob();
+	bool isTree = isTreeSeed(carried);
 	if (bc.cursorClose && bc.hasReqs && bc.buildable)
 	{
 		if (bc.buildable && bc.supported)
@@ -593,7 +597,7 @@ void onRender(CSprite@ this)
 			pos = getBottomOfCursor(bc.tileAimPos);
 			
 			// Waffle: Render tree heights
-			if (isTreeSeed(blob.getCarriedBlob()))
+			if (isTree)
 			{
 				DrawTreeHeight(getDriver(), getMap(), bc.tileAimPos);
 			}
@@ -612,7 +616,14 @@ void onRender(CSprite@ this)
 		Vec2f offset(-0.2f + 0.4f * (Maths::Sin(getGameTime() * 0.5f)), 0.0f);
 		pos = blob.getAimPos() + getCamera().getInterpolationOffset() + offset;
 	}
-	DrawGhostBlock(buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2, buildAngle, color, true, this.getZ() + 1.1);
+	if (buildBlock !is null)
+	{
+		DrawGhostBlock(buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2, buildAngle, color, true, this.getZ() + 1.1);
+	}
+	else if (carried !is null && carried.getName() == "tree")
+	{
+		carried.RenderForHUD(pos, 0.0f, color, RenderStyle::normal);
+	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
@@ -718,16 +729,26 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 }
 
+// Waffle: All classes can place trees
+void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
+{
+	if (this is null || attached is null) return;
+	const string name = attached.getName();
+	if (name != "bucket" && name != "drill" && name != "tree") return;
+	ClearCarriedBlock(this);
+}
+
 void onDetach(CBlob@ this, CBlob@ detached, AttachmentPoint@ attachedPoint)
 {
-	// set visible in case of detachment and was invisible for HUD
-	detached.SetVisible(true);
-
-	if (detached.hasTag("temp blob placed"))  // wont happen on client
+	// Waffle: Client side building
+	if (detached.getName() == "seed")
 	{
-		// override ignore collision so we can step on our ladder
-		this.IgnoreCollisionWhileOverlapped(null);
-		detached.IgnoreCollisionWhileOverlapped(null);
-		detached.Untag("temp blob placed");
+		if (not detached.hasTag('temp blob placed')) return;
+
+		CBlob@ anotherBlob = this.getInventory().getItem(detached.getName());
+		if (anotherBlob !is null)
+		{
+			this.server_Pickup(anotherBlob);
+		}
 	}
 }
