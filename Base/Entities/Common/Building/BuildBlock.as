@@ -70,7 +70,7 @@ shared class BuildBlock
 		
 		if (!isClient() || Texture::exists(icon)) return;
 
-		const string FILE_NAME = getIconTokenFilename(icon);
+		const string FILE_NAME = tile > 0 ? "Sprites/client_world.png" : getIconTokenFilename(icon);
 		if (!Texture::exists(FILE_NAME))
 		{
 			if (!Texture::createFromFile(FILE_NAME, FILE_NAME))
