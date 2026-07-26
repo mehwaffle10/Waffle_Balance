@@ -397,6 +397,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Need a 5 x 5 area to deploy
 - Bolt drag multiplier in water decreased from 5 to 1.5
 - Bolts no longer collide with invincible blobs
+- Bolts hit but don't bounce on enemy trampolines
 - Fixed an issue where explosions would not happen client side
 - Added feedback upon successfully killing a bolt with your sword
 
@@ -439,7 +440,12 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Are now flammable
 	- Ignite things that they bounce while on fire
 		- Ignite any held objects as well
-- No longer bounce enemy arrows. Die in 5 normal arrows
+- No longer bounce enemy projectiles. Die to:
+	- 5 normal arrows
+	- 1 fire arrow if not extinguished
+	- 1 bomb arrow
+	- 2 ballista bolts
+	- 1 bomb bolt
 - No longer bounce boats
 - Take increased damage in alignment with `Wood Structure Damage` section above
 - Can use action3 key (default space) to lock the angle the trampoline is facing
@@ -554,25 +560,25 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Decreased drag multiplier in water from 5 to 1.5
 - Can no longer be harvested mid-air
 - Always ignite when hitting a static burning blob
-- Collide with enemy trampolines
+- Hit but don't bounce on enemy trampolines
 - No longer collide with friendly bridges
 
 ### Water Arrows
 - Cost 25 coins for 1 instead of 15
-- Collide with enemy trampolines
+- Hit but don't bounce on enemy trampolines
 
 ### Fire Arrows
 - Cost 50 coins for 2 instead of 30
 - Always flare even if not on flammable surface
 - Ignite instantly on contact
 - Added animation and sound for instant feedback
-- Collide with enemy trampolines
+- Hit but don't bounce on enemy trampolines
 - Fire arrow flares don't do an extra half heart to things they ignite
 	- Direct arrow hits still do full damage plus burn damage
 
 ### Bomb Arrows
 - Cost 75 coins for 1 instead of 50
-- Collide with enemy trampolines
+- Hit but don't bounce on enemy trampolines
 
 ## KNIGHT SHOP
 

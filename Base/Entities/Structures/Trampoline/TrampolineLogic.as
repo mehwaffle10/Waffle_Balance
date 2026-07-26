@@ -155,8 +155,8 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 	//cant bounce while held by something attached to something else
 	if (holder !is null && holder.isAttached()) return;
 
-	// Waffle: Don't bounce boats
-	if (blob.hasTag("boat")) return;
+	// Waffle: Don't bounce boats or enemy projectiles
+	if (blob.hasTag("boat") || blob.hasTag("projectile") && blob.getTeamNum() != this.getTeamNum()) return;
 
 	//prevent knights from flying using trampolines
 	/*  // Waffle : Bounce from any angle
