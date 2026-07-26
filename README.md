@@ -265,6 +265,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - Velocity decay decreased from 95% to 75%
     - Diagonal move force reduced by 15%
 
+### Bridges
+- No longer collide with friendly arrows
+- Fixed an issue with bridges spawned on a map having the wrong Z value
+
 ## VEHICLES
 
 ### Vehicles
