@@ -398,7 +398,7 @@ bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
 	}
 
 	bool check =	this.getTeamNum() != blob.getTeamNum() || // collide with enemy blobs
-				blob.getName() == "bridge" ||
+				// blob.getName() == "bridge" ||  // Waffle: Arrows don't collide with friendly bridges
 				(blob.getName() == "keg" && !blob.isAttached() && this.hasTag("fire source")); // fire arrows collide with team kegs that arent held
 
 	//maybe collide with team structures

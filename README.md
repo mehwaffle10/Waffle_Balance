@@ -555,6 +555,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Can no longer be harvested mid-air
 - Always ignite when hitting a static burning blob
 - Collide with enemy trampolines
+- No longer collide with friendly bridges
 
 ### Water Arrows
 - Cost 25 coins for 1 instead of 15
