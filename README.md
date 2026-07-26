@@ -411,6 +411,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Bolts hit but don't bounce on enemy trampolines
 - Fixed an issue where explosions would not happen client side
 - Added feedback upon successfully killing a bolt with your sword
+- Bolts no longer die when hitting bedrock
 
 ### Mounted Bow
 - Health increased from 2 to 10

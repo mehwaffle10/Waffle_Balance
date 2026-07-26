@@ -253,15 +253,17 @@ void BallistaHitMap(CBlob@ this, const u32 offset, Vec2f hit_position, Vec2f vel
 	TileType type = map.getTile(offset).type;
 	const f32 angle = velocity.Angle();
 
-	if (type == CMap::tile_bedrock)
-	{
+	// Waffle: Ballista bolts don't die on bedrock
+	// if (type == CMap::tile_bedrock)
+	// {
 
-		this.Tag("dead");
-		this.server_Die();
-		this.getSprite().Gib();
+	// 	this.Tag("dead");
+	// 	this.server_Die();
+	// 	this.getSprite().Gib();
 
-	}
-	else if (!map.isTileGroundStuff(type))
+	// }
+	// else
+	if (!map.isTileGroundStuff(type))
 	{
 		// Waffle: Ignore no build zones
 		// if (map.getSectorAtPosition(hit_position, "no build") is null)
