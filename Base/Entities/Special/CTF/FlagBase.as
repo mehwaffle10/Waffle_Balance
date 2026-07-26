@@ -9,13 +9,28 @@
 void onInit(CBlob@ this)
 {
 	Vec2f pos = this.getPosition();
-	this.SetFacingLeft(pos.x < getMap().getMapDimensions().x * 0.5f); //face center of map
+	if (this.hasTag("upsidedown"))
+	{
+		this.setAngleDegrees(180.0f);
+		this.SetFacingLeft(pos.x >= getMap().getMapDimensions().x * 0.5f); //face center of map
+	}
+	else
+	{
+		this.SetFacingLeft(pos.x < getMap().getMapDimensions().x * 0.5f); //face center of map
+	}
 
 	if (isServer())
 	{
-		CBlob@ flag = server_CreateBlob(flag_name(), this.getTeamNum(), pos);  // Waffle: Fix for staging
+		CBlob@ flag = server_CreateBlobNoInit(flag_name());  // Waffle: Fix for staging
 		if (flag !is null)
 		{
+			flag.server_setTeamNum(this.getTeamNum());
+			flag.setPosition(pos);
+			if (this.hasTag("upsidedown"))
+			{
+				flag.Tag("upsidedown");
+			}
+			flag.Init();
 			this.server_AttachTo(flag, "FLAG");
 			this.set_netid("flag id", flag.getNetworkID());
 		}
@@ -38,7 +53,7 @@ void onTick(CBlob@ this)
 
 		CMap@ map = getMap();
         // Waffle: Flag base is now five wide and seven tall
-        map.server_AddSector(pos + Vec2f(-20, -40), pos + Vec2f(20, 16), "no build", "", this.getNetworkID());
+        map.server_AddSector(pos + Vec2f(-20, this.hasTag("upsidedown") ? 40 : -40), pos + Vec2f(20, this.hasTag("upsidedown") ? -16 : 16), "no build", "", this.getNetworkID());
 
         //clear the no build zone so we dont get unbreakable blocks
         
@@ -47,7 +62,7 @@ void onTick(CBlob@ this)
         {
             for (int y = -40; y < 8; y += 8)
             {
-                Vec2f target = pos + Vec2f(x, y);
+                Vec2f target = pos + Vec2f(x, this.hasTag("upsidedown") ? 0 : y);
                 Tile t = map.getTile(target);
                 if (t.type == CMap::tile_ground)
                 {
@@ -71,7 +86,7 @@ void onTick(CBlob@ this)
         // Waffle: Flag base is now five wide
         for (int x = -16; x <= 16; x += 8)
         {
-            Vec2f target = pos + Vec2f(x, 12);
+            Vec2f target = pos + Vec2f(x, (this.hasTag("upsidedown") ? -1 : 1) * 12);
             if (!map.isTileBedrock(map.getTile(target).type))
             {
                 map.server_SetTile(target, CMap::tile_bedrock);

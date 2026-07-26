@@ -267,6 +267,10 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	this.set_u16(return_prop, 0);
 
+	if (this.hasTag("upsidedown"))
+	{
+		this.setAngleDegrees(180.0f);
+	}
 	this.SetFacingLeft(attached.isFacingLeft());
 
     if (!isServer())

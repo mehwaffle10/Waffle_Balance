@@ -479,39 +479,52 @@ shared class CTFCore : RulesCore
 			f32 auto_distance_from_edge = Maths::Min(map.tilemapwidth * 0.25f * 8.0f, 400.0f);
 
 			//blue flags
-			if (getMap().getMarkers("blue spawn", flagPlaces))
+			for (u8 team = 0; team <= 1; team++)
 			{
-				for (uint i = 0; i < flagPlaces.length; i++)
+				const string teamName = team == 0 ? "blue" : "red";
+				if (getMap().getMarkers(teamName + " spawn", flagPlaces))
 				{
-					server_CreateBlob(flag_spawn_name(), 0, flagPlaces[i] + Vec2f(0, map.tilesize));
+					for (uint i = 0; i < flagPlaces.length; i++)
+					{
+						bool hasAbove = false;
+						bool hasBelow = false;
+						Vec2f tileOffset = Vec2f(0, map.tilesize);
+
+						for (uint j = 0; j < flagPlaces.length; j++)
+						{
+							if (flagPlaces[j] == flagPlaces[i] + tileOffset)
+							{
+								hasBelow = true;
+							}
+							else if (flagPlaces[j] == flagPlaces[i] - tileOffset)
+							{
+								hasAbove = true;
+							}
+						}
+						if (hasBelow) continue;
+
+						CBlob@ flag = server_CreateBlobNoInit(flag_spawn_name());
+						if (flag !is null)
+						{
+							flag.server_setTeamNum(team);
+							flag.setPosition(flagPlaces[i] + (hasAbove ? Vec2f_zero : tileOffset));
+							if (hasAbove)
+							{
+								flag.Tag("upsidedown");
+							}
+							flag.Init();
+						}
+					}
+
+					flagPlaces.clear();
 				}
-
-				flagPlaces.clear();
-			}
-			else
-			{
-				warn("CTF: Blue flag added");
-				f32 x = auto_distance_from_edge;
-				respawnPos = Vec2f(x, (map.getLandYAtX(x / map.tilesize) - 2) * map.tilesize);
-				server_CreateBlob(flag_spawn_name(), 0, respawnPos);
-			}
-
-			//red flags
-			if (getMap().getMarkers("red spawn", flagPlaces))
-			{
-				for (uint i = 0; i < flagPlaces.length; i++)
+				else
 				{
-					server_CreateBlob(flag_spawn_name(), 1, flagPlaces[i] + Vec2f(0, map.tilesize));
+					warn("CTF: " + teamName + " flag added");
+					f32 x = auto_distance_from_edge;
+					respawnPos = Vec2f(x, (map.getLandYAtX(x / map.tilesize) - 2) * map.tilesize);
+					server_CreateBlob(flag_spawn_name(), team, respawnPos);
 				}
-
-				flagPlaces.clear();
-			}
-			else
-			{
-				warn("CTF: Red flag added");
-				f32 x = (map.tilemapwidth-1) * map.tilesize - auto_distance_from_edge;
-				respawnPos = Vec2f(x, (map.getLandYAtX(x / map.tilesize) - 2) * map.tilesize);
-				server_CreateBlob(flag_spawn_name(), 1, respawnPos);
 			}
 		}
 		else
