@@ -1,4 +1,3 @@
-#include "Hitters.as";
 #include "DoorCommon.as";
 #include "FireCommon.as";
 

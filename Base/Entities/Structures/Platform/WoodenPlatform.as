@@ -1,5 +1,3 @@
-#include "Hitters.as"
-
 #include "FireCommon.as"
 
 void onInit(CBlob@ this)
@@ -38,16 +36,6 @@ void onHealthChange(CBlob@ this, f32 oldHealth)
 	f32 hp = this.getHealth();
 	bool repaired = (hp > oldHealth);
 	MakeDamageFrame(this, repaired);
-}
-
-// Waffle: Die to one hit of boat ramming
-f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitterBlob, u8 customData)
-{
-	if (customData == Hitters::ram)
-	{
-		damage *= 2;
-	}
-	return damage;
 }
 
 void MakeDamageFrame(CBlob@ this, bool repaired = false)

@@ -81,6 +81,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - Now has a wider window to trigger instead of a single tick
     - Displays indicator while slashing
     - Indicator no longer targets grass
+- Slashes no longer hit platforms, only jabs
 - Fixed fake client slash if stunned at the wrong time between double slashing
 
 ### Archer
@@ -98,10 +99,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 ### Wood Structure Damage
 - Arrows do full damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
 	- wood doors = 7 hearts
-	- platforms  = 10 hearts
+	- platforms  = 5 hearts
 - Swords do 43.75% damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
     - wood doors = 11 jabs
-    - platforms  = 23 jabs
+    - platforms  = 12 jabs
     - ladders    = 5  jabs
 	- wood shops = 10 jabs
     - quarry     = 19 jabs
@@ -156,7 +157,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Saplings can no longer be placed on each other
 - Can build buildings behind trees
 - Can be placed on non-static blobs
-- Can place platforms inside of trees
+- Can place platforms and bridges inside of trees
 - Can no longer grow inside of static blobs or on other trees
 - Can no longer build blocks on top of saplings placed with left click
 - No longer drops saplings if burned down or kegged
@@ -267,7 +268,13 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Bridges
 - No longer collide with friendly arrows
+- Can be placed inside of trees
 - Fixed an issue with bridges spawned on a map having the wrong Z value
+
+### Platforms
+- No longer hit by slashes, only jabs
+- Siege can no longer fire through them
+- Can be placed inside of trees
 
 ## VEHICLES
 
