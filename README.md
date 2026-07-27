@@ -114,7 +114,6 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Removed threshold for weaker blast force
 - Blast force applied client side to fix issues with dud jumps 
 - Do 1.2x damage to stone structures instead of half (2 shot stone doors and spikes)
-- Do 2x damage to wood structures instead of 1.4x (1 shot wood doors, already 1 shot wood buildings, 3 shot tunnel)
 - No longer damage gold
 
 ### Fire
@@ -604,6 +603,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Fixed fuse sound not resetting when extinguished
 - Fixed screen shake happening when the keg wasn't exploding
 - Cost 160 coins
+- Do 2x damage to wood structures so they can 1 shot tunnels within their inner radius
 - Removed 10 tick inconsistency in fuse timer (thanks bunnie!)
 - Now make sounds on damage and gibs on death (thanks mugg91!)
 
