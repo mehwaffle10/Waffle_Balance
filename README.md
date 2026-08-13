@@ -173,6 +173,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
     - Can no longer grow in one tall holes if the block above isn't breakable
 	- No longer breaks bridges and platforms
 - Nobuild/tree sectors are now tile aligned
+- Trees can now properly be invincible if tagged as such
+- Trees spawned on the map with bedrock above are invincibile (for purpose of limiting tree farms)
 
 ### Holidays
 - Disabled
