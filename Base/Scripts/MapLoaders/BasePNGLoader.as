@@ -437,6 +437,11 @@ class PNGLoader
 			if(tree !is null)
 			{
 				tree.Tag("startbig");
+				// Waffle: Limit tree farms on certain maps
+				if (map.getTile(offset - map.tilemapwidth).type == CMap::tile_bedrock)
+				{
+					tree.Tag("invincible");
+				}
 				tree.setPosition( getSpawnPosition( map, offset ) );
 				tree.Init();
 				if (map.getTile(offset).type == CMap::tile_empty)
