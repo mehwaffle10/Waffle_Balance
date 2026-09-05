@@ -89,8 +89,8 @@ void onInit(CBlob@ this)
 	// auto-load on creation
 	if (isServer())
 	{
-		// Waffle: Start with 120 arrows instead of 30
-		for (u8 i = 0; i < 4; i++)
+		// Waffle: Start with more ammo
+		for (u8 i = 0; i < 2; i++)
 		{
 			CBlob@ ammo = server_CreateBlob("mat_arrows");
 			if (ammo !is null && !this.server_PutInInventory(ammo))

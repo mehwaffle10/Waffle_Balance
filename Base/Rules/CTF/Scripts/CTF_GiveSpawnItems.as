@@ -3,6 +3,7 @@
 #include "RulesCore.as";
 #include "CTF_Structs.as";
 #include "CTF_Common.as"; // resupply stuff
+#include "ArrowCommon.as" // Waffle: Increase max arrow quantity
 
 bool SetMaterials(CBlob@ blob,  const string &in name, const int quantity, bool drop = false)
 {
@@ -96,9 +97,9 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
 		if (gametime > getCTFTimer(this, p, "archer")) 
 		{
 			CInventory@ inv = b.getInventory();
-			if (inv.isInInventory("mat_arrows", 30)) 
+			if (inv.isInInventory("mat_arrows", ARROW_MAX_QUANTITY)) 
 			{
-				return; // don't give arrows if they have 30 already
+				return; // don't give arrows if they have max already
 			}
 			else 
 			{
@@ -111,7 +112,7 @@ void doGiveSpawnMats(CRules@ this, CPlayer@ p, CBlob@ b)
                 }
                 if (isServer())
                 {
-				    SetMaterials(b, "mat_arrows", 30);
+				    SetMaterials(b, "mat_arrows", ARROW_MAX_QUANTITY);
                 }
 			}
 		}

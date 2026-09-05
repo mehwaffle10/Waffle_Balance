@@ -422,7 +422,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Arrows no longer have 2x drag
 - Launch speed reduced from 25 to 21
 - Can be hit by enemy projectiles
-- Now spawn with 90 arrows
+- Now spawn with 100 arrows
 
 ## BUILDER SHOP
 
@@ -575,6 +575,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Always ignite when hitting a static burning blob
 - Hit but don't bounce on enemy trampolines
 - No longer collide with friendly bridges
+- Stack and resupplied to 50 instead of 30
+- Stack size animation adjusted (looks full for longer)
 
 ### Water Arrows
 - Cost 25 coins for 1 instead of 15
