@@ -91,6 +91,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Grapple no longer pulls objects
 - Fixed charge getting stuck when jabbed
 - Can no longer harvest arrows mid-air
+- Can harvest gold with arrows that stun
 
 ### Stomp
 - Added bullet stomps (thanks bunnie!)
@@ -577,6 +578,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer collide with friendly bridges
 - Stack and resupplied to 50 instead of 30
 - Stack size animation adjusted (looks full for longer)
+- Harvest gold on collision if they can stun
 
 ### Water Arrows
 - Cost 25 coins for 1 instead of 15

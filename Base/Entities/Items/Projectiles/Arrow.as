@@ -10,6 +10,7 @@
 #include "FireplaceCommon.as";
 #include "ActivationThrowCommon.as"
 #include "FireCommon.as"  // Waffle: Make igniting arrows more consistent
+#include "GoldCoins.as"  // Waffle: Gold mines for coins instead of gold material
 
 const s32 bomb_fuse = 120;
 const f32 arrowMediumSpeed = 8.0f;
@@ -655,6 +656,24 @@ void ArrowHitMap(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, u8 c
 		if (hitBlob is null) // map (stone, wood, dirt)
 		{
 			this.set_Vec2f("hitWorldPoint", worldPoint);
+
+			// Waffle: Allow archers to harvest gold with arrows that can stun
+			Vec2f vel = velocity;
+			const f32 speed = vel.Normalize();
+			if (this.getTickSinceCreated() <= 4 && speed > ArcherParams::shoot_max_vel * 0.845f)
+			{
+				CMap@ map = getMap();
+				Tile tile = map.getTile(worldPoint);
+				if (map.isTileGold(tile.type) && tile.type != 94)
+				{
+					map.server_DestroyTile(worldPoint, 0.1f, this);
+					CPlayer@ player = this.getDamageOwnerPlayer();
+                    if (player !is null)
+                    {
+                        player.server_setCoins(player.getCoins() + gold_coins);
+                    }
+				}
+			}
 		}
 		else // hitBlob (door, platform, etc.)
 		{
