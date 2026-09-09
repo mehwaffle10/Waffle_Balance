@@ -68,7 +68,7 @@ class PNGLoader
 
 				// Optimization: check if the pixel color is the sky color
 				// We do this before calling handlePixel because it is overriden, and to avoid a SColor copy
-				if (pixel.color != map_colors::sky)  // Waffle: Ignore transparent pixels
+				if (pixel.color != map_colors::sky)
 				{
 					handlePixel(pixel, offset, gold_locations);  // Waffle: Regen gold
 				}
@@ -127,7 +127,7 @@ class PNGLoader
 			case map_colors::alpha_spikes:          autotile(offset); spawnBlob(map, "spikes",          getTeamFromChannel(alpha), position,                             true); break;
 			case map_colors::alpha_stone_door:      autotile(offset); spawnBlob(map, "stone_door",      getTeamFromChannel(alpha), position, getAngleFromChannel(alpha), true); break;
 			case map_colors::alpha_trap_block:      autotile(offset); spawnBlob(map, "trap_block",      getTeamFromChannel(alpha), position,                             true); break;
-			case map_colors::alpha_bridge:          autotile(offset); spawnBlob(map, "bridge",      getTeamFromChannel(alpha), position,                             true); break;
+			case map_colors::alpha_bridge:          autotile(offset); spawnBlob(map, "bridge",          getTeamFromChannel(alpha), position,                             true); break;
 			case map_colors::alpha_wooden_door:     autotile(offset); spawnBlob(map, "wooden_door",     getTeamFromChannel(alpha), position, getAngleFromChannel(alpha), true); break;
 			case map_colors::alpha_wooden_platform: autotile(offset); spawnBlob(map, "wooden_platform", getTeamFromChannel(alpha), position, getAngleFromChannel(alpha), true); break;
 
@@ -653,14 +653,12 @@ CBlob@ spawnHall(CMap@ map, int offset, u8 team)
 
 CBlob@ spawnBlob(CMap@ map, const string &in name, u8 team, Vec2f position)
 {
-    // Waffle: Base team off of position
-	return server_CreateBlob(name, position.x < map.tilemapwidth * map.tilesize / 2 ? 0 : 1, position);
+	return server_CreateBlob(name, team, position);
 }
 
 CBlob@ spawnBlob(CMap@ map, const string &in name, u8 team, Vec2f position, const bool fixed)
 {
-    // Waffle: Base team off of position
-	CBlob@ blob = spawnBlob(map, name, team, position);
+	CBlob@ blob = server_CreateBlob(name, team, position);
 	blob.getShape().SetStatic(fixed);
 
 	return blob;
@@ -668,8 +666,7 @@ CBlob@ spawnBlob(CMap@ map, const string &in name, u8 team, Vec2f position, cons
 
 CBlob@ spawnBlob(CMap@ map, const string &in name, u8 team, Vec2f position, s16 angle)
 {
-    // Waffle: Base team off of position
-	CBlob@ blob = spawnBlob(map, name, team, position);
+	CBlob@ blob = server_CreateBlob(name, team, position);
 	blob.setAngleDegrees(angle);
 
 	return blob;
@@ -1047,259 +1044,259 @@ SColor getColorFromTileType(TileType tile)
 }
 
 const SColor[] TILE_LUT = {
-    map_colors::unused,                // |   0 |
-    map_colors::unused,                // |   1 |
-    map_colors::unused,                // |   2 |
-    map_colors::unused,                // |   3 |
-    map_colors::unused,                // |   4 |
-    map_colors::unused,                // |   5 |
-    map_colors::unused,                // |   6 |
-    map_colors::unused,                // |   7 |
-    map_colors::unused,                // |   8 |
-    map_colors::unused,                // |   9 |
-    map_colors::unused,                // |  10 |
-    map_colors::unused,                // |  11 |
-    map_colors::unused,                // |  12 |
-    map_colors::unused,                // |  13 |
-    map_colors::unused,                // |  14 |
-    map_colors::unused,                // |  15 |
-    map_colors::tile_ground,           // |  16 |
-    map_colors::tile_ground,           // |  17 |
-    map_colors::tile_ground,           // |  18 |
-    map_colors::tile_ground,           // |  19 |
-    map_colors::tile_ground,           // |  20 |
-    map_colors::tile_ground,           // |  21 |
-    map_colors::tile_ground,           // |  22 |
-    map_colors::tile_ground,           // |  23 |
-    map_colors::tile_ground,           // |  24 |
-    map_colors::tile_grass,            // |  25 |
-    map_colors::tile_grass,            // |  26 |
-    map_colors::tile_grass,            // |  27 |
-    map_colors::tile_grass,            // |  28 |
-    map_colors::tile_ground,           // |  29 | damaged
-    map_colors::tile_ground,           // |  30 | damaged
-    map_colors::tile_ground,           // |  31 | damaged
-    map_colors::tile_ground_back,      // |  32 |
-    map_colors::tile_ground_back,      // |  33 |
-    map_colors::tile_ground_back,      // |  34 |
-    map_colors::tile_ground_back,      // |  35 |
-    map_colors::tile_ground_back,      // |  36 |
-    map_colors::tile_ground_back,      // |  37 |
-    map_colors::tile_ground_back,      // |  38 |
-    map_colors::tile_ground_back,      // |  39 |
-    map_colors::tile_ground_back,      // |  40 |
-    map_colors::tile_ground_back,      // |  41 |
-    map_colors::unused,                // |  42 |
-    map_colors::unused,                // |  43 |
-    map_colors::unused,                // |  44 |
-    map_colors::unused,                // |  45 |
-    map_colors::unused,                // |  46 |
-    map_colors::unused,                // |  47 |
-    map_colors::tile_castle,           // |  48 |
-    map_colors::tile_castle,           // |  49 |
-    map_colors::tile_castle,           // |  50 |
-    map_colors::tile_castle,           // |  51 |
-    map_colors::tile_castle,           // |  52 |
-    map_colors::tile_castle,           // |  53 |
-    map_colors::tile_castle,           // |  54 |
-    map_colors::unused,                // |  55 |
-    map_colors::unused,                // |  56 |
-    map_colors::unused,                // |  57 |
-    map_colors::tile_castle,           // |  58 | damaged
-    map_colors::tile_castle,           // |  59 | damaged
-    map_colors::tile_castle,           // |  60 | damaged
-    map_colors::tile_castle,           // |  61 | damaged
-    map_colors::tile_castle,           // |  62 | damaged
-    map_colors::tile_castle,           // |  63 | damaged
-    map_colors::tile_castle_back,      // |  64 |
-    map_colors::tile_castle_back,      // |  65 |
-    map_colors::tile_castle_back,      // |  66 |
-    map_colors::tile_castle_back,      // |  67 |
-    map_colors::tile_castle_back,      // |  68 |
-    map_colors::tile_castle_back,      // |  69 |
-    map_colors::unused,                // |  70 |
-    map_colors::unused,                // |  71 |
-    map_colors::unused,                // |  72 |
-    map_colors::unused,                // |  73 |
-    map_colors::unused,                // |  74 |
-    map_colors::unused,                // |  75 |
-    map_colors::tile_castle_back,      // |  76 | damaged
-    map_colors::tile_castle_back,      // |  77 | damaged
-    map_colors::tile_castle_back,      // |  78 | damaged
-    map_colors::tile_castle_back,      // |  79 | damaged
-    map_colors::tile_gold,             // |  80 |
-    map_colors::tile_gold,             // |  81 |
-    map_colors::tile_gold,             // |  82 |
-    map_colors::tile_gold,             // |  83 |
-    map_colors::tile_gold,             // |  84 |
-    map_colors::tile_gold,             // |  85 |
-    map_colors::unused,                // |  86 |
-    map_colors::unused,                // |  87 |
-    map_colors::unused,                // |  88 |
-    map_colors::unused,                // |  89 |
-    map_colors::tile_gold,             // |  90 | damaged
-    map_colors::tile_gold,             // |  91 | damaged
-    map_colors::tile_gold,             // |  92 | damaged
-    map_colors::tile_gold,             // |  93 | damaged
-    map_colors::tile_gold,             // |  94 | damaged
-    map_colors::unused,                // |  95 |
-    map_colors::tile_stone,            // |  96 |
-    map_colors::tile_stone,            // |  97 |
-    map_colors::unused,                // |  98 |
-    map_colors::unused,                // |  99 |
-    map_colors::tile_stone,            // | 100 | damaged
-    map_colors::tile_stone,            // | 101 | damaged
-    map_colors::tile_stone,            // | 102 | damaged
-    map_colors::tile_stone,            // | 103 | damaged
-    map_colors::tile_stone,            // | 104 | damaged
-    map_colors::unused,                // | 105 |
-    map_colors::tile_bedrock,          // | 106 |
-    map_colors::tile_bedrock,          // | 107 |
-    map_colors::tile_bedrock,          // | 108 |
-    map_colors::tile_bedrock,          // | 109 |
-    map_colors::tile_bedrock,          // | 110 |
-    map_colors::tile_bedrock,          // | 111 |
-    map_colors::unused,                // | 112 |
-    map_colors::unused,                // | 113 |
-    map_colors::unused,                // | 114 |
-    map_colors::unused,                // | 115 |
-    map_colors::unused,                // | 116 |
-    map_colors::unused,                // | 117 |
-    map_colors::unused,                // | 118 |
-    map_colors::unused,                // | 119 |
-    map_colors::unused,                // | 120 |
-    map_colors::unused,                // | 121 |
-    map_colors::unused,                // | 122 |
-    map_colors::unused,                // | 123 |
-    map_colors::unused,                // | 124 |
-    map_colors::unused,                // | 125 |
-    map_colors::unused,                // | 126 |
-    map_colors::unused,                // | 127 |
-    map_colors::unused,                // | 128 |
-    map_colors::unused,                // | 129 |
-    map_colors::unused,                // | 130 |
-    map_colors::unused,                // | 131 |
-    map_colors::unused,                // | 132 |
-    map_colors::unused,                // | 133 |
-    map_colors::unused,                // | 134 |
-    map_colors::unused,                // | 135 |
-    map_colors::unused,                // | 136 |
-    map_colors::unused,                // | 137 |
-    map_colors::unused,                // | 138 |
-    map_colors::unused,                // | 139 |
-    map_colors::unused,                // | 140 |
-    map_colors::unused,                // | 141 |
-    map_colors::unused,                // | 142 |
-    map_colors::unused,                // | 143 |
-    map_colors::unused,                // | 144 |
-    map_colors::unused,                // | 145 |
-    map_colors::unused,                // | 146 |
-    map_colors::unused,                // | 147 |
-    map_colors::unused,                // | 148 |
-    map_colors::unused,                // | 149 |
-    map_colors::unused,                // | 150 |
-    map_colors::unused,                // | 151 |
-    map_colors::unused,                // | 152 |
-    map_colors::unused,                // | 153 |
-    map_colors::unused,                // | 154 |
-    map_colors::unused,                // | 155 |
-    map_colors::unused,                // | 156 |
-    map_colors::unused,                // | 157 |
-    map_colors::unused,                // | 158 |
-    map_colors::unused,                // | 159 |
-    map_colors::unused,                // | 160 |
-    map_colors::unused,                // | 161 |
-    map_colors::unused,                // | 162 |
-    map_colors::unused,                // | 163 |
-    map_colors::unused,                // | 164 |
-    map_colors::unused,                // | 165 |
-    map_colors::unused,                // | 166 |
-    map_colors::unused,                // | 167 |
-    map_colors::unused,                // | 168 |
-    map_colors::unused,                // | 169 |
-    map_colors::unused,                // | 170 |
-    map_colors::unused,                // | 171 |
-    map_colors::unused,                // | 172 |
-    map_colors::tile_wood_back,        // | 173 |
-    map_colors::unused,                // | 174 |
-    map_colors::unused,                // | 175 |
-    map_colors::unused,                // | 176 |
-    map_colors::unused,                // | 177 |
-    map_colors::unused,                // | 178 |
-    map_colors::unused,                // | 179 |
-    map_colors::unused,                // | 180 |
-    map_colors::unused,                // | 181 |
-    map_colors::unused,                // | 182 |
-    map_colors::unused,                // | 183 |
-    map_colors::unused,                // | 184 |
-    map_colors::unused,                // | 185 |
-    map_colors::unused,                // | 186 |
-    map_colors::unused,                // | 187 |
-    map_colors::unused,                // | 188 |
-    map_colors::unused,                // | 189 |
-    map_colors::unused,                // | 190 |
-    map_colors::unused,                // | 191 |
-    map_colors::unused,                // | 192 |
-    map_colors::unused,                // | 193 |
-    map_colors::unused,                // | 194 |
-    map_colors::unused,                // | 195 |
-    map_colors::tile_wood,             // | 196 |
-    map_colors::tile_wood,             // | 197 |
-    map_colors::tile_wood,             // | 198 |
-    map_colors::unused,                // | 199 |
-    map_colors::tile_wood,             // | 200 | damaged
-    map_colors::tile_wood,             // | 201 | damaged
-    map_colors::tile_wood,             // | 202 | damaged
-    map_colors::tile_wood,             // | 203 | damaged
-    map_colors::tile_wood,             // | 204 | damaged
-    map_colors::tile_wood_back,        // | 205 |
-    map_colors::tile_wood_back,        // | 206 |
-    map_colors::tile_wood_back,        // | 207 | damaged
-    map_colors::tile_thickstone,       // | 208 |
-    map_colors::tile_thickstone,       // | 209 |
-    map_colors::unused,                // | 210 |
-    map_colors::unused,                // | 211 |
-    map_colors::unused,                // | 212 |
-    map_colors::unused,                // | 213 |
-    map_colors::tile_thickstone,       // | 214 | damaged
-    map_colors::tile_thickstone,       // | 215 | damaged
-    map_colors::tile_thickstone,       // | 216 | damaged
-    map_colors::tile_thickstone,       // | 217 | damaged
-    map_colors::tile_thickstone,       // | 218 | damaged
-    map_colors::unused,                // | 219 |
-    map_colors::unused,                // | 220 |
-    map_colors::unused,                // | 221 |
-    map_colors::unused,                // | 222 |
-    map_colors::unused,                // | 223 |
-    map_colors::tile_castle_moss,      // | 224 |
-    map_colors::tile_castle_moss,      // | 225 |
-    map_colors::tile_castle_moss,      // | 226 |
-    map_colors::tile_castle_back_moss, // | 227 |
-    map_colors::tile_castle_back_moss, // | 228 |
-    map_colors::tile_castle_back_moss, // | 229 |
-    map_colors::tile_castle_back_moss, // | 230 |
-    map_colors::tile_castle_back_moss, // | 231 |
-    map_colors::unused,                // | 232 |
-    map_colors::unused,                // | 233 |
-    map_colors::unused,                // | 234 |
-    map_colors::unused,                // | 235 |
-    map_colors::unused,                // | 236 |
-    map_colors::unused,                // | 237 |
-    map_colors::unused,                // | 238 |
-    map_colors::unused,                // | 239 |
-    map_colors::unused,                // | 240 |
-    map_colors::unused,                // | 241 |
-    map_colors::unused,                // | 242 |
-    map_colors::unused,                // | 243 |
-    map_colors::unused,                // | 244 |
-    map_colors::unused,                // | 245 |
-    map_colors::unused,                // | 246 |
-    map_colors::unused,                // | 247 |
-    map_colors::unused,                // | 248 |
-    map_colors::unused,                // | 249 |
-    map_colors::unused,                // | 250 |
-    map_colors::unused,                // | 251 |
-    map_colors::unused,                // | 252 |
-    map_colors::unused,                // | 253 |
-    map_colors::unused,                // | 254 |
-    map_colors::unused};               // | 255 |
+map_colors::unused,                // |   0 |
+map_colors::unused,                // |   1 |
+map_colors::unused,                // |   2 |
+map_colors::unused,                // |   3 |
+map_colors::unused,                // |   4 |
+map_colors::unused,                // |   5 |
+map_colors::unused,                // |   6 |
+map_colors::unused,                // |   7 |
+map_colors::unused,                // |   8 |
+map_colors::unused,                // |   9 |
+map_colors::unused,                // |  10 |
+map_colors::unused,                // |  11 |
+map_colors::unused,                // |  12 |
+map_colors::unused,                // |  13 |
+map_colors::unused,                // |  14 |
+map_colors::unused,                // |  15 |
+map_colors::tile_ground,           // |  16 |
+map_colors::tile_ground,           // |  17 |
+map_colors::tile_ground,           // |  18 |
+map_colors::tile_ground,           // |  19 |
+map_colors::tile_ground,           // |  20 |
+map_colors::tile_ground,           // |  21 |
+map_colors::tile_ground,           // |  22 |
+map_colors::tile_ground,           // |  23 |
+map_colors::tile_ground,           // |  24 |
+map_colors::tile_grass,            // |  25 |
+map_colors::tile_grass,            // |  26 |
+map_colors::tile_grass,            // |  27 |
+map_colors::tile_grass,            // |  28 |
+map_colors::tile_ground,           // |  29 | damaged
+map_colors::tile_ground,           // |  30 | damaged
+map_colors::tile_ground,           // |  31 | damaged
+map_colors::tile_ground_back,      // |  32 |
+map_colors::tile_ground_back,      // |  33 |
+map_colors::tile_ground_back,      // |  34 |
+map_colors::tile_ground_back,      // |  35 |
+map_colors::tile_ground_back,      // |  36 |
+map_colors::tile_ground_back,      // |  37 |
+map_colors::tile_ground_back,      // |  38 |
+map_colors::tile_ground_back,      // |  39 |
+map_colors::tile_ground_back,      // |  40 |
+map_colors::tile_ground_back,      // |  41 |
+map_colors::unused,                // |  42 |
+map_colors::unused,                // |  43 |
+map_colors::unused,                // |  44 |
+map_colors::unused,                // |  45 |
+map_colors::unused,                // |  46 |
+map_colors::unused,                // |  47 |
+map_colors::tile_castle,           // |  48 |
+map_colors::tile_castle,           // |  49 |
+map_colors::tile_castle,           // |  50 |
+map_colors::tile_castle,           // |  51 |
+map_colors::tile_castle,           // |  52 |
+map_colors::tile_castle,           // |  53 |
+map_colors::tile_castle,           // |  54 |
+map_colors::unused,                // |  55 |
+map_colors::unused,                // |  56 |
+map_colors::unused,                // |  57 |
+map_colors::tile_castle,           // |  58 | damaged
+map_colors::tile_castle,           // |  59 | damaged
+map_colors::tile_castle,           // |  60 | damaged
+map_colors::tile_castle,           // |  61 | damaged
+map_colors::tile_castle,           // |  62 | damaged
+map_colors::tile_castle,           // |  63 | damaged
+map_colors::tile_castle_back,      // |  64 |
+map_colors::tile_castle_back,      // |  65 |
+map_colors::tile_castle_back,      // |  66 |
+map_colors::tile_castle_back,      // |  67 |
+map_colors::tile_castle_back,      // |  68 |
+map_colors::tile_castle_back,      // |  69 |
+map_colors::unused,                // |  70 |
+map_colors::unused,                // |  71 |
+map_colors::unused,                // |  72 |
+map_colors::unused,                // |  73 |
+map_colors::unused,                // |  74 |
+map_colors::unused,                // |  75 |
+map_colors::tile_castle_back,      // |  76 | damaged
+map_colors::tile_castle_back,      // |  77 | damaged
+map_colors::tile_castle_back,      // |  78 | damaged
+map_colors::tile_castle_back,      // |  79 | damaged
+map_colors::tile_gold,             // |  80 |
+map_colors::tile_gold,             // |  81 |
+map_colors::tile_gold,             // |  82 |
+map_colors::tile_gold,             // |  83 |
+map_colors::tile_gold,             // |  84 |
+map_colors::tile_gold,             // |  85 |
+map_colors::unused,                // |  86 |
+map_colors::unused,                // |  87 |
+map_colors::unused,                // |  88 |
+map_colors::unused,                // |  89 |
+map_colors::tile_gold,             // |  90 | damaged
+map_colors::tile_gold,             // |  91 | damaged
+map_colors::tile_gold,             // |  92 | damaged
+map_colors::tile_gold,             // |  93 | damaged
+map_colors::tile_gold,             // |  94 | damaged
+map_colors::unused,                // |  95 |
+map_colors::tile_stone,            // |  96 |
+map_colors::tile_stone,            // |  97 |
+map_colors::unused,                // |  98 |
+map_colors::unused,                // |  99 |
+map_colors::tile_stone,            // | 100 | damaged
+map_colors::tile_stone,            // | 101 | damaged
+map_colors::tile_stone,            // | 102 | damaged
+map_colors::tile_stone,            // | 103 | damaged
+map_colors::tile_stone,            // | 104 | damaged
+map_colors::unused,                // | 105 |
+map_colors::tile_bedrock,          // | 106 |
+map_colors::tile_bedrock,          // | 107 |
+map_colors::tile_bedrock,          // | 108 |
+map_colors::tile_bedrock,          // | 109 |
+map_colors::tile_bedrock,          // | 110 |
+map_colors::tile_bedrock,          // | 111 |
+map_colors::unused,                // | 112 |
+map_colors::unused,                // | 113 |
+map_colors::unused,                // | 114 |
+map_colors::unused,                // | 115 |
+map_colors::unused,                // | 116 |
+map_colors::unused,                // | 117 |
+map_colors::unused,                // | 118 |
+map_colors::unused,                // | 119 |
+map_colors::unused,                // | 120 |
+map_colors::unused,                // | 121 |
+map_colors::unused,                // | 122 |
+map_colors::unused,                // | 123 |
+map_colors::unused,                // | 124 |
+map_colors::unused,                // | 125 |
+map_colors::unused,                // | 126 |
+map_colors::unused,                // | 127 |
+map_colors::unused,                // | 128 |
+map_colors::unused,                // | 129 |
+map_colors::unused,                // | 130 |
+map_colors::unused,                // | 131 |
+map_colors::unused,                // | 132 |
+map_colors::unused,                // | 133 |
+map_colors::unused,                // | 134 |
+map_colors::unused,                // | 135 |
+map_colors::unused,                // | 136 |
+map_colors::unused,                // | 137 |
+map_colors::unused,                // | 138 |
+map_colors::unused,                // | 139 |
+map_colors::unused,                // | 140 |
+map_colors::unused,                // | 141 |
+map_colors::unused,                // | 142 |
+map_colors::unused,                // | 143 |
+map_colors::unused,                // | 144 |
+map_colors::unused,                // | 145 |
+map_colors::unused,                // | 146 |
+map_colors::unused,                // | 147 |
+map_colors::unused,                // | 148 |
+map_colors::unused,                // | 149 |
+map_colors::unused,                // | 150 |
+map_colors::unused,                // | 151 |
+map_colors::unused,                // | 152 |
+map_colors::unused,                // | 153 |
+map_colors::unused,                // | 154 |
+map_colors::unused,                // | 155 |
+map_colors::unused,                // | 156 |
+map_colors::unused,                // | 157 |
+map_colors::unused,                // | 158 |
+map_colors::unused,                // | 159 |
+map_colors::unused,                // | 160 |
+map_colors::unused,                // | 161 |
+map_colors::unused,                // | 162 |
+map_colors::unused,                // | 163 |
+map_colors::unused,                // | 164 |
+map_colors::unused,                // | 165 |
+map_colors::unused,                // | 166 |
+map_colors::unused,                // | 167 |
+map_colors::unused,                // | 168 |
+map_colors::unused,                // | 169 |
+map_colors::unused,                // | 170 |
+map_colors::unused,                // | 171 |
+map_colors::unused,                // | 172 |
+map_colors::tile_wood_back,        // | 173 |
+map_colors::unused,                // | 174 |
+map_colors::unused,                // | 175 |
+map_colors::unused,                // | 176 |
+map_colors::unused,                // | 177 |
+map_colors::unused,                // | 178 |
+map_colors::unused,                // | 179 |
+map_colors::unused,                // | 180 |
+map_colors::unused,                // | 181 |
+map_colors::unused,                // | 182 |
+map_colors::unused,                // | 183 |
+map_colors::unused,                // | 184 |
+map_colors::unused,                // | 185 |
+map_colors::unused,                // | 186 |
+map_colors::unused,                // | 187 |
+map_colors::unused,                // | 188 |
+map_colors::unused,                // | 189 |
+map_colors::unused,                // | 190 |
+map_colors::unused,                // | 191 |
+map_colors::unused,                // | 192 |
+map_colors::unused,                // | 193 |
+map_colors::unused,                // | 194 |
+map_colors::unused,                // | 195 |
+map_colors::tile_wood,             // | 196 |
+map_colors::tile_wood,             // | 197 |
+map_colors::tile_wood,             // | 198 |
+map_colors::unused,                // | 199 |
+map_colors::tile_wood,             // | 200 | damaged
+map_colors::tile_wood,             // | 201 | damaged
+map_colors::tile_wood,             // | 202 | damaged
+map_colors::tile_wood,             // | 203 | damaged
+map_colors::tile_wood,             // | 204 | damaged
+map_colors::tile_wood_back,        // | 205 |
+map_colors::tile_wood_back,        // | 206 |
+map_colors::tile_wood_back,        // | 207 | damaged
+map_colors::tile_thickstone,       // | 208 |
+map_colors::tile_thickstone,       // | 209 |
+map_colors::unused,                // | 210 |
+map_colors::unused,                // | 211 |
+map_colors::unused,                // | 212 |
+map_colors::unused,                // | 213 |
+map_colors::tile_thickstone,       // | 214 | damaged
+map_colors::tile_thickstone,       // | 215 | damaged
+map_colors::tile_thickstone,       // | 216 | damaged
+map_colors::tile_thickstone,       // | 217 | damaged
+map_colors::tile_thickstone,       // | 218 | damaged
+map_colors::unused,                // | 219 |
+map_colors::unused,                // | 220 |
+map_colors::unused,                // | 221 |
+map_colors::unused,                // | 222 |
+map_colors::unused,                // | 223 |
+map_colors::tile_castle_moss,      // | 224 |
+map_colors::tile_castle_moss,      // | 225 |
+map_colors::tile_castle_moss,      // | 226 |
+map_colors::tile_castle_back_moss, // | 227 |
+map_colors::tile_castle_back_moss, // | 228 |
+map_colors::tile_castle_back_moss, // | 229 |
+map_colors::tile_castle_back_moss, // | 230 |
+map_colors::tile_castle_back_moss, // | 231 |
+map_colors::unused,                // | 232 |
+map_colors::unused,                // | 233 |
+map_colors::unused,                // | 234 |
+map_colors::unused,                // | 235 |
+map_colors::unused,                // | 236 |
+map_colors::unused,                // | 237 |
+map_colors::unused,                // | 238 |
+map_colors::unused,                // | 239 |
+map_colors::unused,                // | 240 |
+map_colors::unused,                // | 241 |
+map_colors::unused,                // | 242 |
+map_colors::unused,                // | 243 |
+map_colors::unused,                // | 244 |
+map_colors::unused,                // | 245 |
+map_colors::unused,                // | 246 |
+map_colors::unused,                // | 247 |
+map_colors::unused,                // | 248 |
+map_colors::unused,                // | 249 |
+map_colors::unused,                // | 250 |
+map_colors::unused,                // | 251 |
+map_colors::unused,                // | 252 |
+map_colors::unused,                // | 253 |
+map_colors::unused,                // | 254 |
+map_colors::unused};               // | 255 |
