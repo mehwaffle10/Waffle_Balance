@@ -287,7 +287,8 @@ void onRender(CSprite@ this)
 				0.0f,
 				SColor(255, 255, 255, 255),
 				true,
-				this.getZ() + 1.1f
+				this.getZ() + 1.1f,
+				true
 			);
 		}
 

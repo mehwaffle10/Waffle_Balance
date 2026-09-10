@@ -574,7 +574,8 @@ void onRender(CSprite@ this)
 			buildAngle,
 			SColor(255, 255, 255, 255),
 			true,
-			this.getZ() + 1.1f
+			this.getZ() + 1.1f,
+			true
 		);
 	}
 
@@ -618,7 +619,15 @@ void onRender(CSprite@ this)
 	}
 	if (buildBlock !is null)
 	{
-		DrawGhostBlock(buildBlock.icon, pos, Texture::width(buildBlock.icon) / 2, buildAngle, color, true, this.getZ() + 1.1);
+		DrawGhostBlock(
+			buildBlock.icon,
+			pos,
+			Texture::width(buildBlock.icon) / 2,
+			buildAngle,
+			color,
+			true,
+			1000
+		);
 	}
 	else if (carried !is null && carried.getName() == "tree")
 	{

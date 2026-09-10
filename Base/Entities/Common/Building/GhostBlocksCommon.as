@@ -82,15 +82,66 @@ void RenderGhostBlocks(CMap@ map)
 	}
 }
 
-void DrawGhostBlock(string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, SColor color, bool setZ = false, f32 z = 0.0f)
+SColor getInterpolatedColorAtPosition(CMap@ map, SColor color, Vec2f pos, bool interporlateColor, CBlob@ localBlob)
 {
+	if (!interporlateColor) return color;
+
+	// This returns RGBA instead of ARGB for some reason so rotate values
+	SColor posColor = map.getColorLight(pos);
+	uint alpha = posColor.getBlue();
+	posColor.setBlue(posColor.getGreen());
+	posColor.setGreen(posColor.getRed());
+	posColor.setRed(posColor.getAlpha());
+	posColor.setAlpha(alpha);
+
+	// Players illuminate themselves locally, keep the block somewhat lit
+	f32 lowerBound = 0.0f;
+	if (localBlob !is null)
+	{
+		f32 length = (localBlob.getPosition() - pos).Length();
+		const u8 start = 30;
+		const u8 end = 18;
+		if (length < start)
+		{
+			if (length < end)
+			{
+				lowerBound = 0.5f;
+			}
+			else
+			{
+				lowerBound = Maths::Lerp(0.5f, 0.0f, (length - end) / (start - end));
+			}
+		}
+	}
+
+	// Luminance is a value from 0 to 255, whereas getInterpolated wants a percent
+	return color.getInterpolated(color_black, Maths::Lerp(lowerBound, 1.2f, posColor.getLuminance() / 255));
+}
+
+void DrawGhostBlock(string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, SColor color, bool setZ = false, f32 z = 0.0f, bool interporlateColor = false)
+{
+	CMap@ map = getMap();
+	if (map is null) return;
+
+	CPlayer@ localPlayer = getLocalPlayer();
+	CBlob@ localBlob;
+	if (localPlayer !is null)
+	{
+		@localBlob = localPlayer.getBlob();
+	}
+
+	Vec2f topLeft     = Vec2f(pos.x - halfWidth, pos.y - halfWidth);
+	Vec2f topRight    = Vec2f(pos.x + halfWidth, pos.y - halfWidth);
+	Vec2f bottomRight = Vec2f(pos.x + halfWidth, pos.y + halfWidth);
+	Vec2f bottomLeft  = Vec2f(pos.x - halfWidth, pos.y + halfWidth);
+
 	Render::SetTransformWorldspace();
 	Render::SetZBuffer(setZ, setZ);
 	v_raw.clear();
-	v_raw.push_back(Vertex(pos.x - halfWidth, pos.y - halfWidth, z, buildAngle == 270 ? 1 : 0, buildAngle > 0 && buildAngle < 270 ? 1 : 0, color));
-	v_raw.push_back(Vertex(pos.x + halfWidth, pos.y - halfWidth, z, buildAngle == 90 ? 0 : 1,  buildAngle > 90 ? 1 : 0,                    color));
-	v_raw.push_back(Vertex(pos.x + halfWidth, pos.y + halfWidth, z, buildAngle == 270 ? 0 : 1, buildAngle > 0 && buildAngle < 270 ? 0 : 1, color));
-	v_raw.push_back(Vertex(pos.x - halfWidth, pos.y + halfWidth, z, buildAngle == 90 ? 1 : 0,  buildAngle > 90 ? 0 : 1,                    color));
+	v_raw.push_back(Vertex(topLeft,     z, Vec2f(buildAngle == 270 ? 1 : 0, buildAngle > 0 && buildAngle < 270 ? 1 : 0), getInterpolatedColorAtPosition(map, color, topLeft, interporlateColor, localBlob)));
+	v_raw.push_back(Vertex(topRight,    z, Vec2f(buildAngle == 90 ? 0 : 1,  buildAngle > 90                    ? 1 : 0), getInterpolatedColorAtPosition(map, color, topRight, interporlateColor, localBlob)));
+	v_raw.push_back(Vertex(bottomRight, z, Vec2f(buildAngle == 270 ? 0 : 1, buildAngle > 0 && buildAngle < 270 ? 0 : 1), getInterpolatedColorAtPosition(map, color, bottomRight, interporlateColor, localBlob)));
+	v_raw.push_back(Vertex(bottomLeft,  z, Vec2f(buildAngle == 90 ? 1 : 0,  buildAngle > 90                    ? 0 : 1), getInterpolatedColorAtPosition(map, color, bottomLeft, interporlateColor, localBlob)));
 	Render::RawQuads(icon, v_raw);
 }
 
