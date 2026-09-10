@@ -130,18 +130,19 @@ void DrawGhostBlock(string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, SColo
 		@localBlob = localPlayer.getBlob();
 	}
 
-	Vec2f topLeft     = Vec2f(pos.x - halfWidth, pos.y - halfWidth);
-	Vec2f topRight    = Vec2f(pos.x + halfWidth, pos.y - halfWidth);
-	Vec2f bottomRight = Vec2f(pos.x + halfWidth, pos.y + halfWidth);
-	Vec2f bottomLeft  = Vec2f(pos.x - halfWidth, pos.y + halfWidth);
+	const u8 minimumHalfWidth = 4;
+	SColor topLeftColor     = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x - minimumHalfWidth, pos.y - minimumHalfWidth), interporlateColor, localBlob);
+	SColor topRightColor    = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x + minimumHalfWidth, pos.y - minimumHalfWidth), interporlateColor, localBlob);
+	SColor bottomRightColor = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x + minimumHalfWidth, pos.y + minimumHalfWidth), interporlateColor, localBlob);
+	SColor bottomLeftColor  = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x - minimumHalfWidth, pos.y + minimumHalfWidth), interporlateColor, localBlob);
 
 	Render::SetTransformWorldspace();
 	Render::SetZBuffer(setZ, setZ);
 	v_raw.clear();
-	v_raw.push_back(Vertex(topLeft,     z, Vec2f(buildAngle == 270 ? 1 : 0, buildAngle > 0 && buildAngle < 270 ? 1 : 0), getInterpolatedColorAtPosition(map, color, topLeft, interporlateColor, localBlob)));
-	v_raw.push_back(Vertex(topRight,    z, Vec2f(buildAngle == 90 ? 0 : 1,  buildAngle > 90                    ? 1 : 0), getInterpolatedColorAtPosition(map, color, topRight, interporlateColor, localBlob)));
-	v_raw.push_back(Vertex(bottomRight, z, Vec2f(buildAngle == 270 ? 0 : 1, buildAngle > 0 && buildAngle < 270 ? 0 : 1), getInterpolatedColorAtPosition(map, color, bottomRight, interporlateColor, localBlob)));
-	v_raw.push_back(Vertex(bottomLeft,  z, Vec2f(buildAngle == 90 ? 1 : 0,  buildAngle > 90                    ? 0 : 1), getInterpolatedColorAtPosition(map, color, bottomLeft, interporlateColor, localBlob)));
+	v_raw.push_back(Vertex(Vec2f(pos.x - halfWidth, pos.y - halfWidth), z, Vec2f(buildAngle == 270 ? 1 : 0, buildAngle > 0 && buildAngle < 270 ? 1 : 0), topLeftColor));
+	v_raw.push_back(Vertex(Vec2f(pos.x + halfWidth, pos.y - halfWidth), z, Vec2f(buildAngle == 90 ? 0 : 1,  buildAngle > 90                    ? 1 : 0), topRightColor));
+	v_raw.push_back(Vertex(Vec2f(pos.x + halfWidth, pos.y + halfWidth), z, Vec2f(buildAngle == 270 ? 0 : 1, buildAngle > 0 && buildAngle < 270 ? 0 : 1), bottomRightColor));
+	v_raw.push_back(Vertex(Vec2f(pos.x - halfWidth, pos.y + halfWidth), z, Vec2f(buildAngle == 90 ? 1 : 0,  buildAngle > 90                    ? 0 : 1), bottomLeftColor));
 	Render::RawQuads(icon, v_raw);
 }
 
