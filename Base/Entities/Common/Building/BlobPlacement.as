@@ -735,7 +735,7 @@ void onAttach(CBlob@ this, CBlob@ attached, AttachmentPoint @attachedPoint)
 {
 	if (this is null || attached is null) return;
 	const string name = attached.getName();
-	if (name != "bucket" && name != "drill" && name != "tree") return;
+	if (name != "bucket" && name != "drill" && name != "tree" && !attached.hasTag("vehicle")) return;
 	ClearCarriedBlock(this);
 }
 
