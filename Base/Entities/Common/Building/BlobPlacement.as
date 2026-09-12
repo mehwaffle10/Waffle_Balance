@@ -299,12 +299,6 @@ void onTick(CBlob@ this)
 		return;
 	}
 
-	//don't build with menus open
-	if (getHUD().hasMenus())
-	{
-		return;
-	}
-
 	// Waffle: Client side building
 	CBlob@ blob = this.getCarriedBlob();
 	if (blob !is null)
@@ -330,6 +324,12 @@ void onTick(CBlob@ this)
 				blob.setAngleDegrees(this.get_u16("build_angle"));
 			}
 		}
+	}
+
+	//don't build with menus open
+	if (getHUD().hasMenus())
+	{
+		return;
 	}
 
 	if (!this.isMyPlayer())
