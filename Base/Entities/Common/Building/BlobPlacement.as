@@ -510,7 +510,9 @@ void onTick(CBlob@ this)
 			}
 		}
 
-		if (this.isKeyJustPressed(key_action3))
+		AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
+		CBlob@ held = hands.getOccupied();
+		if (this.isKeyJustPressed(key_action3) && (held is null || held.getName() != "crate"))  // Waffle: Do not rotate when getting in crate
 		{
 			s8 rotateDir = controls.ActionKeyPressed(AK_BUILD_MODIFIER) ? -1 : 1;
 
@@ -546,6 +548,8 @@ void onRender(CSprite@ this)
 	// {
 	// 	return;
 	// }
+
+	if (blob.isAttached()) return;  // Waffle: Client side building
 
 	// Waffle: Client side building
 	// draw a map block or other blob that snaps to grid
