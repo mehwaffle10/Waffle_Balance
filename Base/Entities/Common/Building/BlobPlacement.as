@@ -543,10 +543,7 @@ void onInit(CSprite@ this)
 void onRender(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
-	if (getHUD().hasButtons())
-	{
-		return;
-	}
+
 	if (blob.isKeyPressed(key_action2) || blob.isKeyPressed(key_pickup))   //hack: dont show when builder is attacking
 	{
 		return;
@@ -584,6 +581,7 @@ void onRender(CSprite@ this)
 
 	if (!blob.isMyPlayer()) return;
 	if (bc is null) return;
+	if (getHUD().hasButtons()) return;  // Waffle: Client side building
 
 	Driver@ driver = getDriver();
 	SColor color;
