@@ -380,12 +380,6 @@ void onTick(CBlob@ this)
 	// 	carryBlob.SetVisible(!carryBlob.hasTag("temp blob"));
 	// }
 
-	bool isLadder = false;
-	if (block.name == "ladder")
-	{
-		isLadder = true;
-	}
-
 	if (snap) // activate help line
 	{
 		bc.blobName = block.name;  // Waffle: Add specific type
@@ -404,7 +398,7 @@ void onTick(CBlob@ this)
 			Vec2f bottomPos = getBottomOfCursor(bc.tileAimPos);
 			bool overlapped;
 
-			if (isLadder || block.name == "wooden_platform" || block.name == "bridge")   // Waffle: Allow building platforms on trees
+			if (block.name == "ladder" || block.name == "wooden_platform" || block.name == "bridge")   // Waffle: Allow building platforms on trees
 			{
 				overlapped = false;
 				CBlob@[] buildBlock;
@@ -416,7 +410,7 @@ void onTick(CBlob@ this)
 						CBlob@ blob = buildBlock[nearblob_step];
 
 						string bname = blob.getName();
-						if (isLadder)
+						if (block.name == "ladder")
 						{
 							if (blob.hasTag("player") || !isBlocking(blob) || !blob.getShape().isStatic())
 							{
@@ -428,7 +422,7 @@ void onTick(CBlob@ this)
 							continue;
 						}
 
-						overlapped = (blob.getPosition() - bottomPos).LengthSquared() < tsqr;
+						overlapped = (blob.getPosition() - bottomPos).LengthSquared() < tsqr && isBlocking(blob) && !(blob.getName() == block.name && blob.getHealth() < blob.getInitialHealth());
 					}
 				}
 			}
@@ -442,7 +436,7 @@ void onTick(CBlob@ this)
 					CBlob@ blob = overlapping[i];
 					if (blob !is null)
 					{
-						overlapped = (blob.getPosition() - bottomPos).LengthSquared() < tsqr && isBlocking(blob);
+						overlapped = (blob.getPosition() - bottomPos).LengthSquared() < tsqr && isBlocking(blob) && !(blob.getName() == block.name && blob.getHealth() < blob.getInitialHealth());
 					}
 				}
 			}

@@ -144,7 +144,7 @@ bool isBuildableAtPos(CBlob@ this, Vec2f p, BuildBlock@ block, bool &out sameTil
 		{
 			CBlob@ blobAtPos = blobsAtPos[i];
 			if (blobAtPos.getName() == block.name && 
-				blobAtPos.getTeamNum() == this.getTeamNum() && 
+				(blobAtPos.getTeamNum() == this.getTeamNum() || blobAtPos.getTeamNum() == 255) &&  // Waffle: Allow repairing platforms
 				blobAtPos.getHealth() != blobAtPos.getInitialHealth()) 
 			{	
 				return true;
