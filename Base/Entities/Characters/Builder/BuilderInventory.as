@@ -244,7 +244,17 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 		if (!blob.get(blocks_property, @blocks)) return;
 
 		u8 i;
-		if (!params.saferead_u8(i)) return; 
+		if (!params.saferead_u8(i)) return;
+
+		CAttachment@ attachments = blob.getAttachments();
+		CBlob@ held = attachments.getAttachedBlob("PICKUP");
+		if (held !is null && (held.getName() == "drill" || held.getName() == "bucket"))
+		{
+			if (!blob.server_PutInInventory(held))
+			{
+				held.server_DetachFrom(blob);
+			}
+		}
 
 		CBitStream clientParams;
 		clientParams.write_u8(i);
