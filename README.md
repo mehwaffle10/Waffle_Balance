@@ -327,6 +327,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Automatically deploy when packed crates are in water
 - Can not deploy on top of other boats
 - Collide with friendly boats
+- Increased seat radius from 7 to 12
 - Removed FakeBoatCollision.as, fixes issues with boats warping and makes boat collisions better
 - Removed RunOverPeople.as, nerfs crushing people and other boats, makes boat collisions better
 - Removed HurtOnCollide.as, use raycasting instead
@@ -398,6 +399,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer stuns players when launching them
 - Anything launched has an unmodified vertical launch force (normally .75 for players and 1.1 for anything else)
 - Automatically loads friendly boulders on collision or when coming off cooldown
+- Mag seat radius decreased from 24 to 12
 - Fixed arm angle not being correct when deployed from a crate
 
 ### Ballistas
