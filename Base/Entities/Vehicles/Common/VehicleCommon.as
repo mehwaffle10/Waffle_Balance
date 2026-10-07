@@ -544,7 +544,7 @@ void Vehicle_FlyerControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, Vehicl
 void Vehicle_RowerControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, VehicleInfo@ v)
 {
 	const f32 moveForce = v.move_speed;
-	const f32 turnSpeed = getBlobBreakingSpeedThreshold(this);  // v.turn_speed;  // Waffle: Only allow turning when you can break blocks
+	const f32 turnSpeed = this.getName() != "dinghy" ? getBlobBreakingSpeedThreshold(this) : v.turn_speed;  // Waffle: Only allow turning when you can break blocks
 	const Vec2f vel = this.getVelocity();
 	Vec2f force;
 

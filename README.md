@@ -316,7 +316,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Each seat is faster
 - Rear water only shows when you have enough speed to break blocks
 - Water particle size scaling reduced
-- Can only turn around when rear water is showing
+- Can only turn around when rear water is showing (except dinghies)
 - Reduced bobbing in water
 - Don't break on land (or if left alone???)
 - Doesn't sink on low health
@@ -338,6 +338,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Spawn in crates like other vehicles
 - Need a 6 x 3 area to deploy
 - No longer can be picked up
+- Increased threshold to turn around
 
 ### Longboats
 - Cost 200 coins
