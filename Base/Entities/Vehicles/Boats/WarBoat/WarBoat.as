@@ -168,6 +168,8 @@ void onInit(CBlob@ this)
 	// getMap().server_AddMovingSector(Vec2f(-28.0f, -32.0f), Vec2f(-12.0f, 0.0f), "ladder", this.getNetworkID());
 	// add back ladder
 	getMap().server_AddMovingSector(Vec2f(-50.0f, -32.0f), Vec2f(-35.0f, 20.0f), "ladder", this.getNetworkID());
+	getMap().server_AddMovingSector(Vec2f(-40.0f, -26.0f), Vec2f(46.0f, 28.0f), "no build", this.getNetworkID());  // Waffle: Add big nobuild
+	getMap().server_AddMovingSector(Vec2f(46.0f, -4.0f), Vec2f(60.0f, 28.0f), "no build", this.getNetworkID());  // Waffle: --
 
 	//set custom minimap icon
 	this.SetMinimapOutsideBehaviour(CBlob::minimap_snap);
