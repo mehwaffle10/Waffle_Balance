@@ -36,7 +36,7 @@ Crate@[] base_presets =
     Crate("dinghy",      FactoryFrame::dinghy,      Vec2f(6,  3),  0, "unpack_only_water"),
 	Crate("longboat",    FactoryFrame::longboat,    Vec2f(10, 4),  0, "unpack_only_water"),
 	Crate("warboat",     FactoryFrame::warboat,     Vec2f(12, 6),  0, "unpack_only_water"),  
-	Crate("catapult",    FactoryFrame::catapult,    Vec2f(5,  3)),
+	Crate("catapult",    FactoryFrame::catapult,    Vec2f(5,  4)),
 	Crate("ballista",    FactoryFrame::ballista,    Vec2f(5,  5)),
 	Crate("mounted_bow", FactoryFrame::mounted_bow, Vec2f(3,  3)),
 	Crate("outpost",     FactoryFrame::outpost,     Vec2f(5,  5),  0, "unpack_check_nobuild")
