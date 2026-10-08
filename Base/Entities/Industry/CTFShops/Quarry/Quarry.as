@@ -30,6 +30,7 @@ const int low_fuel = 200;
 const string fuel_prop = "fuel_level";
 const string working_prop = "working";
 const string unique_prop = "unique";
+const string enabled_prop = "enabled";  // Waffle: Allow disabling
 const string last_working_prop = "last_working";  // Waffle: Add power up and down sounds
 const string last_working_time = "last_working_time";
 const string last_stopped_time = "last_stopped_time";
@@ -84,8 +85,10 @@ void onInit(CBlob@ this)
 	this.set_s16(fuel_prop, 0);
 	this.set_bool(working_prop, false);
 	this.set_u8(unique_prop, XORRandom(getTicksASecond() * conversion_frequency));
+	this.set_bool(enabled_prop, true);  // Waffle: Allow disabling
 
 	//commands
+	this.addCommandID("set enabled");  // Waffle: Allow disabling
 	this.addCommandID("add fuel");
 	string current_output = "current_quarry_output_" + this.getTeamNum();
 	CRules@ rules = getRules();
@@ -98,11 +101,12 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
+	bool enabled = this.get_bool(enabled_prop);  // Waffle: Allow disabling
 	//only do "real" update logic on server
 	if (getNet().isServer())
 	{
 		// Waffle: Quarries can only produce when overlapping at least 2 trees
-		if (!canProduce(this))
+		if (!canProduce(this) || !enabled)
 		{
 			this.set_u32(last_stopped_time, getGameTime());
 			if (this.get_bool(working_prop) && this.get_u32(last_working_time) + 10 < getGameTime())  // Waffle: Need to delay since seeds take a couple ticks to spawn and land on the ground
@@ -159,7 +163,7 @@ void onTick(CBlob@ this)
 
 	// Waffle: Add power up and down sounds
 	CSprite@ sprite = this.getSprite();
-	bool working = this.get_bool(working_prop);
+	bool working = this.get_bool(working_prop) && enabled;  // Waffle: Allow disabling
 	bool last_working = this.get_bool(last_working_prop);
 	if (sprite.getEmitSoundPaused())
 	{
@@ -192,7 +196,7 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	if (!canSeeButtons(this, caller) || !this.isOverlapping(caller)) return;
 
 	CBitStream params;
-	params.write_u16(caller.getNetworkID());
+	params.write_netid(caller.getNetworkID());
 
 	string text = "Add fuel";
 	bool enabled = caller.hasBlob(fuel, 1);
@@ -214,13 +218,29 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
         CShape@ shape = this.getShape();
         button.enableRadius = shape is null ? 16 : Maths::Max(this.getRadius(), (shape.getWidth() + shape.getHeight()) / 2);
 	}
+	// Waffle: Allow disabling
+	bool isEnabled = this.get_bool(enabled_prop);
+	CBitStream enableParams;
+	enableParams.write_netid(caller.getNetworkID());
+	enableParams.write_bool(!isEnabled);
+	CButton@ enableButton = caller.CreateGenericButton(8, Vec2f(4.0f, 0.0f), this, this.getCommandID("set enabled"), getTranslatedString(isEnabled ? "Disable" : "Enable"), enableParams);
+	if (enableButton !is null)
+	{
+		enableButton.deleteAfterClick = false;
+		enableButton.SetEnabled(true);
+        CShape@ shape = this.getShape();
+        enableButton.enableRadius = shape is null ? 16 : Maths::Max(this.getRadius(), (shape.getWidth() + shape.getHeight()) / 2);
+	}
 }
 
 void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 {
 	if (cmd == this.getCommandID("add fuel"))
 	{
-		CBlob@ caller = getBlobByNetworkID(params.read_u16());
+		u16 callerNetId;
+		if (!params.saferead_netid(callerNetId)) return;
+
+		CBlob@ caller = getBlobByNetworkID(callerNetId);
 		if (caller is null) return;
 
 		//amount we'd _like_ to insert
@@ -241,6 +261,34 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 			this.set_s16(fuel_prop, this.get_s16(fuel_prop) + ammountToStore);
 
 			updateWoodLayer(this.getSprite());
+		}
+	}
+	else if (cmd == this.getCommandID("set enabled"))
+	{
+		u16 callerNetId;
+		if (!params.saferead_netid(callerNetId)) return;
+
+		CBlob@ caller = getBlobByNetworkID(callerNetId);
+		if (caller is null) return;
+
+		bool enabled;
+		if (!params.saferead_bool(enabled)) return;
+
+		if ((this.getPosition() - caller.getPosition()).Length() > 40) return;
+
+		this.set_bool(enabled_prop, enabled);
+		this.Sync(enabled_prop, true);
+
+		u16 fuel = this.get_s16(fuel_prop);
+		this.set_s16(fuel_prop, 0);
+		while (fuel > 0)
+		{
+			u8 quantity = Maths::Min(fuel, 250);
+			CBlob@ wood = server_CreateBlob("mat_wood", -1, this.getPosition());
+			if (wood !is null) {
+				wood.server_SetQuantity(quantity);
+			}
+			fuel -= quantity;
 		}
 	}
 }
