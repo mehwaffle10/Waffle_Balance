@@ -223,10 +223,10 @@ void GetButtonsFor(CBlob@ this, CBlob@ caller)
 	CBitStream enableParams;
 	enableParams.write_netid(caller.getNetworkID());
 	enableParams.write_bool(!isEnabled);
-	CButton@ enableButton = caller.CreateGenericButton(8, Vec2f(4.0f, 0.0f), this, this.getCommandID("set enabled"), getTranslatedString(isEnabled ? "Disable" : "Enable"), enableParams);
+	CButton@ enableButton = caller.CreateGenericButton(isEnabled ? 2 : 3, Vec2f(4.0f, 0.0f), this, this.getCommandID("set enabled"), getTranslatedString((isEnabled ? "Disable" : "Enable") + " Quarry"), enableParams);
 	if (enableButton !is null)
 	{
-		enableButton.deleteAfterClick = false;
+		enableButton.deleteAfterClick = true;
 		enableButton.SetEnabled(true);
         CShape@ shape = this.getShape();
         enableButton.enableRadius = shape is null ? 16 : Maths::Max(this.getRadius(), (shape.getWidth() + shape.getHeight()) / 2);
