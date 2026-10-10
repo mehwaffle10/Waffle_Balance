@@ -376,7 +376,7 @@ void Vehicle_DriverControls(CBlob@ this, CBlob@ blob, AttachmentPoint@ ap, Vehic
 	// left / right
 	if (angle < 80 || angle > 290)
 	{
-		f32 moveForce = v.move_speed;
+		f32 moveForce = v.move_speed * (v.charge > 0 ? 0.5f : 1.0f);
 		const f32 turnSpeed = v.turn_speed;
 		const bool slopeangle = (angle > 15 && angle < 345);
 		Vec2f groundNormal = this.getGroundNormal();

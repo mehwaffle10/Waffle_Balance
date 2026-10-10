@@ -370,6 +370,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - No longer drop ammo on death
 - Projectiles ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - 50% Faster and can turn around easier
+- Move force halved when charging a shot
 - No longer turn around while firing or on cooldown
 - Can readd wheels after immobilizing
 - Moved load item and ammo buttons to fixed location instead of based off of the magazine position
