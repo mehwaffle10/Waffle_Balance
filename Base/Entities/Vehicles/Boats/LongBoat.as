@@ -30,7 +30,7 @@ void onInit(CBlob@ this)
 
 	// add custom capture zone
 	getMap().server_AddMovingSector(Vec2f(-27.0f, -16.0f), Vec2f(28.0f, 4.0f), "capture zone "+this.getNetworkID(), this.getNetworkID());
-	getMap().server_AddMovingSector(Vec2f(-40.0f, -22.0f), Vec2f(50.0f, 20.0f), "no build", this.getNetworkID());  // Waffle: Add big nobuild
+	getMap().server_AddMovingSector(Vec2f(-40.0f, -22.0f), Vec2f(50.0f, 20.0f), "no solids", this.getNetworkID());  // Waffle: Add big no solids
 
 	//block knight sword
 	this.Tag("blocks sword");

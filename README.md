@@ -350,7 +350,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Fixed bug where sail seat could drive on land
 - All rower seats also activate the sail
 - Slightly moved vehicle attachment point forward]
-- Added large no build zone to prevent placing blocks directly in front of a charging boat to stop it
+- Added large no solids zone to prevent placing blocks directly in front of a charging boat to stop it
 
 ### Warboats
 - Cost 300 coins
@@ -361,7 +361,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Removed front 3 seats
 - Moved vehicle attachment point to front
 - Has an extended roof
-- Added large no build zones to prevent placing blocks directly in front of a charging boat to stop it
+- Added large no solids zones to prevent placing blocks directly in front of a charging boat to stop it
 
 ### Siege Weapons
 - Don't break in water
