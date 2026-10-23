@@ -34,7 +34,7 @@ namespace Trampoline
 {
 	const string TIMER = "trampoline_timer";
 	const u16 COOLDOWN = 7;
-	const u8 SCALAR = 11;  // Waffle: Increase bounce strength
+	const u8 SCALAR = 10;
 	const bool SAFETY = true;
 	const int COOLDOWN_LIMIT = 8;
 }
@@ -213,6 +213,12 @@ void onCollision(CBlob@ this, CBlob@ blob, bool solid, Vec2f normal, Vec2f point
 
 		Vec2f velocity = Vec2f(0, -Trampoline::SCALAR);
 		velocity.RotateBy(angle);
+
+		// Waffle: Nerf player trampolines
+		if (blob.hasTag("player"))
+		{
+			velocity.x *= 0.8f;
+		}
 
 		blob.setVelocity(velocity);
 

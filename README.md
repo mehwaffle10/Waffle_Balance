@@ -446,8 +446,8 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Now cost 100 coins instead of materials
 
 ### Trampoline
-- Increase bounce velocity from 10 to 11
 - Bounce from all angles
+- Nerfed player horizontal bounce velocity by 20%
 - No longer "medium" weight (no slow down while carrying)
 - Can use M1 and M2 while holding a trampoline
 	- Archers: Shoot arrows and grapple. Arrows always collide with trampoline
