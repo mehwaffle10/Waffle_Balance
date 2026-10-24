@@ -101,7 +101,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 	- wood doors = 7 hearts
 	- platforms  = 5 hearts
 - Swords do 43.75% damage to wood structures instead of 1/8 heart for damage <= 1 heart and 1/4 * damage for damage > 1 heart
-    - wood doors = 11 jabs
+    - wood doors = 18 jabs (10% resistance to swords)
     - platforms  = 12 jabs
     - ladders    = 5  jabs
 	- wood shops = 10 jabs
@@ -113,7 +113,6 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Ignore no build zones, allowing them to destroy backwall in the flag room and behind shops
 - Removed threshold for weaker blast force
 - Blast force applied client side to fix issues with dud jumps 
-- Do 1.2x damage to stone structures instead of half (2 shot stone doors and spikes)
 - No longer damage ground stuffs
 
 ### Fire
@@ -603,6 +602,10 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Hit but don't bounce on enemy trampolines
 
 ## KNIGHT SHOP
+
+### Bombs
+- Do 1.0x damage to wood doors instead of 1.4x (on top of normal 1.4x modifier to wood structures)
+- Do 1.2x damage to stone structures instead of half (2 shot stone doors and spikes)
 
 ### Keg
 - Explode in a circular 6 block radius instead of doing bomberman plus shape

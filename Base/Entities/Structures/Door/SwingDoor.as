@@ -183,10 +183,10 @@ f32 onHit(CBlob@ this, Vec2f worldPoint, Vec2f velocity, f32 damage, CBlob@ hitt
 			damage *= 2.0f;
 			break;
 		case Hitters::sword:
-			damage *= 1.5f;
+			damage *= 0.9f;  // 1.5f;  // Waffle: Nerf sword damage to doors
 			break;
 		case Hitters::bomb:
-			damage *= 1.4f;
+			damage *= this.hasTag("wooden") ? 1.0f : 1.4f;  // Waffle: Nerf bomb damage to doors
 			if (hitterBlob.getTeamNum() == this.getTeamNum())
 				damage *= 0.65f;
 			break;
