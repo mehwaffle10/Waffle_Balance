@@ -115,7 +115,7 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Removed threshold for weaker blast force
 - Blast force applied client side to fix issues with dud jumps 
 - Do 1.2x damage to stone structures instead of half (2 shot stone doors and spikes)
-- No longer damage gold
+- No longer damage ground stuffs
 
 ### Fire
 - Can spread diagonally
