@@ -62,7 +62,6 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 
 ### Builder
 - Increased swing speed on man-made structures, wood, and plants
-- Decreased swing speed on dirt and gold
 - Increased building speed
 	- Delay decreased from 7 to 4
 	- Backwall delay halved of base
@@ -128,7 +127,6 @@ DISCLAIMER: Developed without compatibility with other mods in mind, so there's 
 - Gold can not be fully destroyed
 - No longer damaged by explosives
 - Can no longer be drilled
-- Builders dig gold at the speed that they dig dirt
 
 ### Coins
 - Decreased coins per heart of damage from 6 to 4 (8 to 6 for builders)

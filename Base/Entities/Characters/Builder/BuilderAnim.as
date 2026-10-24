@@ -204,7 +204,7 @@ void onTick(CSprite@ this)
 				}
 
 				// Waffle: Make builders dig dirt slower
-				if (hitting_dirt)
+				if (false && hitting_dirt)
 				{
 					attack_anim = "slow_strike";
 				}

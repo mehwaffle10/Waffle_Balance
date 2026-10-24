@@ -170,7 +170,7 @@ void Pickaxe(CBlob@ this)
         delay = delay_between_hit_structure;
         damage_tick = 3;
     }
-    if (PI.last_hit_dirt)
+    if (false && PI.last_hit_dirt)  // Waffle: Disable slower digging
     {
         delay = delay_between_hit_dirt;
         damage_tick = 9;
@@ -697,7 +697,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 
 		u8 delay = delay_between_hit;
 		if (SPI.last_hit_structure) delay = delay_between_hit_structure;
-        if (SPI.last_hit_dirt)      delay = delay_between_hit_dirt;  // Waffle: Add support for digging dirt and gold slower
+        if (false && SPI.last_hit_dirt)      delay = delay_between_hit_dirt;  // Waffle: Add support for digging dirt and gold slower  // Waffle: Disable for now
 
 		QueuedHit@ queued_hit;
 		if (this.get("queued pickaxe", @queued_hit))
