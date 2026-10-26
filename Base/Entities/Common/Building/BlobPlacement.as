@@ -597,6 +597,21 @@ void onRender(CSprite@ this)
 		{
 			color.set(255, 255, 255, 255);
 			pos = getBottomOfCursor(bc.tileAimPos);
+
+			// Waffle: Rotate held block when repairing
+			CMap@ map = getMap();
+			CBlob@[] blobsAtPos;
+			map.getBlobsAtPosition(getBottomOfCursor(bc.tileAimPos), blobsAtPos);
+
+			for (int i = 0; i < blobsAtPos.size(); i++)
+			{
+				CBlob@ blobAtPos = blobsAtPos[i];
+				
+				if (isRepairable(blobAtPos))
+				{
+					buildAngle = blobAtPos.getAngleDegrees();
+				}
+			}
 			
 			// Waffle: Render tree heights
 			if (isTree)
@@ -620,26 +635,11 @@ void onRender(CSprite@ this)
 	}
 	if (buildBlock !is null)
 	{
-		CMap@ map = getMap();
-		CBlob@[] blobsAtPos;
-		map.getBlobsAtPosition(getBottomOfCursor(bc.tileAimPos), blobsAtPos);
-
-		CBlob@ currentBlobAtPos = null;
-		for (int i = 0; i < blobsAtPos.size(); i++)
-		{
-			CBlob@ blobAtPos = blobsAtPos[i];
-			
-			if (isRepairable(blobAtPos))
-			{
-				@currentBlobAtPos = getBlobByNetworkID(blobAtPos.getNetworkID());
-			}
-		}
-		
 		DrawGhostBlock(
 			buildBlock.icon,
 			pos,
 			Texture::width(buildBlock.icon) / 2,
-			currentBlobAtPos !is null ? currentBlobAtPos.getAngleDegrees() : buildAngle,
+			buildAngle,
 			color,
 			true,
 			1000
