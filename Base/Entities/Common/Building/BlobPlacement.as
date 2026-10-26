@@ -540,7 +540,8 @@ void onRender(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
 
-	if (blob.isKeyPressed(key_action2) || blob.isKeyPressed(key_pickup))   //hack: dont show when builder is attacking
+	// Waffle: Allow showing when holding pickup
+	if (blob.isKeyPressed(key_action2))  // || blob.isKeyPressed(key_pickup))   //hack: dont show when builder is attacking
 	{
 		return;
 	}
