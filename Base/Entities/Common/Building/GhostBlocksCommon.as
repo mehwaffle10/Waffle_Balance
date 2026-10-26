@@ -130,7 +130,7 @@ void DrawGhostBlock(string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, SColo
 		@localBlob = localPlayer.getBlob();
 	}
 
-	const u8 minimumHalfWidth = 4;
+	const u8 minimumHalfWidth = 2;
 	SColor topLeftColor     = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x - minimumHalfWidth, pos.y - minimumHalfWidth), interporlateColor, localBlob);
 	SColor topRightColor    = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x + minimumHalfWidth, pos.y - minimumHalfWidth), interporlateColor, localBlob);
 	SColor bottomRightColor = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x + minimumHalfWidth, pos.y + minimumHalfWidth), interporlateColor, localBlob);
