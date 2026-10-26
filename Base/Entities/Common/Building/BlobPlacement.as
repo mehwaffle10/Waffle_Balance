@@ -510,9 +510,13 @@ void onTick(CBlob@ this)
 			}
 		}
 
+		// Waffle: Do not rotate when holding an activatable
+		string[]@ names;
+		if (!this.get("names to activate", @names)) return;
+
 		AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
 		CBlob@ held = hands.getOccupied();
-		if (this.isKeyJustPressed(key_action3) && (held is null || held.getName() != "crate"))  // Waffle: Do not rotate when getting in crate
+		if (this.isKeyJustPressed(key_action3) && (held is null || names.find(held.getName()) == -1))  // Waffle: Do not rotate when holding an activatable
 		{
 			s8 rotateDir = controls.ActionKeyPressed(AK_BUILD_MODIFIER) ? -1 : 1;
 
