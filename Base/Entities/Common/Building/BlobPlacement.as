@@ -616,11 +616,26 @@ void onRender(CSprite@ this)
 	}
 	if (buildBlock !is null)
 	{
+		CMap@ map = getMap();
+		CBlob@[] blobsAtPos;
+		map.getBlobsAtPosition(getBottomOfCursor(bc.tileAimPos), blobsAtPos);
+
+		CBlob@ currentBlobAtPos = null;
+		for (int i = 0; i < blobsAtPos.size(); i++)
+		{
+			CBlob@ blobAtPos = blobsAtPos[i];
+			
+			if (isRepairable(blobAtPos))
+			{
+				@currentBlobAtPos = getBlobByNetworkID(blobAtPos.getNetworkID());
+			}
+		}
+		
 		DrawGhostBlock(
 			buildBlock.icon,
 			pos,
 			Texture::width(buildBlock.icon) / 2,
-			buildAngle,
+			currentBlobAtPos !is null ? currentBlobAtPos.getAngleDegrees() : buildAngle,
 			color,
 			true,
 			1000
