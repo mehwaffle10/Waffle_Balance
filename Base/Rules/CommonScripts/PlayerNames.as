@@ -5,7 +5,8 @@
 float spacing = 1.0f; // spacing between hearts
 Vec2f icon_size = Vec2f(12, 12); // heart icon frame size
 
-float max_radius = 64.0f; // screenspace distance
+float proximity_radius = 11.0f;
+float max_radius = 20.0f; // world distance
 uint16[] blob_ids;
 
 void onTick(CRules@ this)
@@ -22,7 +23,6 @@ void onTick(CRules@ this)
 	uint8 team = my_player !is null ? my_player.getTeamNum() : this.getSpectatorTeamNum();
 
 	CBlob@ my_blob = getLocalPlayerBlob();
-
 	for (int i = 0; i < getPlayerCount(); i++)
 	{
 		CPlayer@ player = getPlayer(i);
@@ -37,8 +37,12 @@ void onTick(CRules@ this)
 			team == this.getSpectatorTeamNum()
 			// show teammates if u_shownames config is set
 			|| (team == blob.getTeamNum() && u_shownames)
-			// if dead, or if hovering cursor near enemies while alive, *and* they are lit well enough, show them
-			|| ((my_blob is null || (mouse_pos - blob.getPosition()).Length() <= max_radius) && getMap().getColorLight(blob.getPosition()).getRed() >= 30)
+			// if alive and near lit nearby enemy with mouse
+			|| (
+				my_blob !is null &&
+				(my_blob.getPosition() - blob.getPosition()).Length() <= getMap().tilesize * proximity_radius &&
+				(mouse_pos - blob.getPosition()).Length() <= max_radius
+			)
 		)
 		{
 			blob_ids.push_back(blob.getNetworkID());
@@ -53,7 +57,7 @@ void onRender(CRules@ this)
 		return;
 
 	CControls@ c = getControls();
-	Vec2f mouse_screen_pos = c.getInterpMouseScreenPos();
+	Vec2f mouse_pos = c.getMouseWorldPos();
 
 	for (int i = 0; i < blob_ids.size(); i++)
 	{
@@ -69,13 +73,16 @@ void onRender(CRules@ this)
 			continue;
 		}
 
+		CPlayer@ my_player = getLocalPlayer();
+		uint8 teamNum = my_player !is null ? my_player.getTeamNum() : this.getSpectatorTeamNum();
+
 		// Vec2f draw_pos = blob.getInterpolatedPosition() + Vec2f(0.0f, blob.getRadius());
         Vec2f draw_pos = smoothPos(blob, 1.15f) + Vec2f(0.0f, blob.getRadius()); // Waffle: Smoother playername positions
 		draw_pos = getDriver().getScreenPosFromWorldPos(draw_pos);
 
 		// change alpha depending on distance between mouse and player
-		float dist = Maths::Min(max_radius, (mouse_screen_pos - blob.getInterpolatedScreenPos()).Length());
-		float alpha = Maths::Min(1.0f, 1.4f-(dist / max_radius)); // min 0.4, max 1
+		float dist = Maths::Min(max_radius, (mouse_pos - blob.getInterpolatedPosition()).Length());
+		float alpha = blob.getTeamNum() == teamNum ? 1.0f : Maths::Min(1.0f, 1.4f-(dist / max_radius)); // min 0.4, max 1
 
 		// first draw hearts (only for "player" blobs that are also alive (knight, archer and builder))
 		if (blob.hasTag("player"))
