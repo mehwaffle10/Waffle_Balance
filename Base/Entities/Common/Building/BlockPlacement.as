@@ -3,6 +3,7 @@
 #include "Requirements.as"
 #include "GameplayEventsCommon.as";
 #include "GhostBlocksCommon.as"  // Waffle: Client side building
+#include "SmoothPositioning.as"  // Waffle: Smooth tile rendering
 
 // Called server side
 void PlaceBlock(CBlob@ this, u8 index, Vec2f cursorPos)
@@ -281,7 +282,7 @@ void onRender(CSprite@ this)
 
 			DrawGhostBlock(
 				buildBlock.icon,
-				blob.getInterpolatedPosition() + offset,
+				smoothPos(blob) + offset,
 				map.tilesize / 2,
 				0.0f,
 				SColor(255, 255, 255, 255),

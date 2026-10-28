@@ -10,6 +10,7 @@
 #include "TreeLimitCommon.as"    // Waffle: Trees can be placed on buildings
 #include "GhostBlocksCommon.as"  // Waffle: Client side building
 #include "BuilderCommon.as"      // Waffle: All classes can place trees
+#include "SmoothPositioning.as"  // Waffle: Smooth blob rendering
 
 bool PlaceBlob(CBlob@ this, BuildBlock@ block, Vec2f cursorPos, bool repairing = false, CBlob@ repairBlob = null)
 {
@@ -569,7 +570,7 @@ void onRender(CSprite@ this)
 		
 		DrawGhostBlock(
 			buildBlock.icon,
-			blob.getInterpolatedPosition() + offset,
+			smoothPos(blob) + offset,
 			Texture::width(buildBlock.icon) / 2,
 			buildAngle,
 			SColor(255, 255, 255, 255),
