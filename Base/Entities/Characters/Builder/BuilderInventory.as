@@ -248,7 +248,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		CAttachment@ attachments = blob.getAttachments();
 		CBlob@ held = attachments.getAttachedBlob("PICKUP");
-		if (held !is null && (held.getName() == "drill" || held.getName() == "bucket"))
+		if (held !is null && (held.getName() == "drill" || held.getName() == "bucket" || held.getName() == "seed"))
 		{
 			if (!blob.server_PutInInventory(held))
 			{
