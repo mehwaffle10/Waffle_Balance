@@ -5,6 +5,16 @@
 
 void onInit(CRules@ this)
 {
+	AddGhostBlockScript();
+}
+
+void onRestart(CRules@ this)
+{
+	AddGhostBlockScript();
+}
+
+void AddGhostBlockScript()
+{
 	CMap@ map = getMap();
 	if (isServer() || map is null || map.hasScript("GhostBlocks.as")) return;
 	map.AddScript("GhostBlocks.as");
