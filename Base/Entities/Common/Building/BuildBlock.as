@@ -68,19 +68,10 @@ shared class BuildBlock
 			rules.Sync(backgroundTileProperty, true);
 		}
 		
-		if (!isClient() || Texture::exists(icon)) return;
+		if (!isClient() || Texture::exists(icon) && Texture::width(icon) > 0 && Texture::height(icon) > 0) return;
 
-		const string FILE_NAME = tile > 0 ? "Sprites/client_world.png" : getIconTokenFilename(icon);
-		if (!Texture::exists(FILE_NAME))
-		{
-			if (!Texture::createFromFile(FILE_NAME, FILE_NAME))
-			{
-				warn("Failed to create texture from file");
-				return;
-			}
-		}
-
-		ImageData@ data = Texture::data(FILE_NAME);
+		const string FILE_NAME = tile > 0 ? "Sprites/world.png" : getIconTokenFilename(icon);
+		ImageData@ data = loadImageData(FILE_NAME);
 		if (data is null)
 		{
 			warn("data is null");
@@ -118,12 +109,7 @@ shared class BuildBlock
 		}
 		if (teamNum > 0)
 		{
-			const string TEAM_PALETTE = "TeamPalette.png";
-			if (!Texture::exists(TEAM_PALETTE))
-			{
-				Texture::createFromFile(TEAM_PALETTE, TEAM_PALETTE);
-			}
-			ImageData@ teamPalette = Texture::data(TEAM_PALETTE);
+			ImageData@ teamPalette = loadImageData("TeamPalette.png");
 			array<SColor> inColors;
 			array<SColor> outColors;
 			for(int i = 0; i < teamPalette.height(); i++)
@@ -193,3 +179,18 @@ TileType getTileByBlockIndex(CBlob@ this, u8 index)
 	return 0;
 }
 */
+
+// Waffle: Client side building
+shared ImageData@ loadImageData(const string&in file)
+{
+    CFileImage image(file);
+    if (!image.isLoaded() || image.getWidth() <= 0 || image.getHeight() <= 0) return null;
+
+	ImageData@ data = ImageData(image.getWidth(), image.getHeight());
+	while (image.nextPixel())
+	{
+		Vec2f pos = image.getPixelPosition();
+		data.put(pos.x, pos.y, image.readPixel());
+	}
+	return data;
+}
