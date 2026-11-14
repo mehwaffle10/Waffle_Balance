@@ -8,49 +8,9 @@ void onRender(CRules@ this)
     CMap@ map = getMap();
     Driver@ driver = getDriver();
     CBlob@ player = getLocalPlayerBlob();
-
-    if (map is null || driver is null || player is null)
-    {
-        return;
-    }
-
-    AttachmentPoint@[] attachments;
-    player.getAttachmentPoints(attachments);
-    bool holding_sapling = false;
-    for (u8 i = 0; i < attachments.length(); i++)
-    {
-        AttachmentPoint@ attachment = attachments[i];
-        if (attachment !is null && attachment.name == "PICKUP")
-        {
-            if (isTreeSeed(attachment.getOccupied()))
-            {
-                holding_sapling = true;
-                break;
-            }
-        }
-    }
-
-    if (!holding_sapling)  // !player.isKeyPressed(key_action1))  // Waffle: Always show if holding a sapling
-    {
-        return;
-    }
-
-    // Vec2f mouse_pos = player.getAimPos();
-    // CMap::Sector@[] sectors;
-    // // map.getSectorsAtPosition(mouse_pos, sectors);
-    // map.getSectors("tree limit", sectors);  // for debug
-    // for (u16 i = 0 ; i < sectors.length(); i++)
-    // {
-    //     CMap::Sector@ sector = sectors[i];
-    //     if (sector !is null && sector.name == "tree limit")
-    //     {
-    //         GUI::DrawRectangle(
-    //             driver.getScreenPosFromWorldPos(sector.upperleft),
-    //             driver.getScreenPosFromWorldPos(sector.lowerright),
-	// 		    SColor(0x20ed1202)
-	// 	    );
-    //     }
-    // }
+    if (map is null || driver is null || player is null) return;
+    CBlob@ carried = player.getCarriedBlob();
+    if (carried is null) return;
 
     CBlob@[] blobs, seeds;
     getBlobsByTag("tree", blobs);
@@ -70,15 +30,16 @@ void onRender(CRules@ this)
         CBlob@ blob = blobs[i];
         if (blob !is null)
         {
-            Vec2f upper_left = driver.getScreenPosFromWorldPos(getUpperLeft(map, blob)),
-                  bottom_right = driver.getScreenPosFromWorldPos(getBottomRight(map, blob));
+            Vec2f blob_pos = blob is carried ? player.getAimPos() : blob.getPosition();
+            Vec2f upper_left = driver.getScreenPosFromWorldPos(getUpperLeft(map, blob_pos)),
+                  bottom_right = driver.getScreenPosFromWorldPos(getBottomRight(map, blob_pos));
             if (upper_left.x < driver.getScreenWidth() && upper_left.y < driver.getScreenHeight() &&
                 bottom_right.x > 0 && bottom_right.y > 0)
             {
                 SColor color = SColor(0x200bfc03);
                 bool yellow = false;
                 CBlob@[] nearby;
-                getNearbyBlobs(map, blob, nearby);
+                getNearbyBlobs(map, blob_pos, nearby);
                 
                 for (u16 i = 0; i < nearby.length(); i++)
                 {
@@ -104,7 +65,7 @@ void onRender(CRules@ this)
                     color
                 );
 
-                DrawTreeHeight(driver, map, blob);
+                DrawTreeHeight(driver, map, blob_pos);
             }
         }
     }

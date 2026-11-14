@@ -602,8 +602,6 @@ void onRender(CSprite@ this)
 	Driver@ driver = getDriver();
 	SColor color;
 	Vec2f pos;
-	CBlob@ carried = blob.getCarriedBlob();
-	bool isTree = isTreeSeed(carried);
 	if (bc.cursorClose && bc.hasReqs && bc.buildable)
 	{
 		if (bc.buildable && bc.supported)
@@ -624,12 +622,6 @@ void onRender(CSprite@ this)
 				{
 					buildAngle = blobAtPos.getAngleDegrees();
 				}
-			}
-			
-			// Waffle: Render tree heights
-			if (isTree)
-			{
-				DrawTreeHeight(getDriver(), getMap(), bc.tileAimPos);
 			}
 		}
 		else

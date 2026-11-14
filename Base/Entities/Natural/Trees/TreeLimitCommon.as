@@ -6,10 +6,15 @@ const u8 radius = 16;
 const string tree_limit = "tree limit";
 const string tree_limit_delay = "tree limit delay";
 
-void getNearbyBlobs(CMap@ map, CBlob@ tree, CBlob@[]@ blobs)
+void getNearbyBlobs(CMap@ map, Vec2f tree_pos, CBlob@[]@ blobs)
 {
     Vec2f offset = Vec2f(1, 1) * map.tilesize;
-    map.getBlobsInBox(getUpperLeft(map, tree) + offset, getBottomRight(map, tree) - offset, blobs);
+    map.getBlobsInBox(getUpperLeft(map, tree_pos) + offset, getBottomRight(map, tree_pos) - offset, blobs);
+}
+
+void getNearbyBlobs(CMap@ map, CBlob@ tree, CBlob@[]@ blobs)
+{
+    getNearbyBlobs(map, tree.getPosition(), blobs);
 }
 
 Vec2f getUpperLeft(CMap@ map, CBlob@ tree)
