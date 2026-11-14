@@ -57,7 +57,18 @@ bool PlaceBlob(CBlob@ this, BuildBlock@ block, Vec2f cursorPos, bool repairing =
 
 	server_TakeRequirements(inv, block.reqs);
 
-	if (repairing && repairBlob !is null)
+	if (block.name == "seed")
+	{
+		CBlob@ carried = this.getCarriedBlob();
+		if (carried is null) return false;
+		if (!this.server_DetachFrom(carried)) return false;
+		carried.setPosition(cursorPos);
+		if (carried.isSnapToGrid())
+		{
+			carried.getShape().SetStatic(true);
+		}
+	}
+	else if (repairing && repairBlob !is null)
 	{
 		repairBlob.server_SetHealth(repairBlob.getInitialHealth());
 		// Waffle: Don't replace stone or moss backwall
@@ -370,6 +381,7 @@ void onTick(CBlob@ this)
 	u8 blockIndex = this.get_u8("buildblob");
 	BuildBlock@ block = getBlockByIndex(this, blockIndex);
 	if (block is null) return;
+
 	bc.hasReqs = hasRequirements(this.getInventory(), block.reqs, bc.missing, not block.buildOnGround);
 
 	CMap@ map = this.getMap();
@@ -645,10 +657,6 @@ void onRender(CSprite@ this)
 			true,
 			1000
 		);
-	}
-	else if (carried !is null && carried.getName() == "tree")
-	{
-		carried.RenderForHUD(pos, 0.0f, color, RenderStyle::normal);
 	}
 }
 

@@ -1,4 +1,6 @@
 
+#include "TreeLimitCommon.as"  // Waffle: All classes can place trees
+
 shared class BuildBlock
 {
 	TileType tile;
@@ -67,7 +69,7 @@ shared class BuildBlock
 			rules.set_TileType(backgroundTileProperty, backgroundTile);
 			rules.Sync(backgroundTileProperty, true);
 		}
-		
+
 		if (!isClient() || Texture::exists(icon) && Texture::width(icon) > 0 && Texture::height(icon) > 0) return;
 
 		const string FILE_NAME = tile > 0 ? "Sprites/world.png" : getIconTokenFilename(icon);
@@ -153,13 +155,13 @@ BuildBlock@ getBlockByIndex(CBlob@ this, u8 index)
 	{
 		u8 page = this.get_u8("build page");
 		if (index >= blocks[page].length) {
-			return null;
+			return fakeTreeBuildBlock(this);
 		} else {
 			return @blocks[page][index];
 		}
 	}
 
-	return null;
+	return fakeTreeBuildBlock(this);
 }
 
 /*
@@ -193,4 +195,21 @@ shared ImageData@ loadImageData(const string&in file)
 		data.put(pos.x, pos.y, image.readPixel());
 	}
 	return data;
+}
+
+// Waffle: All classes can place trees
+BuildBlock@ fakeTreeBuildBlock(CBlob@ this)
+{
+	CBlob@ carried = this.getCarriedBlob();
+	if (!isTreeSeed(carried)) return null;
+	const string treeType = carried.getInventoryName();
+	return BuildBlock(
+		0,
+		"seed",
+		"$" + treeType + "$",
+		treeType,
+		0,
+		Vec2f(16, 16),
+		true
+	);
 }
