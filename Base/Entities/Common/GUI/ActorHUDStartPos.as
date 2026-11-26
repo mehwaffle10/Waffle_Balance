@@ -123,12 +123,13 @@ void DrawInventoryOnHUD(CBlob@ this, Vec2f tl)
 			// Waffle: Client side building
 			CSprite@ sprite = item.getSprite();
 			if (sprite is null) continue;
-			Animation@ animation = sprite.getAnimation('default');
+			Animation@ animation = sprite.getAnimation(name == "seed" ? "loadedSeed" : "default");
 			if (animation is null) continue;
 			const int quantity = Maths::Max(inv.getCount(name) - getTotalGhostBlockCost(name), 0);
 			uint8 index = (animation.getFramesCount() - 1) * Maths::Min(quantity, item.maxQuantity) / item.maxQuantity;
-			uint8 frame = animation.getFrame(index);
-			
+			uint8 frame = item.hasTag("material") ? animation.getFrame(index) : item.inventoryIconFrame;
+			print("index: " + index + " frame: " + frame);
+
 			drawn.push_back(name);
 
 			Vec2f iconpos = tl + Vec2f((drawn.length - 1) * 40, -6);
