@@ -120,32 +120,34 @@ SColor getInterpolatedColorAtPosition(CMap@ map, SColor color, Vec2f pos, bool i
 	return color.getInterpolated(color_black, Maths::Lerp(lowerBound, 1.2f, posColor.getLuminance() / 255));
 }
 
+// Screen corners and texture (UV) corners, both clockwise from top-left
+const Vec2f[] QUAD_CORNERS = { Vec2f(-1, -1), Vec2f(1, -1), Vec2f(1, 1), Vec2f(-1, 1) };
+const Vec2f[] UV_CORNERS   = { Vec2f( 0,  0), Vec2f(1,  0), Vec2f(1, 1), Vec2f( 0, 1) };
+
 void DrawGhostBlock(string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, bool flip, SColor color, bool setZ = false, f32 z = 0.0f, bool interporlateColor = false)
 {
-	CMap@ map = getMap();
-	if (map is null) return;
+    CMap@ map = getMap();
+    if (map is null) return;
 
-	CPlayer@ localPlayer = getLocalPlayer();
-	CBlob@ localBlob;
-	if (localPlayer !is null)
-	{
-		@localBlob = localPlayer.getBlob();
-	}
+    CPlayer@ localPlayer = getLocalPlayer();
+    CBlob@ localBlob = localPlayer !is null ? localPlayer.getBlob() : null;
 
-	const u8 minimumHalfWidth = 2;
-	SColor topLeftColor     = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x - minimumHalfWidth, pos.y - minimumHalfWidth), interporlateColor, localBlob);
-	SColor topRightColor    = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x + minimumHalfWidth, pos.y - minimumHalfWidth), interporlateColor, localBlob);
-	SColor bottomRightColor = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x + minimumHalfWidth, pos.y + minimumHalfWidth), interporlateColor, localBlob);
-	SColor bottomLeftColor  = getInterpolatedColorAtPosition(map, color, Vec2f(pos.x - minimumHalfWidth, pos.y + minimumHalfWidth), interporlateColor, localBlob);
+    const u8 minimumHalfWidth = 2;
+    const u8 steps = (u16(buildAngle) / 90) % 4;  // 0, 90, 180, 270 -> 0..3
 
-	Render::SetTransformWorldspace();
-	Render::SetZBuffer(setZ, setZ);
-	v_raw.clear();
-	v_raw.push_back(Vertex(Vec2f(pos.x - halfWidth, pos.y - halfWidth), z, Vec2f(buildAngle == 270 ? 1 : 0, buildAngle > 0 && buildAngle < 270 ? 1 : 0), topLeftColor));
-	v_raw.push_back(Vertex(Vec2f(pos.x + halfWidth, pos.y - halfWidth), z, Vec2f(buildAngle == 90 ? 0 : 1,  buildAngle > 90                    ? 1 : 0), topRightColor));
-	v_raw.push_back(Vertex(Vec2f(pos.x + halfWidth, pos.y + halfWidth), z, Vec2f(buildAngle == 270 ? 0 : 1, buildAngle > 0 && buildAngle < 270 ? 0 : 1), bottomRightColor));
-	v_raw.push_back(Vertex(Vec2f(pos.x - halfWidth, pos.y + halfWidth), z, Vec2f(buildAngle == 90 ? 1 : 0,  buildAngle > 90                    ? 0 : 1), bottomLeftColor));
-	Render::RawQuads(icon, v_raw);
+    Render::SetTransformWorldspace();
+    Render::SetZBuffer(setZ, setZ);
+    v_raw.clear();
+    for (u8 i = 0; i < 4; i++)
+    {
+        Vec2f corner = QUAD_CORNERS[i];
+        Vec2f uv = UV_CORNERS[(i + 4 - steps) % 4];  // rotate by shifting which UV corner goes where
+        if (flip) uv.x = 1.0f - uv.x;                // mirror the texture horizontally
+
+        SColor c = getInterpolatedColorAtPosition(map, color, pos + corner * minimumHalfWidth, interporlateColor, localBlob);
+        v_raw.push_back(Vertex(pos + corner * halfWidth, z, uv, c));
+    }
+    Render::RawQuads(icon, v_raw);
 }
 
 void AddGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, bool flip, u8 support, u16 woodCost, u16 stoneCost)
