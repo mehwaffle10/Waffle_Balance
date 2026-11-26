@@ -128,7 +128,6 @@ void DrawInventoryOnHUD(CBlob@ this, Vec2f tl)
 			const int quantity = Maths::Max(inv.getCount(name) - getTotalGhostBlockCost(name), 0);
 			uint8 index = (animation.getFramesCount() - 1) * Maths::Min(quantity, item.maxQuantity) / item.maxQuantity;
 			uint8 frame = item.hasTag("material") ? animation.getFrame(index) : item.inventoryIconFrame;
-			print("index: " + index + " frame: " + frame);
 
 			drawn.push_back(name);
 
