@@ -135,7 +135,8 @@ void onTick(CBlob@ this)
 	}
 
 	// Waffle: Client side building
-	if (this.get_u8("buildblob") != 255)
+	TileType buildtile = this.get_TileType("buildtile");
+	if (buildtile == 0)
 	{
 		return;
 	}
@@ -157,7 +158,6 @@ void onTick(CBlob@ this)
 	bc.buildable = false;
 	bc.supported = false;
 	bc.hasReqs = false;
-	TileType buildtile = this.get_TileType("buildtile");
 
 	if (buildtile > 0)
 	{
