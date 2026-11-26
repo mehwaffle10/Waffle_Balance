@@ -14,12 +14,13 @@ class GhostBlock
 	Vec2f tilePos;
 	f32 halfWidth;
 	f32 angle;
+	bool flip;
 	u32 expires;
 	u8 support;
 	u16 woodCost;
 	u16 stoneCost;
 
-	GhostBlock(TileType _tile, string _name, string _icon, Vec2f _tilePos, f32 _halfWidth, f32 _angle, u8 _support, u16 _woodCost, u16 _stoneCost)
+	GhostBlock(TileType _tile, string _name, string _icon, Vec2f _tilePos, f32 _halfWidth, f32 _angle, bool _flip, u8 _support, u16 _woodCost, u16 _stoneCost)
 	{
 		tile = _tile;
 		name = _name;
@@ -27,6 +28,7 @@ class GhostBlock
 		tilePos = _tilePos;
 		halfWidth = _halfWidth;
 		angle = _angle;
+		flip = _flip;
 		support = _support;
 		woodCost = _woodCost;
 		stoneCost = _stoneCost;
@@ -43,9 +45,9 @@ class GhostBlocks
         blocks = GhostBlock[]();
     }
 
-	void add(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, u8 support, u16 woodCost, u16 stoneCost)
+	void add(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, bool flip, u8 support, u16 woodCost, u16 stoneCost)
 	{
-		blocks.push_back(GhostBlock(tile, name, icon, tilePos, halfWidth, angle, support, woodCost, stoneCost));
+		blocks.push_back(GhostBlock(tile, name, icon, tilePos, halfWidth, angle, flip, support, woodCost, stoneCost));
 	}
 }
 
@@ -77,7 +79,7 @@ void RenderGhostBlocks(CMap@ map)
 			continue;
 		}
 
-		DrawGhostBlock(block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, GHOST_COLOR);
+		DrawGhostBlock(block.icon, (block.tilePos + Vec2f(0.5f, 0.5f)) * map.tilesize, block.halfWidth, block.angle, block.flip, GHOST_COLOR);
 		i++;
 	}
 }
@@ -118,7 +120,7 @@ SColor getInterpolatedColorAtPosition(CMap@ map, SColor color, Vec2f pos, bool i
 	return color.getInterpolated(color_black, Maths::Lerp(lowerBound, 1.2f, posColor.getLuminance() / 255));
 }
 
-void DrawGhostBlock(string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, SColor color, bool setZ = false, f32 z = 0.0f, bool interporlateColor = false)
+void DrawGhostBlock(string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, bool flip, SColor color, bool setZ = false, f32 z = 0.0f, bool interporlateColor = false)
 {
 	CMap@ map = getMap();
 	if (map is null) return;
@@ -146,10 +148,10 @@ void DrawGhostBlock(string icon, Vec2f pos, f32 halfWidth, f32 buildAngle, SColo
 	Render::RawQuads(icon, v_raw);
 }
 
-void AddGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, u8 support, u16 woodCost, u16 stoneCost)
+void AddGhostBlock(TileType tile, string name, string icon, Vec2f tilePos, f32 halfWidth, f32 angle, bool flip, u8 support, u16 woodCost, u16 stoneCost)
 {
 	GhostBlocks@ ghostBlocks = getGhostBlocks();
-	ghostBlocks.add(tile, name, icon, tilePos, halfWidth, angle, support, woodCost, stoneCost);
+	ghostBlocks.add(tile, name, icon, tilePos, halfWidth, angle, flip, support, woodCost, stoneCost);
 }
 
 void DeleteGhostBlockTilePos(Vec2f tilePos, TileType tile, CBlob@ blob)

@@ -212,6 +212,7 @@ void onTick(CBlob@ this)
 					map.getTileSpacePosition(bc.tileAimPos),
 					map.tilesize / 2,
 					0,
+					false,
 					1,
 					getRequiredQuantity(block.reqs, "blob", "mat_wood"),
 					getRequiredQuantity(block.reqs, "blob", "mat_stone")
@@ -285,6 +286,7 @@ void onRender(CSprite@ this)
 				smoothPos(blob) + offset,
 				map.tilesize / 2,
 				0.0f,
+				false,
 				SColor(255, 255, 255, 255),
 				true,
 				this.getZ() + 1.1f,
