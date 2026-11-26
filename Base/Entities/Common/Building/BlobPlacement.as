@@ -507,7 +507,7 @@ void onTick(CBlob@ this)
 						map.getTileSpacePosition(bc.tileAimPos),
 						Texture::width(block.icon) / 2,
 						block.noRotate ? 0 : this.get_u16("build_angle"),
-						this.isFacingLeft(),
+						block.name == "seed" ? this.isFacingLeft() : false,
 						1,
 						getRequiredQuantity(block.reqs, "blob", "mat_wood"),
 						getRequiredQuantity(block.reqs, "blob", "mat_stone")
@@ -647,7 +647,7 @@ void onRender(CSprite@ this)
 			pos,
 			Texture::width(buildBlock.icon) / 2,
 			buildAngle,
-			blob.isFacingLeft(),
+			buildBlock.name == "seed" ? blob.isFacingLeft() : false,
 			color,
 			true,
 			1000
