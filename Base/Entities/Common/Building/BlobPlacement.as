@@ -67,6 +67,12 @@ bool PlaceBlob(CBlob@ this, BuildBlock@ block, Vec2f cursorPos, bool repairing =
 		{
 			carried.getShape().SetStatic(true);
 		}
+
+		CBlob@ new = this.server_PutOutInventory(block.name);
+		if (new !is null)
+		{
+			this.server_Pickup(new);
+		}
 	}
 	else if (repairing && repairBlob !is null)
 	{
