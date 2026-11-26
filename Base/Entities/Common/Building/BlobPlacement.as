@@ -570,14 +570,11 @@ void onRender(CSprite@ this)
 	u8 blockIndex = blob.get_u8("buildblob");
 	BuildBlock@ buildBlock = getBlockByIndex(blob, blockIndex);
 
-	// Waffle: Allow showing when holding pickup
-	if (buildBlock.name != "seed" && blob.isKeyPressed(key_action2))  // || blob.isKeyPressed(key_pickup))   //hack: dont show when builder is attacking
-	{
-		return;
-	}
 	u16 buildAngle = 0;
 	if (buildBlock !is null && buildBlock.name != "seed")  // Seeds are actual held blobs, don't draw again
 	{
+		// Waffle: Allow showing when holding pickup
+		if (blob.isKeyPressed(key_action2)) return;
 		Vec2f offset = HELD_BUILD_BLOCK_OFFSET;
 		offset.x *= blob.isFacingLeft() ? -1 : 1;
 		buildAngle = buildBlock.noRotate ? 0 : blob.get_u16("build_angle");
