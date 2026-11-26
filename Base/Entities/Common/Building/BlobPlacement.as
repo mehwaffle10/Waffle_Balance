@@ -558,11 +558,6 @@ void onRender(CSprite@ this)
 {
 	CBlob@ blob = this.getBlob();
 
-	// Waffle: Allow showing when holding pickup
-	if (blob.isKeyPressed(key_action2) && blob.getName() == "builder")  // || blob.isKeyPressed(key_pickup))   //hack: dont show when builder is attacking
-	{
-		return;
-	}
 	// if (isBuildDelayed(blob))  // Waffle: Client side building
 	// {
 	// 	return;
@@ -574,6 +569,12 @@ void onRender(CSprite@ this)
 	// draw a map block or other blob that snaps to grid
 	u8 blockIndex = blob.get_u8("buildblob");
 	BuildBlock@ buildBlock = getBlockByIndex(blob, blockIndex);
+
+	// Waffle: Allow showing when holding pickup
+	if (buildBlock.name != "seed" && blob.isKeyPressed(key_action2))  // || blob.isKeyPressed(key_pickup))   //hack: dont show when builder is attacking
+	{
+		return;
+	}
 	u16 buildAngle = 0;
 	if (buildBlock !is null && buildBlock.name != "seed")  // Seeds are actual held blobs, don't draw again
 	{
