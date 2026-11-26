@@ -286,7 +286,7 @@ void onRender(CSprite@ this)
 				smoothPos(blob) + offset,
 				map.tilesize / 2,
 				0.0f,
-				false,
+				blob.isFacingLeft(),
 				SColor(255, 255, 255, 255),
 				true,
 				this.getZ() + 1.1f,
