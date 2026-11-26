@@ -86,12 +86,13 @@ shared class BuildBlock
 			return;
 		}
 		f32 difference = Maths::Abs(size.x - size.y);
+		Vec2f offset = Vec2f(size.x > size.y ? 0 : 1, size.y > size.x ? 0 : 1) * difference / 2;
 		ImageData@ new = ImageData(squareSize, squareSize);
 		Vec2f frameOffset;
 		if (tile > 0)
 		{
 			CMap@ map = getMap();
-			s32 textureTileWidth = Texture::width(FILE_NAME) / map.tilesize;
+			s32 textureTileWidth = data.width() / map.tilesize;
 			TileType textureTile = tile;
 			if (tile == CMap::tile_wood_back)
 			{
@@ -107,8 +108,9 @@ shared class BuildBlock
 		else
 		{
 			frameOffset = Vec2f_zero;
-			if (name == "Pine Seed" || name == "Oak Seed")
+			if (icon == "$Pine Seed$" || icon == "$Oak Seed$")
 			{
+				offset.y -= 2;
 				frameOffset.x = size.x * 4;
 				if (icon == "$Pine Seed$")
 				{
@@ -116,13 +118,11 @@ shared class BuildBlock
 				}
 			}
 		}
-		u8 xOffset = size.x > size.y ? 0 : difference / 2;
-		u8 yOffset = size.y > size.x ? 0 : difference / 2;
-		for (u8 x = 0; x < Maths::Min(Texture::width(FILE_NAME), size.x); x++)
+		for (u8 x = 0; x < Maths::Min(data.width(), size.x); x++)
 		{
-			for (u8 y = 0; y < Maths::Min(Texture::height(FILE_NAME), size.y); y++)
+			for (u8 y = 0; y < Maths::Min(data.height(), size.y); y++)
 			{
-				new.put(x + xOffset, y + yOffset, data.get(x + frameOffset.x, y + frameOffset.y));
+				new.put(x + offset.x, y + offset.y, data.get(x + frameOffset.x, y + frameOffset.y));
 			}
 		}
 		if (teamNum > 0)
