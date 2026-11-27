@@ -272,11 +272,12 @@ void onRender(CSprite@ this)
 		CMap@ map = getMap();
 		BlockCursor @bc;
 		blob.get("blockCursor", @bc);
+		if (bc is null) return;
 
 		// Waffle: Client side building
 		u8 blockIndex = getBlockIndexByTile(blob, buildtile);
 		BuildBlock@ buildBlock = getBlockByIndex(blob, blockIndex);
-		if (buildBlock !is null)
+		if (buildBlock !is null && bc.hasReqs)
 		{
 			Vec2f offset = HELD_BUILD_BLOCK_OFFSET;
 			offset.x *= blob.isFacingLeft() ? -1 : 1;
@@ -296,8 +297,6 @@ void onRender(CSprite@ this)
 
 		if (!blob.isMyPlayer()) return;
 		if (getHUD().hasButtons()) return;  // Waffle: Client side building
-
-		if (bc is null) return;
 		
 		if (bc.cursorClose && bc.hasReqs && bc.buildable)
 		{

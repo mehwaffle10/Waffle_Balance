@@ -590,8 +590,12 @@ void onRender(CSprite@ this)
 	u8 blockIndex = blob.get_u8("buildblob");
 	BuildBlock@ buildBlock = getBlockByIndex(blob, blockIndex);
 
+	BlockCursor @bc;
+	blob.get("blockCursor", @bc);
+	if (bc is null) return;
+
 	u16 buildAngle = 0;
-	if (buildBlock !is null && buildBlock.name != "seed")  // Seeds are actual held blobs, don't draw again
+	if (buildBlock !is null && bc.hasReqs && buildBlock.name != "seed")  // Seeds are actual held blobs, don't draw again
 	{
 		// Waffle: Allow showing when holding pickup
 		if (blob.isKeyPressed(key_action2)) return;
@@ -612,11 +616,7 @@ void onRender(CSprite@ this)
 		);
 	}
 
-	BlockCursor @bc;
-	blob.get("blockCursor", @bc);
-
 	if (!blob.isMyPlayer()) return;
-	if (bc is null) return;
 	if (getHUD().hasButtons()) return;  // Waffle: Client side building
 
 	Driver@ driver = getDriver();
