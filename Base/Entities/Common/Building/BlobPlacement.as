@@ -306,6 +306,7 @@ void onInit(CBlob@ this)
 
 	this.set_u16("build_angle", 0);
 
+	this.getCurrentScript().runFlags |= Script::tick_not_ininventory;  // Waffle: Client side building
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().removeIfTag = "dead";
 
@@ -317,14 +318,20 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	CControls@ controls = this.getControls();
+	// Waffle: Client side building
+	BlockCursor @bc;
+	this.get("blockCursor", @bc);
+	if (bc is null) return;
+	BuildBlock@ block = getBlockByIndex(this, this.get_u8("buildblob"));
 
-	if (controls is null || this.isInInventory())
+	if (isClient() && block !is null)
 	{
-		return;
+		bc.hasReqs = hasRequirements(this.getInventory(), block.reqs, bc.missing, not block.buildOnGround);
 	}
 
-	// Waffle: Client side building
+	CControls@ controls = this.getControls();
+	if (controls is null) return;
+
 	CBlob@ blob = this.getCarriedBlob();
 	if (blob !is null)
 	{
@@ -359,23 +366,9 @@ void onTick(CBlob@ this)
 	}
 
 	//don't build with menus open
-	if (getHUD().hasMenus())
-	{
-		return;
-	}
-
-	if (!this.isMyPlayer())
-	{
-		return;
-	}
-
-////                     ONLY MYPLAYER STUFF BEYOND THIS LINE                   ////
-	BlockCursor @bc;
-	this.get("blockCursor", @bc);
-	if (bc is null)
-	{
-		return;
-	}
+	if (getHUD().hasMenus()) return;
+	if (!this.isMyPlayer()) return;
+	//////////// ONLY MYPLAYER STUFF BEYOND THIS LINE ////////////
 
 	bc.blobActive = false;
 
@@ -392,17 +385,11 @@ void onTick(CBlob@ this)
 
 	SetTileAimpos(this, bc);
 	// check buildable
-
 	bc.buildable = false;
 	bc.supported = false;
-	bc.hasReqs = true;
 
 	// Waffle: Client side building
-	u8 blockIndex = this.get_u8("buildblob");
-	BuildBlock@ block = getBlockByIndex(this, blockIndex);
 	if (block is null) return;
-
-	bc.hasReqs = hasRequirements(this.getInventory(), block.reqs, bc.missing, not block.buildOnGround);
 
 	CMap@ map = this.getMap();
 	bool snap = block.snapToGrid;
@@ -587,8 +574,7 @@ void onRender(CSprite@ this)
 
 	// Waffle: Client side building
 	// draw a map block or other blob that snaps to grid
-	u8 blockIndex = blob.get_u8("buildblob");
-	BuildBlock@ buildBlock = getBlockByIndex(blob, blockIndex);
+	BuildBlock@ buildBlock = getBlockByIndex(blob, blob.get_u8("buildblob"));
 
 	BlockCursor @bc;
 	blob.get("blockCursor", @bc);
@@ -717,8 +703,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if (cmd == this.getCommandID("placeBlob"))
 	{
-		u8 blockIndex = this.get_u8("buildblob");
-		BuildBlock@ block = getBlockByIndex(this, blockIndex);
+		BuildBlock@ block = getBlockByIndex(this, this.get_u8("buildblob"));
 		if (block is null) return;
 
 		Vec2f aimpos;
@@ -736,8 +721,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 	}
 	else if (cmd == this.getCommandID("repairBlob"))
 	{
-		u8 blockIndex = this.get_u8("buildblob");
-		BuildBlock@ block = getBlockByIndex(this, blockIndex);
+		BuildBlock@ block = getBlockByIndex(this, this.get_u8("buildblob"));
 		if (block is null) return;
 
 		Vec2f aimpos;

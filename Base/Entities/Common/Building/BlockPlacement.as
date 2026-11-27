@@ -116,117 +116,96 @@ void onInit(CBlob@ this)
 	SetupBuildDelay(this);
 	this.addCommandID("placeBlock");
 
+	this.getCurrentScript().runFlags |= Script::tick_not_ininventory;  // Waffle: Client side building
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
-	this.getCurrentScript().runFlags |= Script::tick_myplayer;
+	// this.getCurrentScript().runFlags |= Script::tick_myplayer;  // Waffle: Client side building
 	this.getCurrentScript().removeIfTag = "dead";
 }
 
 void onTick(CBlob@ this)
 {
-	if (this.isInInventory())
-	{
-		return;
-	}
-
-	//don't build with menus open
-	if (getHUD().hasMenus())
-	{
-		return;
-	}
-
 	// Waffle: Client side building
 	TileType buildtile = this.get_TileType("buildtile");
-	if (buildtile == 0)
-	{
-		return;
-	}
-
-	if (isBuildDelayed(this))
-	{
-		return;
-	}
+	if (buildtile == 0) return;
 
 	BlockCursor @bc;
 	this.get("blockCursor", @bc);
-	if (bc is null)
+	if (bc is null) return;
+
+	CMap@ map = this.getMap();
+	u8 blockIndex = getBlockIndexByTile(this, buildtile);
+	BuildBlock@ block = getBlockByIndex(this, blockIndex);
+
+	// Waffle: Client side building
+	if (isClient())
 	{
-		return;
+		bc.missing.Clear();
+		bc.hasReqs = block !is null && hasRequirements(this.getInventory(), block.reqs, bc.missing, not block.buildOnGround);
 	}
+
+	if (!this.isMyPlayer()) return;
+	//////////// ONLY MYPLAYER STUFF BEYOND THIS LINE ////////////
+
+	//don't build with menus open
+	if (getHUD().hasMenus()) return;
+	if (isBuildDelayed(this)) return;
 
 	SetTileAimpos(this, bc);
-	// check buildable
 	bc.buildable = false;
 	bc.supported = false;
-	bc.hasReqs = false;
+	bc.blockType = buildtile;  // Waffle: Add specific type
+	bc.blockActive = true;
+	bc.blobActive = false;
 
-	if (buildtile > 0)
+	if (bc.cursorClose)
 	{
-        bc.blockType = buildtile;  // Waffle: Add specific type
-		bc.blockActive = true;
-		bc.blobActive = false;
-		CMap@ map = this.getMap();
-		u8 blockIndex = getBlockIndexByTile(this, buildtile);
-		BuildBlock@ block = getBlockByIndex(this, blockIndex);
-		if (block !is null)
-		{
-			bc.missing.Clear();
-			bc.hasReqs = hasRequirements(this.getInventory(), block.reqs, bc.missing, not block.buildOnGround);
-		}
-
-		if (bc.cursorClose)
-		{
-			Vec2f tilePos = bc.tileAimPos / map.tilesize;  // Waffle: Client side building
-			Vec2f halftileoffset(map.tilesize * 0.5f, map.tilesize * 0.5f);
-			bc.buildableAtPos = isBuildableAtPos(this, bc.tileAimPos + halftileoffset, block, bc.sameTileOnBack) && !isGhostBlocked(tilePos);  // Waffle: Client side building
-			//printf("bc.buildableAtPos " + bc.buildableAtPos );
-			bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
-			bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
-			bc.supported = bc.buildable && (map.hasSupportAtPos(bc.tileAimPos) || hasGhostSupport(tilePos));  // Waffle: Client side building
-		}
-
-		// place block
-
-		if (!getHUD().hasButtons() && this.isKeyPressed(key_action1))
-		{
-			if (bc.hasReqs && bc.cursorClose && bc.buildable && bc.supported)
-			{
-				CBitStream params;
-				params.write_u8(blockIndex);
-				//params.write_Vec2f(bc.tileAimPos);
-				params.write_Vec2f(this.getAimPos()); // we're gonna send the aimpos and double-check range on server for safety
-				this.SendCommand(this.getCommandID("placeBlock"), params);
-				u32 delay = getCurrentBuildDelay(this);
-                // Waffle: Build backwall faster
-                if (buildtile == CMap::tile_castle_back || buildtile == CMap::tile_wood_back)
-                {
-                    delay /= 2;
-                }
-				SetBuildDelay(this, block.tile < 255 ? delay : delay / 3);
-				bc.blockActive = false;
-
-				// Waffle: Client side building
-				AddGhostBlock(
-					block.tile,
-					block.name,
-					block.icon,
-					map.getTileSpacePosition(bc.tileAimPos),
-					map.tilesize / 2,
-					0,
-					false,
-					1,
-					getRequiredQuantity(block.reqs, "blob", "mat_wood"),
-					getRequiredQuantity(block.reqs, "blob", "mat_stone")
-				);
-			}
-			else if (this.isKeyJustPressed(key_action1) && !bc.sameTileOnBack)
-			{
-				this.getSprite().PlaySound("NoAmmo.ogg", 0.5);
-			}
-		}
+		Vec2f tilePos = bc.tileAimPos / map.tilesize;  // Waffle: Client side building
+		Vec2f halftileoffset(map.tilesize * 0.5f, map.tilesize * 0.5f);
+		bc.buildableAtPos = isBuildableAtPos(this, bc.tileAimPos + halftileoffset, block, bc.sameTileOnBack) && !isGhostBlocked(tilePos);  // Waffle: Client side building
+		//printf("bc.buildableAtPos " + bc.buildableAtPos );
+		bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
+		bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
+		bc.supported = bc.buildable && (map.hasSupportAtPos(bc.tileAimPos) || hasGhostSupport(tilePos));  // Waffle: Client side building
 	}
-	else
+
+	// place block
+
+	if (!getHUD().hasButtons() && this.isKeyPressed(key_action1))
 	{
-		bc.blockActive = false;
+		if (bc.hasReqs && bc.cursorClose && bc.buildable && bc.supported)
+		{
+			CBitStream params;
+			params.write_u8(blockIndex);
+			//params.write_Vec2f(bc.tileAimPos);
+			params.write_Vec2f(this.getAimPos()); // we're gonna send the aimpos and double-check range on server for safety
+			this.SendCommand(this.getCommandID("placeBlock"), params);
+			u32 delay = getCurrentBuildDelay(this);
+			// Waffle: Build backwall faster
+			if (buildtile == CMap::tile_castle_back || buildtile == CMap::tile_wood_back)
+			{
+				delay /= 2;
+			}
+			SetBuildDelay(this, block.tile < 255 ? delay : delay / 3);
+			bc.blockActive = false;
+
+			// Waffle: Client side building
+			AddGhostBlock(
+				block.tile,
+				block.name,
+				block.icon,
+				map.getTileSpacePosition(bc.tileAimPos),
+				map.tilesize / 2,
+				0,
+				false,
+				1,
+				getRequiredQuantity(block.reqs, "blob", "mat_wood"),
+				getRequiredQuantity(block.reqs, "blob", "mat_stone")
+			);
+		}
+		else if (this.isKeyJustPressed(key_action1) && !bc.sameTileOnBack)
+		{
+			this.getSprite().PlaySound("NoAmmo.ogg", 0.5);
+		}
 	}
 }
 
