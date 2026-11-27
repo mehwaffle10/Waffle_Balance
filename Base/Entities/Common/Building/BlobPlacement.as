@@ -12,6 +12,8 @@
 #include "BuilderCommon.as"      // Waffle: All classes can place trees
 #include "SmoothPositioning.as"  // Waffle: Smooth blob rendering
 
+const string DEFAULT_HANDS_OFFSET_PROP = "default pickup offset";  // Waffle: Cache default hands offset
+
 bool PlaceBlob(CBlob@ this, BuildBlock@ block, Vec2f cursorPos, bool repairing = false, CBlob@ repairBlob = null)
 {
 	if (block is null) return false;
@@ -306,6 +308,11 @@ void onInit(CBlob@ this)
 
 	this.getCurrentScript().runFlags |= Script::tick_not_attached;
 	this.getCurrentScript().removeIfTag = "dead";
+
+	// Waffle: Cache default hands offset
+	AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
+	if (hands is null || this.exists(DEFAULT_HANDS_OFFSET_PROP)) return;
+	this.set_Vec2f(DEFAULT_HANDS_OFFSET_PROP, hands.offset);
 }
 
 void onTick(CBlob@ this)
@@ -333,6 +340,13 @@ void onTick(CBlob@ this)
 		}
 		else
 		{
+			// Waffle: Cache default hands offset
+			AttachmentPoint@ hands = this.getAttachments().getAttachmentPointByName("PICKUP");
+			if (hands !is null && this.exists(DEFAULT_HANDS_OFFSET_PROP))
+			{
+				hands.offset = this.get_Vec2f(DEFAULT_HANDS_OFFSET_PROP);
+			}
+
 			if (blob.hasTag("place norotate"))
 			{
 				blob.setAngleDegrees(0.0f);
