@@ -409,7 +409,10 @@ void MakeBlockClient(CBlob@ blob, u8 i)
 		if (block.tile == 0)
 		{
 			blob.set_TileType("buildtile", block.tile);
-			server_BuildBlob(blob, @blocks[PAGE], i);
+			if (!isServer())
+			{
+				server_BuildBlob(blob, @blocks[PAGE], i);
+			}
 		}
 		else
 		{
