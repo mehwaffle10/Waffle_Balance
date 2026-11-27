@@ -114,6 +114,28 @@ void ClearSelection(CBitStream@ params)
 	ClearCarriedBlock(blob);;
 }
 
+// Waffle: Client side building
+void PageSelect(CBitStream@ params)
+{
+	u8 i;
+	if (!params.saferead_u8(i)) return;
+
+	u16 netID;
+	if (!params.saferead_netid(netID)) return;
+
+	CBlob@ blob = getBlobByNetworkID(netID);
+	if (blob is null) return;
+
+	CInventory@ inventory = blob.getInventory();
+	if (inventory is null) return;
+
+	CBitStream serverParams;
+	serverParams.write_u8(i);
+
+	blob.SendCommand(blob.getCommandID("page select"), serverParams);
+	PageSelectClient(blob, i);
+}
+
 void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 {
 	CBlob@ blob = this.getBlob();
@@ -200,7 +222,8 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 			{
 				CBitStream params;
 				params.write_u8(i);
-				CGridButton@ button = index.AddButton("$"+PAGE_NAME[i]+"$", PAGE_NAME[i], blob.getCommandID("page select"), Vec2f(2, 1), params);
+				params.write_netid(blob.getNetworkID());
+				CGridButton@ button = index.AddButton("$"+PAGE_NAME[i]+"$", PAGE_NAME[i], "BuilderInventory.as", "PageSelect", Vec2f(2, 1), params);
 				if (button is null) continue;
 
 				button.selectOneOnClick = true;
@@ -381,15 +404,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		if (getPlayerByNetworkId(netID) is getLocalPlayer()) return;
 
-		blob.ClearGridMenus();
-		blob.set_u8("build page", page);
-
-		ClearCarriedBlock(blob);
-
-		if (blob is getLocalPlayerBlob())
-		{
-			blob.CreateInventoryMenu(blob.get_Vec2f("backpack position"));
-		}
+		PageSelectClient(blob, page);
 	}
 }
 
@@ -433,6 +448,18 @@ void MakeBlockClient(CBlob@ blob, u8 i)
 		{
 			SetHelp(blob, "help self action", "builder", getTranslatedString("$Build$Build/Place  $LMB$"), "", 3);
 		}
+	}
+}
+
+void PageSelectClient(CBlob@ blob, u8 page)
+{
+	blob.set_u8("build page", page);
+	ClearCarriedBlock(blob);
+
+	if (blob is getLocalPlayerBlob())
+	{
+		blob.ClearGridMenus();
+		blob.CreateInventoryMenu(blob.get_Vec2f("backpack position"));
 	}
 }
 
