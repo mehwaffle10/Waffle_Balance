@@ -169,7 +169,7 @@ bool hasRequirements(CInventory@ inv1, CInventory@ inv2, CBitStream &inout bs, C
 			}
 
 			// Waffle: Client side building
-			if (isClient())
+			if (isClient() && inv1 !is null && inv1.getBlob().isMyPlayer())
 			{
 				sum -= getTotalGhostBlockCost(blobName);
 			}
