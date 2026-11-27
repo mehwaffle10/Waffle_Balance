@@ -18,7 +18,7 @@ shared class BuildBlock
 	bool collides;
 	TileType backgroundTile;
 
-	BuildBlock() { support = 0, collides = false, backgroundTile = 0} // required for handles to work
+	BuildBlock() { support = 0; collides = false; backgroundTile = 0; } // required for handles to work
 
 	BuildBlock(TileType _tile, string _name, string _icon, string _desc, u8 teamNum, Vec2f _size = Vec2f(8, 8), bool _noRotate = false, bool _buildOnGround = false, bool _snapToGrid = true)  // Waffle: Client side building
 	{
@@ -196,6 +196,7 @@ BuildBlock@ fakeTreeBuildBlock(CBlob@ this)
 		Vec2f(16, 16),
 		true
 	);
+	block.collides = true;
 	this.set(blockProp, @block);
 	return block;
 }
