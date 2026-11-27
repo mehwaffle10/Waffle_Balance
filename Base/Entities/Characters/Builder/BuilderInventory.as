@@ -82,10 +82,7 @@ void SelectBuildBlock(CBitStream@ params)
 	u8 i;
 	if (!params.saferead_u8(i)) return;
 
-	u16 netID;
-	if (!params.saferead_netid(netID)) return;
-
-	CBlob@ blob = getBlobByNetworkID(netID);
+	CBlob@ blob = getLocalPlayerBlob();
 	if (blob is null) return;
 
 	CInventory@ inventory = blob.getInventory();
@@ -101,10 +98,7 @@ void SelectBuildBlock(CBitStream@ params)
 // Waffle: Client side building
 void ClearSelection(CBitStream@ params)
 {
-	u16 netID;
-	if (!params.saferead_netid(netID)) return;
-
-	CBlob@ blob = getBlobByNetworkID(netID);
+	CBlob@ blob = getLocalPlayerBlob();
 	if (blob is null) return;
 
 	CInventory@ inventory = blob.getInventory();
@@ -120,10 +114,7 @@ void PageSelect(CBitStream@ params)
 	u8 i;
 	if (!params.saferead_u8(i)) return;
 
-	u16 netID;
-	if (!params.saferead_netid(netID)) return;
-
-	CBlob@ blob = getBlobByNetworkID(netID);
+	CBlob@ blob = getLocalPlayerBlob();
 	if (blob is null) return;
 
 	CInventory@ inventory = blob.getInventory();
@@ -161,7 +152,6 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 			string block_desc = getTranslatedString(b.description);
 			CBitStream params;
 			params.write_u8(i);
-			params.write_netid(blob.getNetworkID());
 			CGridButton@ button = menu.AddButton(b.icon, "\n" + block_desc, "BuilderInventory.as", "SelectBuildBlock", params);  // Waffle: Client side building
 			
 			if (button is null) continue;
@@ -199,7 +189,6 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 			tool.SetCaptionEnabled(false);
 
 			CBitStream params;
-			params.write_netid(blob.getNetworkID());
 			CGridButton@ clear = tool.AddButton("$BUILDER_CLEAR$", "", "BuilderInventory.as", "ClearSelection", Vec2f(1, 1), params);
 			if (clear !is null)
 			{
@@ -222,7 +211,6 @@ void MakeBlocksMenu(CInventory@ this, const Vec2f &in INVENTORY_CE)
 			{
 				CBitStream params;
 				params.write_u8(i);
-				params.write_netid(blob.getNetworkID());
 				CGridButton@ button = index.AddButton("$"+PAGE_NAME[i]+"$", PAGE_NAME[i], "BuilderInventory.as", "PageSelect", Vec2f(2, 1), params);
 				if (button is null) continue;
 
@@ -281,7 +269,6 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		CBitStream clientParams;
 		clientParams.write_u8(i);
-		clientParams.write_netid(callerp.getNetworkID());  // Waffle: Client side building
 		blob.SendCommand(blob.getCommandID("make block client"), clientParams);
 
 		const u8 PAGE = blob.get_u8("build page");
@@ -337,12 +324,7 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 	{
 		u8 i;
 		if (!params.saferead_u8(i)) return;
-
-		// Waffle: Client side building
-		u16 netID;
-		if (!params.saferead_netid(netID)) return;
-
-		if (getPlayerByNetworkId(netID) is getLocalPlayer()) return;
+		if (blob.isMyPlayer()) return;
 
 		MakeBlockClient(blob, i);
 	}
@@ -359,16 +341,12 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		// Waffle: Client side building
 		CBitStream clientParams;
-		clientParams.write_netid(callerp.getNetworkID());  // Waffle: Client side building
 		blob.SendCommand(blob.getCommandID("tool clear client"), clientParams);
 	}
 	else if (cmd == blob.getCommandID("tool clear client") && isClient())
 	{
 		// Waffle: Client side building
-		u16 netID;
-		if (!params.saferead_netid(netID)) return;
-
-		if (getPlayerByNetworkId(netID) is getLocalPlayer()) return;
+		if (blob.isMyPlayer()) return;
 
 		ClearCarriedBlock(blob);
 	}
@@ -383,26 +361,22 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		u8 page;
 		if (!params.saferead_u8(page)) return;
-
+		BuildBlock[][]@ blocks;
+		if (!blob.get(blocks_property, @blocks) || page >= blocks.length) return;
+		
 		blob.set_u8("build page", page);
 
 		ClearCarriedBlock(blob);
 
 		CBitStream sparams;
 		sparams.write_u8(page);
-		sparams.write_netid(callerp.getNetworkID());  // Waffle: Client side building
 		blob.SendCommand(blob.getCommandID("page select client"), sparams);
 	}
 	else if (cmd == blob.getCommandID("page select client") && isClient())
 	{
 		u8 page;
 		if (!params.saferead_u8(page)) return;
-
-		// Waffle: Client side building
-		u16 netID;
-		if (!params.saferead_netid(netID)) return;
-
-		if (getPlayerByNetworkId(netID) is getLocalPlayer()) return;
+		if (blob.isMyPlayer()) return;
 
 		PageSelectClient(blob, page);
 	}
@@ -453,6 +427,9 @@ void MakeBlockClient(CBlob@ blob, u8 i)
 
 void PageSelectClient(CBlob@ blob, u8 page)
 {
+	BuildBlock[][]@ blocks;
+	if (!blob.get(blocks_property, @blocks) || page >= blocks.length) return;
+
 	blob.set_u8("build page", page);
 	ClearCarriedBlock(blob);
 
