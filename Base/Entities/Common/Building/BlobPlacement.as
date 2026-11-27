@@ -415,7 +415,7 @@ void onTick(CBlob@ this)
 			CMap@ map = this.getMap();
 			TileType buildtile = 256;   // something else than a tile
 			Vec2f bottomPos = getBottomOfCursor(bc.tileAimPos);
-			bool overlapped;
+			bool overlapped = false;
 
 			if (block.name == "ladder" || block.name == "wooden_platform" || block.name == "bridge")   // Waffle: Allow building platforms on trees
 			{
@@ -448,15 +448,15 @@ void onTick(CBlob@ this)
 			else
 			{
 				// Waffle: Client side building
+				const bool isSeed = block.name == "seed";
 				CBlob@[] overlapping;
 				map.getBlobsInRadius(bottomPos, 0.5f, @overlapping);
 				for (u16 i = 0; i < overlapping.length && !overlapped; i++)
 				{
 					CBlob@ blob = overlapping[i];
-					if (blob !is null)
-					{
-						overlapped = (blob.getPosition() - bottomPos).LengthSquared() < tsqr && isBlocking(blob) && !(blob.getName() == block.name && blob.getHealth() < blob.getInitialHealth());
-					}
+					if (blob is null) continue;
+					if (isSeed && !blob.getShape().isStatic()) continue;
+					overlapped = (blob.getPosition() - bottomPos).LengthSquared() < tsqr && isBlocking(blob) && !(blob.getName() == block.name && blob.getHealth() < blob.getInitialHealth());
 				}
 			}
 
