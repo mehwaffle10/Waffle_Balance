@@ -82,8 +82,7 @@ bool PlaceBlob(CBlob@ this, BuildBlock@ block, Vec2f cursorPos, bool repairing =
 		// Waffle: Don't replace stone or moss backwall
 		CMap@ map = getMap();
 		TileType type = map.getTile(cursorPos).type;
-		CRules@ rules = getRules();
-		if (type != CMap::tile_castle_back && !(type >= CMap::tile_castle_back_moss && type <= 231))
+		if (block.backgroundTile != 0 && type != CMap::tile_castle_back && !(type >= CMap::tile_castle_back_moss && type <= 231))
 		{
 			map.server_SetTile(repairBlob.getPosition(), block.backgroundTile);
 		}
@@ -514,7 +513,7 @@ void onTick(CBlob@ this)
 						Texture::width(block.icon) / 2,
 						block.noRotate ? 0 : this.get_u16("build_angle"),
 						block.name == "seed" ? this.isFacingLeft() : false,
-						1,
+						block.support,
 						getRequiredQuantity(block.reqs, "blob", "mat_wood"),
 						getRequiredQuantity(block.reqs, "blob", "mat_stone")
 					);

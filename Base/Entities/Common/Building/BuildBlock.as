@@ -11,12 +11,11 @@ shared class BuildBlock
 	bool buildOnGround;
 	Vec2f size; // used by buildOnGround blobs
 	bool temporaryBlob;
-	bool noRotate;    // Waffle: Client side building
-	bool collidable;  // Waffle: --
-	bool snapToGrid;  // Waffle: --
-	u8 support;
-	bool collides;
-	TileType backgroundTile;
+	bool noRotate;            // Waffle: Client side building
+	bool snapToGrid;          // Waffle: --
+	u8 support;               // Waffle: --
+	bool collides;            // Waffle: --
+	TileType backgroundTile;  // Waffle: --
 
 	BuildBlock() { support = 0; collides = false; backgroundTile = 0; } // required for handles to work
 
@@ -31,6 +30,9 @@ shared class BuildBlock
 		size = _size;
 		noRotate = _noRotate;      // Waffle: Client side building
 		snapToGrid = _snapToGrid;  // Waffle: --
+		support = 0;               // Waffle: --
+		collides = false;          // Waffle: --
+		backgroundTile = 0;        // Waffle: --
 
 		// Waffle: Client side building
 		if (_buildOnGround || !isClient() || Texture::exists(icon) && Texture::width(icon) > 0 && Texture::height(icon) > 0) return;
