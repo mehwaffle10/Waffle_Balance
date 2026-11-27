@@ -367,12 +367,19 @@ void onCommand(CInventory@ this, u8 cmd, CBitStream@ params)
 
 		CBitStream sparams;
 		sparams.write_u8(page);
-		blob.server_SendCommandToPlayer(blob.getCommandID("page select client"), sparams, callerp);
+		sparams.write_netid(callerp.getNetworkID());  // Waffle: Client side building
+		blob.SendCommand(blob.getCommandID("page select client"), sparams);
 	}
 	else if (cmd == blob.getCommandID("page select client") && isClient())
 	{
 		u8 page;
 		if (!params.saferead_u8(page)) return;
+
+		// Waffle: Client side building
+		u16 netID;
+		if (!params.saferead_netid(netID)) return;
+
+		if (getPlayerByNetworkId(netID) is getLocalPlayer()) return;
 
 		blob.ClearGridMenus();
 		blob.set_u8("build page", page);
