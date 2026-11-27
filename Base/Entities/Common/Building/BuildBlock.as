@@ -218,8 +218,13 @@ BuildBlock@ fakeTreeBuildBlock(CBlob@ this)
 {
 	CBlob@ carried = this.getCarriedBlob();
 	if (!isTreeSeed(carried)) return null;
+
 	const string treeType = carried.getInventoryName();
-	return BuildBlock(
+	const string blockProp = "fake build block " + treeType;
+	BuildBlock@ block;
+	if (this.get(blockProp, @block) && block !is null) return block;
+	
+	@block = BuildBlock(
 		0,
 		"seed",
 		"$" + treeType + "$",
@@ -228,4 +233,6 @@ BuildBlock@ fakeTreeBuildBlock(CBlob@ this)
 		Vec2f(16, 16),
 		true
 	);
+	this.set(blockProp, @block);
+	return block;
 }
