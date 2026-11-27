@@ -668,10 +668,7 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (!params.saferead_u16(angle)) return;
 
 		// Waffle: Client side block selection
-		u16 netID;
-		if (!params.saferead_netid(netID)) return;
-
-		if (getPlayerByNetworkId(netID) is getLocalPlayer()) return;
+		if (this.isMyPlayer()) return;
 
 		this.set_u16("build_angle", angle);
 		return;
@@ -690,14 +687,13 @@ void onCommand(CBlob@ this, u8 cmd, CBitStream @params)
 		if (caller !is this) return;
 
 		u16 angle;
-		if (!params.saferead_u16(angle)) return;
+		if (!params.saferead_u16(angle) || angle % 90 != 0 || angle >= 360) return;  // Waffle: Clamp rotations
 
 		this.set_u16("build_angle", angle);
 
 		// Waffle: Client side block selection
 		CBitStream clientParams;
 		clientParams.write_u16(angle);
-		clientParams.write_netid(callerp.getNetworkID());
 		this.SendCommand(this.getCommandID("rotateBlobClient"), clientParams);
 		return;
 	}
