@@ -14,8 +14,11 @@ shared class BuildBlock
 	bool noRotate;    // Waffle: Client side building
 	bool collidable;  // Waffle: --
 	bool snapToGrid;  // Waffle: --
+	u8 support;
+	bool collides;
+	TileType backgroundTile;
 
-	BuildBlock() {} // required for handles to work
+	BuildBlock() { support = 0, collides = false, backgroundTile = 0} // required for handles to work
 
 	BuildBlock(TileType _tile, string _name, string _icon, string _desc, u8 teamNum, Vec2f _size = Vec2f(8, 8), bool _noRotate = false, bool _buildOnGround = false, bool _snapToGrid = true)  // Waffle: Client side building
 	{
@@ -30,47 +33,7 @@ shared class BuildBlock
 		snapToGrid = _snapToGrid;  // Waffle: --
 
 		// Waffle: Client side building
-		if (_buildOnGround) return;
-
-		if (isServer())
-		{
-			CRules@ rules = getRules();
-			string supportProperty = _name + "_support";
-			string collidesProperty = _name + "_collides";
-			string backgroundTileProperty = _name + "_background_tile";
-			if (rules.exists(supportProperty)  &&
-			    rules.exists(collidesProperty) &&
-				rules.exists(backgroundTileProperty)
-			) return;
-			
-			u8 support = 0;
-			bool collides = false;
-			TileType backgroundTile = 0;
-			if (tile == 0)
-			{
-				CBlob@ blob = server_CreateBlob(_name, -1, Vec2f_zero);
-				if (blob !is null)
-				{
-					support = blob.getShape().getConsts().support;
-					collides = blob.isCollidable();
-					backgroundTile = blob.get_TileType("background tile");
-					blob.server_Die();
-				}
-			}
-			else
-			{
-				support = 1;  // TODO: Find real way to read this
-				collides = name.findFirst("back_") < 0;
-			}
-			rules.set_u8(supportProperty, support);
-			rules.Sync(supportProperty, true);
-			rules.set_bool(collidesProperty, collides);
-			rules.Sync(collidesProperty, true);
-			rules.set_TileType(backgroundTileProperty, backgroundTile);
-			rules.Sync(backgroundTileProperty, true);
-		}
-
-		if (!isClient() || Texture::exists(icon) && Texture::width(icon) > 0 && Texture::height(icon) > 0) return;
+		if (_buildOnGround || !isClient() || Texture::exists(icon) && Texture::width(icon) > 0 && Texture::height(icon) > 0) return;
 
 		const string FILE_NAME = tile > 0 ? "Sprites/world.png" : getIconTokenFilename(icon);
 		ImageData@ data = loadImageData(FILE_NAME);

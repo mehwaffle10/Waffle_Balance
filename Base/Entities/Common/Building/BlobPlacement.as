@@ -83,10 +83,9 @@ bool PlaceBlob(CBlob@ this, BuildBlock@ block, Vec2f cursorPos, bool repairing =
 		CMap@ map = getMap();
 		TileType type = map.getTile(cursorPos).type;
 		CRules@ rules = getRules();
-		string backgroundTileProperty = block.name + "_background_tile";
-		if (rules.exists(backgroundTileProperty) && type != CMap::tile_castle_back && !(type >= CMap::tile_castle_back_moss && type <= 231))
+		if (type != CMap::tile_castle_back && !(type >= CMap::tile_castle_back_moss && type <= 231))
 		{
-			map.server_SetTile(repairBlob.getPosition(), rules.get_TileType(backgroundTileProperty));
+			map.server_SetTile(repairBlob.getPosition(), block.backgroundTile);
 		}
 	}
 	else
@@ -132,7 +131,7 @@ bool serverBlobCheck(CBlob@ blob, BuildBlock@ block, Vec2f cursorPos, bool repai
 		return false;
 
 	// Make sure we actually have support at our cursor pos
-	if (!(getRules().get_u8(block.name + "_support") > 0 ? map.hasSupportAtPos(cursorPos) : true)) 
+	if (!(block.support > 0 ? map.hasSupportAtPos(cursorPos) : true)) 
 		return false;
 
 	// Is the pos currently collapsing?
@@ -465,7 +464,7 @@ void onTick(CBlob@ this)
 			bc.buildableAtPos = isBuildableAtPos(this, bottomPos, block, bc.sameTileOnBack) && !overlapped && !isGhostBlocked(tilePos);  // Waffle: Client side building
 			bc.rayBlocked = isBuildRayBlocked(this.getPosition(), bc.tileAimPos + halftileoffset, bc.rayBlockedPos);
 			bc.buildable = bc.buildableAtPos && !bc.rayBlocked;
-			bc.supported = getRules().get_u8(block.name + "_support") > 0 ? map.hasSupportAtPos(bc.tileAimPos) || hasGhostSupport(tilePos) : true;  // Waffle: Client side building
+			bc.supported = block.support > 0 ? map.hasSupportAtPos(bc.tileAimPos) || hasGhostSupport(tilePos) : true;  // Waffle: Client side building
 			//printf("bc.buildableAtPos " + bc.buildableAtPos + " bc.supported " + bc.supported );
 		}
 	}

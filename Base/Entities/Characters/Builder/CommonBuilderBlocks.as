@@ -69,6 +69,9 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 	{
 		BuildBlock b(0, "stone_door", getTeamIcon("stone_door", "1x1StoneDoor.png", team_num, Vec2f(16, 8)), "Stone Door\nPlace next to walls", team_num, Vec2f(16, 8));
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", BuilderCosts::stone_door);
+		b.support = 3;
+		b.collides = true;
+		b.backgroundTile = CMap::tile_castle_back;
 		blocks[0].push_back(b);
 	}
 	{
@@ -84,26 +87,40 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 	{
 		BuildBlock b(0, "wooden_door", getTeamIcon("wooden_door", "1x1WoodDoor.png", team_num, Vec2f(16, 8)), "Wooden Door\nPlace next to walls", team_num, Vec2f(16, 8));
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", BuilderCosts::wooden_door);
+		b.support = 3;
+		b.collides = true;
+		b.backgroundTile = CMap::tile_wood_back;
 		blocks[0].push_back(b);
 	}
 	/*{
 		BuildBlock b(0, "trap_block", getTeamIcon("trap_block", "TrapBlock.png", team_num), "Trap Block\nOnly enemies can pass", team_num);
 		AddRequirement(b.reqs, "blob", "mat_stone", "Stone", BuilderCosts::trap_block);
+		b.support = 4;
+		b.collides = true;
+		b.backgroundTile = CMap::tile_castle_back;
 		blocks[0].push_back(b);
 	}*/
 	{
 		BuildBlock b(0, "bridge", getTeamIcon("bridge", "Bridge.png", team_num), "Trap Bridge\nOnly your team can stand on it", team_num, Vec2f(8, 8), true);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", BuilderCosts::bridge);
+		b.support = 1;
+		b.collides = true;
+		b.backgroundTile = CMap::tile_wood_back;
 		blocks[0].push_back(b);
 	}
 	{
 		BuildBlock b(0, "ladder", getTeamIcon("ladder", "Ladder.png", team_num, Vec2f(16, 8)), "Ladder\nAnyone can climb it", team_num, Vec2f(16, 24));
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", BuilderCosts::ladder);
+		b.support = 5;
+		b.collides = false;
 		blocks[0].push_back(b);
 	}
 	{
 		BuildBlock b(0, "wooden_platform", "$wooden_platform$", "Wooden Platform\nOne way platform", team_num);
 		AddRequirement(b.reqs, "blob", "mat_wood", "Wood", BuilderCosts::wooden_platform);
+		b.support = 1;
+		b.collides = true;
+		b.backgroundTile = CMap::tile_wood_back;
 		blocks[0].push_back(b);
 	}
 	{
@@ -144,57 +161,79 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 		{
 			BuildBlock b(0, "wire", "$wire$", "Wire", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "elbow", "$elbow$", "Elbow", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "tee", "$tee$", "Tee", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "junction", "$junction$", "Junction", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 20);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "diode", "$diode$", "Diode", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "resistor", "$resistor$", "Resistor", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "inverter", "$inverter$", "Inverter", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 20);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "oscillator", "$oscillator$", "Oscillator", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "transistor", "$transistor$", "Transistor", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "toggle", "$toggle$", "Toggle", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 20);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 		{
 			BuildBlock b(0, "randomizer", "$randomizer$", "Randomizer", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 20);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[1].push_back(b);
 		}
 
@@ -204,27 +243,38 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 			BuildBlock b(0, "lever", "$lever$", "Lever", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 30);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[2].push_back(b);
 		}
 		{
 			BuildBlock b(0, "push_button", "$pushbutton$", "Button", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 40);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[2].push_back(b);
 		}
 		{
 			BuildBlock b(0, "coin_slot", "$coin_slot$", "Coin Slot", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 40);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[2].push_back(b);
 		}
 		{
 			BuildBlock b(0, "pressure_plate", "$pressureplate$", "Pressure Plate", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 30);
+			b.support = 10;
+			b.collides = true;
+			b.backgroundTile = CMap::tile_castle_back;
 			blocks[2].push_back(b);
 		}
 		{
 			BuildBlock b(0, "sensor", "$sensor$", "Motion Sensor", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 40);
+			b.support = 1;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[2].push_back(b);
 		}
 
@@ -234,44 +284,64 @@ void addCommonBuilderBlocks(BuildBlock[][]@ blocks, int team_num = 0, const stri
 			BuildBlock b(0, "lamp", "$lamp$", "Lamp", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 10);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[3].push_back(b);
 		}
 		{
 			BuildBlock b(0, "emitter", "$emitter$", "Emitter", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 30);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[3].push_back(b);
 		}
 		{
 			BuildBlock b(0, "receiver", "$receiver$", "Receiver", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 30);
+			b.support = 10;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[3].push_back(b);
 		}
 		{
 			BuildBlock b(0, "magazine", "$magazine$", "Magazine", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 20);
+			b.support = 10;
+			b.collides = true;
+			b.backgroundTile = CMap::tile_wood_back;
 			blocks[3].push_back(b);
 		}
 		{
 			BuildBlock b(0, "bolter", "$bolter$", "Bolter", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 30);
+			b.support = 10;
+			b.collides = true;
+			b.backgroundTile = CMap::tile_castle_back;
 			blocks[3].push_back(b);
 		}
 		{
 			BuildBlock b(0, "dispenser", "$dispenser$", "Dispenser", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 30);
+			b.support = 10;
+			b.collides = true;
+			b.backgroundTile = CMap::tile_castle_back;
 			blocks[3].push_back(b);
 		}
 		{
 			BuildBlock b(0, "obstructor", "$obstructor$", "Obstructor", team_num);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 50);
+			b.support = 1;
+			b.backgroundTile = CMap::tile_castle_back;
 			blocks[3].push_back(b);
 		}
 		{
 			BuildBlock b(0, "spiker", "$spiker$", "Spiker", team_num);
 			AddRequirement(b.reqs, "blob", "mat_wood", "Wood", 10);
 			AddRequirement(b.reqs, "blob", "mat_stone", "Stone", 40);
+			b.support = 4;
+			b.collides = true;
+			b.backgroundTile = CMap::tile_castle_back;
 			blocks[3].push_back(b);
 		}
 	}
