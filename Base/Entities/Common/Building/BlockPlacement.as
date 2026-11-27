@@ -125,12 +125,16 @@ void onInit(CBlob@ this)
 void onTick(CBlob@ this)
 {
 	// Waffle: Client side building
-	TileType buildtile = this.get_TileType("buildtile");
-	if (buildtile == 0) return;
-
 	BlockCursor @bc;
 	this.get("blockCursor", @bc);
 	if (bc is null) return;
+
+	TileType buildtile = this.get_TileType("buildtile");
+	if (buildtile == 0)
+	{
+		bc.blockActive = false;
+		return;
+	}
 
 	CMap@ map = this.getMap();
 	u8 blockIndex = getBlockIndexByTile(this, buildtile);
@@ -145,6 +149,7 @@ void onTick(CBlob@ this)
 
 	if (!this.isMyPlayer()) return;
 	//////////// ONLY MYPLAYER STUFF BEYOND THIS LINE ////////////
+	if (block is null) return;
 
 	//don't build with menus open
 	if (getHUD().hasMenus()) return;
